@@ -3,23 +3,15 @@ PROGRAM TO CALCULATE THE CORRELATION BETWEEN ENERGIES-SOC
 AND THE G-TENSOR VALUES
 """
 import numpy as np
-import sys
 import matplotlib.pyplot as plt
 from scipy import stats
 
 from g_read import get_number_of_states, get_eigenenergies, get_selected_states, get_spin_orbit_couplings, \
     get_SOCC_values, get_spin_matrices, get_orbital_matrices
 
-from g_operations import get_Hamiltonian_construction, Hamiltonian_diagonalization, angular_matrixes_obtention, \
-    angular_matrixes_obtention, g_factor_calculation, from_energies_SOC_to_g_values, print_g_calculation
+from g_operations import get_Hamiltonian_construction, Hamiltonian_diagonalization, angular_matrixes_obtention, g_factor_calculation, from_energies_SOC_to_g_values, print_g_calculation
 
-from g_excited_states_analysis import get_excited_states_analysis, improved_active_space
-
-from g_take_eom_states import get_eom_transitions_analysis
-
-from g_ras_eom_change import ras_and_eom_energy_exchange
-
-from g_plots import get_bar_chart, sos_analysis_and_plot, plot_g_tensor_vs_states
+from g_plots import plot_g_tensor_vs_states
 
 #####
 

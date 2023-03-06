@@ -8,7 +8,8 @@ import numpy as np
 import sys
 
 from g_read import get_number_of_states, get_eigenenergies, get_selected_states, \
-    get_symmetry_states, get_hole_part_contributions, get_SOCC_values, get_ground_state_orbital_momentum
+    get_symmetry_states, get_hole_part_contributions, get_SOCC_values, get_ground_state_orbital_momentum, \
+    get_mulliken_spin
 
 def get_RAS2_and_RAS_OCC_and_HOMO(RAS_input):
     """
@@ -176,7 +177,8 @@ def get_orbital(HOMO_orbital, configuration_data, initial_active_orbitals):
 
     return new_orbital
 
-def print_excited_states(presentation_list,n_states,hole_contributions,part_contributions,SOCC_values,excitation_energies_eV,state_symmetries,new_orbital,orbital_momentum):
+def print_excited_states(presentation_list,n_states,hole_contributions,part_contributions,SOCC_values,excitation_energies_eV,
+                         state_symmetries,new_orbital,orbital_momentum, mulliken_spin):
     """
     Prepare te presentation list with the values of each excited state
     :param: presentation_list,n_states,hole_contributions,part_contributions,SOCC_values,excitation_energies_eV,state_symmetries,new_orbital
@@ -193,7 +195,9 @@ def print_excited_states(presentation_list,n_states,hole_contributions,part_cont
 
     L_ground_state = np.round(float(orbital_momentum[n_states]), 3)
 
-    presentation_list.append([state, symmetry, hole, part, excit_energy, new_orbital, SOC, L_ground_state])
+    spin = np.round(float(mulliken_spin[n_states]), 3)
+
+    presentation_list.append([state, symmetry, hole, part, excit_energy, new_orbital, SOC, L_ground_state, spin])
 
     return presentation_list, SOC
 
@@ -234,6 +238,8 @@ def get_excited_states_analysis(input):
 
     hole_contributions, part_contributions = get_hole_part_contributions(input, totalstates)
 
+    mulliken_charge, mulliken_spin = get_mulliken_spin(input, totalstates, states_ras)
+
     SOCC_values = get_SOCC_values(input, totalstates)
 
     orbital_momentum = get_ground_state_orbital_momentum(input, totalstates)
@@ -242,7 +248,7 @@ def get_excited_states_analysis(input):
 
     excited_states_presentation_list = []
     excited_states_presentation_list.append(['State', 'Symmetry', 'Hole', 'Part', 'Excitation energy (eV)','Orbitals',
-                                             'SOCC (cm-1)', 'Orbital momentum'])
+                                             'SOCC (cm-1)', 'Orbital momentum', 'Mulliken Spin'])
 
     searches = ' | HOLE  | '
     n_states = 0
@@ -261,7 +267,7 @@ def get_excited_states_analysis(input):
                                                                                  part_contributions,SOCC_values,
                                                                                  excitation_energies_ras * 27.211399,
                                                                                  ordered_state_symmetries,new_orbital,
-                                                                                 orbital_momentum)
+                                                                                 orbital_momentum, mulliken_spin)
 
                 n_states += 1
 

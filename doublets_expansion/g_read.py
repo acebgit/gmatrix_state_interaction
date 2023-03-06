@@ -125,24 +125,35 @@ def get_eigenenergies(input, totalstates, selected_states):
     with open(input, encoding="utf8") as f:
         data = f.readlines()
 
-    searches = [' RAS-CI total energy for state  ']
+    searches = ' RAS-CI total energy for state  '
     elements = []
+    elements_2 = []
 
-    for line in data:
-        if any(i in line for i in searches):
-            line = line.split()
-            element = line[6]
-            elements.append(element)
-        if (len(elements) == totalstates): break
+    with open(input, encoding="utf8") as file:
+        for line in file:
+            if searches in line:
+                line = line.split()
+                element = line[6]
+                elements.append(element)
+
+                next_line = next(file)
+                next_line = next_line.split()
+                element = next_line[4]
+                elements_2.append(element)
+            if (len(elements) == totalstates): break
 
     energies_selected = []
+    excited_energies_selected = []
     for i in selected_states:
         energies_selected.append(elements[i - 1])
+        excited_energies_selected.append(elements_2[i - 1])
     eigenenergies = np.array(energies_selected, dtype=float)
+    excitation_energies = np.array(excited_energies_selected, dtype=float)
+    excitation_energies = excitation_energies / 27.211399  # From eV to a.u.
 
-    excitation_energies = np.zeros(len(eigenenergies))
-    for i in range(0, len(eigenenergies)):
-        excitation_energies[i] = (eigenenergies[i] - eigenenergies[0])  # * 27.211399
+    # excitation_energies = np.zeros(len(eigenenergies))
+    # for i in range(0, len(eigenenergies)):
+    #     excitation_energies[i] = (eigenenergies[i] - eigenenergies[0])  # * 27.211399
 
     return eigenenergies, excitation_energies
 
@@ -833,3 +844,44 @@ def get_orbital_matrices_pyqchem(file_ras, totalstates, selected_states):
     # exit()
     return doublets_Lk
 
+def get_mulliken_spin(input, totalstates, states):
+    """
+    Get energies of the states: 0: ras ; 1: CASSCF ; 2: SF-DFT
+    :param selected_states, input_ras, theory_level
+    :return: eigenenergies
+    """
+    with open(input, encoding="utf8") as f:
+        data = f.readlines()
+
+    searches = 'Mulliken population analysis'
+    elements = []
+    elements_2 = []
+
+    with open(input, encoding="utf8") as file:
+        for line in file:
+            if searches in line:
+                next_line = next(file)
+                next_line = next(file)
+                next_line = next(file)
+                next_line = next(file)
+
+                next_line = next_line.split()
+
+                element = next_line[2]
+                elements.append(element)
+
+                element = next_line[3]
+                elements_2.append(element)
+            if (len(elements) == totalstates): break
+
+    charge_mulliken_selected = []
+    spin_mulliken_selected = []
+
+    for i in states:
+        charge_mulliken_selected.append(elements[i - 1])
+        spin_mulliken_selected.append(elements_2[i - 1])
+
+    charge_mulliken = np.array(charge_mulliken_selected, dtype=float)
+    spin_mulliken = np.array(spin_mulliken_selected, dtype=float)
+
+    return charge_mulliken, spin_mulliken

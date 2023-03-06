@@ -2,18 +2,21 @@
 #          MODULES SELECTION
 #####################################
 # module load Python/3.7.4-Anaconda3-2019.10
+
+import numpy as np
 import sys
 
 from g_read import get_number_of_states, get_eigenenergies, get_selected_states, get_spin_orbit_couplings, \
-    get_SOCC_values, get_ground_state_orbital_momentum, get_symmetry_states, get_spin_orbit_couplings_pyqchem
+    get_SOCC_values, get_ground_state_orbital_momentum, get_symmetry_states, get_spin_orbit_couplings_pyqchem, \
+    get_mulliken_spin
 
 from g_operations import from_energies_SOC_to_g_values, print_g_calculation
 
 from g_excited_states_analysis import get_excited_states_analysis, improved_active_space
 
-from g_take_eom_states import get_eom_transitions_analysis
+from doublets_expansion.eom_analysis.g_take_eom_states import get_eom_transitions_analysis
 
-from g_ras_eom_change import ras_and_eom_energy_exchange
+from doublets_expansion.eom_analysis.g_ras_eom_change import ras_and_eom_energy_exchange
 
 from g_plots import get_bar_chart, sos_analysis_and_plot
 
@@ -23,15 +26,16 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 
 # G-TENSOR CALCULATION
 g_calculation = 1
-ras_input = '../RASCI_results/cucl4_2-/cucl4_2-_def2tzvp_11_6.out' # str(sys.argv[1])
+ras_input = '../\
+RASCI_results/cucl4_2-/cucl4_2-_def2tzvp_11_6.out' # str(sys.argv[1])'''
 
 selected_states = 1 # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1,2,3,4,5,6,7,8,9,10,11] # States to be included when "selected_states = 0"
+states_ras = [1,2,3,4,5] # States to be included when "selected_states = 0"
 symmetry_selection = 'B2u' # Symmetry selected states
 selected_SOC = 0 # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
-excited_states_analysis = 0
+excited_states_analysis = 1
 new_active_space = 0
 sos_analysis = 0
 bar_plots = 0
