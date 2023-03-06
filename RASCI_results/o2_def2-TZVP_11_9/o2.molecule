@@ -1,0 +1,8 @@
+$molecule
+0 3    !charge and multiplicity
+O1
+O2 O1 oo
+
+oo = 1.221 !DOI: 10.1063/1.1569243
+$end
+

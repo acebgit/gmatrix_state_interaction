@@ -1,0 +1,557 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 6.0 (devel), Q-Chem, Inc., Pleasanton, CA (2022)
+
+ E. Epifanovsky,  A. T. B. Gilbert,  Xintian Feng,  Joonho Lee,  Yuezhi Mao,  
+ N. Mardirossian,  P. Pokhilko,  A. White,  M. Wormit,  M. P. Coons,  
+ A. L. Dempwolff,  Zhengting Gan,  D. Hait,  P. R. Horn,  L. D. Jacobson,  
+ I. Kaliman,  J. Kussmann,  A. W. Lange,  Ka Un Lao,  D. S. Levine,  Jie Liu,  
+ S. C. McKenzie,  A. F. Morrison,  K. Nanda,  F. Plasser,  D. R. Rehn,  
+ M. L. Vidal,  Zhi-Qiang You,  Ying Zhu,  B. Alam,  B. Albrecht,  
+ A. Aldossary,  E. Alguire,  J. H. Andersen,  V. Athavale,  D. Barton,  
+ K. Begam,  A. Behn,  N. Bellonzi,  Y. A. Bernard,  E. J. Berquist,  
+ H. Burton,  A. Carreras,  K. Carter-Fenk,  Romit Chakraborty,  
+ Chandrima Chakravarty,  Junhan Chen,  A. D. Chien,  K. D. Closser,  
+ V. Cofer-Shabica,  L. Cunha,  S. Dasgupta,  Jia Deng,  M. de Wergifosse,  
+ M. Diedenhofen,  Hainam Do,  S. Ehlert,  Po-Tung Fang,  S. Fatehi,  
+ Qingguo Feng,  T. Friedhoff,  B. Ganoe,  J. Gayvert,  Qinghui Ge,  
+ G. Gidofalvi,  M. Goldey,  J. Gomes,  C. Gonzalez-Espinoza,  S. Gulania,  
+ A. Gunina,  J. A. Gyamfi,  M. W. D. Hanson-Heine,  P. H. P. Harbach,  
+ A. W. Hauser,  M. F. Herbst,  M. Hernandez Vera,  M. Hodecker,  
+ Z. C. Holden,  S. Houck,  Xunkun Huang,  Kerwin Hui,  B. C. Huynh,  
+ K. Ikeda,  M. Ivanov,  Hyunjun Ji,  Zuxin Jin,  Hanjie Jiang,  B. Kaduk,  
+ S. Kaehler,  R. Kang,  K. Khistyaev,  Jaehoon Kim,  Yongbin Kim,  
+ P. Klunzinger,  Z. Koczor-Benda,  Joong Hoon Koh,  D. Kosenkov,  
+ Saikiran Kotaru,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  K. Kue,  
+ A. Kunitsa,  T. Kus,  A. Landau,  K. V. Lawler,  D. Lefrancois,  S. Lehtola,  
+ Rain Li,  Shaozhi Li,  Yi-Pei Li,  Jiashu Liang,  M. Liebenthal,  
+ Hung-Hsuan Lin,  You-Sheng Lin,  Fenglai Liu,  Kuan-Yu Liu,  
+ M. Loipersberger,  A. Luenser,  C. Malbon,  A. Manjanath,  P. Manohar,  
+ E. Mansoor,  S. F. Manzer,  Shan-Ping Mao,  A. V. Marenich,  T. Markovich,  
+ S. Mason,  F. Matz,  S. A. Maurer,  P. F. McLaughlin,  M. F. S. J. Menger,  
+ J.-M. Mewes,  S. A. Mewes,  P. Morgante,  Mohammad Mostafanejad,  
+ J. W. Mullinax,  K. J. Oosterbaan,  G. Paran,  V. Parravicini,  
+ Alexander C. Paul,  Suranjan K. Paul,  F. Pavosevic,  Zheng Pei,  S. Prager,  
+ E. I. Proynov,  E. Ramos,  B. Rana,  A. E. Rask,  A. Rettig,  R. M. Richard,  
+ F. Rob,  E. Rossomme,  T. Scheele,  M. Scheurer,  M. Schneider,  
+ P. E. Schneider,  N. Sergueev,  S. M. Sharada,  Hengyuan Shen,  
+ W. Skomorowski,  D. W. Small,  C. J. Stein,  Yingli Su,  Yu-Chuan Su,  
+ E. J. Sundstrom,  Zhen Tao,  J. Thirman,  Hung-Yi Tsai,  T. Tsuchimochi,  
+ N. M. Tubman,  C. Utku,  S. P. Veccham,  O. Vydrov,  J. Wenzel,  
+ Jonathan Wong,  J. Witte,  A. Yamada,  Chou-Hsun Yang,  Kun Yao,  
+ S. Yeganeh,  S. R. Yost,  A. Zech,  F. Zeller,  Igor Ying Zhang,  
+ Xing Zhang,  Yu Zhang,  D. Zuev,  A. Aspuru-Guzik,  A. T. Bell,  
+ N. A. Besley,  K. B. Bravaya,  B. R. Brooks,  D. Casanova,  Jeng-Da Chai,  
+ Hsing-Ta Chen,  S. Coriani,  C. J. Cramer,  A. E. DePrince, III,  
+ R. A. DiStasio Jr.,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  
+ W. A. Goddard III,  S. Grimme,  S. Hammes-Schiffer,  T. Head-Gordon,  
+ W. J. Hehre,  Chao-Ping Hsu,  T.-C. Jagau,  Yousung Jung,  A. Klamt,  
+ Jing Kong,  D. S. Lambrecht,  Xiangyuan Li,  WanZhen Liang,  N. J. Mayhall,  
+ C. W. McCurdy,  J. B. Neaton,  T. Neudecker,  C. Ochsenfeld,  
+ J. A. Parkhill,  R. Peverati,  V. A. Rassolov,  Haisheng Ren,  Yihan Shao,  
+ L. V. Slipchenko,  R. P. Steele,  J. E. Subotnik,  A. J. W. Thom,  
+ A. Tkatchenko,  D. G. Truhlar,  T. Van Voorhis,  Fan Wang,  
+ T. A. Wesolowski,  K. B. Whaley,  H. L. Woodcock III,  P. M. Zimmerman,  
+ S. Faraji,  P. M. W. Gill,  M. Head-Gordon,  J. M. Herbert,  A. I. Krylov
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  R. Baer,  J. Baker,  G. J. O. Beran,  
+ K. Brandhorst,  S. T. Brown,  E. F. C. Byrd,  Arup K. Chakraborty,  
+ G. K. L. Chan,  Chun-Min Chang,  Yunqing Chen,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  R. G. Edgar,  J. Fosso-Tande,  
+ L. Fusti-Molnar,  D. Ghosh,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  
+ J. Gonthier,  M. S. Gordon,  S. R. Gwaltney,  G. Hawkins,  J. E. Herr,  
+ A. Heyden,  S. Hirata,  E. G. Hohenstein,  G. Kedziora,  F. J. Keil,  
+ C. Kelley,  Jihan Kim,  R. A. King,  R. Z. Khaliullin,  P. P. Korambath,  
+ W. Kurlancheek,  A. Laurent,  A. M. Lee,  M. S. Lee,  S. V. Levchenko,  
+ Ching Yeh Lin,  D. Liotard,  E. Livshits,  R. C. Lochan,  I. Lotan,  
+ L. A. Martinez-Martinez,  P. E. Maslen,  N. Nair,  D. P. O'Neill,  
+ D. Neuhauser,  E. Neuscamman,  C. M. Oana,  R. Olivares-Amaya,  R. Olson,  
+ T. M. Perrine,  B. Peters,  P. A. Pieniazek,  A. Prociuk,  Y. M. Rhee,  
+ J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  H. F. Schaefer III,  
+ M. W. Schmidt,  N. E. Schultz,  S. Sharma,  N. Shenvi,  C. D. Sherrill,  
+ A. C. Simmonett,  A. Sodt,  T. Stein,  D. Stuck,  K. S. Thanthiriwatte,  
+ V. Vanovschi,  L. Vogt,  Tao Wang,  A. Warshel,  M. A. Watson,  
+ C. F. Williams,  Q. Wu,  X. Xu,  Jun Yang,  W. Zhang,  Yan Zhao
+
+   Please cite Q-Chem as follows:
+  "Software for the frontiers of quantum chemistry:
+   An overview of developments in the Q-Chem 5 package"
+   J. Chem. Phys. 155, 084801 (2021)
+   https://doi.org/10.1063/5.0055522 (open access)
+
+ Q-Chem 6.0.1 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Fri Feb 10 11:55:02 2023  
+
+ Host: atlas-208
+0
+
+     Scratch files written to ./qchem343992//
+ Processing $rem in /scratch/abel/SOFTWARE/qchem/config/preferences:
+ Processing $rem in /dipc/acebg/.qchemrc:
+
+ Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ RAS-SF CALCULATION
+$end
+
+$molecule
+ READ cucl4_2-.molecule
+$end
+
+$rem
+!**CALCULATION TYPE***     
+JOBTYPE            sp    
+EXCHANGE           HF
+CORRELATION        RASCI    !RASCI=Casanova; RASCI2=Zimmerman
+BASIS              def2-TZVP
+BASIS2             STO-3G
+
+!***SCF REFERENCE***
+SKIP_SCFMAN        FALSE
+UNRESTRICTED       FALSE
+!SCF_GUESS          core
+!SCF_GUESS_MIX      FALSE
+!SCF_GUESS_ALWAYS   FALSE
+MAX_SCF_CYCLES     500
+SCF_CONVERGENCE    8
+!SCF_ALGORITHM      DIIS !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
+
+SYMMETRY           TRUE !use of symmetry for calculating integrals
+SYM_IGNORE         FALSE !turn off using symmetry
+SYM_TOL            5 !tolerance for determining point group
+
+!THRESH             14
+SCF_FINAL_PRINT     1 !0,1,2,3
+
+!****RAS-SF****
+RAS_ROOTS          30       !number of RAS-CI roots to be computed
+SET_ITER           150     !number of iterations in RASCI
+RAS_ELEC           17       !number of electrons in RAS2
+!RAS_ELEC_ALPHA            !spin-α electrons in RAS2 
+!RAS_ELEC_BETA             !spin-β electrons in RAS2
+
+RAS_ACT            10       !number of orbitals in RAS2 
+RAS_ACT_ORB       [34, 35, 36, 37, 41, 43, 44, 45, 50, 51] !user-selected RAS2 orbitals
+RAS_OCC            41       !number of orbitals in RAS1
+N_FROZEN_CORE      FC     !Number of frozen core orbitals
+N_FROZEN_VIRTUAL   0      !Number of frozen virtual orbitals
+RAS_NATORB         TRUE    !computation of the natural orbital occupancies
+!RAS_NATORB_STATE  0      !Saves NO of i RAS computed state in .fchk ﬁle
+
+RAS_DO_HOLE        TRUE   !presence of hole excitations in RAS-CI wave function
+RAS_DO_PART        TRUE   !presence of particle excitations
+RAS_AMPL_PRINT     10     !threshold (×10 2 ) for the CI amplitudes
+
+RAS_GUESS_CS       0      !number of closed shell guess conﬁgurations
+RAS_SPIN_MULT      0      !spin multiplicity: 0=any, 2n+1=defined 
+RAS_SRDFT          FALSE  !short-range density functional RAS-CI
+RAS_NFRAG          0     !fragments of excitation analysis in RASCI
+
+RAS_PRINT          2      !level of information
+RAS_NATORB         TRUE   !computation of the natural orbital occupancies
+!RAS_NATORB_STATE  0      !Saves NO of i RAS computed state in .fchk ﬁle
+RAS_FOD            TRUE
+
+!****RAS-SOC****
+CALC_SOC           TRUE   !calculate SOC for EOM-CC, RAS-CI, ADC, TDDFT/TDA and TDDFT
+!RAS_SOC_2E        TRUE   !two-electron mean-ﬁeld contribution, default=true
+RAS_SOC_SYM_DENS   TRUE   !averaging of α and β densities
+
+!****MEMORY****
+MEM_TOTAL          10000 !Default 2000 MB
+MEM_STATIC         2000  !Default 64 MB
+
+!**Molecular Properties and Analysis **                                                                                          
+GUI                2
+STATE_ANALYSIS     TRUE
+MOLDEN_FORMAT      TRUE
+PRINT_ORBITALS     20
+$end                                           
+
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      Cu     -0.0000000000     0.0000000000    -0.0000000000
+    2      Cl      2.3112385002    -0.0000000000    -0.0000000000
+    3      Cl      0.0000000000     2.3112385002    -0.0000000000
+    4      Cl     -0.0000000000    -2.3112385002     0.0000000000
+    5      Cl     -2.3112385002     0.0000000000     0.0000000000
+ ----------------------------------------------------------------
+ Molecular Point Group                 D2h   NOp =  8
+ Largest Abelian Subgroup              D2h   NOp =  8
+ Nuclear Repulsion Energy =         704.82872953 hartrees
+ There are       50 alpha and       49 beta electrons
+ Requested basis set is def2-TZVP
+ There are 67 shells and 193 basis functions
+
+ Total QAlloc Memory Limit  10000 MB
+ Mega-Array Size      1956 MB
+ MEM_STATIC part      2000 MB
+
+
+                       Distance Matrix (Angstroms)
+             Cu(  1)   Cl(  2)   Cl(  3)   Cl(  4)
+   Cl(  2)  2.311239
+   Cl(  3)  2.311239  3.268585
+   Cl(  4)  2.311239  3.268585  4.622477
+   Cl(  5)  2.311239  4.622477  3.268585  3.268585
+ 
+ A cutoff of  1.0D-12 yielded   1874 shell pairs
+ There are     16710 function pairs (     21943 Cartesian)
+ Smallest overlap matrix eigenvalue = 9.49E-03
+
+ Scale SEOQF with 1.000000e-01/1.000000e-01/1.000000e-01
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000195 hartrees
+ Requested basis set is STO-3G
+ There are 17 shells and 54 basis functions
+ A cutoff of  1.0D-12 yielded    113 shell pairs
+ There are      1311 function pairs (      1371 Cartesian)
+ Smallest overlap matrix eigenvalue = 2.93E-01
+ Constructing guess Fock matrix from core Hamiltonian
+ Applying Wolfsberg-Helmholtz approximation
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Geometric Direct Minimization
+ SCF converges when RMS gradient is below 1.0E-04
+ ---------------------------------------
+  Cycle       Energy        RMS Gradient
+ ---------------------------------------
+    1   -3414.0448209425      5.46E+00 Descent step
+    2   -3416.0789549848      2.40E+04 Line search: understep
+    3   -3427.8100586570      1.46E+00 Descent step
+    4   -3428.6717161485      8.51E+03 Line search: understep
+    5   -3432.7992156610      3.93E+00 Descent step
+    6   -3434.1070673373      2.01E+00 Descent step
+    7   -3434.9438365728      1.55E+00 Descent step
+    8   -3435.7226093628      1.29E+00 Descent step
+    9   -3436.3932676866      1.07E+00 Descent step
+   10   -3436.8898005574      8.41E-01 Descent step
+   11   -3437.2425841589      6.16E-01 Descent step
+   12   -3437.5069357397      4.90E-01 Descent step
+   13   -3437.7549079830      7.45E-01 Descent step
+   GDM::BFGS:   rebuilding Hinv to be positive definite
+   14   -3438.0546748814      1.23E+00 Descent step
+   15   -3438.4424555280      4.57E-01 Descent step
+   16   -3438.5678499566      1.90E-01 Dog-leg BFGS step
+   17   -3438.5808861029      1.08E-01 Dog-leg BFGS step
+   18   -3438.5894129584      7.78E-02 Dog-leg BFGS step
+   19   -3438.5751444492      2.78E+01 Line search: overstep
+   20   -3438.5941026413      6.21E-02 Dog-leg BFGS step
+   21   -3438.5985463983      1.32E-02 Normal BFGS step
+   22   -3438.5986574106      3.08E-03 Normal BFGS step
+   23   -3438.5986645900      6.88E-04 Normal BFGS step
+   24   -3438.5986654896      2.25E-04 Normal BFGS step
+   25   -3438.5986656685      4.54E-05 Convergence criterion met
+ ---------------------------------------
+ One-Electron    Energy = -6230.8986956401
+ Total Coulomb   Energy =  2265.0313634541
+ Alpha Exchange  Energy =   -88.9417208690
+ Beta  Exchange  Energy =   -88.6183421633
+ DFT   Exchange  Energy =     0.0000000000
+ DFT Correlation Energy =     0.0000000000
+ Nuclear Repu.   Energy =   704.8287295498
+ Nuclear Attr.   Energy = -9638.5422937597
+ Kinetic         Energy =  3407.6435981195
+ SCF time:  CPU 1.70 s  wall 3.10 s
+ SCF   energy in the small basis set = -3438.59866567
+ Total energy in the small basis set = -3438.59866567
+ ----------------------------------------------------
+  Cycle       Energy    
+ ----------------------------------------------------
+    1    -163.9689023428     -1.64E+02
+ A restricted Hartree-Fock SCF calculation will be
+ performed using Geometric Direct Minimization
+ SCF converges when RMS gradient is below 1.0E-08
+ ---------------------------------------
+  Cycle       Energy        RMS Gradient
+ ---------------------------------------
+    1   -3476.5617618619      5.21E-01 Descent step
+    2   -3476.8147995946      3.23E-01 Descent step
+    3   -3477.0337745587      2.10E-01 Descent step
+    4   -3477.1478394215      1.08E-01 Normal BFGS step
+    5   -3477.1744814111      3.88E-02 Normal BFGS step
+    6   -3477.1779029598      1.35E-02 Normal BFGS step
+    7   -3477.1781984402      3.71E-02 Normal BFGS step
+    8   -3477.1784326126      1.26E-02 Normal BFGS step
+    9   -3477.1784852679      1.87E-03 Normal BFGS step
+   10   -3477.1784884386      4.43E-04 Normal BFGS step
+   11   -3477.1784886068      4.49E-05 Normal BFGS step
+   12   -3477.1784886178      2.00E-05 Normal BFGS step
+   13   -3477.1784886189      3.34E-06 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   8.988854903468901E-010
+   14   -3477.1784886188      2.33E-06 Normal BFGS step
+   15   -3477.1784886191      4.61E-07 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   8.988854903468901E-010
+   16   -3477.1784886190      6.47E-08 Normal BFGS step
+   17   -3477.1784886190      2.94E-08 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   1.228959711774280E-009
+   18   -3477.1784886190      4.36E-08 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   1.434998148086564E-009
+   19   -3477.1784886189      3.00E-08 Normal BFGS step
+   20   -3477.1784886189      4.20E-08 Normal BFGS step
+   GDM::WARNING energy changes are now smaller than effective accuracy.
+   GDM::        calculation will continue, but THRESH should be increased
+   GDM::        or SCF_CONVERGENCE decreased.
+   GDM::        effective_thresh =   1.637462151982128E-009
+   21   -3477.1784886189      1.75E-09 Convergence criterion met
+ ---------------------------------------
+ One-Electron    Energy = -6269.6381209824
+ Total Coulomb   Energy =  2264.1952094040
+ Alpha Exchange  Energy =   -88.9536067748
+ Beta  Exchange  Energy =   -87.6106998156
+ DFT   Exchange  Energy =     0.0000000000
+ DFT Correlation Energy =     0.0000000000
+ Nuclear Repu.   Energy =   704.8287295498
+ Nuclear Attr.   Energy = -9747.4359151739
+ Kinetic         Energy =  3477.7977941915
+ SCF time:  CPU 85.70 s  wall 89.58 s
+ SCF   energy in the final basis set = -3477.17848862
+ Total energy in the final basis set = -3477.17848862
+Setting RAS_srDFT_COR/EXC
+  
+     ##========================================##
+     ||                                        ||
+     ||              R A S M A N 2             ||
+     ||________________________________________||
+     ||                                        ||
+     ||  Author:                               ||
+     ||                                        ||
+     ||        David Casanova (2010)           ||
+     ||                                        ||
+     ##========================================##
+  
+  ***************************************************
+  *  RAS-CI Dimensions:                             *
+  *                                                 *
+  *  Active Elec.:  17 ( 9, 8)   Active Orb.:  10   *
+  *  Doubly Occ. :  41           Doubly Vir.: 142   *
+  *  Frozen Occ. :  29           Frozen Vir.:   0   *
+  *                                                 *
+  *  Total CI configurations:    460140             * 
+  *    Active configurations:       450             * 
+  *      Hole configurations:      1740             * 
+  *  Particle configurations:    457950             * 
+  *                                                 *
+  *   Requested states:       30                    *
+  *  Spin multiplicity: Any multiplicity            *
+  *                                                 *
+  ***************************************************
+-----------------------------------------
+    Memory requirements of RASCI
+
+ Each CI-vector requires      3.51 MiB 
+ Max. subspace vectors           4500      
+
+ Reduced Lists                0.00 MiB 
+ Excitation Lists             0.00 MiB 
+ Excitation Lists Sign        0.00 MiB 
+ CI-space (Max)           16057.50 MiB 
+ Integrals                   59.28 MiB 
+ Memory required (Max)    16057.51 MiB 
+ Memory available          1907.35 MiB 
+
+ Q-Chem warning in module rasman2/ras_mem_check.C, line 162:
+
+ Static memory may be insufficient to store the subspace vectors
+
+
+    Disk requirements of RASCI
+
+ Fock matrix                  0.57 MiB 
+ 2-electron integrals        67.08 MiB 
+ CI-space                 31595.31 MiB 
+ Disk required            31662.95 MiB 
+-----------------------------------------
+  
+RAS1 HF-like energy:          -3414.3756725160
+ Computing integrals
+ Computing J and K matrices
+ Computing addressing
+ Making amplitude guesses
+ 
+Direct CI diagonalization
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+   1         0          30      0.010786    0.001268
+   2         0          30      0.012737    0.000690
+   3         0          30      0.015870    0.001337
+   4         0          30      0.018865    0.001221
+   5         0          30      0.014469    0.000855
+   6         0          30      0.010509    0.000702
+   7         0          30      0.010129    0.000599
+   8         0          30      0.006938    0.000598
+   9         0          30      0.007145    0.000719
+  10         0          30      0.005386    0.000762
+  11         0          30      0.005386    0.000605
+  12         0          30      0.003559    0.000566
+  13         0          30      0.002842    0.000382
+  14         0          30      0.003270    0.000495
+  15         0          30      0.002590    0.000643
+  16         0          30      0.003076    0.000698
+  17         0          30      0.003118    0.000661
+  18         0          30      0.001933    0.000411
+  19         1          29      0.001981    0.000424
+  20         2          28      0.001857    0.000354
+  21         3          27      0.001998    0.000405
+  22         5          25      0.001885    0.000336
+  23         5          25      0.002212    0.000427
+  24         5          25      0.001848    0.000281
+  25         5          25      0.001991    0.000317
+  26         5          25      0.001927    0.000280
+  27         5          25      0.002409    0.000378
+  28         5          25      0.002457    0.000389
+  29         6          24      0.002785    0.000405
+  30         6          24      0.002236    0.000359
+  31         5          25      0.002216    0.000279
+  32         6          24      0.002220    0.000294
+  33         7          23      0.001819    0.000260
+  34         7          23      0.001724    0.000249
+  35         7          23      0.001784    0.000284
+  36         7          23      0.001523    0.000230
+  37         7          23      0.001520    0.000211
+  38        11          19      0.002319    0.000324
+  39        11          19      0.001896    0.000336
+  40        12          18      0.001621    0.000283
+  41        12          18      0.001675    0.000339
+  42        12          18      0.001600    0.000325
+  43        12          18      0.001183    0.000196
+  44        12          18      0.001345    0.000260
+  45        12          18      0.000970    0.000148
+  46        12          18      0.000926    0.000158
+  47        12          18      0.000863    0.000147
+  48        12          18      0.000754    0.000115
+  49        12          18      0.000669    0.000103
+  50        12          18      0.000727    0.000118
+  51        12          18      0.000697    0.000118
+  52        12          18      0.000619    0.000105
+  53        13          17      0.000667    0.000127
+  54        13          17      0.000627    0.000116
+  55        14          16      0.000561    0.000101
+  56        14          16      0.000546    0.000098
+  57        14          16      0.000603    0.000102
+  58        13          17      0.000507    0.000056
+  59        13          17      0.000888    0.000253
+  60        13          17      0.000873    0.000296
+  61        13          17      0.000686    0.000228
+  62        13          17      0.000659    0.000244
+  63        14          16      0.000670    0.000238
+  64        14          16      0.000550    0.000177
+  65        14          16      0.000463    0.000131
+  66        15          15      0.000525    0.000141
+  67        15          15      0.000388    0.000094
+  68        15          15      0.000346    0.000082
+  69        15          15      0.000351    0.000082
+  70        15          15      0.000291    0.000053
+  71        16          14      0.000259    0.000052
+  72        17          13      0.000286    0.000053
+  73        17          13      0.000245    0.000053
+  74        16          14      0.000281    0.000109
+  75        17          13      0.000337    0.000156
+  76        17          13      0.000292    0.000126
+  77        17          13      0.000254    0.000112
+  78        17          13      0.000294    0.000142
+  79        17          13      0.000331    0.000178
+  80        17          13      0.000306    0.000174
+  81        18          12      0.000325    0.000177
+  82        19          11      0.000436    0.000286
+  83        20          10      0.000327    0.000178
+  84        21           9      0.000332    0.000181
+  85        21           9      0.000336    0.000164
+  86        22           8      0.000303    0.000143
+  87        22           8      0.000278    0.000099
+  88        24           6      0.000290    0.000107
+  89        24           6      0.000254    0.000081
+  90        24           6      0.000244    0.000074
+  91        24           6      0.000273    0.000074
+  92        24           6      0.000219    0.000058
+  93        24           6      0.000233    0.000065
+  94        24           6      0.000378    0.000134
+  95        24           6      0.000313    0.000121
+  96        24           6      0.000303    0.000112
+  97        24           6      0.000300    0.000098
+  98        24           6      0.000300    0.000116
+  99        24           6      0.000263    0.000090
+ 100        24           6      0.000299    0.000084
+ 101        24           6      0.000282    0.000095
+ 102        24           6      0.000246    0.000066
+ 103        24           6      0.000269    0.000074
+ 104        25           5      0.000256    0.000077
+ 105        25           5      0.000228    0.000064
+ 106        25           5      0.000230    0.000069
+ 107        25           5      0.000212    0.000057
+ 108        25           5      0.000168    0.000047
+ 109        25           5      0.000184    0.000055
+ 110        25           5      0.000155    0.000046
+ 111        25           5      0.000161    0.000050
+ 112        25           5      0.000138    0.000041
+ 113        25           5      0.000159    0.000057
+ 114        26           4      0.000131    0.000048
+ 115        26           4      0.000128    0.000042
+ 116        26           4      0.000131    0.000047
+ 117        26           4      0.000110    0.000036
+ 118        26           4      0.000110    0.000034
+ 119        26           4      0.000102    0.000033
+ 120        26           4      0.000103    0.000031
+ 121        26           4      0.000082    0.000024
+ 122        26           4      0.000093    0.000026
+ 123        27           3      0.000083    0.000023
+ 124        27           3      0.000078    0.000022
+ 125        27           3      0.000075    0.000022
+ 126        27           3      0.000078    0.000025
+ 127        27           3      0.000065    0.000017
+ 128        27           3      0.000071    0.000019
+ 129        27           3      0.000063    0.000017
+ 130        27           3      0.000053    0.000015
+ 131        27           3      0.000054    0.000014
+ 132        27           3      0.000048    0.000012
+ 133        27           3      0.000044    0.000011
+ 134        27           3      0.000041    0.000011
+ 135        27           3      0.000040    0.000009
+ 136        27           3      0.000033    0.000007
+ 137        27           3      0.000035    0.000008
+ 138        27           3      0.000030    0.000005
+ 139        27           3      0.000028    0.000004
+ 140        27           3      0.000027    0.000004
+ 141        27           3      0.000026    0.000004
+ 142        27           3      0.000023    0.000003
+ 143        27           3      0.000023    0.000003
+ 144        27           3      0.000021    0.000002
+ 145        29           1      0.000020    0.000002
+ 146        29           1      0.000020    0.000002
+ 147        29           1      0.000020    0.000002
+ 148        29           1      0.000019    0.000002
+ 149        29           1      0.000020    0.000002
+ 150        29           1      0.000019    0.000001
+
+ Q-Chem fatal error occurred in module 0, line  125:
+
+ MaxIt Reached in the diagonalization
+
