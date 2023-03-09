@@ -27,11 +27,11 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/cucl4_2-/cucl4_2-_def2tzvp_11_6.out' # str(sys.argv[1])'''
+RASCI_results/mncn5no_2-_def2tzvp_7_7_d5_sextet_enerproc.out' # str(sys.argv[1])'''
 
 selected_states = 1 # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1,2,3,4,5] # States to be included when "selected_states = 0"
-symmetry_selection = 'B2u' # Symmetry selected states
+states_ras = [1,6] # States to be included when "selected_states = 0"
+symmetry_selection = 'Ag' # Symmetry selected states
 selected_SOC = 0 # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
@@ -42,7 +42,7 @@ bar_plots = 0
 
 # eom ANALYSIS AND ras-eom ENERGIES EXCHANGE
 eom_information = 0
-eom_input = 'Sven_eom-MP2/ag_cucl4_2-_D2h_eomip_soc_def2-TZVP.in.out'
+eom_input = '../EOM_outputs/ag_cucl4_2-_D2h_eomip_soc_def2-TZVP.in.out'
 
 eom_change_energies = 0
 ras_states_to_change = [2,3,4]
@@ -73,12 +73,6 @@ if (g_calculation == 1):
                                                                                          soc_ras)
 
     print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
-
-    # for i in range(0, len(eigenvalues),2):
-    #     energy_diff = (eigenvalues[i] - excitation_energies_ras[i//2]) * 27.211399
-    #     print('State:', i//2, '; Relativ. - non-relativ. energy diff (eV): ', np.round(energy_diff,4), '; c**2: ',
-    #           np.round(np.absolute(eigenvector[i,i]),3) )
-
 
 #####################################
 #        EXCITED STATE ANALYSIS
@@ -124,6 +118,10 @@ if (bar_plots == 1):
     orbital_momentum = get_ground_state_orbital_momentum(ras_input, totalstates)
     get_bar_chart(ras_input, ordered_state_symmetries, orbital_momentum, 'State', 'Orbital angular momentum','')
 
+    # Printing Mulliken spin:
+    mulliken_charge, mulliken_spin = get_mulliken_spin(ras_input, totalstates, states_ras)
+    get_bar_chart(ras_input, ordered_state_symmetries, mulliken_spin, 'State', 'Mulliken spin','')
+
 #####################################
 #      eom COMPARISON
 #####################################
@@ -131,7 +129,7 @@ if eom_information == 1:
     get_eom_transitions_analysis(eom_input)
 
 if (eom_change_energies == 1):
-    comparison_presentation_list, G_tensor, G_tensor_results = ras_and_eom_energy_exchange(eom_input, ras_input, states_ras, ras_states_to_change, eom_states_to_change)
+    comparison_presentation_list, G_tensor_results = ras_and_eom_energy_exchange(eom_input, ras_input, states_ras, ras_states_to_change, eom_states_to_change)
 
     print('g-factor (x y z dimensions) with ras energies:')
     print(np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),np.round(ras_g_values.real[2], 3))

@@ -1,5 +1,14 @@
 import numpy as np
 
+from doublets_expansion.g_read import get_number_of_states, get_eigenenergies, get_selected_states, \
+    get_spin_orbit_couplings_pyqchem, get_SOCC_values
+
+from doublets_expansion.g_operations import from_energies_SOC_to_g_values
+
+from doublets_expansion.eom_analysis.g_take_eom_states import get_eom_type, get_SCF_energy, get_irreps_energies, \
+    prepare_presentation_list, \
+    get_maximum_amplitude_orbitals, get_eom_SOCC_values, eom_results
+
 
 def change_RAS_with_eom_energies(RAS_states_to_change, eom_states_to_change, excitation_energies_ras,
                                  eom_excitation_energies):
@@ -42,16 +51,6 @@ def get_comparison_results(RAS_states_to_change, eom_states_to_change, ras_energ
 
 
 def ras_and_eom_energy_exchange(eom_input, input, states_ras, RAS_states_to_change, eom_states_to_change):
-    from g_read import get_number_of_states, get_eigenenergies, get_selected_states, get_spin_orbit_couplings, \
-        get_SOCC_values
-
-    from g_operations import from_energies_SOC_to_g_values
-
-    from g_take_eom_states import get_eom_type, get_SCF_energy, get_irreps_energies, prepare_presentation_list, \
-        get_maximum_amplitude_orbitals, get_eom_SOCC_values, eom_results
-
-    from g_ras_eom_change import change_RAS_with_eom_energies, get_comparison_results
-
     eom_version = get_eom_type(eom_input)
 
     RAS_SCF_reference_energy = get_SCF_energy(input)
@@ -81,11 +80,11 @@ def ras_and_eom_energy_exchange(eom_input, input, states_ras, RAS_states_to_chan
                                                                excitation_energies_ras,
                                                                selected_excitation_energies_eom)
 
-    SOC_ras = get_spin_orbit_couplings(input, totalstates, states_ras, selected_SOC=0)
+    SOC_ras = get_spin_orbit_couplings_pyqchem(input, totalstates, states_ras, selected_SOC=0)
 
     soc_constant_ras = get_SOCC_values(input, totalstates)
 
-    G_tensor, G_tensor_results = from_energies_SOC_to_g_values(input, states_ras, totalstates,
+    G_tensor, G_tensor_results, eigenvalues, eigenvector = from_energies_SOC_to_g_values(input, states_ras, totalstates,
                                                                changed_excitation_energies, SOC_ras)
 
     comparison_presentation_list = get_comparison_results(RAS_states_to_change, eom_states_to_change,
@@ -105,4 +104,4 @@ def ras_and_eom_energy_exchange(eom_input, input, states_ras, RAS_states_to_chan
     print('eom states to be changed:', eom_states_to_change)
     print('')
 
-    return comparison_presentation_list, G_tensor, G_tensor_results
+    return comparison_presentation_list, G_tensor_results

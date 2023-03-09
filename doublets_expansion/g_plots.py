@@ -81,8 +81,7 @@ def sos_analysis_and_plot(input, save_picture):
     AN INITIAL TO A FINAL NUMBER OF STATES IN THE
     SUM-OVER-STATES EXPANSION
     """
-    from g_read import get_number_of_states, get_eigenenergies, get_selected_states,get_spin_orbit_couplings,\
-        get_spin_matrices, get_orbital_matrices, get_symmetry_states
+    from g_read import get_number_of_states, get_eigenenergies, get_spin_orbit_couplings_pyqchem, get_symmetry_states
     from g_operations import from_energies_SOC_to_g_values
 
     totalstates = get_number_of_states(input)
@@ -95,17 +94,17 @@ def sos_analysis_and_plot(input, save_picture):
 
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(input, totalstates, states_ras)
 
-        SOC_ras = get_spin_orbit_couplings(input, totalstates, states_ras, selected_SOC=0)
+        SOC_ras = get_spin_orbit_couplings_pyqchem(input, totalstates, states_ras, selected_SOC=0)
 
         ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_SOC_to_g_values(input, states_ras, totalstates,
                                                                    excitation_energies_ras, SOC_ras)
 
         state_symmetries, ordered_state_symmetries = get_symmetry_states(input, totalstates)
 
-        # presentation_list.append([ordered_state_symmetries[i-1], np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
-        #                           np.round(ras_g_values.real[2], 3)])
-        presentation_list.append([i, np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
+        presentation_list.append([ordered_state_symmetries[i-1], np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
                                   np.round(ras_g_values.real[2], 3)])
+        # presentation_list.append([i, np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
+        #                           np.round(ras_g_values.real[2], 3)])
 
     presentation_matrix = np.array(presentation_list, dtype=object)
 

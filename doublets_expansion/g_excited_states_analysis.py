@@ -304,6 +304,8 @@ def improved_active_space(input):
 
     SOCC_values = get_SOCC_values(input, totalstates)
 
+    mulliken_charge, mulliken_spin = get_mulliken_spin(input, totalstates, states_ras)
+
     initial_active_orbitals, RAS_OCC, HOMO_orbital = get_RAS2_and_RAS_OCC_and_HOMO(input)
 
     # TAKE STATES WITH HIGHEST CONTRIBUTION
@@ -332,7 +334,7 @@ def improved_active_space(input):
                                                                                      part_contributions,SOCC_values,
                                                                                      excitation_energies_ras * 27.211399,
                                                                                      state_symmetries, new_orbital,
-                                                                                     orbital_momentum)
+                                                                                     orbital_momentum, mulliken_spin)
 
                         if SOC != 0 or i == 0:
                             final_SCF_ordered_space.append(new_orbital)

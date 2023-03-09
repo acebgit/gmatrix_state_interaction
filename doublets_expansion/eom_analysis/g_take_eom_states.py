@@ -322,7 +322,7 @@ def get_eom_transitions_analysis(eom_input):
     :param: eom_input
     :return: eom_presentation_list
     """
-    from g_take_eom_states import get_eom_type, get_SCF_energy, get_irreps_energies, prepare_presentation_list, \
+    from doublets_expansion.eom_analysis.g_take_eom_states import get_eom_type, get_SCF_energy, get_irreps_energies, prepare_presentation_list, \
         get_maximum_amplitude_orbitals, get_eom_SOCC_values, eom_results
 
     eom_version = get_eom_type(eom_input)
