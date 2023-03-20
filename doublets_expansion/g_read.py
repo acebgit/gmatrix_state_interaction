@@ -623,12 +623,24 @@ def get_spin_orbit_couplings_pyqchem(file_ras, totalstates, selected_states, sel
         :param: output
         :return: all_multip, all_sz
         """
-        all_multip = []
+        read_multip = []
         for i, state in enumerate(output['excited_states']):
-            all_multip.append(state['multiplicity'])
+            read_multip.append( np.round(state['multiplicity'],2) )
+
+        all_multip = []
+        for i in range(0, len(read_multip)):
+            # Making multiplicity numbers multiples of doublets (s2=0.75).
+            element = read_multip[i]
+            n_times = np.round(element / 0.75)
+            new_multip = 0.75 * n_times
+            all_multip.append(new_multip)
 
         s2_max = max(all_multip)
+
         s_max = 0.5 * (-1 + np.sqrt(1 + 4 * s2_max))
+        element = np.round(s_max / 0.5)  # Making multiplicity numbers multiples of doublets (s=0.5).
+        s_max = 0.5 * element
+
         all_sz = list(np.arange(-s_max, s_max + 1, 1))
 
         return all_multip, all_sz
@@ -642,6 +654,8 @@ def get_spin_orbit_couplings_pyqchem(file_ras, totalstates, selected_states, sel
         :return: soc_matrix
         """
         soc_matrix = np.zeros((totalstates * len(sz_list), totalstates * len(sz_list)), dtype=complex)
+        # print('Multip:', state_multiplicities)
+        # print('Sz:', sz_list)
 
         for i in range(0, totalstates):
             for j in range(0, totalstates):
@@ -649,7 +663,10 @@ def get_spin_orbit_couplings_pyqchem(file_ras, totalstates, selected_states, sel
                 if i != j:
 
                     i_multip = -0.5 * (-1 + np.sqrt(1 + 4 * state_multiplicities[i]))
+                    i_multip = 0.5 * np.round(i_multip / 0.5)  # Making multiplicity numbers multiples of doublets (s=0.5)
                     j_multip = -0.5 * (-1 + np.sqrt(1 + 4 * state_multiplicities[j]))
+                    j_multip = 0.5 * np.round(j_multip / 0.5)  # Making multiplicity numbers multiples of doublets (s=0.5)
+                    # print(i_multip, j_multip)
 
                     i_index = sz_list.index(i_multip)
                     j_index = sz_list.index(j_multip)
