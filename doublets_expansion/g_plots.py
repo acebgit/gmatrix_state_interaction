@@ -101,10 +101,10 @@ def sos_analysis_and_plot(input, save_picture):
 
         state_symmetries, ordered_state_symmetries = get_symmetry_states(input, totalstates)
 
-        # presentation_list.append([ordered_state_symmetries[i-1], np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
-        #                           np.round(ras_g_values.real[2], 3)])
-        presentation_list.append([i, np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
+        presentation_list.append([ordered_state_symmetries[i-1], np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
                                   np.round(ras_g_values.real[2], 3)])
+        # presentation_list.append([i, np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
+        #                           np.round(ras_g_values.real[2], 3)])
 
     presentation_matrix = np.array(presentation_list, dtype=object)
 
