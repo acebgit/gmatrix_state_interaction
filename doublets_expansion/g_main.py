@@ -29,20 +29,20 @@ g_calculation = 1
 ras_input = '../\
 RASCI_results/fe_pyms2/fe_pyms2_def2tzvp_17_11_d5_doublet_enerproc.out'  # str(sys.argv[1])'''
 
-selected_states = 0 # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1,4] # States to be included when "selected_states = 0"
+selected_states = 1 # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+states_ras = [1,2,5] # States to be included when "selected_states = 0"
 symmetry_selection = 'Ag' # Symmetry selected states
 selected_SOC = 0 # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
-excited_states_analysis = 0
+excited_states_analysis = 1
 new_active_space = 0
 sos_analysis = 0
 bar_plots = 0
 
 # eom ANALYSIS AND ras-eom ENERGIES EXCHANGE
 eom_information = 0
-eom_input = '../EOM_outputs/ag_cucl4_2-_D2h_eomip_soc_def2-TZVP.in.out'
+eom_input = '../EOM_outputs/fe_pyms2_def2tzvp_17_11_d5_doublet_enerproc.out'
 
 eom_change_energies = 0
 ras_states_to_change = [2,3,4]

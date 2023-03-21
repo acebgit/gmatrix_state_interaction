@@ -87,7 +87,6 @@ def sos_analysis_and_plot(input, save_picture):
     totalstates = get_number_of_states(input)
 
     presentation_list = []
-    # presentation_list.append(['State', 'gxx', 'gyy', 'gzz'])
 
     for i in range(1, totalstates + 1):
         states_ras = list(range(1, i + 1))
@@ -119,5 +118,7 @@ def sos_analysis_and_plot(input, save_picture):
     print("--------------------------------")
     print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
+    # plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='State', y_title='g-values deviations (ppt)',
+    #                         main_title='g-tensor sum-over-states analysis', save_picture=0)
     plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='State', y_title='g-values deviations (ppt)',
-                            main_title='g-tensor sum-over-states analysis', save_picture=0)
+                        main_title=input, save_picture=0)
