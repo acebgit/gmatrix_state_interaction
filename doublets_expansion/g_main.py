@@ -34,7 +34,7 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/ni_mnt2_-/ni_mnt2_-_def2tzvp_19_12_30_states.out'  # str(sys.argv[1])'''
+RASCI_results/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])'''
 
 selected_states = 1 # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1,4] # States to be included when "selected_states = 0"
@@ -43,9 +43,9 @@ selected_SOC = 0 # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 
 # EXCITED STATES ANALYSIS IN ras
 excited_states_analysis = 1
-new_active_space = 1
-sos_analysis = 1
-bar_plots = 0
+new_active_space = 0
+sos_analysis = 0
+bar_plots = 1
 
 # eom ANALYSIS AND ras-eom ENERGIES EXCHANGE
 eom_information = 0
