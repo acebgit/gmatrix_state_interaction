@@ -153,9 +153,9 @@ def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angul
                         angular_matrix[row, column] += 2 * element
 
     # print('SIGMA matrix with all spin angular momentums:')
-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                  for row in np.round((angular_matrix[:,:]),8)]))
-    # print(" ")
+    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+                     for row in np.round((angular_matrix[:,:]),8)]))
+    print(" ")
 
     return angular_matrix
 
