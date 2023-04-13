@@ -101,10 +101,10 @@ def Hamiltonian_diagonalization(Hamiltonian):
     if (kramer_st % 2) != 0:
         kramer_st = kramer_st - 1
 
-    # for i in range(0, len(eigenvalues)):
-    #     print('eigenvalue:', eigenvalues[i])
-    #     print('eigenvector:', eigenvectors[:, i])
-    #     print()
+    for i in range(0, len(eigenvalues)):
+        print('eigenvalue:', eigenvalues[i])
+        print('eigenvector:', eigenvectors[:, i])
+        print()
 
     return eigenvalues, eigenvectors, kramer_st
 
@@ -126,6 +126,9 @@ def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angul
     # Matrices calculation:
     angular_matrix = np.zeros((3, 3), dtype=complex)
 
+    coefficient_analysis_list = []
+    coefficient_analysis_list.append(['Row', 'Column', 'Bra (phi2)', 'Bra coefficient', 'Ket (phi1)', 'Ket coefficient', 'Angular momentum'])
+
     for row in range(0, 3):  # dimension x,y,z
         for column in range(0, 3):  # dimension x,y,z
 
@@ -143,19 +146,33 @@ def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angul
                     if column == 0:
                         element = coeff_bra * coeff_ket * angular_value
                         angular_matrix[row, column] += 2 * element.real
+                        if element.real != 0 or element.real ==0:
+                            coefficient_analysis_list.append([row, column, bra, np.round(coeff_bra,7), ket, \
+                                                              np.round(coeff_ket,7), angular_value])
 
                     elif column == 1:
                         element = coeff_bra * coeff_ket * angular_value
                         angular_matrix[row, column] += 2 * element.imag
+                        if element.imag != 0 or element.imag ==0:
+                            coefficient_analysis_list.append([row, column, bra, np.round(coeff_bra, 7), ket, \
+                                                              np.round(coeff_ket, 7), angular_value])
 
                     elif column == 2:
                         element = coeff_bra * coeff_ket_2 * angular_value
                         angular_matrix[row, column] += 2 * element
+                        if element != 0 or element ==0:
+                            coefficient_analysis_list.append([row, column, bra, np.round(coeff_bra,7), ket, \
+                                                              np.round(coeff_ket_2,7), angular_value])
 
-    # print('SIGMA matrix with all spin angular momentums:')
-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                  for row in np.round((angular_matrix[:,:]),8)]))
-    # print(" ")
+    print('matrix with all spin angular momentums:')
+    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+                     for row in np.round((angular_matrix[:,:]),8)]))
+    print(" ")
+
+    coefficient_analysis = np.array(coefficient_analysis_list, dtype=object)
+    print('Most important settings for each state (amplitude_cutoff: 0.3) :')
+    print('\n'.join( [''.join(['{:^20}'.format(item) for item in row])\
+                     for row in (coefficient_analysis[:,:]) ] ) )
 
     return angular_matrix
 
@@ -214,7 +231,7 @@ def from_energies_SOC_to_g_values(input, states_ras, totalstates, excitation_ene
     :param: input, states, totalstates, excitation_energies, SOC
     :return: G_matrix, G_tensor_results
     """
-    from g_read import get_spin_matrices, get_orbital_matrices, get_orbital_matrices_pyqchem
+    from g_read import get_spin_matrices, get_orbital_matrices_pyqchem
 
     Hamiltonian_ras = get_Hamiltonian_construction(states_ras, excitation_energies_ras, SOC_ras)
 
