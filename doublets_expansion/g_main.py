@@ -23,18 +23,19 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 #####################################
 #            INPUT VALUES
 #####################################
-# g_lista = [-18, -10, -65.3]
+# g_lista = [2.160, 2.042, 1.998]
 # lande_factor = 2.002319304363
 # for i in range(0, len(g_lista)):
-#     # g_shift = (g_lista[i] - lande_factor) * 1000
-#     g_shift = g_lista[i] / 1000 + lande_factor
+#     g_shift = (g_lista[i] - lande_factor) * 1000
+#     # g_shift = g_lista[i] / 1000 + lande_factor
 #     print(np.round(g_shift,3))
 # exit()
 
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])'''
+RASCI_results/h2o/h2o_def2tzvp_5_5_symignore.out'  # h2o_def2tzvp_5_5.out  # str(sys.argv[1])'''
+# h2o_def2tzvp_5_5.out   h2o_def2tzvp_5_5_symignore
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1,2]  # States to be included when "selected_states = 0"
@@ -42,7 +43,7 @@ symmetry_selection = 'A2'  # Symmetry selected states
 selected_SOC = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
-excited_states_analysis = 1
+excited_states_analysis = 0
 new_active_space = 0
 sos_analysis = 0
 bar_plots = 0
@@ -78,7 +79,7 @@ if (g_calculation == 1):
                                                                                          totalstates,
                                                                                          excitation_energies_ras,
                                                                                          soc_ras)
-    exit()
+
     print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
 
 #####################################
