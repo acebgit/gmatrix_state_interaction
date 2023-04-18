@@ -137,7 +137,7 @@ def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angul
 
                     # coeff_ket for 1st and 2nd column ("x", "y" dir)
                     # coeff_ket_2 for 3rd column ("z" direction)
-                    coeff_bra = np.conj(eigenvectors[bra, kramer_st + 1])
+                    coeff_bra = np.conj(eigenvectors[bra, kramer_st + 1]) #ok
                     coeff_ket = (eigenvectors[ket, kramer_st])
                     coeff_ket_2 = (eigenvectors[ket, kramer_st + 1])
 
