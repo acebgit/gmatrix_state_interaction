@@ -101,10 +101,10 @@ def Hamiltonian_diagonalization(Hamiltonian):
     if (kramer_st % 2) != 0:
         kramer_st = kramer_st - 1
 
-    for i in range(0, len(eigenvalues)):
-        print('eigenvalue:', eigenvalues[i])
-        print('eigenvector:', eigenvectors[:, i])
-        print()
+    # for i in range(0, len(eigenvalues)):
+    #     print('eigenvalue:', eigenvalues[i])
+    #     print('eigenvector:', eigenvectors[:, i])
+    #     print()
 
     return eigenvalues, eigenvectors, kramer_st
 
@@ -164,15 +164,15 @@ def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angul
                             coefficient_analysis_list.append([row, column, bra, np.round(coeff_bra,7), ket, \
                                                               np.round(coeff_ket_2,7), angular_value])
 
-    print('matrix with all spin angular momentums:')
-    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-                     for row in np.round((angular_matrix[:,:]),8)]))
-    print(" ")
+    # print('matrix with all spin angular momentums:')
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                  for row in np.round((angular_matrix[:,:]),8)]))
+    # print(" ")
 
     coefficient_analysis = np.array(coefficient_analysis_list, dtype=object)
-    print('Most important settings for each state (amplitude_cutoff: 0.3) :')
-    print('\n'.join( [''.join(['{:^20}'.format(item) for item in row])\
-                     for row in (coefficient_analysis[:,:]) ] ) )
+    # print('Most important settings for each state (amplitude_cutoff: 0.3) :')
+    # print('\n'.join( [''.join(['{:^20}'.format(item) for item in row])\
+    #                  for row in (coefficient_analysis[:,:]) ] ) )
 
     return angular_matrix
 

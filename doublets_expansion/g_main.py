@@ -34,17 +34,17 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/h2o/h2o_def2tzvp_5_5_symignore.out'  # h2o_def2tzvp_5_5.out  # str(sys.argv[1])'''
+RASCI_results/mncn5no_2-/mncn5no_2-_def2tzvp_9_8_d6_enerproc.out'  # h2o_def2tzvp_5_5.out  # str(sys.argv[1])'''
 # h2o_def2tzvp_5_5.out   h2o_def2tzvp_5_5_symignore
 
-selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1,2]  # States to be included when "selected_states = 0"
+selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+states_ras = [1,3]  # States to be included when "selected_states = 0"
 symmetry_selection = 'A2'  # Symmetry selected states
 selected_SOC = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
-excited_states_analysis = 0
-new_active_space = 0
+excited_states_analysis = 1
+new_active_space = 1
 sos_analysis = 0
 bar_plots = 0
 
