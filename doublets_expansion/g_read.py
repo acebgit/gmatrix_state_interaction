@@ -547,13 +547,13 @@ def get_orbital_matrices(file_ras, totalstates, n_states):
                         bra_index + 1, ket_index + 1, k]
                 nel = nel + 3
 
-    print('Angular momentums (x,y,z):')
-    for k in range(0,3):
-       print('Dimension: ', k)
-       print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-                        for row in np.round((orbital_matrix[:,:,k]),12)]))
-       print(" ")
-    exit()
+    # print('Angular momentums (x,y,z):')
+    # for k in range(0,3):
+    #    print('Dimension: ', k)
+    #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                     for row in np.round((orbital_matrix[:,:,k]),12)]))
+    #    print(" ")
+    # exit()
     return orbital_matrix
 
 
@@ -642,6 +642,8 @@ def get_spin_orbit_couplings_pyqchem(file_ras, totalstates, selected_states, sel
         s_max = 0.5 * element
 
         all_sz = list(np.arange(-s_max, s_max + 1, 1))
+        # print(all_multip, all_sz)
+        # exit()
 
         return all_multip, all_sz
 
@@ -656,6 +658,8 @@ def get_spin_orbit_couplings_pyqchem(file_ras, totalstates, selected_states, sel
         soc_matrix = np.zeros((totalstates * len(sz_list), totalstates * len(sz_list)), dtype=complex)
         # print('Multip:', state_multiplicities)
         # print('Sz:', sz_list)
+        # print(len(soc_matrix[0,:]), len(soc_matrix[:,0]))
+        # exit()
 
         for i in range(0, totalstates):
             for j in range(0, totalstates):
@@ -688,6 +692,17 @@ def get_spin_orbit_couplings_pyqchem(file_ras, totalstates, selected_states, sel
         #                  for row in np.round((soc_matrix[:, :]), 5)]))
         # print(" ")
         # exit()
+
+        # print('---------------')
+        # state_A = 10
+        # state_B = 8
+        # for i in range(0, len(sz_list)):
+        #     element_A = (state_A-1)*3+i
+        #     element_B = (state_B-1)*3
+        #     print(soc_matrix[element_A, element_B], soc_matrix[element_A, element_B+1], \
+        #           soc_matrix[element_A, element_B+2])
+        # exit()
+
         return soc_matrix
 
     def get_selected_states_soc(selected_states, sz_list, all_soc):
@@ -715,6 +730,7 @@ def get_spin_orbit_couplings_pyqchem(file_ras, totalstates, selected_states, sel
         # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) \
         #                  for row in np.round((soc[:, :]), 5)]))
         # print(" ")
+        # print(len(soc[0,:]), len(soc[:,0]))
         # exit()
         return soc
 
@@ -751,7 +767,8 @@ def get_spin_orbit_couplings_pyqchem(file_ras, totalstates, selected_states, sel
     doublet_soc = get_doublets_soc(selected_states, selected_soc)
 
     doublet_soc = doublet_soc / 219474.63068  # From cm-1 to a.u.
-    return doublet_soc
+    selected_soc = selected_soc / 219474.63068  # From cm-1 to a.u.
+    return doublet_soc, selected_soc, sz_list
 
 
 def get_orbital_matrices_pyqchem(file_ras, totalstates, selected_states):

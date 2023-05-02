@@ -5,7 +5,7 @@
  highest amplitudes in the excited states
 """
 import numpy as np
-import sys
+# import sys
 
 from g_read import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_symmetry_states, get_hole_part_contributions, get_SOCC_values, get_ground_state_orbital_momentum, \
