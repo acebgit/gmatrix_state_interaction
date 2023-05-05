@@ -43,8 +43,8 @@ symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
-excited_states_analysis = 1
-new_active_space = 1
+excited_states_analysis = 0
+new_active_space = 0
 sos_analysis = 0
 bar_plots = 0
 
@@ -97,7 +97,7 @@ if new_active_space == 1:
 #####################################
 
 if sos_analysis == 1:
-    sos_analysis_and_plot(ras_input, save_picture=0)
+    sos_analysis_and_plot(ras_input)
 
 if bar_plots == 1:
 

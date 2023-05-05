@@ -259,9 +259,9 @@ def get_excited_states_analysis(file):
 
     initial_active_orbitals, ras_occ, homo_orbital = get_ras2_and_ras_occ_and_homo(file)
 
-    excited_states_presentation_list = ['State', 'Symmetry', 'Hole', 'Part',
-                                        'Excitation energy (eV)', 'Orbitals', 'SOCC (cm-1)',
-                                        'Orbital momentum', 'Mulliken Spin']
+    excited_states_presentation_list = [['State', 'Symmetry', 'Hole', 'Part',
+                                         'Excitation energy (eV)', 'Orbitals', 'SOCC (cm-1)',
+                                         'Orbital momentum', 'Mulliken Spin']]
 
     word_search = ' | HOLE  | '
     n_states = 0
@@ -283,15 +283,16 @@ def get_excited_states_analysis(file):
                                                                                  orbital_momentum, mulliken_spin)
 
                 n_states += 1
-
+    # print(excited_states_presentation_list[1])
+    # exit()
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
 
     print("------------------------")
     print(" EXCITED STATES ANALYSIS")
     print("------------------------")
     print('Most important settings for each state (amplitude_cutoff: 0.3) :')
-    print('\n'.join(''.join('{:^20}'.format(item) for item in row) for row in excited_states_presentation_matrix[:, :]))
-
+    print('\n'.join(''.join('{:^20}'.format(item) for item in row)
+                    for row in excited_states_presentation_matrix[:, :]))
     print(" ")
 
 
