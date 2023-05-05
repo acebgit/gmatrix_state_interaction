@@ -301,3 +301,11 @@ def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
 #     #                 gpt_mat_ras[x + 1, y + 1, z] = -4000 * etacoeff_ras[y + 1, x + 1] * l_matrix[x // 2, y // 2, z]
 #
 #     return
+
+
+def from_gvalues_to_gshifts(g_lista):
+    lande_factor = 2.002319304363
+    for i in range(0, len(g_lista)):
+        g_shift = (g_lista[i] - lande_factor) * 1000
+        # g_shift = g_lista[i] / 1000 + lande_factor
+        print(np.round(g_shift, 3))
