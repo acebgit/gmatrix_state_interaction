@@ -37,17 +37,17 @@ ras_upper_g_matrix, ras_g_values = from_energies_soc_to_g_values(
 print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
 
 
-def soc_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs, socc_values, sz_list):
+def soc_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs, soccs, sz_list):
     """"
     Correlation analysis between SOC and gvalues. Variation is done only
     for imaginary part of SOC between ground and first excited state.
-    :param: ras_input, states_ras, totalstates, excitation_energies_ras, doublet_socs,SOCC_values
+    :param: ras_input, states_ras, totalstates, excitation_energies_ras, doublet_socs,socc_values
     :return: soc_gvalues_matrix, r_square of fit
     """
     presentation_tuple = []
 
-    max_socc = (max(socc_values)) * 3
-    min_socc = (min(socc_values)) / 20
+    max_socc = (max(soccs)) * 3
+    min_socc = (min(soccs)) / 20
 
     for soc_value in np.linspace(min_socc, max_socc, 50):
         soc_value = 0 + soc_value * 1j / 219474.63068  # from cm-1 to au
@@ -167,9 +167,11 @@ def orbitmomentum_and_gvalues_correlation(file, n_states, allstates, excit_energ
         r_square.append(res.rvalue ** 2)
     return presentation_matrix, r_square
 
+
 # SOC CORRELATION
 soc_gvalues_matrix, r2 = soc_and_gvalues_correlation(ras_input, states_ras,
-                                                     totalstates, excitation_energies_ras, doublet_socs, socc_values, sz_values)
+                                                     totalstates, excitation_energies_ras, doublet_socs,
+                                                     socc_values, sz_values)
 print('R-square in three dimmensions: ', np.round(r2[0], 2), np.round(r2[1], 3), np.round(r2[2], 3))
 
 # ENERGY CORRELATION
