@@ -6,11 +6,11 @@
 import numpy as np
 import sys
 
-from g_read import get_number_of_states, get_eigenenergies, get_selected_states, get_spin_orbit_couplings, \
-    get_SOCC_values, get_ground_state_orbital_momentum, get_symmetry_states, get_spin_orbit_couplings_pyqchem, \
+from g_read import get_number_of_states, get_eigenenergies, get_selected_states, \
+    get_socc_values, get_ground_state_orbital_momentum, get_symmetry_states, get_spin_orbit_couplings, \
     get_mulliken_spin
 
-from g_operations import from_energies_SOC_to_g_values, print_g_calculation
+from g_operations import from_energies_soc_to_g_values, print_g_calculation
 
 from g_excited_states_analysis import get_excited_states_analysis, improved_active_space
 
@@ -34,13 +34,13 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/o2/o2_STO-3G-TZVP_11_9_triplets.out'  # h2o_def2tzvp_5_5.out  # str(sys.argv[1])'''
+RASCI_results/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])'''
 # h2o_def2tzvp_5_5.out   h2o_def2tzvp_5_5_symignore
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1,4,5]  # States to be included when "selected_states = 0"
+states_ras = [1, 4, 5]  # States to be included when "selected_states = 0"
 symmetry_selection = 'A2'  # Symmetry selected states
-selected_SOC = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
+soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
 excited_states_analysis = 0
@@ -53,19 +53,19 @@ eom_information = 0
 eom_input = '../EOM_outputs/fe_pyms2_def2tzvp_17_11_d5_doublet_enerproc.out'
 
 eom_change_energies = 0
-ras_states_to_change = [2,3,4]
-eom_states_to_change = [4,7,9]
+ras_states_to_change = [2, 3, 4]
+eom_states_to_change = [4, 7, 9]
 
 # OUTPUT
-write_file = 0 # 0: write results directly; 1: write in output file
+write_file = 0  # 0: write results directly; 1: write in output file
 output_file = ras_input + '-gvalues.txt'
-if (write_file == 1):
+if write_file == 1:
     sys.stdout = open(output_file, "w")
 
 #####################################
 #      G-VALUE CALCULATION
 #####################################
-if (g_calculation == 1):
+if g_calculation == 1:
 
     totalstates = get_number_of_states(ras_input)
 
@@ -73,44 +73,48 @@ if (g_calculation == 1):
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
-    doublet_soc, selected_soc, sz_list = get_spin_orbit_couplings_pyqchem(ras_input, totalstates, states_ras, selected_SOC)
+    doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
 
-    ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_SOC_to_g_values(ras_input, states_ras,
+    ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_soc_to_g_values(ras_input, states_ras,
                                                                                          totalstates,
                                                                                          excitation_energies_ras,
-                                                                                         selected_soc,
-                                                                                         sz_list)
+                                                                                         doublet_socs,
+                                                                                         sz_values)
 
     print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
 
 #####################################
 #        EXCITED STATE ANALYSIS
 #####################################
-if (excited_states_analysis == 1):
+if excited_states_analysis == 1:
     get_excited_states_analysis(ras_input)
 
-if (new_active_space == 1):
+if new_active_space == 1:
     improved_active_space(ras_input)
 
 #####################################
 #        PLOT ANALYSIS
 #####################################
 
-if (sos_analysis == 1):
+if sos_analysis == 1:
     sos_analysis_and_plot(ras_input, save_picture=0)
 
-if (bar_plots == 1):
+if bar_plots == 1:
 
     totalstates = get_number_of_states(ras_input)
 
-    states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_states=1, symmetry_selection='None')
+    selected_states = 1
+    states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_states, symmetry_selection='None')
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
-    soc_ras = get_spin_orbit_couplings(ras_input, totalstates, states_ras, selected_SOC)
+    doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
 
-    ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_SOC_to_g_values(ras_input, states_ras, totalstates,
-                                                               excitation_energies_ras, soc_ras)
+    ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_soc_to_g_values(ras_input, states_ras,
+                                                                                         totalstates,
+                                                                                         excitation_energies_ras,
+                                                                                         doublet_socs,
+                                                                                         sz_values)
 
     # Printing excitation energies versus orbital symmetries:
     state_symmetries, ordered_state_symmetries = get_symmetry_states(ras_input, totalstates)
@@ -118,18 +122,18 @@ if (bar_plots == 1):
     get_bar_chart(ras_input, ordered_state_symmetries, excitation_energies_ras * 27.211399, 'State', 'Energy (eV)',
                   'Excitation energies')
 
-    # Printing SOCC versus orbital symmetries:
-    SOCC_values = get_SOCC_values(ras_input, totalstates)
-    get_bar_chart(ras_input, ordered_state_symmetries, SOCC_values / 8065.540107, 'State', 'Energy (eV)',
+    # Printing socc versus orbital symmetries:
+    socc_values = get_socc_values(ras_input, totalstates)
+    get_bar_chart(ras_input, ordered_state_symmetries, socc_values / 8065.540107, 'State', 'Energy (eV)',
                   'Mean-field spin-orbit coupling constants')
 
     # Printing orbital angular momentum versus orbital symmetries:
     orbital_momentum = get_ground_state_orbital_momentum(ras_input, totalstates)
-    get_bar_chart(ras_input, ordered_state_symmetries, orbital_momentum, 'State', 'Orbital angular momentum','')
+    get_bar_chart(ras_input, ordered_state_symmetries, orbital_momentum, 'State', 'Orbital angular momentum', '')
 
     # Printing Mulliken spin:
     mulliken_charge, mulliken_spin = get_mulliken_spin(ras_input, totalstates, states_ras)
-    get_bar_chart(ras_input, ordered_state_symmetries, mulliken_spin, 'State', 'Mulliken spin','')
+    get_bar_chart(ras_input, ordered_state_symmetries, mulliken_spin, 'State', 'Mulliken spin', '')
 
 #####################################
 #      eom COMPARISON
@@ -137,18 +141,19 @@ if (bar_plots == 1):
 if eom_information == 1:
     get_eom_transitions_analysis(eom_input)
 
-if (eom_change_energies == 1):
-    comparison_presentation_list, G_tensor_results = ras_and_eom_energy_exchange(eom_input, ras_input, states_ras, ras_states_to_change, eom_states_to_change)
+if eom_change_energies == 1:
+    comparison_presentation_list, G_tensor_results = ras_and_eom_energy_exchange(
+        eom_input, ras_input, states_ras, ras_states_to_change, eom_states_to_change)
 
     print('g-factor (x y z dimensions) with ras energies:')
-    print(np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),np.round(ras_g_values.real[2], 3))
+    print(np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3), np.round(ras_g_values.real[2], 3))
     print('')
 
     print('g-factor (x y z dimensions) with eom eigenenergies:')
-    print(np.round(G_tensor_results.real[0], 3), np.round(G_tensor_results.real[1], 3),np.round(G_tensor_results.real[2], 3))
+    print(np.round(G_tensor_results.real[0], 3), np.round(
+        G_tensor_results.real[1], 3), np.round(G_tensor_results.real[2], 3))
     print('')
 
     print("ras file selected: ", ras_input)
     print("eom-CC file selected: ", eom_input)
-    print('\n'.join([''.join(['{:^30}'.format(item) for item in row]) \
-                     for row in (comparison_presentation_list)]))
+    print('\n'.join(''.join('{:^30}'.format(item) for item in row) for row in comparison_presentation_list))

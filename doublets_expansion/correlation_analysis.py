@@ -9,7 +9,7 @@ from scipy import stats
 from g_read import get_number_of_states, get_eigenenergies, get_selected_states, get_spin_orbit_couplings, \
     get_SOCC_values, get_spin_matrices, get_orbital_matrices
 
-from g_operations import get_Hamiltonian_construction, Hamiltonian_diagonalization, angular_matrixes_obtention, g_factor_calculation, from_energies_SOC_to_g_values, print_g_calculation
+from g_operations import get_hamiltonian_construction, Hamiltonian_diagonalization, angular_matrixes_obtention, g_factor_calculation, from_energies_soc_to_g_values, print_g_calculation
 
 from g_plots import plot_g_tensor_vs_states
 
@@ -31,7 +31,7 @@ soc_ras = get_spin_orbit_couplings(ras_input, totalstates, states_ras, selected_
 
 SOCC_values = get_SOCC_values(ras_input, totalstates)
 
-ras_G_matrix, ras_g_values = from_energies_SOC_to_g_values(ras_input, states_ras, totalstates, excitation_energies_ras,
+ras_G_matrix, ras_g_values = from_energies_soc_to_g_values(ras_input, states_ras, totalstates, excitation_energies_ras,
                                                            soc_ras)
 
 print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
@@ -57,7 +57,7 @@ def soc_gvalues_correlation(ras_input, states_ras, totalstates, excitation_energ
         soc_ras[3,0] = np.conj(soc_ras[0, 3])
         soc_ras[2,1] = np.conj(soc_ras[1,2])
 
-        ras_G_matrix, ras_g_values = from_energies_SOC_to_g_values(ras_input, states_ras, totalstates, excitation_energies_ras, soc_ras)
+        ras_G_matrix, ras_g_values = from_energies_soc_to_g_values(ras_input, states_ras, totalstates, excitation_energies_ras, soc_ras)
 
         presentation_tuple.append([abs(soc_value), np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3), np.round(ras_g_values.real[2], 3)])
 
@@ -94,7 +94,7 @@ def energy_gvalues_correlation(ras_input, states_ras, totalstates, excitation_en
     for ener_value in np.linspace(min_ener, max_ener, 50):
         excitation_energies_ras[1] = ener_value
 
-        ras_G_matrix, ras_g_values = from_energies_SOC_to_g_values(ras_input, states_ras, totalstates,
+        ras_G_matrix, ras_g_values = from_energies_soc_to_g_values(ras_input, states_ras, totalstates,
                                                                    excitation_energies_ras, soc_ras)
 
         presentation_tuple.append([ener_value * 27.211399, np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
@@ -120,7 +120,7 @@ def orbital_momentum_gvalues_correlation(input, states_ras, totalstates, excitat
     :param: ras_input, states_ras, totalstates, excitation_energies_ras, soc_ras,SOCC_values
     :return: soc_gvalues_matrix, r_square of fit
     """
-    Hamiltonian_ras = get_Hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras)
+    Hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras)
 
     eigenvalues, eigenvector, kramers_states = Hamiltonian_diagonalization(Hamiltonian_ras)
 

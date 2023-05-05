@@ -82,7 +82,7 @@ def sos_analysis_and_plot(input, save_picture):
     SUM-OVER-STATES EXPANSION
     """
     from g_read import get_number_of_states, get_eigenenergies, get_spin_orbit_couplings_pyqchem, get_symmetry_states
-    from g_operations import from_energies_SOC_to_g_values
+    from g_operations import from_energies_soc_to_g_values
 
     totalstates = get_number_of_states(input)
 
@@ -95,8 +95,8 @@ def sos_analysis_and_plot(input, save_picture):
 
         SOC_ras = get_spin_orbit_couplings_pyqchem(input, totalstates, states_ras, selected_SOC=0)
 
-        ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_SOC_to_g_values(input, states_ras, totalstates,
-                                                                   excitation_energies_ras, SOC_ras)
+        ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_soc_to_g_values(input, states_ras, totalstates,
+                                                                                             excitation_energies_ras, SOC_ras)
 
         state_symmetries, ordered_state_symmetries = get_symmetry_states(input, totalstates)
 

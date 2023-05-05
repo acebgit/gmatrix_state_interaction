@@ -407,11 +407,11 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     # exit()
 
     doublet_soc = doublet_soc / 219474.63068  # From cm-1 to a.u.
-    sz_list = [-0.5,0.5]  # For doublets it is not going to be used
+    sz_list = [-0.5, 0.5]  # For doublets, it is not going to be used
     return doublet_soc, sz_list
 
 
-def get_spin_orbit_couplings_mine(file, totalstates, n_states, soc_option):
+def get_spin_orbit_couplings_manual(file, totalstates, n_states, soc_option):
     """
     WRITTEN WHEN INTERSTATE PROPERTIES BETWEEN 2 STATES
     ARE SHOWN ONLY ONCE.
@@ -603,8 +603,8 @@ def get_spin_matrices(file, n_states):
 
     def s2_to_s(s2):
         """
-        get total spin (s) from s2
-        :param s2: s2
+        get total spin (s) from s^2
+        :param: s2
         :return: total spin (s)
         """
         return 0.5 * (-1 + np.sqrt(1 + 4 * s2))
@@ -875,7 +875,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     return doublets_lk
 
 
-def get_orbital_matrices_mine(file, totalstates, n_states):
+def get_orbital_matrices_manual(file, totalstates, n_states):
     """
     Orbital angular momentum values are written in matrix with
     'bra' in rows and 'ket' in columns, with spin order -1/2 , +1/2.
@@ -961,4 +961,3 @@ def get_orbital_matrices_mine(file, totalstates, n_states):
     #    print(" ")
     # exit()
     return orbital_matrix
-

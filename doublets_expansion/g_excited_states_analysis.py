@@ -8,7 +8,7 @@ import numpy as np
 # import sys
 
 from g_read import get_number_of_states, get_eigenenergies, get_selected_states, \
-    get_symmetry_states, get_hole_part_contributions, get_SOCC_values, get_ground_state_orbital_momentum, \
+    get_symmetry_states, get_hole_part_contributions, get_socc_values, get_ground_state_orbital_momentum, \
     get_mulliken_spin
 
 def get_RAS2_and_RAS_OCC_and_HOMO(RAS_input):
