@@ -75,11 +75,11 @@ if g_calculation == 1:
 
     doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
 
-    ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_soc_to_g_values(ras_input, states_ras,
-                                                                                         totalstates,
-                                                                                         excitation_energies_ras,
-                                                                                         doublet_socs,
-                                                                                         sz_values)
+    ras_upper_g_matrix, ras_g_values = from_energies_soc_to_g_values(ras_input, states_ras,
+                                                                                               totalstates,
+                                                                                               excitation_energies_ras,
+                                                                                               doublet_socs,
+                                                                                               sz_values)
 
     print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
 
@@ -110,11 +110,11 @@ if bar_plots == 1:
 
     doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
 
-    ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_soc_to_g_values(ras_input, states_ras,
-                                                                                         totalstates,
-                                                                                         excitation_energies_ras,
-                                                                                         doublet_socs,
-                                                                                         sz_values)
+    ras_upper_g_matrix, ras_g_values = from_energies_soc_to_g_values(ras_input, states_ras,
+                                                                                               totalstates,
+                                                                                               excitation_energies_ras,
+                                                                                               doublet_socs,
+                                                                                               sz_values)
 
     # Printing excitation energies versus orbital symmetries:
     state_symmetries, ordered_state_symmetries = get_symmetry_states(ras_input, totalstates)

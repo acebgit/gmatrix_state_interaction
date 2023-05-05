@@ -236,7 +236,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
     upper_g_matrix, g_values = g_factor_calculation(lambda_matrix, sigma_matrix)
 
-    return upper_g_matrix, g_values, eigenvalues, eigenvector
+    return upper_g_matrix, g_values
 
 
 def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
