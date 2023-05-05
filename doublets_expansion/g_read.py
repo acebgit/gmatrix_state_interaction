@@ -208,7 +208,9 @@ def get_mulliken_spin(file, totalstates, states):
     with open(file, encoding="utf8") as file:
         for line in file:
             if word_search in line:
-                next_line = next(file)
+                for i in range(0,4):  # Tahe the 5th line
+                    next_line = next(file)
+                    i += 1
 
                 next_line = next_line.split()
 
