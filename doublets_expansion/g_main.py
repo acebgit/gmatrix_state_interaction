@@ -10,7 +10,7 @@ from g_read import get_number_of_states, get_eigenenergies, get_selected_states,
     get_socc_values, get_ground_state_orbital_momentum, get_symmetry_states, \
     get_spin_orbit_couplings, get_mulliken_spin
 
-from g_operations import from_energies_soc_to_g_values, print_g_calculation
+from g_operations import from_energies_soc_to_g_values, print_g_calculation, from_gvalues_to_gshifts
 
 from g_excited_states_analysis import get_excited_states_analysis, improved_active_space
 
@@ -23,10 +23,14 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 #####################################
 #            INPUT VALUES
 #####################################
+lista = 2.00320, 1.99727, 2.00161
+from_gvalues_to_gshifts(lista)
+exit()
+
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/cucl4_2-/cucl4_2-_def2tzvp_17_10_20_states.out'  # str(sys.argv[1])'''
+RASCI_results/co2/co2_def2-TZVP_11_9_30_states.out'  # str(sys.argv[1])'''
 # h2o_def2tzvp_5_5.out   h2o_def2tzvp_5_5_symignore
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
@@ -35,9 +39,9 @@ symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
-excited_states_analysis = 0
+excited_states_analysis = 1
 new_active_space = 0
-sos_analysis = 0
+sos_analysis = 1
 bar_plots = 0
 
 # eom ANALYSIS AND ras-eom ENERGIES EXCHANGE
