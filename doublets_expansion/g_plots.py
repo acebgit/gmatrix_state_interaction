@@ -113,7 +113,9 @@ def sos_analysis_and_plot(file):
     presentation_matrix_deviation = np.array(presentation_list, dtype=object)
     for ndim in [1, 2, 3]:
         for i in range(1, len(presentation_matrix)):
-            presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim] - presentation_matrix[i-1, ndim])
+            # presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim] - presentation_matrix[i-1, ndim])
+            presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim])
+
 
     print("--------------------------------")
     print(" SUM-OVER-STATE ANALYSIS")

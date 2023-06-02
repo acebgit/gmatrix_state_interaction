@@ -559,7 +559,7 @@ Natural Orbitals stored in FCHK
   
 **************************************************
  RAS-CI total energy for state   2:   -187.632808140374
-  Excitation energy (eV) =  3.741287611166
+  Excitation energy (eV) =  3.43436
   State symmetry: B2    (C2v      )
   <S^2>      :  0.7500
   Dipole Moment:   -0.0000 X    -0.0000 Y     0.1632 Z
@@ -2656,7 +2656,7 @@ Natural Orbitals stored in FCHK
   
 **************************************************
  RAS-CI total energy for state  25:   -187.407049591297
-  Excitation energy (eV) =  9.884490287934
+  Excitation energy (eV) =  8.88967
   State symmetry: B1    (C2v      )
   <S^2>      :  0.7500
   Dipole Moment:    0.0000 X     0.0000 Y     0.1589 Z

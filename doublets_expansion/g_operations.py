@@ -110,6 +110,7 @@ def hamiltonian_diagonalization(hamiltonian):
     #     print('eigenvalue:', eigenvalues[i])
     #     print('eigenvector:', eigenvectors[:, i])
     #     print()
+    # exit()
 
     return eigenvalues, eigenvectors, kramer_st
 
@@ -308,4 +309,4 @@ def from_gvalues_to_gshifts(g_lista):
     for i in range(0, len(g_lista)):
         g_shift = (g_lista[i] - lande_factor) * 1000
         # g_shift = g_lista[i] / 1000 + lande_factor
-        print(np.round(g_shift, 3))
+        print(np.round(g_shift, 1))
