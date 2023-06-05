@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+from matplotlib.ticker import MaxNLocator
 
 
 def plot_obtention(file, x_data, y_data):
@@ -48,25 +50,59 @@ def get_bar_chart(file, x_list, y_list, x_title, y_title, main_title):
 
 
 def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):
-    plt.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r', label='gxx')
-    plt.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b', label='gyy')
-    plt.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k', label='gzz')
+    fig, ax = plt.subplots()
+
+    fuente = 'sans-serif'  # 'serif'
+    small_size = 12
+    medium_size = 17
+    bigger_size = 18
+
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
+             label='$\mathregular{\Delta g_{xx}}$')
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b',
+             label='$\mathregular{\Delta g_{yy}}$')
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k',
+             label='$\mathregular{\Delta g_{zz}}$')
 
     # MARKER TYPES: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
-    plt.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'ro')  # label='gxx')
-    plt.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'bo')  # label='gyy')
-    plt.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'ks')  # label='gzz')
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'ro')  # label='gxx')
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'bv')  # label='gyy')
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'ks')  # label='gzz')
 
-    fuente = 'serif'
+    # changing the fontsize of yticks
+    plt.xticks(fontsize=small_size)
+    plt.yticks(fontsize=small_size)
+    # axis.set_major_locator(MaxNLocator(integer=True))
 
-    plt.xlabel(x_title, fontsize=20, fontfamily=fuente)
-    plt.ylabel(y_title, fontsize=20, fontfamily=fuente)
-    plt.title(main_title, fontsize=26, fontfamily=fuente)
+    # Labels:
+    # labelpad: change the space between axis umbers and labels
+    plt.xlabel(x_title, fontsize=bigger_size, fontfamily=fuente, labelpad=15)
+    plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic', labelpad=15)
+
+    # Major and minor ticks:
+    x_tick = int((max(presentation_matrix[:, 0]))) / 4
+    y_tick = int((max(presentation_matrix[:, 1]))) / 4
+
+    ax.xaxis.set_major_locator(MultipleLocator(x_tick))
+    ax.xaxis.set_minor_locator(MultipleLocator(1))
+    ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+    ax.yaxis.set_minor_locator(MultipleLocator(1))
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+    # Title:
+    # y=1.05 change the space between title and plot
+    plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
+
+    # Legend
+    legend = plt.legend(fontsize=medium_size, fancybox=True, framealpha=0.5,
+                        labelcolor='linecolor')
+    frame = legend.get_frame()
+    frame.set_facecolor('white')
+    frame.set_edgecolor('black')
 
     # plt.locator_params(nbins=10)
-
-    plt.grid()
-    plt.legend()
+    # plt.grid()
 
     if save_picture == 0:
         plt.show()
@@ -102,10 +138,10 @@ def sos_analysis_and_plot(file):
 
         state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
 
-        presentation_list.append([ordered_state_symmetries[i-1], np.round(
-            ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3), np.round(ras_g_values.real[2], 3)])
-        # presentation_list.append([i, np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
-        #                           np.round(ras_g_values.real[2], 3)])
+        # presentation_list.append([ordered_state_symmetries[i-1], np.round(
+        #     ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3), np.round(ras_g_values.real[2], 3)])
+        presentation_list.append([i, np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
+                                  np.round(ras_g_values.real[2], 3)])
 
     presentation_matrix = np.array(presentation_list, dtype=object)
 
@@ -124,5 +160,5 @@ def sos_analysis_and_plot(file):
 
     # plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='State', y_title='g-values deviations (ppt)',
     #                         main_title='g-tensor sum-over-states analysis', save_picture=0)
-    plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='State',
-                            y_title='g-values deviations (ppt)', main_title=file, save_picture=0)
+    plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Number of states',
+                            y_title='g-shift (ppt)', main_title=file, save_picture=0)
