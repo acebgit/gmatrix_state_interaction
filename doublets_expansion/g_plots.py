@@ -80,15 +80,15 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic', labelpad=15)
 
     # Major and minor ticks:
-    x_tick = int((max(presentation_matrix[:, 0]))) / 4
-    y_tick = int((max(presentation_matrix[:, 1]))) / 4
-
-    ax.xaxis.set_major_locator(MultipleLocator(x_tick))
-    ax.xaxis.set_minor_locator(MultipleLocator(1))
-    ax.yaxis.set_major_locator(MultipleLocator(y_tick))
-    ax.yaxis.set_minor_locator(MultipleLocator(1))
-    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    # x_tick = int((max(presentation_matrix[:, 0]))) / 4
+    # y_tick = int((max(presentation_matrix[:, 1]))) / 4
+    #
+    # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
+    # ax.xaxis.set_minor_locator(MultipleLocator(1))
+    # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+    # ax.yaxis.set_minor_locator(MultipleLocator(1))
+    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     # Title:
     # y=1.05 change the space between title and plot
