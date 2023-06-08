@@ -52,43 +52,71 @@ def get_bar_chart(file, x_list, y_list, x_title, y_title, main_title):
 def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):
     fig, ax = plt.subplots()
 
+    # Features to select:
     fuente = 'sans-serif'  # 'serif'
     small_size = 12
     medium_size = 17
     bigger_size = 18
 
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
-             label='$\mathregular{\Delta g_{xx}}$')
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b',
-             label='$\mathregular{\Delta g_{yy}}$')
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k',
-             label='$\mathregular{\Delta g_{zz}}$')
+    weight_selected = 'normal'
+    line_width = 2
+    marker_size = 10
 
-    # MARKER TYPES: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'ro')  # label='gxx')
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'bv')  # label='gyy')
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'ks')  # label='gzz')
+    x_min = 0
+    x_max =  51
+    y_min = -10
+    y_max =  5
+    # for i in range(1, len(presentation_matrix[0, :])):
+    #     maximum = max(presentation_matrix[:, i])
+    #     if maximum > y_max:
+    #         y_max = maximum + 10
+    #
+    # for i in range(1, len(presentation_matrix[0, :])):
+    #     minimum = min(presentation_matrix[:, i])
+    #     if minimum < y_min:
+    #         y_min = minimum - 10
+
+    x_tick = int((max(presentation_matrix[:, 0]))) / 4
+    y_tick = 40
+
+    # Lines:
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
+             label='$\mathregular{\Delta g_{xx}}$', linewidth=line_width)
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b',
+             label='$\mathregular{\Delta g_{yy}}$', linewidth=line_width)
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k',
+             label='$\mathregular{\Delta g_{zz}}$', linewidth=line_width)
+
+    # Markers: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'ro', markersize=marker_size)
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'bo', markersize=marker_size,
+            markerfacecolor='none', markeredgewidth=1.5)
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'ko', markersize=marker_size)
 
     # changing the fontsize of yticks
-    plt.xticks(fontsize=small_size)
-    plt.yticks(fontsize=small_size)
+    plt.xticks(fontsize=small_size, weight=weight_selected)
+    plt.yticks(fontsize=small_size, weight=weight_selected)
     # axis.set_major_locator(MaxNLocator(integer=True))
 
     # Labels:
     # labelpad: change the space between axis umbers and labels
-    plt.xlabel(x_title, fontsize=bigger_size, fontfamily=fuente, labelpad=15)
-    plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic', labelpad=15)
+    plt.xlabel(x_title, fontsize=bigger_size, fontfamily=fuente, labelpad=15,
+               weight=weight_selected)
+    plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic',
+               weight=weight_selected, labelpad=15)
+    plt.xlim([x_min, x_max])  # Limit axis values
+    plt.ylim([y_min, y_max])  # Limit axis values
 
     # Major and minor ticks:
-    # x_tick = int((max(presentation_matrix[:, 0]))) / 4
-    # y_tick = int((max(presentation_matrix[:, 1]))) / 4
-    #
-    # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
-    # ax.xaxis.set_minor_locator(MultipleLocator(1))
-    # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
-    # ax.yaxis.set_minor_locator(MultipleLocator(1))
-    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    x_tick_min = x_tick / 2
+    y_tick_min = y_tick / 2
+
+    ax.xaxis.set_major_locator(MultipleLocator(x_tick))
+    ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
+    ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+    ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     # Title:
     # y=1.05 change the space between title and plot
@@ -96,13 +124,25 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
 
     # Legend
     legend = plt.legend(fontsize=medium_size, fancybox=True, framealpha=0.5,
-                        labelcolor='linecolor')
+                        labelcolor='linecolor', loc='center right')
     frame = legend.get_frame()
     frame.set_facecolor('white')
     frame.set_edgecolor('black')
 
     # plt.locator_params(nbins=10)
     # plt.grid()
+
+    # Add an horizontal line in y = 0
+    ax.hlines(y=0, xmin=x_min, xmax=x_max, linewidth=line_width, color='k',
+              linestyle='solid')
+    # dotted, dashed, solid, dashdot
+
+    # Frame of the plot: https://e2eml.school/matplotlib_framing.html#spinestyle
+    line_width = line_width - 0.8
+    ax.spines["top"].set_linewidth(line_width)
+    ax.spines["bottom"].set_linewidth(line_width)
+    ax.spines["left"].set_linewidth(line_width)
+    ax.spines["right"].set_linewidth(line_width)
 
     if save_picture == 0:
         plt.show()
@@ -161,4 +201,4 @@ def sos_analysis_and_plot(file):
     # plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='State', y_title='g-values deviations (ppt)',
     #                         main_title='g-tensor sum-over-states analysis', save_picture=0)
     plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Number of states',
-                            y_title='g-shift (ppt)', main_title=file, save_picture=0)
+                            y_title='$\Delta g, ppt$', main_title=file, save_picture=0)
