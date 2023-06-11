@@ -23,30 +23,31 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 #####################################
 #            INPUT VALUES
 #####################################
-# lista = 1.9755, 1.9990
-# from_gvalues_to_gshifts(lista)
-# exit()
+lista = [2.032743, 2.175272, 2.286640]
+from_gvalues_to_gshifts(lista)
+exit()
+
 
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/no2/no2_def2-TZVP_11_9_50_states.out'  # str(sys.argv[1])'''
+RASCI_results/ni_mnt2_-/ni_mnt2_-_def2tzvp_19_12.out'  # str(sys.argv[1])'''
 # h2o_def2tzvp_5_5.out   h2o_def2tzvp_5_5_symignore
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1, 2]  # States to be included when "selected_states = 0"
+states_ras = [1, 4, 5]  # States to be included when "selected_states = 0"
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # EXCITED STATES ANALYSIS IN ras
 excited_states_analysis = 0
 new_active_space = 0
-sos_analysis = 1
+sos_analysis = 0
 bar_plots = 0
 
 # eom ANALYSIS AND ras-eom ENERGIES EXCHANGE
-eom_information = 1
-eom_input = '../EOM_outputs/a2_mncn5no_2-_eomip_def2-TZVP.in.out'
+eom_information = 0
+eom_input = '../EOM_outputs/ag_cucl4_2-_D2h_eomip_soc_def2-TZVP.in.out'
 
 eom_change_energies = 0
 ras_states_to_change = [2, 3, 4]
