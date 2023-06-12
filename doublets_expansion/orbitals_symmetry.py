@@ -6,13 +6,12 @@
 import numpy as np
 
 file = '../\
-RASCI_results/cucl4_2-/cucl4_2-_def2tzvp_17_10_20_states.out'
+../../Desktop/1_gfactor/calcs/transition_metal_complexes_scf/vo_h2o5_2+_scf_def2tzvp_1.out'
+my_orbitals = [33, 37, 38, 39, 40, 42, 43, 44, 46, 49]
 
-word_search = ['-- Doubly Occupied --']
+word_search = ['-- Doubly Occupied --', ' -- Occupied --']
 word_stop = '---------------------------------'
 orbitals_symmetry = []
-my_orbitals = [34, 35, 36, 37, 41, 43, 44, 45, 50, 51]
-
 with open(file, encoding="utf8") as data:
     for line in data:
         if any(i in line for i in word_search):

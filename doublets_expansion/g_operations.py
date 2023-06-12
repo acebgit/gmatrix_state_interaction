@@ -305,7 +305,9 @@ def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
 
 
 def from_gvalues_to_gshifts(g_lista):
-    lande_factor = 2.002319304363
+    lande_factor = 2.0023
+    # lande_factor = 2.002319304363
+
     for i in range(0, len(g_lista)):
         g_shift = (g_lista[i] - lande_factor) * 1000
         # g_shift = g_lista[i] / 1000 + lande_factor

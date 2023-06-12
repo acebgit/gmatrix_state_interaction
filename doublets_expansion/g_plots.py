@@ -54,8 +54,8 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
 
     # Features to select:
     fuente = 'sans-serif'  # 'serif'
-    small_size = 12
-    medium_size = 17
+    small_size = 18
+    medium_size = 22
     bigger_size = 18
 
     weight_selected = 'normal'
@@ -63,9 +63,12 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     marker_size = 10
 
     x_min = 0
-    x_max =  51
-    y_min = -10
+    x_max =  11
+    y_min = -45
     y_max =  5
+    x_tick = 1
+    y_tick = 5
+
     # for i in range(1, len(presentation_matrix[0, :])):
     #     maximum = max(presentation_matrix[:, i])
     #     if maximum > y_max:
@@ -76,8 +79,19 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     #     if minimum < y_min:
     #         y_min = minimum - 10
 
-    x_tick = int((max(presentation_matrix[:, 0]))) / 4
-    y_tick = 40
+
+    # Major and minor ticks:
+    # x_tick = int((max(presentation_matrix[:, 0]))) / 4
+    # y_tick = 40
+    # x_tick_min = x_tick / 2
+    y_tick_min = y_tick / 2
+
+    ax.xaxis.set_major_locator(MultipleLocator(x_tick))
+    # ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
+    ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+    ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     # Lines:
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
@@ -107,17 +121,6 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     plt.xlim([x_min, x_max])  # Limit axis values
     plt.ylim([y_min, y_max])  # Limit axis values
 
-    # Major and minor ticks:
-    x_tick_min = x_tick / 2
-    y_tick_min = y_tick / 2
-
-    ax.xaxis.set_major_locator(MultipleLocator(x_tick))
-    ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
-    ax.yaxis.set_major_locator(MultipleLocator(y_tick))
-    ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
-    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-
     # Title:
     # y=1.05 change the space between title and plot
     plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
@@ -134,7 +137,7 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
 
     # Add an horizontal line in y = 0
     ax.hlines(y=0, xmin=x_min, xmax=x_max, linewidth=line_width, color='k',
-              linestyle='solid')
+              linestyle='dotted')
     # dotted, dashed, solid, dashdot
 
     # Frame of the plot: https://e2eml.school/matplotlib_framing.html#spinestyle

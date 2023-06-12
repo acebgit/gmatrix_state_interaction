@@ -23,10 +23,9 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 #####################################
 #            INPUT VALUES
 #####################################
-lista = [2.032743, 2.175272, 2.286640]
-from_gvalues_to_gshifts(lista)
-exit()
-
+# lista = [2.032743, 2.175272, 2.286640]
+# from_gvalues_to_gshifts(lista)
+# exit()
 
 # G-TENSOR CALCULATION
 g_calculation = 1
