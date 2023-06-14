@@ -62,12 +62,12 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     line_width = 2
     marker_size = 10
 
-    x_min = 0
-    x_max =  11
-    y_min = -45
-    y_max =  5
-    x_tick = 1
-    y_tick = 5
+    # x_min = 0
+    # x_max =  11
+    # y_min = -45
+    # y_max =  5
+    # x_tick = 1
+    # y_tick = 5
 
     # for i in range(1, len(presentation_matrix[0, :])):
     #     maximum = max(presentation_matrix[:, i])
@@ -84,12 +84,12 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     # x_tick = int((max(presentation_matrix[:, 0]))) / 4
     # y_tick = 40
     # x_tick_min = x_tick / 2
-    y_tick_min = y_tick / 2
+    # y_tick_min = y_tick / 2
 
-    ax.xaxis.set_major_locator(MultipleLocator(x_tick))
+    # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
     # ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
-    ax.yaxis.set_major_locator(MultipleLocator(y_tick))
-    ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
+    # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+    # ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
@@ -118,8 +118,8 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
                weight=weight_selected)
     plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic',
                weight=weight_selected, labelpad=15)
-    plt.xlim([x_min, x_max])  # Limit axis values
-    plt.ylim([y_min, y_max])  # Limit axis values
+    # plt.xlim([x_min, x_max])  # Limit axis values
+    # plt.ylim([y_min, y_max])  # Limit axis values
 
     # Title:
     # y=1.05 change the space between title and plot
@@ -136,8 +136,8 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     # plt.grid()
 
     # Add an horizontal line in y = 0
-    ax.hlines(y=0, xmin=x_min, xmax=x_max, linewidth=line_width, color='k',
-              linestyle='dotted')
+    # ax.hlines(y=0, xmin=x_min, xmax=x_max, linewidth=line_width, color='k',
+    #           linestyle='dotted')
     # dotted, dashed, solid, dashdot
 
     # Frame of the plot: https://e2eml.school/matplotlib_framing.html#spinestyle
