@@ -30,7 +30,7 @@ from g_plots import get_bar_chart, sos_analysis_and_plot
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/ni_mnt2_-/ni_mnt2_-_def2tzvp_19_12.out'  # str(sys.argv[1])'''
+RASCI_results/co2_def2-TZVP_11_9_30_states.out'  # str(sys.argv[1])'''
 # h2o_def2tzvp_5_5.out   h2o_def2tzvp_5_5_symignore
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry

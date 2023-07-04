@@ -174,7 +174,7 @@ def sos_analysis_and_plot(file):
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
 
         soc_option = 0
-        doublet_socs, sz_values = get_spin_orbit_couplings(file, totalstates, states_ras, soc_option)
+        doublet_socs, sz_values = get_spin_orbit_couplings(file, totalstates, states_ras, soc_option=0)
 
         ras_upper_g_matrix, ras_g_values = from_energies_soc_to_g_values(
             file, states_ras, totalstates, excitation_energies_ras, doublet_socs, sz_values)

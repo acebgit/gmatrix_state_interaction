@@ -31,6 +31,19 @@ def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coup
             else:
                 hamiltonian[i, j] = spin_orbit_coupling[i, j]
 
+    for i in range(0, len(hamiltonian)):
+        for j in range(0, len(hamiltonian)):
+            if hamiltonian[i,j] != hamiltonian[j,i].conjugate():
+                print('Hamiltonian is not Hermitic')
+                print('Problem in states: ', i//2+1, j//2+1)
+                print(hamiltonian[i,j], hamiltonian[j,i])
+                print()
+                print('hamiltonian (SOC in cm-1, energies in a.u):')
+                print('\n'.join([''.join(['{:^20}'.format(item) for item in row])\
+                                 for row in np.round((hamiltonian[:,:]),5)]))
+                print(" ")
+                exit()
+
     # print('hamiltonian (SOC in cm-1, energies in a.u):')
     # print('\n'.join([''.join(['{:^20}'.format(item) for item in row])\
     #                  for row in np.round((hamiltonian[:,:]),5)]))
