@@ -23,15 +23,10 @@ from parser_plots import get_bar_chart, sos_analysis_and_plot
 #####################################
 #            INPUT VALUES
 #####################################
-# lista = [2.032743, 2.175272, 2.286640]
-# from_gvalues_to_gshifts(lista)
-# exit()
-
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/co2_def2-TZVP_11_9_30_states.out'  # str(sys.argv[1])'''
-# h2o_def2tzvp_5_5.out   h2o_def2tzvp_5_5_symignore
+RASCI_results/co2_def2-TZVP_11_9_30_states.out'  # str(sys.argv[1])
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1, 4, 5]  # States to be included when "selected_states = 0"
