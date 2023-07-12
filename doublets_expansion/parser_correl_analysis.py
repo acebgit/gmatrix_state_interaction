@@ -7,13 +7,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
-from g_read import get_number_of_states, get_eigenenergies, get_selected_states,  \
+from __init__ import get_number_of_states, get_eigenenergies, get_selected_states,  \
     get_spin_orbit_couplings, get_spin_matrices, get_orbital_matrices, get_socc_values
 
-from g_operations import get_hamiltonian_construction, hamiltonian_diagonalization, \
+from parser_gtensor import get_hamiltonian_construction, hamiltonian_diagonalization, \
     angular_matrixes_obtention, g_factor_calculation, from_energies_soc_to_g_values, print_g_calculation
 
-from g_plots import plot_g_tensor_vs_states
+from parser_plots import plot_g_tensor_vs_states
 
 ras_input = '../RASCI_results/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry

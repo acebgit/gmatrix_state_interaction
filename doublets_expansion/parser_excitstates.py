@@ -6,7 +6,7 @@
 """
 import numpy as np
 
-from g_read import get_number_of_states, get_eigenenergies, get_selected_states, \
+from __init__ import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_symmetry_states, get_hole_part_contributions, get_socc_values, get_ground_state_orbital_momentum, \
     get_mulliken_spin
 
@@ -297,7 +297,7 @@ def get_excited_states_analysis(file):
 
 
 def improved_active_space(file):
-    from g_read import get_number_of_states, get_eigenenergies, get_selected_states, get_symmetry_states, \
+    from __init__ import get_number_of_states, get_eigenenergies, get_selected_states, get_symmetry_states, \
         get_hole_part_contributions, get_socc_values
 
     # from g_excited_states_analysis import get_ras2_and_ras_occ_and_homo, get_highest_amplitudes, get_orbital, \
