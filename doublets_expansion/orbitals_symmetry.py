@@ -32,3 +32,5 @@ my_symmetry = []
 for orbital in my_orbitals:
     my_symmetry.append(orbitals_symmetry[orbital-1])
 print(my_symmetry)
+
+

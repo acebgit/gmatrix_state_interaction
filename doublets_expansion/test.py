@@ -1,23 +1,16 @@
 #####################################
 #          MODULES SELECTION
 #####################################
-# module load Python/3.7.4-Anaconda3-2019.10
-
 import numpy as np
 import sys
 
 from __init__ import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_socc_values, get_ground_state_orbital_momentum, get_symmetry_states, \
     get_spin_orbit_couplings, get_mulliken_spin
-
 from parser_gtensor import from_energies_soc_to_g_values, print_g_calculation, from_gvalues_to_gshifts
-
 from parser_excitstates import get_excited_states_analysis, improved_active_space
-
 from doublets_expansion.eom_analysis.parser_excitstates_eom import get_eom_transitions_analysis
-
 from doublets_expansion.eom_analysis.parser_ras_eom import ras_and_eom_energy_exchange
-
 from parser_plots import get_bar_chart, sos_analysis_and_plot
 
 #####################################
