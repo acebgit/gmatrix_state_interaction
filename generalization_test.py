@@ -16,7 +16,7 @@ from parser_plots import sos_analysis_and_plot
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '\
-doublets_molecules/h2o/h2o_6-31Gd_5_5.out'
+doublets_molecules/h2o/h2o_def2tzvp_5_5.out'
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1, 2, 3, 4, 5]  # States to be included when "selected_states = 0"
