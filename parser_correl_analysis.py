@@ -11,7 +11,8 @@ from parser_init import get_number_of_states, get_eigenenergies, get_selected_st
     get_spin_orbit_couplings, get_spin_matrices, get_orbital_matrices, get_socc_values
 
 from parser_gtensor import get_hamiltonian_construction, bolvin_diagonalization, \
-    bolvin_angular_matrixes_obtention, bolvin_g_factor_calculation, bolvin_from_energies_soc_to_g_values, print_g_calculation
+    bolvin_angular_matrixes_obtention, bolvin_g_factor_calculation, bolvin_from_energies_soc_to_g_values, \
+    print_g_calculation
 
 from parser_plots import plot_g_tensor_vs_states
 
@@ -27,7 +28,7 @@ states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_st
 
 eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
-doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_option)
+doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_option, bolvin=1)
 
 socc_values = get_socc_values(ras_input, totalstates)
 
@@ -58,7 +59,8 @@ def soc_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs,
         socs[2, 1] = np.conj(socs[1, 2])
 
         upper_g_matrix, g_values = bolvin_from_energies_soc_to_g_values(file,
-                                                                        n_states, allstates, excit_energies, socs, sz_list)
+                                                                        n_states, allstates, excit_energies, socs,
+                                                                        sz_list)
 
         presentation_tuple.append([abs(soc_value), np.round(g_values.real[0], 3),
                                    np.round(g_values.real[1], 3), np.round(g_values.real[2], 3)])
@@ -125,11 +127,11 @@ def orbitmomentum_and_gvalues_correlation(file, n_states, allstates, excit_energ
 
     eigenvalues, eigenvector, kramers_states = bolvin_diagonalization(hamiltonian_ras)
 
-    spin_matrix = get_spin_matrices(file, n_states)
+    spin_matrix = get_spin_matrices(file, n_states, bolvin=1)
 
     sigma_matrix = bolvin_angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, spin_matrix)
 
-    l_matrix = get_orbital_matrices(file, allstates, n_states, sz_list)
+    l_matrix = get_orbital_matrices(file, allstates, n_states, sz_list, bolvin=1)
 
     # Change L values
     presentation_tuple = []

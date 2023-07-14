@@ -3,6 +3,7 @@ from numpy import linalg, sqrt
 
 from parser_init import get_spin_matrices, get_orbital_matrices
 
+
 def hermitian_test(matrix):
     """
     Check if a matrix is Hermitian. If not, exit.
@@ -306,11 +307,11 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
 
     sz_difference = (len(sz_list) - len(ground_sz)) // 2
     j_matrix = np.zeros((len(ground_sz), len(ground_sz), 3), dtype=complex)
-    for k in range(0,3):
+    for k in range(0, 3):
         for i in range(0, len(j_matrix)):
             for j in range(0, len(j_matrix)):
-                j_matrix[i,j,k] = j_big_matrix[i + sz_difference, j + sz_difference, k]
-        hermitian_test(j_matrix[:,:,k])
+                j_matrix[i, j, k] = j_big_matrix[i + sz_difference, j + sz_difference, k]
+        hermitian_test(j_matrix[:, :, k])
 
     # 1) g-value zz
     j_eigenvalues_z, j_matrix_rotation, j_matrix_diagonal_z = j_diagonalization(j_matrix[:, :, 2], sz_list, ground_sz)
@@ -403,6 +404,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                    sz_list, ground_sz)
 
     return g_shift
+
 
 def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
                         states_ras, upper_g_tensor_results_ras):
