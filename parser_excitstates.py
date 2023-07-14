@@ -20,21 +20,26 @@ def get_ras_spaces(qchem_file):
     with open(qchem_file, encoding="utf-8") as file:
         data = file.readlines()
 
-    # List with active orbitals
-    word_search = ['RAS_ACT_ORB']
-    element_actorbitals = []
+    word_search = ['RAS_ACT  ']
     for line in data:
         if any(i in line for i in word_search):
             line = line.split()
-            element = line[1]
-            element = element.replace('[', '')
-            element = element.replace(']', '')
-            element = element.replace(',', '')
+            ras_act = int(line[1])
 
-            for i in range(0, len(element)):
-                element_actorbitals.append(element[i])
+    # List with active orbitals
+    word_search = ['RAS_ACT_ORB']
+    elements = []
+    for line in data:
+        if any(i in line for i in word_search):
+            line = line.replace('[', '')
+            line = line.replace(']', '')
+            line = line.replace(',', ' ')
+            line = line.split()
+
+            for i in range(1, ras_act+1):
+                elements.append(line[i])
             break
-    ras_act_orb = np.array(element_actorbitals, dtype=int)
+    ras_act_orb = np.array(elements, dtype=int)
 
     # Number of occupied orbitals
     word_search = ['RAS_OCC']
@@ -71,17 +76,17 @@ def get_alpha_beta(qchem_file):
 def get_highest_amplitudes(file):
     """
     Get:
-    - index_max_amplitudes
-    - orbitals_each_state: "| HOLE  | ALPHA | BETA  | PART" information of the configurations
-    with an amplitude higher than a cutoff
+    - index_max_amplitudes: list of the indexes of the configurations with relevant amplitudes (higher than a cut-off)
+    - configurations_orbitals: "| HOLE  | ALPHA | BETA  | PART" information of the configurations with an amplitude higher
+    than a cutoff
     :param: file
-    :return: index_max_amplitudes, orbitals_each_state
+    :return: index_max_amplitudes, configurations_orbitals
     """
 
     def get_configurations_information(line):
         """
         From highest to lowest amplitudes, get a list with the amplitudes ('amplitude') and
-        the orbitals ('') of all the configurations.
+        the orbitals ('orbitals_information') of all the configurations.
         :param: line
         :return: amplitude, orbitals_information
         """
@@ -118,10 +123,10 @@ def get_highest_amplitudes(file):
 
     def other_important_orbitals(amplitude, amplitude_cutoff):
         """
-        Get a list of the indexes of the configurations with the amplitudes higher than a cut-off times the
-        first configuration (the one with highest amplitude).
-        :param: line
-        :return: amplitude, orbitals_information
+        Get indexes of configurations that have the amplitude higher than a cut-off times the
+        amplitude of the first configuration (that is the one with the highest amplitude).
+        :param: amplitude, amplitude_cutoff
+        :return: indexes
         """
         cut_off = amplitude_cutoff * amplitude[0]
 
@@ -133,41 +138,38 @@ def get_highest_amplitudes(file):
             else:
                 break
 
-        main_indexes = np.array(indexes_list, dtype=int)
-        return main_indexes
+        indexes = np.array(indexes_list, dtype=int)
+        return indexes
 
     next_line = 0
     for i in range(0, 2):  # Go to the line of the first configuration
         next_line = next(file)
         i += 1
 
-    # Take the line data where amplitude is maximum and where difference
-    # between maximum amplitude and amplitude is less than a cut-off
-    amplitudes, orbitals_each_state = get_configurations_information(next_line)
-    index_max_amplitudes = other_important_orbitals(
-        amplitudes, amplitude_cutoff=0.7)  # Cut-off value between 1st and 2nd highest amplitudes
-
-    return index_max_amplitudes, orbitals_each_state
+    amplitudes, configurations_orbitals = get_configurations_information(next_line)
+    index_max_amplitudes = other_important_orbitals(amplitudes, amplitude_cutoff=0.7)
+    return index_max_amplitudes, configurations_orbitals
 
 
 def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
     """
-    Take orbitals depending on hole, active or particle configurations
+    Get orbital_list with unpaired electrons in the hole, active or particle configurations
+    :param: homo_orbital, configuration_data, initial_active_orbitals
+    :return: orbitals (string)
      """
-
     def from_ras_to_scf_order(homo_orbit, initial_scf_space, ras_orbitals):
         """
         Change from RAS order to SCF order.
-        Example: if in (1,2,3,4) orbitals the active space selected is [1,3],
-        RAS_order is (1,2,3,4) while SCF_order is (2,1,3,4), since orbitals are
+        Example: if in (1,2,3,4) orbital_list the active space selected is [1,3],
+        RAS_order is (1,2,3,4) while SCF_order is (2,1,3,4), since orbital_list are
         order by RAS1-RAS2-RAS3.
-        :param: HOMO_orbital, initial_SCF_space, final_RAS_space
+        :param: homo_orbit, initial_scf_space, ras_orbitals
         :return: final_SCF_space
         """
         initial_scf_space = initial_scf_space.tolist()
         scf_orbitals_order = []
 
-        # scf_orbitals_order: orbitals in HF energetic order
+        # scf_orbitals_order: orbital_list in HF energetic order
         for orbital in range(1, homo_orbit + 1):  # RAS1
             if orbital not in initial_scf_space:
                 scf_orbitals_order.append(orbital)
@@ -179,7 +181,7 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
             if orbital not in initial_scf_space:
                 scf_orbitals_order.append(orbital)
 
-        # ras_orbitals_order: orbitals in RAS energetic order, meaning RAS1 - RAS2 - RAS3
+        # ras_orbitals_order: orbital_list in RAS energetic order, meaning RAS1 - RAS2 - RAS3
         ras_orbitals_order = list(range(1, homo_orbit + 50))
 
         # print('ras_orbitals_order', 'scf_orbitals_order')
@@ -189,44 +191,53 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
 
         indx = ras_orbitals_order.index(ras_orbitals)
         final_scf_orbital = scf_orbitals_order[indx]
-        # print(ras_orbital, final_scf_orbital)
         return final_scf_orbital
 
-    # When orbital is in active space
-    new_orbital = 0
+    orbital_list = []
 
-    if (configuration_data[0] == '-1') and (configuration_data[3] == '-1'):
-        alpha_config = str(configuration_data[1])
-        beta_config = str(configuration_data[2])
-
-        active_orbital_index = 0
-        for active_orbital_index in range(0, len(alpha_config)):
-            if alpha_config[active_orbital_index] != beta_config[active_orbital_index]: 
-                break
-        new_orbital = initial_active_orbitals[active_orbital_index]
-
-    # When orbital is in hole
-    elif (configuration_data[0] != '-1') and (configuration_data[3] == '-1'):
+    # If orbital is in hole
+    if (configuration_data[0] != '-1'):
         ras_orbital = int(configuration_data[0])
         new_orbital = from_ras_to_scf_order(homo_orbital, initial_active_orbitals, ras_orbital)
+        new_orbital = int(new_orbital)
+        orbital_list.append(new_orbital)
 
-    # When orbital is in particle
-    elif (configuration_data[0] == '-1') and (configuration_data[3] != '-1'):
+    # If orbital is in active space
+    alpha_config = str(configuration_data[1])
+    beta_config = str(configuration_data[2])
+
+    for active_orbital_index in range(0, len(alpha_config)):
+        if alpha_config[active_orbital_index] != beta_config[active_orbital_index]:
+            new_orbital = initial_active_orbitals[active_orbital_index]
+            new_orbital = int(new_orbital)
+            orbital_list.append(new_orbital)
+
+    # If orbital is in particle
+    if (configuration_data[3] != '-1'):
         ras_orbital = int(configuration_data[3])
         new_orbital = from_ras_to_scf_order(homo_orbital, initial_active_orbitals, ras_orbital)
+        new_orbital = int(new_orbital)
+        orbital_list.append(new_orbital)
 
-    new_orbital = int(new_orbital)
+    if not orbital_list:  # If list is empty, append a 0
+        orbital_list.append('-')
 
-    return new_orbital
+    # Put orbitals as a string
+    if len(orbital_list) > 1:
+        orbitals = ','.join([str(n) for n in orbital_list])
+    else:
+        orbitals = orbital_list[0]
+    return orbitals
 
 
 def print_excited_states(presentation_list, n_states, hole_contributions,
                          part_contributions, socc_values, excitation_energies_ev,
                          state_symmetries, new_orbital, orbital_momentum, mulliken_spin):
     """
-    Prepare te presentation list with the values of each excited state
-    :param: presentation_list,n_states,hole_contributions,part_contributions,
-    SOCC_values,excitation_energies_eV,state_symmetries,new_orbital
+    Prepare tHe presentation list with each excited state values
+    :param: presentation_list, n_states, hole_contributions,
+                         part_contributions, socc_values, excitation_energies_ev,
+                         state_symmetries, new_orbital, orbital_momentum, mulliken_spin
     :return: presentation_list, SOC
      """
     state = np.round(int(n_states), 0) + 1
@@ -243,7 +254,6 @@ def print_excited_states(presentation_list, n_states, hole_contributions,
     spin = np.round(float(mulliken_spin[n_states]), 3)
 
     presentation_list.append([state, symmetry, hole, part, excit_energy, new_orbital, soc, orbital_ground_state, spin])
-
     return presentation_list, soc
 
 
@@ -307,25 +317,22 @@ def get_excited_states_analysis(file):
         for line in file:
             if word_search in line:  # Go to configurations line
 
-                index_max_amplitudes, state_orbitals = get_highest_amplitudes(file)
-                print(index_max_amplitudes, state_orbitals)
-                exit()
+                index_relevant_amplit, state_orbitals = get_highest_amplitudes(file)
 
-                for i in index_max_amplitudes:
-                    new_orbital = get_orbital(homo_orbital, state_orbitals[i], initial_active_orbitals)
+                # Include all those configurations with relevant amplitudes in the final list
+                for i in index_relevant_amplit:
+                    new_orbitals = get_orbital(homo_orbital, state_orbitals[i], initial_active_orbitals)
 
                     excited_states_presentation_list, soc = print_excited_states(excited_states_presentation_list,
                                                                                  n_states, hole_contributions,
                                                                                  part_contributions, socc_values,
                                                                                  excitation_energies_ras * 27.211399,
-                                                                                 ordered_state_symmetries, new_orbital,
+                                                                                 ordered_state_symmetries, new_orbitals,
                                                                                  orbital_momentum, mulliken_spin)
 
                 n_states += 1
-    # print(excited_states_presentation_list[1])
-    # exit()
-    excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
 
+    excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
     print("------------------------")
     print(" EXCITED STATES ANALYSIS")
     print("------------------------")
