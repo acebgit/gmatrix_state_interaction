@@ -6,7 +6,7 @@ from pyqchem.parsers.parser_rasci import parser_rasci
 def get_scf_energy(file):
     """
     Obtain SCF energy
-    :param: ras_input
+    :param: qchem_file
     :return: scf_energy
     """
     word_search = ['SCF   energy in the final basis set']

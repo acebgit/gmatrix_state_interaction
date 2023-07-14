@@ -26,7 +26,7 @@ soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 sos_analysis = 0
 
 # OUTPUT
-write_ras_input = 0  # 0: write results directly; 1: write in output ras_input
+write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file
 output_ras_input = ras_input + '-gvalues.txt'
 if write_ras_input == 1:
     sys.stdout = open(output_ras_input, "w")
@@ -43,18 +43,18 @@ if write_ras_input == 1:
 # g_list = []
 # # iterate through all file
 # for file in os.listdir():
-#     ras_input = f"{file}"
+#     qchem_file = f"{file}"
 #
-#     totalstates = get_number_of_states(ras_input)
-#     states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_states, symmetry_selection)
-#     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
-#     selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
-#     g_shift = from_energies_soc_to_g_values(ras_input, states_ras,
+#     totalstates = get_number_of_states(qchem_file)
+#     states_ras = get_selected_states(qchem_file, totalstates, states_ras, selected_states, symmetry_selection)
+#     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(qchem_file, totalstates, states_ras)
+#     selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(qchem_file, totalstates, states_ras, soc_options)
+#     g_shift = from_energies_soc_to_g_values(qchem_file, states_ras,
 #                                             totalstates, excitation_energies_ras,
 #                                             selected_socs, sz_list, sz_ground)
 #
-#     ras_input = ras_input.replace('.out', '')
-#     g_list.append([ras_input, np.round(g_shift.real[0]*1000, 3), np.round(g_shift.real[1]*1000, 3),
+#     qchem_file = qchem_file.replace('.out', '')
+#     g_list.append([qchem_file, np.round(g_shift.real[0]*1000, 3), np.round(g_shift.real[1]*1000, 3),
 #           np.round(g_shift.real[2]*1000, 3)])
 #
 # sorted_list = sorted(g_list)
