@@ -2,6 +2,7 @@ import sys
 import numpy as np
 from pyqchem.parsers.parser_rasci import parser_rasci
 
+
 def get_scf_energy(file):
     """
     Obtain SCF energy
@@ -440,7 +441,7 @@ def get_spin_matrices(file, n_states, bolvin):
 
         with open(file_qchem, encoding="utf8") as file_qchem:
             for line in file_qchem:
-                if any(k in line for k in search):
+                if any(ii in line for ii in search):
                     element = line[16:]
                     elements.append(element.split())
 
@@ -455,9 +456,9 @@ def get_spin_matrices(file, n_states, bolvin):
         :return: s2_values
         """
         s2_values_list = []
-        for k in range(0, len(states_s2)):
-            if states_s2[k] not in s2_values_list:
-                s2_values_list.append(states_s2[k])
+        for ii in range(0, len(states_s2)):
+            if states_s2[ii] not in s2_values_list:
+                s2_values_list.append(states_s2[ii])
 
         s2_values = np.array(s2_values_list, dtype=float)
         return s2_values
@@ -489,13 +490,13 @@ def get_spin_matrices(file, n_states, bolvin):
         long_sy = np.zeros((max_multiplicity, max_multiplicity), dtype=complex)
         long_sz = np.zeros((max_multiplicity, max_multiplicity), dtype=complex)
 
-        multip_difference = int((multip_max - multip_state) // 2)
+        multipl_difference = int((multip_max - multip_state) // 2)
 
-        if multip_difference != 0:
+        if multipl_difference != 0:
             for n_row in range(0, len(sx)):
                 for n_column in range(0, len(sx)):
-                    ii = n_row + multip_difference
-                    jj = n_column + multip_difference
+                    ii = n_row + multipl_difference
+                    jj = n_column + multipl_difference
                     long_sx[ii, jj] = s_x[n_row, n_column]
                     long_sy[ii, jj] = s_y[n_row, n_column]
                     long_sz[ii, jj] = s_z[n_row, n_column]
@@ -535,19 +536,19 @@ def get_spin_matrices(file, n_states, bolvin):
         s_z = np.zeros((multiplicity, multiplicity), dtype=complex)
 
         # build spin matrices
-        for k, sz_bra in enumerate(sz_values(spin)):
+        for ii, sz_bra in enumerate(sz_values(spin)):
             for g, sz_ket in enumerate(sz_values(spin)):
 
                 if are_equal(sz_bra, sz_ket):
-                    s_z[k, g] = sz_ket
+                    s_z[ii, g] = sz_ket
 
                 if are_equal(sz_bra, sz_ket + 1):
-                    s_x[k, g] = 0.5 * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
-                    s_y[k, g] = -0.5j * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
+                    s_x[ii, g] = 0.5 * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
+                    s_y[ii, g] = -0.5j * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
 
                 if are_equal(sz_bra, sz_ket - 1):
-                    s_x[k, g] = 0.5 * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
-                    s_y[k, g] = 0.5j * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
+                    s_x[ii, g] = 0.5 * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
+                    s_y[ii, g] = 0.5j * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
 
         return s_x, s_y, s_z
 

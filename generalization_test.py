@@ -16,10 +16,10 @@ from parser_plots import sos_analysis_and_plot
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '\
-triplets_molecules/nbr_12_9_enerproc.out'
+doublets_molecules/h2o/h2o_def2tzvp_5_5.out'
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1,2,3,4,5]  # States to be included when "selected_states = 0"
+states_ras = [1, 2, 3, 4, 5]  # States to be included when "selected_states = 0"
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
@@ -72,7 +72,8 @@ if g_calculation == 1:
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
-    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options, bolvin=0)
+    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options,
+                                                                 bolvin=0)
 
     g_shift = from_energies_soc_to_g_values(ras_input, states_ras,
                                             totalstates, excitation_energies_ras,
