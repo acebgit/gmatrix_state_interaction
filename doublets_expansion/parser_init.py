@@ -2,7 +2,6 @@ import sys
 import numpy as np
 from pyqchem.parsers.parser_rasci import parser_rasci
 
-
 def get_scf_energy(file):
     """
     Obtain SCF energy
@@ -219,7 +218,7 @@ def get_mulliken_spin(file, totalstates, states):
     return charge_mulliken, spin_mulliken
 
 
-def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
+def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option, bolvin):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
     and 'ket' in columns, with spin order -Ms , +Ms.
@@ -235,7 +234,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         """
         Get S² and Sz of all states
         :param: output
-        :return: all_multip, all_sz
+        :return: all_multiplicities, all_sz, ground_sz
         """
         read_multip = []
         for i, state in enumerate(qchem_file['excited_states']):
@@ -249,17 +248,19 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
             new_multip = 0.75 * n_times
             all_multiplicities.append(new_multip)
 
+        # Obtain maximum and ground state multiplicity and s values
         s2_max = max(all_multiplicities)
-
+        s2_ground = all_multiplicities[0]
         s_max = 0.5 * (-1 + np.sqrt(1 + 4 * s2_max))
-        element = np.round(s_max / 0.5)  # Making multiplicity numbers multiples of doublets (s=0.5).
-        s_max = 0.5 * element
+        s_ground = 0.5 * (-1 + np.sqrt(1 + 4 * s2_ground))
 
+        # Making multiplicity list from -n to +n in 1/2 intervals
+        s_max = 0.5 * np.round(s_max / 0.5)
+        s_ground = 0.5 * np.round(s_ground / 0.5)
         all_sz = list(np.arange(-s_max, s_max + 1, 1))
-        # print(all_multip, all_sz)
-        # exit()
+        ground_sz = list(np.arange(-s_ground, s_ground + 1, 1))
 
-        return all_multiplicities, all_sz
+        return all_multiplicities, all_sz, ground_sz
 
     def get_all_socs(line, n_states, multiplicities, all_sz, soc_selection):
         """
@@ -380,14 +381,17 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     elif soc_option == 2:
         soc_search = '2e_soc_mat'
 
-    state_multiplicities, sz_list = get_states_sz(output)
+    state_multiplicities, sz_list, sz_ground = get_states_sz(output)
     all_socs = get_all_socs(data, totalstates, state_multiplicities, sz_list, soc_search)
     selected_socs = get_selected_states_socs(selected_states, sz_list, all_socs)
-    doublet_soc = get_doublets_soc(selected_states, selected_socs)
 
-    doublet_soc = doublet_soc / 219474.63068  # From cm-1 to a.u.
-    sz_list = [-0.5, 0.5]
-    return doublet_soc, sz_list
+    if bolvin == 1:
+        doublet_soc = get_doublets_soc(selected_states, selected_socs)
+        selected_socs = doublet_soc
+        sz_list = [-0.5, 0.5]
+
+    selected_socs = selected_socs / 219474.63068  # From cm-1 to a.u.
+    return selected_socs, sz_list, sz_ground
 
 
 def get_socc_values(file, totalstates):
@@ -417,7 +421,7 @@ def get_socc_values(file, totalstates):
     return socc
 
 
-def get_spin_matrices(file, n_states):
+def get_spin_matrices(file, n_states, bolvin):
     """
     Obtain the 3 dimensions of spin (s_x, s_y, s_z) from s2 of each state and put them in a 3-dim array.
     Spin is written with 'bra' in rows and 'ket' in columns, with spin order -Ms , +Ms.
@@ -474,6 +478,37 @@ def get_spin_matrices(file, n_states):
         """
         return spin * (spin + 1)
 
+    def long_spin_matrices(s_x, s_y, s_z, multip_max, multip_state):
+        """
+        from sx, sy, sz with dimension of the state multiplicity to
+        sx, sy, sz with dimension of the maximum multiplicity
+        :param: s_x, s_y, s_z, multip_max, multip_state
+        :return: s_x, s_y, s_z
+        """
+        long_sx = np.zeros((max_multiplicity, max_multiplicity), dtype=complex)
+        long_sy = np.zeros((max_multiplicity, max_multiplicity), dtype=complex)
+        long_sz = np.zeros((max_multiplicity, max_multiplicity), dtype=complex)
+
+        multip_difference = int((multip_max - multip_state) // 2)
+
+        if multip_difference != 0:
+            for n_row in range(0, len(sx)):
+                for n_column in range(0, len(sx)):
+                    ii = n_row + multip_difference
+                    jj = n_column + multip_difference
+                    long_sx[ii, jj] = s_x[n_row, n_column]
+                    long_sy[ii, jj] = s_y[n_row, n_column]
+                    long_sz[ii, jj] = s_z[n_row, n_column]
+        else:
+            long_sx = s_x
+            long_sy = s_y
+            long_sz = s_z
+
+        # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+        #                  for row in np.round((long_sx[:, :]), 5)]))
+        # exit()
+        return long_sx, long_sy, long_sz
+
     # Abel function to determine the spin matrix:
     # https://github.com/abelcarreras/PyQchem/blob/1b1a0291f2737474955a5045ffbc56a2efd50911/pyqchem/tools/spin.py#L14
 
@@ -516,35 +551,78 @@ def get_spin_matrices(file, n_states):
 
         return s_x, s_y, s_z
 
-    s2_states = s2_from_file(file)
-    single_s2_values = s2_single_values(s2_states)
+    s2_states = s2_from_file(file)  # s2 of each of the states
+    single_s2_values = s2_single_values(s2_states)  # s2 of each of the states, without repetition
     number_of_spins = len(single_s2_values)
 
-    spin_matrix = np.zeros((len(n_states) * 2, len(n_states) * 2, 3), dtype=complex)
+    # Spin matrix of non-relativistic states:
+    max_multiplicity = int(2 * s2_to_s(max(single_s2_values)) + 1)
+    ground_multiplicity = int(2 * s2_to_s(single_s2_values[0]) + 1)
 
-    for i in range(0, number_of_spins):
-        for j in n_states:
-            if s2_states[j - 1] == single_s2_values[i]:
-                s = s2_to_s(single_s2_values[i])
-                sx, sy, sz = spin_matrices(s)
+    standard_spin_matrix = np.zeros((ground_multiplicity, ground_multiplicity, 3), dtype=complex)
+    spin_matrix = np.zeros((len(n_states) * max_multiplicity, len(n_states) * max_multiplicity, 3), dtype=complex)
 
-                s_dim = len(sx) // 2 - 1
-                total_dim = n_states.index(j) * 2
+    if bolvin == 1:
 
-                spin_matrix[total_dim, total_dim, 0] = sx[s_dim, s_dim]
-                spin_matrix[total_dim + 1, total_dim, 0] = sx[s_dim + 1, s_dim]
-                spin_matrix[total_dim, total_dim + 1, 0] = sx[s_dim, s_dim + 1]
-                spin_matrix[total_dim + 1, total_dim + 1, 0] = sx[s_dim + 1, s_dim + 1]
+        for i in range(0, number_of_spins):
+            for j in n_states:
+                if s2_states[j - 1] == single_s2_values[i]:
+                    s = s2_to_s(single_s2_values[i])
+                    sx, sy, sz = spin_matrices(s)
 
-                spin_matrix[total_dim, total_dim, 1] = sy[s_dim, s_dim]
-                spin_matrix[total_dim + 1, total_dim, 1] = sy[s_dim + 1, s_dim]
-                spin_matrix[total_dim, total_dim + 1, 1] = sy[s_dim, s_dim + 1]
-                spin_matrix[total_dim + 1, total_dim + 1, 1] = sy[s_dim + 1, s_dim + 1]
+                    s_dim = len(sx) // 2 - 1
+                    total_dim = n_states.index(j) * 2
 
-                spin_matrix[total_dim, total_dim, 2] = sz[s_dim, s_dim]
-                spin_matrix[total_dim + 1, total_dim, 2] = sz[s_dim + 1, s_dim]
-                spin_matrix[total_dim, total_dim + 1, 2] = sz[s_dim, s_dim + 1]
-                spin_matrix[total_dim + 1, total_dim + 1, 2] = sz[s_dim + 1, s_dim + 1]
+                    spin_matrix[total_dim, total_dim, 0] = sx[s_dim, s_dim]
+                    spin_matrix[total_dim + 1, total_dim, 0] = sx[s_dim + 1, s_dim]
+                    spin_matrix[total_dim, total_dim + 1, 0] = sx[s_dim, s_dim + 1]
+                    spin_matrix[total_dim + 1, total_dim + 1, 0] = sx[s_dim + 1, s_dim + 1]
+
+                    spin_matrix[total_dim, total_dim, 1] = sy[s_dim, s_dim]
+                    spin_matrix[total_dim + 1, total_dim, 1] = sy[s_dim + 1, s_dim]
+                    spin_matrix[total_dim, total_dim + 1, 1] = sy[s_dim, s_dim + 1]
+                    spin_matrix[total_dim + 1, total_dim + 1, 1] = sy[s_dim + 1, s_dim + 1]
+
+                    spin_matrix[total_dim, total_dim, 2] = sz[s_dim, s_dim]
+                    spin_matrix[total_dim + 1, total_dim, 2] = sz[s_dim + 1, s_dim]
+                    spin_matrix[total_dim, total_dim + 1, 2] = sz[s_dim, s_dim + 1]
+                    spin_matrix[total_dim + 1, total_dim + 1, 2] = sz[s_dim + 1, s_dim + 1]
+
+    else:
+
+        for i in range(0, number_of_spins):
+            for j in n_states:
+                if s2_states[j - 1] == single_s2_values[i]:
+                    s = s2_to_s(single_s2_values[i])
+                    sx, sy, sz = spin_matrices(s)
+                    sx, sy, sz = long_spin_matrices(sx, sy, sz, max_multiplicity, s2_states[j - 1])
+
+                    s_dim = 0
+                    total_dim = n_states.index(j) * max_multiplicity
+
+                    for row in range(0, max_multiplicity):
+                        for column in range(0, max_multiplicity):
+                            spin_matrix[total_dim, total_dim, 0] = sx[s_dim, s_dim]
+                            spin_matrix[total_dim, total_dim + column, 0] = sx[s_dim, s_dim + column]
+                            spin_matrix[total_dim + row, total_dim, 0] = sx[s_dim + row, s_dim]
+                            spin_matrix[total_dim + row, total_dim + column, 0] = sx[s_dim + row, s_dim + column]
+
+                            spin_matrix[total_dim, total_dim, 1] = sy[s_dim, s_dim]
+                            spin_matrix[total_dim, total_dim + column, 1] = sy[s_dim, s_dim + column]
+                            spin_matrix[total_dim + row, total_dim, 1] = sy[s_dim + row, s_dim]
+                            spin_matrix[total_dim + row, total_dim + column, 1] = sy[s_dim + row, s_dim + column]
+
+                            spin_matrix[total_dim, total_dim, 2] = sz[s_dim, s_dim]
+                            spin_matrix[total_dim, total_dim + column, 2] = sz[s_dim, s_dim + column]
+                            spin_matrix[total_dim + row, total_dim, 2] = sz[s_dim + row, s_dim]
+                            spin_matrix[total_dim + row, total_dim + column, 2] = sz[s_dim + row, s_dim + column]
+
+        # Standard spin matrix
+        multip_difference = (max_multiplicity - ground_multiplicity) // 2
+        for k in range(0, 3):
+            for i in range(0, ground_multiplicity):
+                for j in range(0, ground_multiplicity):
+                    standard_spin_matrix[i, j, k] = spin_matrix[i + multip_difference, j + multip_difference, k]
 
     # print('Spin Matrices:')
     # for k in range(0,3):
@@ -553,7 +631,7 @@ def get_spin_matrices(file, n_states):
     #                     for row in np.round((spin_matrix[:,:,k]),5)]))
     #    print(" ")
     # exit()
-    return spin_matrix
+    return spin_matrix, standard_spin_matrix
 
 
 def get_ground_state_orbital_momentum(file, totalstates):
@@ -601,7 +679,7 @@ def get_ground_state_orbital_momentum(file, totalstates):
     return orbital_momentum
 
 
-def get_orbital_matrices(file, totalstates, selected_states, sz_list):
+def get_orbital_matrices(file, totalstates, selected_states, sz_list, bolvin):
     """
     Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
     with spin order -Ms , +Ms. Third dimension is the direction.
@@ -681,9 +759,12 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
     all_lk = get_all_momentum(data, totalstates)
     selected_lk = get_selected_states_momentum(selected_states, all_lk)
-    doublets_lk = get_doublets_momentum(selected_states, selected_lk)
     all_multip_lk = get_all_multip_momentum(selected_lk, sz_list)
-    return doublets_lk
+
+    if bolvin == 1:
+        doublets_lk = get_doublets_momentum(selected_states, selected_lk)
+        all_multip_lk = doublets_lk
+    return all_multip_lk
 
 
 def get_orbital_matrices_manual(file, totalstates, n_states):

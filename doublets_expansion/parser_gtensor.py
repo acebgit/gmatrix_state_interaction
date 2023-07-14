@@ -171,9 +171,9 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
     eigenvalues, eigenvector, kramers_states = hamiltonian_diagonalization(hamiltonian_ras)
 
-    spin_matrix = get_spin_matrices(file, states_ras)
+    spin_matrix, standard_spin_matrix = get_spin_matrices(file, states_ras, bolvin=1)
 
-    l_matrix = get_orbital_matrices(file, totalstates, states_ras, sz_list)
+    l_matrix = get_orbital_matrices(file, totalstates, states_ras, sz_list, bolvin=1)
 
     sigma_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, spin_matrix)
 

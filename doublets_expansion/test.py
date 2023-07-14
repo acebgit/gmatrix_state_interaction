@@ -57,7 +57,7 @@ if g_calculation == 1:
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
-    doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
+    doublet_socs, sz_values, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options, bolvin=1)
 
     ras_upper_g_matrix, g_shift = from_energies_soc_to_g_values(ras_input, states_ras,
                                                                 totalstates, excitation_energies_ras,
@@ -90,7 +90,7 @@ if bar_plots == 1:
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
-    doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
+    doublet_socs, sz_values, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options, bolvin=1)
 
     ras_upper_g_matrix, g_shift = from_energies_soc_to_g_values(ras_input, states_ras,
                                                                 totalstates,
