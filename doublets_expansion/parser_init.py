@@ -1,6 +1,3 @@
-"""
-    READ DATA OF Q-CHEM OUTPUTS
-"""
 import sys
 import numpy as np
 from pyqchem.parsers.parser_rasci import parser_rasci
@@ -8,7 +5,7 @@ from pyqchem.parsers.parser_rasci import parser_rasci
 
 def get_scf_energy(file):
     """
-    Define the type of equation of motions EOM_input
+    Obtain SCF energy
     :param: ras_input
     :return: scf_energy
     """
@@ -25,8 +22,8 @@ def get_scf_energy(file):
 def get_number_of_states(file):
     """
     Obtain the total number of states in ras
-    :param file: output Q-Chem
-    :return totalstates: number of states
+    :param: file
+    :return: totalstates
     """
     with open(file, encoding="utf8") as f:
         data = f.readlines()
@@ -47,8 +44,8 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     """
     Select the states used depending on "states_option" value:
     0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-    :param: input_ras, totalstates, states_option, symmetry_selection, states_ras
-    :return states_ras
+    :param: file, totalstates, selected_states, states_option, symmetry_selection
+    :return: selected_states
     """
     all_symmetries, ordered_symmetries = get_symmetry_states(file, totalstates)
 
@@ -76,15 +73,14 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
             for nstate in range(0, totalstates):
                 print('- State', nstate + 1, ', symmetry', all_symmetries[nstate])
             sys.exit()
-
     return selected_states
 
 
 def get_eigenenergies(file, totalstates, selected_states):
     """
-    Get energies of the states: 0: ras ; 1: CASSCF ; 2: SF-DFT
-    :param: selected_states, input_ras, theory_level
-    :return: eigenenergies
+    Get energies of the RAS-CI states.
+    :param: file, totalstates, selected_states
+    :return: eigenenergies, excitation_energies
     """
     word_search = ' RAS-CI total energy for state  '
     element_energy = []
@@ -113,20 +109,15 @@ def get_eigenenergies(file, totalstates, selected_states):
     eigenenergies = np.array(energies_selected, dtype=float)
     excitation_energies_ev = np.array(excited_energies_selected, dtype=float)
     excitation_energies = excitation_energies_ev / 27.211399  # From eV to a.u.
-
-    # excitation_energies = np.zeros(len(eigenenergies))
-    # for i in range(0, len(eigenenergies)):
-    #     excitation_energies[i] = (eigenenergies[i] - eigenenergies[0])  # * 27.211399
-
     return eigenenergies, excitation_energies
 
 
 def get_symmetry_states(file, totalstates):
     """
-    Create two lists: first with the symmetry of each state and second with
-    the order of these symmetries (1,2,3...)
+    Create two lists: first with the symmetry of each state (A1,A2,A3...) and second with
+    the order of these symmetries (1A1,2A2,3A3...)
     :param: file_ras, totalstates
-    :return states_selected_by_symmetry: symmetry of each state array
+    :return: all_state_symmetries, ordered_state_symmetries
     """
     with open(file, encoding="utf8") as f:
         data = f.readlines()
@@ -143,8 +134,6 @@ def get_symmetry_states(file, totalstates):
         if len(elements) == totalstates:
             break  # All symmetries appended
     all_state_symmetries = np.array(elements)
-    # print(state_symmetries)
-    # exit()
 
     ordered_state_symmetries = []  # State symmetries with the order (1,2,3..)
     for i in range(0, len(all_state_symmetries)):
@@ -154,17 +143,14 @@ def get_symmetry_states(file, totalstates):
                 number += 1
         element = str(number) + all_state_symmetries[i]
         ordered_state_symmetries.append(element)
-    # print(ordered_state_symmetries)
-    # exit()
-
     return all_state_symmetries, ordered_state_symmetries
 
 
 def get_hole_part_contributions(file, totalstates):
     """
-    Take the contribution of hole configurations for each state
-    :param: lines_input
-    :return: hole_contributions
+    Take the hole and particle contributions of each state.
+    :param: file, totalstates
+    :return: hole_contributions, part_contributions
     """
     with open(file, encoding="utf-8") as file:
         data = file.readlines()
@@ -191,15 +177,14 @@ def get_hole_part_contributions(file, totalstates):
         if len(elements) == totalstates:
             break
     part_contributions = np.array(elements, dtype=float)
-
     return hole_contributions, part_contributions
 
 
 def get_mulliken_spin(file, totalstates, states):
     """
-    Get energies of the states: 0: ras ; 1: CASSCF ; 2: SF-DFT
-    :param: selected_states, input_ras, theory_level
-    :return: eigenenergies
+    Get Mulliken charge and spin of the first atom, i.e. a metal in transition atom complexes.
+    :param: file, totalstates, states
+    :return: charge_mulliken, spin_mulliken
     """
     word_search = '    Mulliken population analysis '
     element_charge = []
@@ -208,7 +193,7 @@ def get_mulliken_spin(file, totalstates, states):
     with open(file, encoding="utf8") as file:
         for line in file:
             if word_search in line:
-                for i in range(0, 4):  # Tahe the 5th line
+                for i in range(0, 4):  # Take the 5th line
                     next_line = next(file)
                     i += 1
 
@@ -231,17 +216,15 @@ def get_mulliken_spin(file, totalstates, states):
 
     charge_mulliken = np.array(charge_mulliken_selected, dtype=float)
     spin_mulliken = np.array(spin_mulliken_selected, dtype=float)
-
     return charge_mulliken, spin_mulliken
 
 
 def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
-    and 'ket' in columns, with spin order -1/2 , +1/2.
-    :param: file, totalstates, selected_states, soc_option: type of SOC
-    considered, number of states, states selected, output Q-Chem
-    :return SOC_matrix: SOC matrix
+    and 'ket' in columns, with spin order -Ms , +Ms.
+    :param: file, totalstates, selected_states, soc_option
+    :return: doublet_soc, sz_list
     """
     with open(file, encoding="utf8") as f:
         output = f.read()
@@ -402,143 +385,16 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     selected_socs = get_selected_states_socs(selected_states, sz_list, all_socs)
     doublet_soc = get_doublets_soc(selected_states, selected_socs)
 
-    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) \
-    #                  for row in np.round((doublet_soc[:, :]), 5)]))
-    # print(" ")
-    # print(state_multiplicities, sz_list)
-    # exit()
-
     doublet_soc = doublet_soc / 219474.63068  # From cm-1 to a.u.
-    sz_list = [-0.5, 0.5]  # For doublets, it is not going to be used
+    sz_list = [-0.5, 0.5]
     return doublet_soc, sz_list
-
-
-def get_spin_orbit_couplings_manual(file, totalstates, n_states, soc_option):
-    """
-    WRITTEN WHEN INTERSTATE PROPERTIES BETWEEN 2 STATES
-    ARE SHOWN ONLY ONCE.
-    Spin-orbit coupling values are written in matrix with 'bra' in rows
-    and 'ket' in columns, with spin order -1/2 , +1/2.
-    :param: selected_SOC, totalstates, n_states, file_ras: type of SOC
-    considered, number of states, states selected, output Q-Chem
-    :return SOC_matrix: SOC matrix
-    """
-    word_search = 0
-    if soc_option == 0:
-        word_search = 'Total mean-field SOC matrix'
-    elif soc_option == 1:
-        word_search = ' 1-elec SOC matrix '
-    elif soc_option == 2:
-        word_search = ' 2-elec mean-field SOC matrix '
-
-    elements = []
-    total_number_soc = sum(range(totalstates - 1, 0, -1)) * 4
-
-    with open(file, encoding="utf8") as file:
-        for line in file:
-            if word_search in line:
-
-                next_line = next(file)
-
-                if next_line.startswith("                     |Sz'=-0.50>"):
-                    next_line = next(file)
-
-                    while next_line.startswith(" <Sz="):
-                        if next_line.startswith((" <Sz=-0.50|", " <Sz= 0.50|")):
-                            # next_line = next_line.replace('***********i', '0.00000')
-                            elements.append(next_line[12:35].split())  # add elements |Sz'=-0.50> to a list
-                            elements.append(next_line[37:61].split())  # add elements |Sz'=+0.50> to a list
-                            next_line = next(file)
-                        else:
-                            next_line = next(file)
-
-                if next_line.startswith("                     |Sz'=-1.50>"):
-                    next_line = next(file)
-
-                    while next_line.startswith(" <Sz="):
-                        if next_line.startswith((" <Sz=-0.50|", " <Sz= 0.50|")):
-                            # next_line = next_line.replace('***********i', '0.00000')
-                            elements.append(next_line[37:61].split())  # add elements |Sz'=-0.50> to a list
-                            elements.append(next_line[63:87].split())  # add elements |Sz'=+0.50> to a list
-                            next_line = next(file)
-                        else:
-                            next_line = next(file)
-
-            if len(elements) == total_number_soc:
-                break
-    # --------------------------------------------------------------------------------
-    soc_selected_list = []
-    for ket in n_states:  # | A >
-        for bra in n_states:  # < B |
-
-            ket_index = 0
-            while ket_index < 4:
-                if ket == bra:  # SOC between same state values zero
-                    soc_selected_list.append(['0.000000', '0.000000'])
-
-                elif ket < bra:  # In Q-Chem, SOCs written when bra > ket
-                    ket_position = 0
-                    for ket_number in range(1, ket):
-                        ket_position = ket_position + 4 * (totalstates - ket_number)
-                    bra_position = 4 * (bra - ket - 1)
-
-                    soc_position = ket_position + bra_position + ket_index
-                    soc_selected_list.append(elements[soc_position])
-
-                else:
-                    pass
-
-                ket_index = ket_index + 1
-    soc_selected = np.array(soc_selected_list, dtype=float)
-    # --------------------------------------------------------------------------------
-    soc = np.zeros((len(n_states) * 2, len(n_states) * 2), dtype=complex)
-    nel = 0
-
-    for ket in n_states:  # |A, -1/2 >, |A, +1/2 >
-        for bra in n_states:  # <B, -1/2|, <B, +1/2|
-            ket_index = n_states.index(ket) * 2
-            bra_index = n_states.index(bra) * 2
-
-            if ket == bra:
-                soc[bra_index, ket_index] = complex(soc_selected[nel, 0], soc_selected[nel, 1])
-                nel = nel + 1
-                soc[bra_index, ket_index + 1] = complex(soc_selected[nel, 0], soc_selected[nel, 1])
-                nel = nel + 1
-                soc[bra_index + 1, ket_index] = complex(soc_selected[nel, 0], soc_selected[nel, 1])
-                nel = nel + 1
-                soc[bra_index + 1, ket_index + 1] = complex(soc_selected[nel, 0], soc_selected[nel, 1])
-                nel = nel + 1
-
-            if ket < bra:  # In Q-Chem, SOCs written when ket < bra
-                soc[bra_index, ket_index] = complex(soc_selected[nel, 0], soc_selected[nel, 1])
-                soc[ket_index, bra_index] = np.conj(soc[bra_index, ket_index])
-                nel = nel + 1
-
-                soc[bra_index, ket_index + 1] = complex(soc_selected[nel, 0], soc_selected[nel, 1])
-                soc[ket_index + 1, bra_index] = np.conj(soc[bra_index, ket_index + 1])
-                nel = nel + 1
-
-                soc[bra_index + 1, ket_index] = complex(soc_selected[nel, 0], soc_selected[nel, 1])
-                soc[ket_index, bra_index + 1] = np.conj(soc[bra_index + 1, ket_index])
-                nel = nel + 1
-
-                soc[bra_index + 1, ket_index + 1] = complex(soc_selected[nel, 0], soc_selected[nel, 1])
-                soc[ket_index + 1, bra_index + 1] = np.conj(soc[bra_index + 1, ket_index + 1])
-                nel = nel + 1
-
-    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row])\
-    #                  for row in np.round((soc[:,:]),5)]))
-    # print(" ")
-
-    soc = soc / 219474.63068  # From cm-1 to a.u.
-    return soc
 
 
 def get_socc_values(file, totalstates):
     """
-    Get SOCC between states
-    :param: input, totalstates
-    :return: hole_contributions
+    Get spin-orbit coupling constant between states
+    :param: file, totalstates
+    :return: socc
     """
     with open(file, encoding="utf-8") as file:
         data = file.readlines()
@@ -563,11 +419,10 @@ def get_socc_values(file, totalstates):
 
 def get_spin_matrices(file, n_states):
     """
-    Obtain the 3 dimensions of spin (s_x, s_y, s_z) from s2 of each state and
-     put them in a 3-dim array. Spin is written with 'bra' in rows and
-     'ket' in columns, with spin order -1/2 , +1/2.
-    :param: file, n_states: output Q-Chem, number of states
-    :return total_spin_matrix: matrix with spins < m' | S | m >  in 3-D
+    Obtain the 3 dimensions of spin (s_x, s_y, s_z) from s2 of each state and put them in a 3-dim array.
+    Spin is written with 'bra' in rows and 'ket' in columns, with spin order -Ms , +Ms.
+    :param: file, n_states
+    :return: spin_matrix: matrix with spins < m' | S | m >  in 3-D
     """
 
     def s2_from_file(file_qchem):
@@ -614,7 +469,7 @@ def get_spin_matrices(file, n_states):
     def s_to_s2(spin):
         """
         get s2 from total spin (s)
-        :param spin: total spin (s)
+        :param: spin: total spin (s)
         :return: s2
         """
         return spin * (spin + 1)
@@ -626,7 +481,7 @@ def get_spin_matrices(file, n_states):
         """
         Get spin matrices s_x, s_y, s_z between two spin states (s,m) and (s,m') such that
         sx = < m' | s_x | m >, sy = < m' | s_y | m > and sz = < m' | s_z | m >
-        :param spin: total spin (s)
+        :param: spin: total spin (s)
         :return: s_x, s_y, s_z
         """
 
@@ -698,7 +553,6 @@ def get_spin_matrices(file, n_states):
     #                     for row in np.round((spin_matrix[:,:,k]),5)]))
     #    print(" ")
     # exit()
-
     return spin_matrix
 
 
@@ -749,19 +603,16 @@ def get_ground_state_orbital_momentum(file, totalstates):
 
 def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
-    Orbital angular momentum values are written in matrix with
-    'bra' in rows and 'ket' in columns, with spin order -1/2 , +1/2.
-    Third dimension is the direction.
-    :param: file_ras, totalstates, selected_states, sz_list: output Q-Chem, number of
-    states, states selected
+    Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
+    with spin order -Ms , +Ms. Third dimension is the direction.
+    :param: file, totalstates, selected_states, sz_list
     :return: orbital_matrix
     """
     def get_all_momentum(line, n_states):
         """
-        Get Lk between all the states in x,y,z dimensions.
-        | A > in columns, < B | in rows.
+        Get Lk between all the states in x,y,z dimensions. | A > in columns, < B | in rows.
         :param: line, n_states
-        :return: all_orbital_momentums
+        :return: all_orbital_momentum
         """
         all_orbital_momentum = np.zeros((n_states, n_states, 3), dtype=complex)
 
@@ -772,21 +623,13 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
                     for k in range(0, 3):
                         all_orbital_momentum[j, i, k] = element[k]
-
-        # print('Angular momentums (x,y,z):')
-        # for k in range(0,3):
-        #    print('Dimension: ', k)
-        #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-        #                     for row in np.round((lk_matrix[:,:,k]),5)]))
-        #    print(" ")
-        # exit()
         return all_orbital_momentum
 
     def get_selected_states_momentum(n_states, all_momentum):
         """
         Get Lk between the selected states in x,y,z dimensions.
-        :param: selected_states, sz_list, all_soc
-        :return: lk_matrix
+        :param: n_states, all_momentum
+        :return: selected_momentum
         """
         selected_momentum = np.zeros((len(n_states), len(n_states), 3), dtype=complex)
 
@@ -795,25 +638,16 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
                 for j, all_j in enumerate(n_states):
                     # print('i, j; ', i, j, 'all_i, all_j:', all_i-1, all_j-1)
                     selected_momentum[i][j][k] = all_momentum[all_i-1][all_j-1][k]
-
-        # print('Angular momentums (x,y,z):')
-        # for k in range(0, 3):
-        #     print('Dimension: ', k)
-        #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-        #                      for row in np.round((lk[:, :, k]), 5)]))
-        #     print(" ")
-        # exit()
         return selected_momentum
 
     def get_doublets_momentum(n_states, selected_momentum):
         """
         Get Lk between the selected states in x,y,z dimensions for doublets,
         i.e. in each row (column) there are state A,-1/2 and A,+1/2.
-        :param: selected_states, selected_momentum
-        :return: lk_matrix
+        :param: n_states, selected_momentum
+        :return: doublets_momentum
         """
-        doublets_momentum = np.zeros((len(selected_momentum) * 2, len(n_states) * 2, 3),
-                                     dtype=complex)
+        doublets_momentum = np.zeros((len(selected_momentum) * 2, len(n_states) * 2, 3), dtype=complex)
 
         for k in range(0, 3):
             for i in range(0, len(selected_momentum) * 2, 2):
@@ -821,25 +655,16 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
                     doublets_momentum[i, j][k] = selected_momentum[i // 2][j // 2][k]
                     doublets_momentum[i + 1, j + 1][k] = selected_momentum[i // 2][j // 2][k]
-
-        # print('Angular momentums (x,y,z):')
-        # for k in range(0, 3):
-        #     print('Dimension: ', k)
-        #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-        #                      for row in np.round((selected_momentum[:, :, k]), 5)]))
-        #     print(" ")
-        # exit()
         return doublets_momentum
 
     def get_all_multip_momentum(all_momentums, all_sz):
         """
         Get Lk between the selected states in x,y,z dimensions for doublets,
         i.e. in each row (column) there are state A,-1/2 and A,+1/2.
-        :param: selected_states, sz_list, all_soc
-        :return: lk_matrix
+        :param: all_momentums, all_sz
+        :return: lk_values
         """
-        lk_values = np.zeros((len(all_momentums) * len(all_sz),
-                              len(selected_states) * len(all_sz), 3), dtype=complex)
+        lk_values = np.zeros((len(all_momentums) * len(all_sz), len(selected_states) * len(all_sz), 3), dtype=complex)
 
         for k in range(0, 3):
             for i in range(0, len(all_momentums) * len(all_sz), len(all_sz)):
@@ -847,14 +672,6 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
                     for multip in range(0, len(all_sz)):
                         lk_values[i + multip, j + multip][k] = all_momentums[i // len(all_sz)][j // len(all_sz)][k]
-
-        # print('Angular momentums (x,y,z):')
-        # for k in range(0, 3):
-        #     print('Dimension: ', k)
-        #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-        #                      for row in np.round((lk_values[:, :, k]), 5)]))
-        #     print(" ")
-        # exit()
         return lk_values
 
     with open(file, encoding="utf8") as f:
@@ -866,24 +683,14 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     selected_lk = get_selected_states_momentum(selected_states, all_lk)
     doublets_lk = get_doublets_momentum(selected_states, selected_lk)
     all_multip_lk = get_all_multip_momentum(selected_lk, sz_list)
-
-    # print('Angular momentums (x,y,z):')
-    # for k in range(0,3):
-    #    print('Dimension: ', k)
-    #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                     for row in np.round((lk_values[:,:,k]),5)]))
-    #    print(" ")
-    # exit()
     return doublets_lk
 
 
 def get_orbital_matrices_manual(file, totalstates, n_states):
     """
-    Orbital angular momentum values are written in matrix with
-    'bra' in rows and 'ket' in columns, with spin order -1/2 , +1/2.
-    Third dimension is the direction.
-    :param: file_ras, totalstates, n_states: output Q-Chem, number of
-    states, states selected
+    Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
+    with spin order -Ms , +Ms. Third dimension is the direction.
+    :param: file, totalstates, n_states
     :return: orbital_matrix
     """
     word_search = ['< B | Lx | A >', '< B | Ly | A >', '< B | Lz | A >']
@@ -954,12 +761,4 @@ def get_orbital_matrices_manual(file, totalstates, n_states):
                     orbital_matrix[ket_index + 1, bra_index + 1, k] = (-1) * orbital_matrix[
                         bra_index + 1, ket_index + 1, k]
                 nel = nel + 3
-
-    # print('Angular momentums (x,y,z):')
-    # for k in range(0,3):
-    #    print('Dimension: ', k)
-    #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                     for row in np.round((orbital_matrix[:,:,k]),12)]))
-    #    print(" ")
-    # exit()
     return orbital_matrix

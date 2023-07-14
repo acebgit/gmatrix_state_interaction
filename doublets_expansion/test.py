@@ -7,7 +7,7 @@ import sys
 from parser_init import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_socc_values, get_ground_state_orbital_momentum, get_symmetry_states, \
     get_spin_orbit_couplings, get_mulliken_spin
-from parser_gtensor import from_energies_soc_to_g_values, print_g_calculation, from_gvalues_to_gshifts
+from parser_gtensor import from_energies_soc_to_g_values, print_g_calculation
 from parser_excitstates import get_excited_states_analysis, improved_active_space
 from doublets_expansion.eom_analysis.parser_excitstates_eom import get_eom_transitions_analysis
 from doublets_expansion.eom_analysis.parser_ras_eom import ras_and_eom_energy_exchange
@@ -19,7 +19,7 @@ from parser_plots import get_bar_chart, sos_analysis_and_plot
 # G-TENSOR CALCULATION
 g_calculation = 1
 ras_input = '../\
-RASCI_results/co2_def2-TZVP_11_9_30_states.out'  # str(sys.argv[1])
+RASCI_results/h2o/h2o_def2tzvp_5_5_50_states.out'  # str(sys.argv[1])
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1, 4, 5]  # States to be included when "selected_states = 0"

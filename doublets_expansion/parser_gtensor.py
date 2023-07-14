@@ -1,28 +1,53 @@
-"""
-    G-TENSOR CALCULATION WITH ORBITAL AND SPIN
-    ANGULAR MOMENTUM AND SOC BETWEEN STATES
- Analysis of the excited states and print of those
- orbitals involved in the configurations with the
- highest amplitudes in the excited states
-"""
 import numpy as np
 from numpy import linalg, sqrt
 
 
+def hermitian_test(matrix):
+    """
+    Check if a matrix is Hermitian. If not, exit.
+    :param: matrix
+    """
+    for i in range(0, len(matrix)):
+        for j in range(i, len(matrix)):
+            element_1 = np.round(matrix[i, j], 4)
+            element_2 = np.round(np.conjugate(matrix[j, i]), 4)
+            if element_1 != element_2:
+                print("Hamiltonian is not Hermitian")
+                print('positions: ', i // 2, 'value:', matrix[i, j])
+                print('positions: ', j // 2, 'value:', matrix[j, i])
+                exit()
+                
+                
+def reordering_eigenvectors(eigenval, eigenvect):
+    """
+    Reorder eigenvectors (and eigenenergies) by weight coefficients
+    :param: eigenvalues, eigenvectors
+    :return: eigenvalues, eigenvectors
+    """
+    change_order = np.zeros(len(eigenvect), dtype=complex)
+
+    for v_1 in range(0, len(eigenvect)):
+        for v_2 in range(v_1, len(eigenvect)):
+
+            if abs(eigenvect[v_1, v_2]) > abs(eigenvect[v_1, v_1]):
+                change_order[:] = eigenvect[:, v_1]
+                eigenvect[:, v_1] = eigenvect[:, v_2]
+                eigenvect[:, v_2] = change_order[:]
+
+                change_order.real[0] = eigenval[v_1]
+                eigenval[v_1] = eigenval[v_2]
+                eigenval[v_2] = change_order.real[0]
+    return eigenval, eigenvect
+
+
 def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coupling, sz_values):
     """
-    hamiltonian is written 'bra' in rows and 'ket' in columns,
-    with spin order -1/2 , +1/2.
+    Hamiltonian is written 'bra' in rows and 'ket' in columns, with spin order -1/2 , +1/2.
     :param: selected_states, eigenenergies, spin_orbit_coupling
     :return: hamiltonian
     """
     hamiltonian = np.zeros((len(selected_states) * len(sz_values),
                             len(selected_states) * len(sz_values)), dtype=complex)
-    # spin_orbit_coupling[:,:] = 0
-    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row])\
-    #                  for row in np.round((spin_orbit_coupling[:,:]),5)]))
-    # print(" ")
-    # exit()
 
     for i in range(0, len(selected_states) * len(sz_values)):
         for j in range(0, len(selected_states) * len(sz_values)):
@@ -31,25 +56,7 @@ def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coup
             else:
                 hamiltonian[i, j] = spin_orbit_coupling[i, j]
 
-    for i in range(0, len(hamiltonian)):
-        for j in range(0, len(hamiltonian)):
-            if hamiltonian[i,j] != hamiltonian[j,i].conjugate():
-                print('Hamiltonian is not Hermitic')
-                print('Problem in states: ', i//2+1, j//2+1)
-                print(hamiltonian[i,j], hamiltonian[j,i])
-                print()
-                print('hamiltonian (SOC in cm-1, energies in a.u):')
-                print('\n'.join([''.join(['{:^20}'.format(item) for item in row])\
-                                 for row in np.round((hamiltonian[:,:]),5)]))
-                print(" ")
-                exit()
-
-    # print('hamiltonian (SOC in cm-1, energies in a.u):')
-    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row])\
-    #                  for row in np.round((hamiltonian[:,:]),5)]))
-    # print(" ")
-    # exit()
-
+    hermitian_test(hamiltonian)
     return hamiltonian
 
 
@@ -59,72 +66,20 @@ def hamiltonian_diagonalization(hamiltonian):
     2) eigenvectors-eigenvalues are ordered by weight coefficients
     3) Doublet with the lowest energy is set as the new basis (Kramer doublet)
     :param: Hamiltonian
-    :return eigenvalues, eigenvectors, kramer_st: kramer_st is the index
+    :return: eigenvalues, eigenvectors, kramer_st: kramer_st is the index
     of the state set as Kramer doublet * 2
     """
-    # def normalize_vector(vector):
-    #     """
-    #     Normalize a complex vector
-    #     :param vector:
-    #     :return:
-    #     """
-    #     sum_of_coefficients = 0
-    #     for i in range(0, len(vector)):
-    #         coefficient = vector.real[i]**2 + vector.imag[i]**2
-    #         sum_of_coefficients += coefficient
-    #
-    #     module = sqrt( sum_of_coefficients )
-    #     vector[:] = vector[:] / module
-    #     return vector, module
-
     eigenvalues, eigenvectors = linalg.eigh(hamiltonian)
-
-    # Reorder eigenvectors (and eigenenergies) by weight coefficients
-    change_order = np.zeros(len(eigenvectors), dtype=complex)
-    for v_1 in range(0, len(eigenvectors)):
-        for v_2 in range(v_1, len(eigenvectors)):
-
-            if abs(eigenvectors[v_1, v_2]) > abs(eigenvectors[v_1, v_1]):
-                change_order[:] = eigenvectors[:, v_1]
-                eigenvectors[:, v_1] = eigenvectors[:, v_2]
-                eigenvectors[:, v_2] = change_order[:]
-
-                change_order.real[0] = eigenvalues[v_1]
-                eigenvalues[v_1] = eigenvalues[v_2]
-                eigenvalues[v_2] = change_order.real[0]
-
-    # Normalize the eigenvectors
-    # for i in range(0, len(eigenvalues)):
-    #     print('Before eigenvector:', eigenvectors[:, i])
-    #     module = sqrt(sum( ( abs(eigenvectors[:, i]) )** 2) )
-    #     eigenvectors[:, i] = eigenvectors[:, i] / module
-    #     print('After eigenvector:', eigenvectors[:, i])
-    #     print('module:', module)
-    #     print()
-    # print('-------------------------------------')
-    # for i in range(0, len(eigenvalues)):
-    #     eigenvectors[:, i],module = normalize_vector(eigenvectors[:,i])
-    #     print('eigenvalue:', eigenvalues[i])
-    #     print('eigenvector:', eigenvectors[:, i])
-    #     print('module:', module)
-    #     print()
+    eigenvalues, eigenvectors = reordering_eigenvectors(eigenvalues, eigenvectors)
 
     # Kramer doublets selection:
     minimum_energy = min(eigenvalues)
     eigenvalues_list = list(eigenvalues)
     kramer_st = eigenvalues_list.index(minimum_energy)
 
-    # The index of the selected state must be even since
-    # Kramer doublets are [kramer_st, kramer_st+1]
+    # The index of the selected state must be even since Kramer doublets are [kramer_st, kramer_st+1]
     if (kramer_st % 2) != 0:
         kramer_st = kramer_st - 1
-
-    # for i in range(0, len(eigenvalues)):
-    #     print('eigenvalue:', eigenvalues[i])
-    #     print('eigenvector:', eigenvectors[:, i])
-    #     print()
-    # exit()
-
     return eigenvalues, eigenvectors, kramer_st
 
 
@@ -133,16 +88,11 @@ def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angul
     Spin or orbital angular matrix calculation using:
     1) coeff_bra, coeff_ket: coefficients of the lineal combination of non-relativistic states,
     that come from Kramer doublet states eigenvectors
-    2) angular_value: angular momentum between states. Depending on the
-    column of the final matrix, it takes real (col 0), imaginary (col 1) or
-    both parts (col 2).
-
+    2) angular_value: angular momentum between states. Depending on the column of the final matrix,
+    it takes real (col 0), imaginary (col 1) or both parts (col 2).
     :param: eigenvalues, eigenvectors, kramer_st, input_angular_matrix
-    :return angular_matrix: contains the spin value < B(S,Sz) | Sx | A(S',Sz') >,
-    meaning < B(S,Sz)| corresponds to state "i" (in rows) and | A(S',Sz') > to
-    state "j" (in columns)
+    :return: angular_matrix: contains the spin value < B(S,Sz) | Sx | A(S',Sz') >
     """
-    # Matrices calculation:
     angular_matrix = np.zeros((3, 3), dtype=complex)
 
     for row in range(0, 3):  # dimension x,y,z
@@ -151,12 +101,9 @@ def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angul
             for bra in range(0, len(eigenvalues)):  # state <B|
                 for ket in range(0, len(eigenvalues)):  # state |A>
 
-                    # coeff_ket for 1st and 2nd column ("x", "y" dir)
-                    # coeff_ket_2 for 3rd column ("z" direction)
                     coeff_bra = np.conj(eigenvectors[bra, kramer_st + 1])
                     coeff_ket = (eigenvectors[ket, kramer_st])
                     coeff_ket_2 = (eigenvectors[ket, kramer_st + 1])
-
                     angular_value = (input_angular_matrix[bra, ket, row])
 
                     if column == 0:
@@ -175,7 +122,6 @@ def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angul
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
     #                  for row in np.round((angular_matrix[:,:]),8)]))
     # print(" ")
-
     return angular_matrix
 
 
@@ -183,15 +129,15 @@ def g_factor_calculation(lambda_matrix, sigma_matrix):
     """
     Calculation of the G-tensor with lambda and sigma matrices. Then, g-factors
     are calculated as square roots of the eigenvalues of the G-tensor.
+    :param: lambda_matrix, sigma_matrix
+    :return: upper_g_matrix, g_tensor_values
     """
     # G-tensor matrix obtention:
     lande_factor = 2.002319304363
-
     sigma_plus_lambda = lande_factor * sigma_matrix + lambda_matrix
 
-    upper_g_matrix = np.matmul(sigma_plus_lambda, np.transpose(sigma_plus_lambda))
-
     # Diagonalize and reorder by weight coefficients:
+    upper_g_matrix = np.matmul(sigma_plus_lambda, np.transpose(sigma_plus_lambda))
     upper_g_matrix_diagonal, rotation_matrix = linalg.eigh(upper_g_matrix)
 
     change_order = np.zeros(len(upper_g_matrix_diagonal), dtype=complex)
@@ -206,24 +152,9 @@ def g_factor_calculation(lambda_matrix, sigma_matrix):
                 upper_g_matrix_diagonal[j] = upper_g_matrix_diagonal[i]
                 upper_g_matrix_diagonal[i] = change_order.real[0]
 
-    # Obtain the g-factor: g = O^(1r) * X * sqrt(Gdiag) * O
-    # X_mat = np.identity(3)
-    # g_value = (np.transpose(rotation_matrix)).dot(X_mat).dot(sqrt(upper_g_matrix_diagonal)).dot(rotation_matrix)
-    # g_value = ( (g_value) - lande_factor ) * 1000
-
     g_tensor_values = np.zeros(3, dtype=complex)
     for i in range(0, 3):
         g_tensor_values[i] = (sqrt(upper_g_matrix_diagonal[i]) - lande_factor) * 1000
-
-    # print('G_tensor matrix:')
-    # print(''.join(['{:^15}'.format(item) for item in ['x','y','z']]) )
-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                  for row in np.round((upper_g_matrix[:,:]),5)]))
-    # print('')
-    # print(np.round(g_tensor_values.real[0], 3), np.round(g_tensor_values.real[1], 3), \
-    #       np.round(g_tensor_values.real[2], 3))
-    # print('')
-
     return upper_g_matrix, g_tensor_values
 
 
@@ -231,8 +162,8 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                   excitation_energies_ras, soc_ras, sz_list):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param: input, states, totalstates, excitation_energies, SOC
-    :return: upper_g_matrix, G_tensor_results
+    :param: file, states_ras, totalstates, excitation_energies_ras, soc_ras, sz_list
+    :return: upper_g_matrix, g_values
     """
     from parser_init import get_spin_matrices, get_orbital_matrices
 
@@ -274,54 +205,3 @@ def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
     print(np.round(upper_g_tensor_results_ras.real[0], 3), np.round(upper_g_tensor_results_ras.real[1], 3),
           np.round(upper_g_tensor_results_ras.real[2], 3))
     print('')
-
-
-# def perturbative_method(totalstates, eigenenergies, spin_orbit_coupling):
-#     """
-#     The coefficients that previously were on the eigenvectors
-#     are now calculated using equation 27: they are called "eta". Similar
-#     process to the one used in Hamiltonian construction, BUT considering
-#     also the eigenvalues substraction in the denominator: en[a] - en[b],
-#     where the "a" corresponds to the row number and the "b" to the column number
-#     """
-#     coef = np.zeros((len(states_ras) * 2, len(states_ras) * 2), dtype=complex)
-#     k1 = 0
-#     k2 = 0
-#     for y in range(0, len(totalstates) * 2):
-#         k1 = 0
-#         for x in range(0, len(totalstates) * 2):
-#             if (y == x) or (x % 2 != 0 and x - 1 == y):
-#                 coef[x][y] = 0
-#                 k1 = k1 + 1
-#             elif (y % 2 == 0):
-#                 coef[x][y] = spin_orbit_coupling[x - k1 + k2][0] / (eigenenergies[x] - eigenenergies[y])
-#                 coef[x][y + 1] = spin_orbit_coupling[x - k1 + k2][1] / (eigenenergies[x] - eigenenergies[y + 1])
-#         k2 = k2 + len(states_ras) - 1
-#
-#     # The procedure is the same than for the Hamiltonian case. Coefficients matrix
-#     # obtained by perturbation expressions is symmetric, meaning multiplication does not
-#     # change if it is done by columns or by rows
-#     # gpt_mat_ras = np.zeros((len(states_ras) * 2, len(states_ras) * 2, 3), dtype=complex)
-#     # for z in range(0, 3):
-#     #     for y in range(0, len(states_ras) * 2, 2):
-#     #         for x in range(0, len(states_ras) * 2):
-#     #             if (y == x) or (x % 2 != 0 and x - 1 == y):
-#     #                 gpt_mat_ras[y, x, z] = 0
-#     #                 gpt_mat_ras[x, y, z] = 0
-#     #             elif (x % 2 == 0):
-#     #                 gpt_mat_ras[x, y, z] = -4000 * etacoeff_ras[y, x] * l_matrix[x // 2, y // 2, z]
-#     #                 gpt_mat_ras[x + 1, y, z] = -4000 * etacoeff_ras[y, x + 1] * l_matrix[x // 2, y // 2, z]
-#     #                 gpt_mat_ras[x, y + 1, z] = -4000 * etacoeff_ras[y + 1, x] * l_matrix[x // 2, y // 2, z]
-#     #                 gpt_mat_ras[x + 1, y + 1, z] = -4000 * etacoeff_ras[y + 1, x + 1] * l_matrix[x // 2, y // 2, z]
-#
-#     return
-
-
-def from_gvalues_to_gshifts(g_lista):
-    lande_factor = 2.0023
-    # lande_factor = 2.002319304363
-
-    for i in range(0, len(g_lista)):
-        g_shift = (g_lista[i] - lande_factor) * 1000
-        # g_shift = g_lista[i] / 1000 + lande_factor
-        print(np.round(g_shift, 1))
