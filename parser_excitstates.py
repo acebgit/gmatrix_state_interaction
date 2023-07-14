@@ -73,7 +73,7 @@ def get_alpha_beta(qchem_file):
     return alpha, beta
 
 
-def get_highest_amplitudes(file):
+def get_highest_amplitudes(file, amplitude_cutoff):
     """
     Get:
     - index_max_amplitudes: list of the indexes of the configurations with relevant amplitudes (higher than a cut-off)
@@ -147,7 +147,7 @@ def get_highest_amplitudes(file):
         i += 1
 
     amplitudes, configurations_orbitals = get_configurations_information(next_line)
-    index_max_amplitudes = other_important_orbitals(amplitudes, amplitude_cutoff=0.7)
+    index_max_amplitudes = other_important_orbitals(amplitudes, amplitude_cutoff)
     return index_max_amplitudes, configurations_orbitals
 
 
@@ -277,12 +277,11 @@ def get_new_active_space_electrons(new_active_space, homo_orbital):
     return electrons
 
 
-def get_excited_states_analysis(file):
+def get_excited_states_analysis(file, cutoff):
     """
-    Obtention of a matrix with several data for each excited state. Cut-off determines the amplitude
-    difference between the 1st and 2nd (or more) important configurations in each state: if it is lower,
-    the state will appear another time with the 2nd configuration.
-    :param: input
+    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
+    of the 1st configuration that need to have the other configurations to be shown in each state.
+    :param: file, cutoff
     :return: excited_states_presentation_matrix
     """
     totalstates = get_number_of_states(file)
@@ -317,7 +316,7 @@ def get_excited_states_analysis(file):
         for line in file:
             if word_search in line:  # Go to configurations line
 
-                index_relevant_amplit, state_orbitals = get_highest_amplitudes(file)
+                index_relevant_amplit, state_orbitals = get_highest_amplitudes(file, cutoff)
 
                 # Include all those configurations with relevant amplitudes in the final list
                 for i in index_relevant_amplit:
@@ -382,7 +381,7 @@ def improved_active_space(file):
         for line in file:
             if word_search in line:  # Go to configurations line
 
-                index_max_amplitudes, state_orbitals = get_highest_amplitudes(file)
+                index_max_amplitudes, state_orbitals = get_highest_amplitudes(file, cutoff)
 
                 for i in index_max_amplitudes:
                     new_orbital = get_orbital(homo_orbital, state_orbitals[i], initial_active_orbitals)
