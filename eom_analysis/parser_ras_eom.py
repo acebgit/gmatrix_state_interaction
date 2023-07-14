@@ -1,11 +1,11 @@
 import numpy as np
 
-from doublets_expansion.parser_init import get_number_of_states, get_eigenenergies, get_selected_states, \
+from parser_init import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_spin_orbit_couplings, get_socc_values
 
-from doublets_expansion.parser_gtensor import from_energies_soc_to_g_values
+from parser_gtensor import bolvin_from_energies_soc_to_g_values
 
-from doublets_expansion.eom_analysis.parser_excitstates_eom import get_eom_type, get_scf_energy, get_irreps_energies, \
+from eom_analysis.parser_excitstates_eom import get_eom_type, get_scf_energy, get_irreps_energies, \
     prepare_presentation_list, \
     get_maximum_amplitude_orbitals, get_eom_socc_values, eom_results
 
@@ -83,9 +83,9 @@ def ras_and_eom_energy_exchange(eom_input, file, states_ras, ras_states_to_chang
 
     soc_constant_ras = get_socc_values(file, totalstates)
 
-    upper_g_matrix, g_shifts = from_energies_soc_to_g_values(file, states_ras,
-                                                             totalstates, changed_excitation_energies,
-                                                             soc_ras, sz_values)
+    upper_g_matrix, g_shifts = bolvin_from_energies_soc_to_g_values(file, states_ras,
+                                                                    totalstates, changed_excitation_energies,
+                                                                    soc_ras, sz_values)
 
     comparison_presentation_list = get_comparison_results(ras_states_to_change, eom_states_to_change,
                                                           excitation_energies_ras, selected_excitation_energies_eom,
