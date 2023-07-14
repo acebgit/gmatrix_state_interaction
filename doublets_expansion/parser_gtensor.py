@@ -234,7 +234,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
     :param: input, states, totalstates, excitation_energies, SOC
     :return: upper_g_matrix, G_tensor_results
     """
-    from __init__ import get_spin_matrices, get_orbital_matrices
+    from parser_init import get_spin_matrices, get_orbital_matrices
 
     hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)
 

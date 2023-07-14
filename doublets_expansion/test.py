@@ -4,7 +4,7 @@
 import numpy as np
 import sys
 
-from __init__ import get_number_of_states, get_eigenenergies, get_selected_states, \
+from parser_init import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_socc_values, get_ground_state_orbital_momentum, get_symmetry_states, \
     get_spin_orbit_couplings, get_mulliken_spin
 from parser_gtensor import from_energies_soc_to_g_values, print_g_calculation, from_gvalues_to_gshifts

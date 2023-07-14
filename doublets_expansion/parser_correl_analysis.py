@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
-from __init__ import get_number_of_states, get_eigenenergies, get_selected_states,  \
+from parser_init import get_number_of_states, get_eigenenergies, get_selected_states,  \
     get_spin_orbit_couplings, get_spin_matrices, get_orbital_matrices, get_socc_values
 
 from parser_gtensor import get_hamiltonian_construction, hamiltonian_diagonalization, \

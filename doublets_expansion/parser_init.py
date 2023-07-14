@@ -201,7 +201,7 @@ def get_mulliken_spin(file, totalstates, states):
     :param: selected_states, input_ras, theory_level
     :return: eigenenergies
     """
-    word_search = 'Mulliken population analysis'
+    word_search = '    Mulliken population analysis '
     element_charge = []
     elements_spin = []
 

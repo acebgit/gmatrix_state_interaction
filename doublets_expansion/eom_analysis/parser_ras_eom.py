@@ -1,6 +1,6 @@
 import numpy as np
 
-from doublets_expansion.__init__ import get_number_of_states, get_eigenenergies, get_selected_states, \
+from doublets_expansion.parser_init import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_spin_orbit_couplings, get_socc_values
 
 from doublets_expansion.parser_gtensor import from_energies_soc_to_g_values
