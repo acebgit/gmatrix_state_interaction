@@ -263,8 +263,8 @@ def print_excited_states(presentation_list, n_states, hole_contributions,
     state = np.round(int(n_states), 0) + 1
     symmetry = state_symmetries[n_states]
 
-    hole = np.round(float(hole_contributions[n_states]), 2)
-    part = np.round(float(part_contributions[n_states]), 2)
+    hole = np.around(float(hole_contributions[n_states]), 2)
+    part = np.around(float(part_contributions[n_states]), 2)
 
     soc = np.round(float(socc_values[n_states]), 0)
     excit_energy = np.round(float(excitation_energies_ev[n_states]), 3)
