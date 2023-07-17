@@ -52,6 +52,26 @@ def get_ras_spaces(qchem_file):
     return ras_act_orb, ras_occ
 
 
+def s2_from_file(qchem_file):
+    """
+    get s2 of each state from Q-Chem otuput
+    :param: file
+    :return: s2
+    """
+    search = ['  <S^2>      : ']
+    elements = []
+
+    with open(qchem_file, encoding="utf8") as qchem_file:
+        for line in qchem_file:
+            if any(ii in line for ii in search):
+                line = line.split()
+                element = float(line[2])
+                elements.append(np.round(element, 2))
+
+    s2_each_states = np.array(elements, dtype=float)
+    return s2_each_states
+
+
 def get_alpha_beta(qchem_file):
     """
     Get the alpha and beta electrons.
@@ -232,9 +252,9 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
 
 def print_excited_states(presentation_list, n_states, hole_contributions,
                          part_contributions, socc_values, excitation_energies_ev,
-                         state_symmetries, new_orbital, orbital_momentum, mulliken_spin):
+                         state_symmetries, new_orbital, orbital_momentum, mulliken_spin, s2_list):
     """
-    Prepare tHe presentation list with each excited state values
+    Prepare the presentation list with each excited state values
     :param: presentation_list, n_states, hole_contributions,
                          part_contributions, socc_values, excitation_energies_ev,
                          state_symmetries, new_orbital, orbital_momentum, mulliken_spin
@@ -251,9 +271,10 @@ def print_excited_states(presentation_list, n_states, hole_contributions,
 
     orbital_ground_state = np.round(float(orbital_momentum[n_states]), 3)
 
-    spin = np.round(float(mulliken_spin[n_states]), 3)
+    mull_spin = np.round(float(mulliken_spin[n_states]), 3)
+    s2 = s2_list[n_states]
 
-    presentation_list.append([state, symmetry, hole, part, excit_energy, new_orbital, soc, orbital_ground_state, spin])
+    presentation_list.append([state, symmetry, hole, part, excit_energy, new_orbital, soc, orbital_ground_state, mull_spin, s2])
     return presentation_list, soc
 
 
@@ -293,6 +314,8 @@ def get_excited_states_analysis(file, cutoff):
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
 
+    s2_list = s2_from_file(file)
+
     hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates)
 
     mulliken_charge, mulliken_spin = get_mulliken_spin(file, totalstates, states_ras)
@@ -307,7 +330,7 @@ def get_excited_states_analysis(file, cutoff):
 
     excited_states_presentation_list = [['State', 'Symmetry', 'Hole', 'Part',
                                          'Excitation energy (eV)', 'Orbitals', 'SOCC (cm-1)',
-                                         'Orbital momentum', 'Mulliken Spin']]
+                                         'Orbital momentum', 'Mulliken Spin', 'S^2']]
 
     word_search = ' | HOLE  | '
     n_states = 0
@@ -327,7 +350,7 @@ def get_excited_states_analysis(file, cutoff):
                                                                                  part_contributions, socc_values,
                                                                                  excitation_energies_ras * 27.211399,
                                                                                  ordered_state_symmetries, new_orbitals,
-                                                                                 orbital_momentum, mulliken_spin)
+                                                                                 orbital_momentum, mulliken_spin, s2_list)
 
                 n_states += 1
 

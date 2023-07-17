@@ -1,7 +1,6 @@
 #####################################
 #          MODULES SELECTION
 #####################################
-# module load Python/3.7.4-Anaconda3-2019.10
 import sys
 
 from parser_init import get_eigenenergies, get_selected_states, get_number_of_states, get_spin_orbit_couplings
