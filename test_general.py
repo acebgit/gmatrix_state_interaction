@@ -14,9 +14,12 @@ from parser_excitstates import get_excited_states_analysis
 #####################################
 #            INPUT VALUES
 #####################################
-g_calculation = 1
+g_calculation = 0
 ras_input = '\
-roberto_molecules/C54H24B4_6_6.out'
+roberto_molecules/C74H32B4_8_8.out'
+
+get_excited_states_analysis(ras_input, cutoff=0.99)
+exit()
 
 several_molecules = 0
 path = "roberto_molecules"
@@ -26,7 +29,7 @@ states_ras = [1, 2, 3, 4, 5]  # States to be included when "selected_states = 0"
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
-excited_states_analysis = 1
+excited_states_analysis = 0
 sos_analysis = 1
 
 # OUTPUT

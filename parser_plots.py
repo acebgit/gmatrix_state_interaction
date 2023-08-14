@@ -57,9 +57,9 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
 
     # Features to select:
     fuente = 'sans-serif'  # 'serif'
-    small_size = 18
+    small_size = 22
     medium_size = 22
-    bigger_size = 18
+    bigger_size = 24
 
     weight_selected = 'normal'
     line_width = 2
