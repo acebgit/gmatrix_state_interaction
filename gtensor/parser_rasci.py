@@ -944,31 +944,31 @@ def get_my_eigenenergies(file, totalstates, selected_states):
     for i in selected_states:
         energies_selected.append(element_energy[i - 1])
         excited_energies_selected.append(elements_excitenergy[i - 1])
-    #
-    # eigenenergies = np.array(energies_selected, dtype=float)
-    # excitation_energies_ev = np.array(excited_energies_selected, dtype=float)
-    # excitation_energies = excitation_energies_ev / 27.211399  # From eV to a.u.
+
+    eigenenergies = np.array(energies_selected, dtype=float)
+    excitation_energies_ev = np.array(excited_energies_selected, dtype=float)
+    excitation_energies = excitation_energies_ev / 27.211399  # From eV to a.u.
     # print(excitation_energies_ev)
     # exit()
     return eigenenergies, excitation_energies
 
 
-def get_eigenenergies(file, totalstates, selected_states):
-    """
-    Get energies of the RAS-CI states.
-    :param: file, totalstates, selected_states
-    :return: eigenenergies, excitation_energies
-    """
-    with open(file, encoding="utf8") as f:
-        output = f.read()
-    output = parser_rasci(output)
-    data = output['excited_states']
-    for i in range(0, len(data)):
-        print(data[i]['total_energy'])
-        print(data[i]['excitation_energy'])
-
-    exit()
-    return eigenenergies, excitation_energies
+# def get_eigenenergies(file, totalstates, selected_states):
+#     """
+#     Get energies of the RAS-CI states.
+#     :param: file, totalstates, selected_states
+#     :return: eigenenergies, excitation_energies
+#     """
+#     # with open(file, encoding="utf8") as f:
+#     #     output = f.read()
+#     # output = parser_rasci(output)
+#     # data = output['excited_states']
+#     # for i in range(0, len(data)):
+#     #     print(data[i]['total_energy'])
+#     #     print(data[i]['excitation_energy'])
+#     #
+#     # exit()
+#     return eigenenergies, excitation_energies
 
 
 def get_symmetry_states(file, totalstates):
@@ -1601,5 +1601,3 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
     g_values = gfactor_calculation(lambda_matrix, sigma_matrix)
 
     return g_values
-
-

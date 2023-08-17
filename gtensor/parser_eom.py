@@ -13,7 +13,7 @@ else:
 unsortStateList = []
 stateList = []
 
-with open(sys.argv[1], 'r') as f:
+with open(sys.argv[1], encoding="utf8") as f:
     contents = f.readlines()
 
 # find start of excited state results in file
