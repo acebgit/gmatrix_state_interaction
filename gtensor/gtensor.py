@@ -1,15 +1,8 @@
-__author__ = 'Antonio Cebreiro-Gallardo'
+__author__ = 'Sven Kähler, Antonio Cebreiro-Gallardo'
 
-from eom_ras_program import *
+from parser_rasci import *
 
-#######################
-#  input information
-#######################
 file = 'fe_pyms2_def2tzvp_ras.out' # str(sys.argv[1])
-
-###############################
-#  rasci g-tensor calculation
-###############################
 totalstates, states_ras = get_number_of_states(file)
 eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
 doublet_socs, sz_values, sz_ground = get_spin_orbit_couplings(file, totalstates, states_ras)

@@ -66,14 +66,9 @@ Examples
 
 Files
 -------------------------
-- [test.py](test.py): file to test programs. At the moment, only RAS results. 
-
-- [parser_eom.py](parser_eom.py): generate the input from eom output and calculate eom g-tensor
-- [gnt_fe_pyms2_+_eomip_def2-SVPD.in.out.json](gnt_fe_pyms2_+_eomip_def2-SVPD.in.out.json): general input created from eom output
-
-- [fe_pyms2_def2tzvp_ras.out](fe_pyms2_def2tzvp_ras.out): rasci output
-- [parser_rasci_gtensor.py](parser_rasci_gtensor.py): calculate rasci g-tensor
-- [parser_rasci_pyqchem.py](parser_rasci_pyqchem.py): pyqchem parser used in rasci
+- [gtensor.py](gtensor.py): Calculation of the g-tensor from "json" file.
+- [parser_eom.py](parser_eom.py): generate the "json" file from EOM Q-Chem output.
+- [parser_rasci.py](parser_rasci.py): generate the "json" file from RAS-CI Q-Chem output.
 
 Contact info
 ------------
