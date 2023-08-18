@@ -231,7 +231,7 @@ def sos_analysis_and_plot(file):
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
 
-        # state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
+        # state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
         # presentation_list.append([ordered_state_symmetries[i-1], np.round(
         #     ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3), np.round(ras_g_values.real[2], 3)])
 

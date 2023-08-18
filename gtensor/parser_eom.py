@@ -1,3 +1,12 @@
+#########################################################
+# THIS PROGRAM GENERATES A "JSON" AND "XML" FILE        #
+# (WITH SOCS, ENERGIES, SPIN AND ORBITAL ANGULAR        #
+# MOMENTUMS OF ALL THE STATES) FROM THE EOM Q-CHEM      #
+# OUTPUT.                                               #
+#########################################################
+
+__author__ = 'Sven Kähler'
+
 import sys, re, string
 import numpy as np
 import json
@@ -71,9 +80,9 @@ eomStateLabels = []
 #eomipStateEnergies = []
 eomStateEnergies = []
 #eomipStateEnergiesDict = {}
-eomStateEnergiesDict = {}
+StateEnergiesDict = {}
 #eomipStateTotalAngMomDict = {}
-eomStateTotalAngMomDict = {}
+StateTotalAngMomDict = {}
 #eomipStateAngMomVecs = []
 eomStateAngMomVecs = []
 #eomipStateAngMomVecsDict = {} 
@@ -113,8 +122,8 @@ def printFoundStatePropMessage():
     print(str(eomStateLabels))
     print("eomStateEnergies:")
     print(str(eomStateEnergies))
-    print("eomStateEnergiesDict:")
-    print(str(eomStateEnergiesDict))
+    print("StateEnergiesDict:")
+    print(str(StateEnergiesDict))
     #print("stateList (= list of states with same S^2 as target) should be complete")
     #print("unsortStateList:")
     #print(unsortStateList)
@@ -162,11 +171,11 @@ for line in contents:
             #match = eomStateEnergyRe.match(line)
             energy_list = [float(energy) for energy in re.findall(realValueRe, line)]
             eomStateEnergies.append(energy_list)
-            eomStateEnergiesDict[symLabel] = energy_list
+            StateEnergiesDict[symLabel] = energy_list
             print("found eom state energy")
             print(line)
             #print("eom state energies: " + str(eomStateEnergies))
-            print("eom state energies dict:", eomStateEnergiesDict[symLabel])
+            print("eom state energies dict:", StateEnergiesDict[symLabel])
     if statePropRe.match(line):
         symLabel = re.findall(symLabelRe, line)[0]
         #if(not foundStateEOMIPProp):
@@ -196,8 +205,8 @@ for line in contents:
         print("found total ang mom")
         print(line)
         #eomipStateTotalAngMomDict[symLabel] = re.findall(realValueRe, line)
-        eomStateTotalAngMomDict[symLabel] = float(re.findall(realValueRe, line)[0])
-        print("symLabel {} and totalAngMom {}".format(symLabel, eomStateTotalAngMomDict[symLabel]))
+        StateTotalAngMomDict[symLabel] = float(re.findall(realValueRe, line)[0])
+        print("symLabel {} and totalAngMom {}".format(symLabel, StateTotalAngMomDict[symLabel]))
     if (transPropRe.match(line)):
         #if (not foundEOMIPtransProp):
         if (not foundEOMtransProp):
@@ -325,20 +334,20 @@ print("finished parsing")
 #print("eomStates:\n" + str(eomStates))
 #print("eomStateLabels:\n" + str(eomStateLabels))
 #print("eomStateEnergies:\n" + str(eomStateEnergies))
-#print("eomStateEnergiesDict:\n" + str(eomStateEnergiesDict))
-print("eomStateEnergiesDict:\n" + str(eomStateEnergiesDict))
-print("eomStateTotalAngMomDict:\n" + str(eomStateTotalAngMomDict))
+#print("StateEnergiesDict:\n" + str(StateEnergiesDict))
+print("StateEnergiesDict:\n" + str(StateEnergiesDict))
+print("StateTotalAngMomDict:\n" + str(StateTotalAngMomDict))
 #print("eomStateAngMomVecsDict:\n" + str(eomStateAngMomVecsDict))
-eomTransAngMomListDict = {x : [str(elem) for elem in list(y)] for x, y in eomTransAngMomVecDict.items()}
-print("eomTransAngMomVecDict:\n" + str(eomTransAngMomListDict))
-eomAveTransSOCListDict = {x : matrix_to_string_list(y) for x, y in eomAveTransSOCDict.items()}
-print("eomAveTransSOCDict:\n" + str(eomAveTransSOCListDict))
+TransAngMomListDict = {x : [str(elem) for elem in list(y)] for x, y in eomTransAngMomVecDict.items()}
+print("eomTransAngMomVecDict:\n" + str(TransAngMomListDict))
+AveTransSOCListDict = {x : matrix_to_string_list(y) for x, y in eomAveTransSOCDict.items()}
+print("eomAveTransSOCDict:\n" + str(AveTransSOCListDict))
 
 output_dict = {
-    "eomStateEnergiesDict" : eomStateEnergiesDict,
-    "eomStateTotalAngMomDict" : eomStateTotalAngMomDict,
-    "eomTransAngMomListDict" : eomTransAngMomListDict,
-    "eomAveTransSOCListDict" : eomAveTransSOCListDict
+    "StateEnergiesDict" : StateEnergiesDict,
+    "StateTotalAngMomDict" : StateTotalAngMomDict,
+    "TransAngMomListDict" : TransAngMomListDict,
+    "AveTransSOCListDict" : AveTransSOCListDict
 }
 
 # If python version >= 3.9 sys.argv[1].removesuffix(".out") would be nice.

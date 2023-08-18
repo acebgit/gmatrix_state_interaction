@@ -359,7 +359,7 @@ def bolvin_from_energies_soc_to_g_values(file, states_ras, totalstates,
                                          excitation_energies_ras, soc_ras, sz_list):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param: file, states_ras, totalstates, excitation_energies_ras, soc_ras, sz_list
+    :param: file, states_ras, nstates, excitation_energies_ras, soc_ras, sz_list
     :return: upper_g_matrix, g_values
     """
     from parser_init import get_spin_matrices, get_orbital_matrices
@@ -385,7 +385,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                   excitation_energies_ras, soc_ras, sz_list, ground_sz):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param:file, states_ras, totalstates, excitation_energies_ras, soc_ras, sz_list, ground_sz
+    :param:file, states_ras, nstates, excitation_energies_ras, soc_ras, sz_list, ground_sz
     :return: g_shift
     """
     hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)

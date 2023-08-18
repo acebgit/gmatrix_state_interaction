@@ -1,3 +1,5 @@
+__author__ = 'Sven Kähler'
+
 import numpy as np
 import numpy.matlib
 import json
@@ -71,92 +73,61 @@ def compute_state_g_tensor(gsubblock_x, gsubblock_y, gsubblock_z):
     g_eig_reord = g_eig_unord[g_reord]
     return np.sqrt(g_eig_reord)
 
-
 inputTargetState = ""
 S_SQUARE_TOL = 0.05
 INVCMTOAU= 1./219474.63068
 
 # 1) TAKING THE INPUT FORMAT FILE
 # input_file_name = sys.argv[1] + ".json"
-input_file_name = 'gnt_fe_pyms2_+_eomip_def2-SVPD.in.out.json'
+input_file_name = "fe_pyms2_def2tzvp_ras.out.json"
+# input_file_name = "ag_cucl4_2-_D2h_eomip_soc_def2-TZVP.in.out.json"
 with open(input_file_name, 'r') as f:
     object_text = f.read()
 input_dict = json.loads(object_text)
 
-print_inputs = "print_inputs" in input_dict and input_dict["print_inputs"]
-print_intermediates = "print_intermediater" in input_dict and input_dict["print_intermediater"]
-
+# 2) TAKE THE LOWEST ENERGY TRANSITION
 lowestEtargetState = "inputTargetState" not in input_dict
 if not lowestEtargetState:
     inputTargetState = input_dict["inputTargetState"]
 
-eomStateEnergiesDict = input_dict["eomStateEnergiesDict"]
-eomStateTotalAngMomDict= input_dict["eomStateTotalAngMomDict"]
-eomTransAngMomListDict= input_dict["eomTransAngMomListDict"]
-eomAveTransSOCListDict = input_dict["eomAveTransSOCListDict"]
+StateEnergiesDict = input_dict["StateEnergiesDict"]
+StateTotalAngMomDict= input_dict["StateTotalAngMomDict"]
+TransAngMomListDict= input_dict["TransAngMomListDict"]
+AveTransSOCListDict = input_dict["AveTransSOCListDict"]
 
 eomTransAngMomVecDict = {key: np.array(
-    [np.complex128(elem) for elem in eomTransAngMomListDict[key]]) for key in eomTransAngMomListDict}
+    [np.complex128(elem) for elem in TransAngMomListDict[key]]) for key in TransAngMomListDict}
 eomAveTransSOCDict = {key: np.matrix(
-    [[complex(elem) for elem in line] for line in eomAveTransSOCListDict[key]]) for key in eomAveTransSOCListDict}
-
-# if print_inputs:
-#     print(eomTransAngMomListDict)
-#     print(eomAveTransSOCListDict)
-#
-# if print_intermediates:
-#     for vector in eomTransAngMomListDict:
-#         print("vector", vector)
-#     print(eomTransAngMomVecDict)
-#     for matrix in eomAveTransSOCListDict.values():
-#         print("matrix", matrix)
-#     print("eomAveTransSOCDict", eomAveTransSOCDict)
+    [[complex(elem) for elem in line] for line in AveTransSOCListDict[key]]) for key in AveTransSOCListDict}
 
 if lowestEtargetState:
-    targetState = min(eomStateEnergiesDict, key=lambda x: eomStateEnergiesDict[x][0])
+    targetState = min(StateEnergiesDict, key=lambda x: StateEnergiesDict[x][0])
 else:
     try:
-        inputTargetState in eomStateEnergiesDict
+        inputTargetState in StateEnergiesDict
     except:
         raise RuntimeError("Requested target state not found.")
     else:
        targetState = inputTargetState
 
+# 3) Collect all state that have the same total angular momentum as totAng in matchingStatesDict
+totalAngValues = [s for s in list(StateTotalAngMomDict.values())]
+totAng = StateTotalAngMomDict[targetState]
+matchingStatesDict = {state: StateEnergiesDict[state] for state in filter(
+    lambda x: abs(totAng - StateTotalAngMomDict[x]) < S_SQUARE_TOL, 
+    StateTotalAngMomDict)}
 
-totalAngValues = [s for s in list(eomStateTotalAngMomDict.values())]
-
-
-# Collect all state that have the same total angular momentum as totAng in matchingStatesDict 
-totAng = eomStateTotalAngMomDict[targetState]
-matchingStatesDict = {state: eomStateEnergiesDict[state] for state in filter(
-    lambda x: abs(totAng - eomStateTotalAngMomDict[x]) < S_SQUARE_TOL, 
-    eomStateTotalAngMomDict)}
-
-stateList = sorted(matchingStatesDict, key=lambda x: eomStateEnergiesDict[x][0])
+stateList = sorted(matchingStatesDict, key=lambda x: StateEnergiesDict[x][0])
 nStates = len(stateList)
-
-# if print_intermediates:
-#     print("totalAngValues: " + str(totalAngValues))
-#     print("totAng {ang} type(totAng) {angtype}".format(ang=totAng, angtype=type(totAng)))
-#     print("matchingStatesDict", matchingStatesDict)
-#     print("stateList", stateList)
-
 
 # Find spin multiplicity corresponding to totAng and save in s_mult.
 s_mult = spin_multiplity(totAng)
 
-
 # Determine index of target state and save as targetStateNo.
 targetStateNo = stateList.index(targetState)
 
-
 s = m_max(s_mult)
-
 ms = np.linspace(-s, s, s_mult)
-
-    
-# Populate H0Mat, spinMat, angMomMat and SOCMat.
-# inputs s_mult, nStates, eomStateEnergiesDict, eomTransAngMomVecDict, eomAveTransSOCDict
 
 H0Mat = np.matlib.zeros((nStates*s_mult, nStates*s_mult), dtype=np.cdouble)
 spinMat_x = np.matlib.zeros((nStates*s_mult, nStates*s_mult), dtype=np.cdouble)
@@ -173,7 +144,7 @@ for j_col in range(nStates):
         if (i_row == j_col):
             # S_z operator contribution -> diagonal elements of spinMat_z
             for i in range(s_mult):
-                H0Mat[i_row*s_mult+i,j_col*s_mult+i] = float(eomStateEnergiesDict[stateList[i_row]][0]) 
+                H0Mat[i_row*s_mult+i,j_col*s_mult+i] = float(StateEnergiesDict[stateList[i_row]][0]) 
                 spinMat_z[i_row*s_mult+i,j_col*s_mult+i] = ms[i]
             # S_- operator contribution -> upper "subdiagonal" of spinMat_x/y
             for i in range(1, s_mult):
@@ -217,20 +188,6 @@ for j_col in range(nStates):
 H_soc_au = INVCMTOAU * SOCMat
 H = H0Mat + H_soc_au
 
-# if print_intermediates:
-#     print("printing result of output processing:\n")
-#     print("H0Mat:\n"+str(H0Mat))
-#     print("spinMat_x:\n"+str(spinMat_x))
-#     print("spinMat_y:\n"+str(spinMat_y))
-#     print("spinMat_z:\n"+str(spinMat_z))
-#     print("angMomMat_x:\n"+str(angMomMat_x))
-#     print("angMomMat_y:\n"+str(angMomMat_y))
-#     print("angMomMat_z:\n"+str(angMomMat_z))
-#     print("SOCMat:\n"+str(SOCMat))
-#     print("H_soc_au:\n" + str(H_soc_au))
-
-
-
 # Compute spin orbit coupled energies and transformation matrix.
 e_vec, c_mat = sorted_diag(H)
 
@@ -245,31 +202,9 @@ S_z_orig = np.matrix(spinMat_z, dtype=np.cdouble)
 L_x_trans, L_y_trans, L_z_trans, S_x_trans, S_y_trans, S_z_trans = trans_ls(
     c_mat, L_x_orig, L_y_orig, L_z_orig, S_x_orig, S_y_orig, S_z_orig)
 
-# if print_inputs:
-#     print("L_x_orig:\n" + str(L_x_orig))
-#     print("L_y_orig:\n" + str(L_y_orig))
-#     print("L_z_orig:\n" + str(L_z_orig))
-#     print("S_x_orig:\n" + str(S_x_orig))
-#     print("S_y_orig:\n" + str(S_y_orig))
-#     print("S_z_orig:\n" + str(S_z_orig))
-#
-#
-# if print_intermediates:
-#     print("L_x_trans:\n" + str(L_x_trans))
-#     print("L_y_trans:\n" + str(L_y_trans))
-#     print("L_z_trans:\n" + str(L_z_trans))
-#     print("S_x_trans:\n" + str(S_x_trans))
-#     print("S_y_trans:\n" + str(S_y_trans))
-#     print("S_z_trans:\n" + str(S_z_trans))
-
 G_x_combined = L_x_trans + S_x_trans
 G_y_combined = L_y_trans + S_y_trans
 G_z_combined = L_z_trans + S_z_trans
-
-# if print_intermediates:
-#     print("G_x_combined:\n" + str(G_x_combined))
-#     print("G_y_combined:\n" + str(G_y_combined))
-#     print("G_z_combined:\n" + str(G_z_combined))
 
 print("calculate g-tensor for target state", targetState)
 iTarget = targetStateNo
@@ -279,4 +214,3 @@ g_out = compute_state_g_tensor(
     G_x_combined[iup:idown,iup:idown], G_y_combined[iup:idown,iup:idown], 
     G_z_combined[iup:idown,iup:idown])
 print(str(g_out))
-

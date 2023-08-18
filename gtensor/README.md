@@ -18,10 +18,11 @@ Installation requirements
 - json
 - matlib
 - sys
+- pymatgen
 
 Examples 
 --------
-**Simple API to define the input:** An example is shown in file [test.py](test.py)
+**Simple API to define the input:** An example is shown below (pending)
 
 [//]: # ()
 [//]: # (```python)
@@ -67,8 +68,8 @@ Examples
 Files
 -------------------------
 - [gtensor.py](gtensor.py): Calculation of the g-tensor from "json" file.
-- [parser_eom.py](parser_eom.py): generate the "json" file from EOM Q-Chem output.
-- [parser_rasci.py](parser_rasci.py): generate the "json" file from RAS-CI Q-Chem output.
+- [parser_eom.py](parser_eom.py): generates the "json" and "xml" file from EOM Q-Chem output.
+- [parser_rasci.py](parser_rasci.py): generates the "json" and "xml" file from RAS-CI Q-Chem output.
 
 Contact info
 ------------

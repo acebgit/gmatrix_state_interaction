@@ -1,10 +1,21 @@
+#########################################################
+# THIS PROGRAM GENERATES A "JSON" AND "XML" FILE        #
+# (WITH SOCS, ENERGIES, SPIN AND ORBITAL ANGULAR        #
+# MOMENTUMS OF ALL THE STATES) FROM THE RAS-CI Q-CHEM   #
+# OUTPUT.                                               #
+#########################################################
+
 __author__ = 'Antonio Cebreiro-Gallardo, Abel Carreras'
+
+from dicttoxml import dicttoxml
+import sys
 
 import re
 import operator
 import warnings
 import numpy as np
 import hashlib, json
+import pymatgen
 from numpy import linalg, sqrt
 
 
@@ -893,11 +904,45 @@ def parser_rasci(output):
     return data_dict
 
 
+def get_symmetry_states(file, totalstates):
+    """
+    Create two lists: first with the symmetry of each state (A1,A2,A3...) and second with
+    the order of these symmetries (1A1,2A2,3A3...)
+    :param: file_ras, nstates
+    :return: all_state_symmetries, ordered_state_symmetries
+    """
+    with open(file, encoding="utf8") as f:
+        data = f.readlines()
+
+    word_search = ['State symmetry: ']
+    elements = []
+    for line in data:
+        if any(i in line for i in word_search):
+            line = line.split()
+            element = line[2]
+            element = element.replace('*', '')  # '*' means mix of symmetries
+            elements.append(element)
+
+        if len(elements) == totalstates:
+            break  # All symmetries appended
+    all_state_symmetries = np.array(elements)
+
+    ordered_state_symmetries = []  # State symmetries with the order (1,2,3..)
+    for i in range(0, len(all_state_symmetries)):
+        number = 1
+        for j in range(0, i):
+            if all_state_symmetries[i] == all_state_symmetries[j]:
+                number += 1
+        element = str(number) + all_state_symmetries[i]
+        ordered_state_symmetries.append(element)
+    return all_state_symmetries, ordered_state_symmetries
+
+
 def get_number_of_states(file):
     """
     Obtain the total number of states in ras
     :param: file
-    :return: totalstates
+    :return: nstates
     """
     with open(file, encoding="utf8") as f:
         data = f.readlines()
@@ -915,10 +960,10 @@ def get_number_of_states(file):
     return totalstates, states
 
 
-def get_my_eigenenergies(file, totalstates, selected_states):
+def get_eigenenergies(file, totalstates, selected_states):
     """
     Get energies of the RAS-CI states.
-    :param: file, totalstates, selected_states
+    :param: file, nstates, selected_states
     :return: eigenenergies, excitation_energies
     """
     word_search = ' RAS-CI total energy for state  '
@@ -953,63 +998,11 @@ def get_my_eigenenergies(file, totalstates, selected_states):
     return eigenenergies, excitation_energies
 
 
-# def get_eigenenergies(file, totalstates, selected_states):
-#     """
-#     Get energies of the RAS-CI states.
-#     :param: file, totalstates, selected_states
-#     :return: eigenenergies, excitation_energies
-#     """
-#     # with open(file, encoding="utf8") as f:
-#     #     output = f.read()
-#     # output = parser_rasci(output)
-#     # data = output['excited_states']
-#     # for i in range(0, len(data)):
-#     #     print(data[i]['total_energy'])
-#     #     print(data[i]['excitation_energy'])
-#     #
-#     # exit()
-#     return eigenenergies, excitation_energies
-
-
-def get_symmetry_states(file, totalstates):
-    """
-    Create two lists: first with the symmetry of each state (A1,A2,A3...) and second with
-    the order of these symmetries (1A1,2A2,3A3...)
-    :param: file_ras, totalstates
-    :return: all_state_symmetries, ordered_state_symmetries
-    """
-    with open(file, encoding="utf8") as f:
-        data = f.readlines()
-
-    word_search = ['State symmetry: ']
-    elements = []
-    for line in data:
-        if any(i in line for i in word_search):
-            line = line.split()
-            element = line[2]
-            element = element.replace('*', '')  # '*' means mix of symmetries
-            elements.append(element)
-
-        if len(elements) == totalstates:
-            break  # All symmetries appended
-    all_state_symmetries = np.array(elements)
-
-    ordered_state_symmetries = []  # State symmetries with the order (1,2,3..)
-    for i in range(0, len(all_state_symmetries)):
-        number = 1
-        for j in range(0, i):
-            if all_state_symmetries[i] == all_state_symmetries[j]:
-                number += 1
-        element = str(number) + all_state_symmetries[i]
-        ordered_state_symmetries.append(element)
-    return all_state_symmetries, ordered_state_symmetries
-
-
 def get_spin_orbit_couplings(file, totalstates, selected_states):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
     and 'ket' in columns, with spin order -Ms , +Ms.
-    :param: file, totalstates, selected_states
+    :param: file, nstates, selected_states
     :return: doublet_soc, sz_list
     """
     with open(file, encoding="utf8") as f:
@@ -1342,7 +1335,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
     with spin order -Ms , +Ms. Third dimension is the direction.
-    :param: file, totalstates, selected_states, sz_list
+    :param: file, nstates, selected_states, sz_list
     :return: orbital_matrix
     """
     def get_all_momentum(line, n_states):
@@ -1583,7 +1576,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                          excitation_energies_ras, soc_ras, sz_list):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param: file, states_ras, totalstates, excitation_energies_ras, soc_ras, sz_list
+    :param: file, states_ras, nstates, excitation_energies_ras, soc_ras, sz_list
     :return: upper_g_matrix, g_values
     """
     hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)
@@ -1601,3 +1594,136 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
     g_values = gfactor_calculation(lambda_matrix, sigma_matrix)
 
     return g_values
+
+
+class MyEncoder(json.JSONEncoder):
+    # https://itsourcecode.com/typeerror/typeerror-object-of-type-is-not-json-serializable-solved/?expand_article=1
+    def default(self, obj):
+        if isinstance(obj, set):
+            return list(obj)
+        elif isinstance(obj, complex):
+            # return {'real': obj.real, 'image': obj.imag}
+            a = obj.real
+            b = obj.imag
+            return {a, b}
+        else:
+            return super().default(obj)
+
+
+def get_socs(outpuut, nstates, selected_state):
+    """
+    Obtain a dictionary with SOCs between ground state and all the rest, written as strings.
+    :param outpuut:
+    :param nstates:
+    :param selected_state:
+    :return: socs
+    """
+    data = outpuut['interstate_properties']
+    socs = {}
+    for i in range(2, nstates + 1):
+        list_1 = data[(1, i)]['total_soc_mat']
+        a = str(list_1[0][0]), str(list_1[0][1])
+        b = str(list_1[1][0]), str(list_1[1][1])
+        list_2 = [a, b]
+        socs.update({selected_state[i - 1]: list_2})
+    return socs
+
+
+def get_energies(outpuut, nstates, selected_state):
+    """
+    Obtain a dictionary with eigenenergies of all the states, written as floats.
+    :param outpuut:
+    :param nstates:
+    :param selected_state:
+    :return: socs
+    """
+    data = outpuut['excited_states']
+    energy = {}
+    for i in range(0, nstates):
+        lista = [data[i]['total_energy'], data[i]['excitation_energy']]
+        energy.update({selected_state[i]: lista})
+    return energy
+
+
+def get_orbital_angmoment(outpuut, nstates, selected_state):
+    """
+    Obtain a dictionary with orbital angular momentum between ground state and all the rest, written as strings.
+    :param outpuut:
+    :param nstates:
+    :param selected_state:
+    :return: socs
+    """
+    data = outpuut['interstate_properties']
+    momentums = {}
+    for i in range(2, nstates + 1):
+        list_1 = data[(1, i)]['angular_momentum']
+        a = str(list_1[0])
+        b = str(list_1[1])
+        c = str(list_1[2])
+        list_2 = [a, b, c]
+        momentums.update({selected_state[i - 1]: list_2})
+    return momentums
+
+
+def get_spin_momentum(outpuut, nstates):
+    """
+    get s2 of each state from Q-Chem otuput
+    :param: outpuut
+    :param: nstates
+    :return: s2
+    """
+    search = ['  <S^2>      : ']
+    s2_each_states = []
+    with open(outpuut, encoding="utf8") as outpuut:
+        for line in outpuut:
+            if any(ii in line for ii in search):
+                element = float(line[16:])
+                s2_each_states.append(element)
+    # s2_each_states = np.array(elements, dtype=float)
+
+    momentum = {}
+    for i in range(0, totalstates):
+        momentum.update({nstates[i]: s2_each_states[i]})
+    return momentum
+
+
+def output_json(outpuut):
+    outfile_name = outpuut + ".json"
+    with open(outfile_name, 'w') as ff:
+        json.dump(output_dict, ff, separators=(',', ':'), sort_keys=True, indent=4, cls=MyEncoder)
+
+
+def output_xml(outpuut, dictionary):
+    xmloutfile_name = outpuut + ".xml"
+    xml = dicttoxml(dictionary)
+    with open(xmloutfile_name, 'w') as ff:
+        ff.write(str(xml))
+
+
+file = str(sys.argv[1])
+with open(file, encoding="utf8") as f:
+    output = f.read()
+output = parser_rasci(output)
+
+totalstates, states_ras = get_number_of_states(file)
+all_state_symmetry, ordered_state_symmetry = get_symmetry_states(file, totalstates)
+AveTransSOCListDict = get_socs(output, totalstates, ordered_state_symmetry)
+StateEnergiesDict = get_energies(output, totalstates, ordered_state_symmetry)
+StateTotalAngMomDict = get_spin_momentum(file, ordered_state_symmetry)
+TransAngMomListDict = get_orbital_angmoment(output, totalstates, ordered_state_symmetry)
+
+output_dict = {
+    "AveTransSOCListDict": AveTransSOCListDict,
+    "StateEnergiesDict": StateEnergiesDict,
+    "StateTotalAngMomDict": StateTotalAngMomDict,
+    "TransAngMomListDict": TransAngMomListDict
+}
+
+output_json(file)
+output_xml(file, output_dict)
+
+# eigenenergies_ras, excitation_energies_ras = get_eigenenergies(outpuut, selected_state, states_ras)
+# doublet_socs, sz_values, sz_ground = get_spin_orbit_couplings(outpuut, selected_state, states_ras)
+# g_shift = from_energies_soc_to_g_values(outpuut, states_ras, selected_state, excitation_energies_ras,
+# doublet_socs, sz_values)
+# print('g-factor:', np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3))
