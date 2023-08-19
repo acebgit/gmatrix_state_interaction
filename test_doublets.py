@@ -34,7 +34,7 @@ bar_plots = 0
 
 # eom ANALYSIS AND ras-eom ENERGIES EXCHANGE
 eom_information = 0
-eom_input = '../eom_outputs/ag_cucl4_2-_D2h_eomip_soc_def2-TZVP.in.out'
+eom_input = '../eom_outputs/example_eom.out'
 
 eom_change_energies = 0
 ras_states_to_change = [2, 3, 4]
