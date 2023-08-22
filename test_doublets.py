@@ -34,7 +34,7 @@ bar_plots = 0
 
 # eom ANALYSIS AND ras-eom ENERGIES EXCHANGE
 eom_information = 0
-eom_input = '../eom_outputs/example_eom.out'
+eom_input = '../eom_outputs/ras_qchem_output.out'
 
 eom_change_energies = 0
 ras_states_to_change = [2, 3, 4]

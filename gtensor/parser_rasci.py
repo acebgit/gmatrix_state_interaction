@@ -1707,16 +1707,16 @@ output = parser_rasci(output)
 
 totalstates, states_ras = get_number_of_states(file)
 all_state_symmetry, ordered_state_symmetry = get_symmetry_states(file, totalstates)
-AveTransSOCListDict = get_socs(output, totalstates, ordered_state_symmetry)
-StateEnergiesDict = get_energies(output, totalstates, ordered_state_symmetry)
-StateTotalAngMomDict = get_spin_momentum(file, ordered_state_symmetry)
-TransAngMomListDict = get_orbital_angmoment(output, totalstates, ordered_state_symmetry)
+aveTransSOCListDict = get_socs(output, totalstates, ordered_state_symmetry)
+stateEnergiesDict = get_energies(output, totalstates, ordered_state_symmetry)
+stateTotalAngMomDict = get_spin_momentum(file, ordered_state_symmetry)
+transAngMomListDict = get_orbital_angmoment(output, totalstates, ordered_state_symmetry)
 
 output_dict = {
-    "AveTransSOCListDict": AveTransSOCListDict,
-    "StateEnergiesDict": StateEnergiesDict,
-    "StateTotalAngMomDict": StateTotalAngMomDict,
-    "TransAngMomListDict": TransAngMomListDict
+    "stateEnergiesDict" : stateEnergiesDict,
+    "stateTotalAngMomDict" : stateTotalAngMomDict,
+    "transAngMomListDict" : transAngMomListDict,
+    "aveTransSOCListDict" : aveTransSOCListDict
 }
 
 output_json(file)

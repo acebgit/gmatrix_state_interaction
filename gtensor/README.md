@@ -67,9 +67,9 @@ Examples
 
 Files
 -------------------------
-- [gtensor.py](gtensor.py): Calculation of the g-tensor from "json" file.
-- [parser_eom.py](parser_eom.py): generates the "json" and "xml" file from EOM Q-Chem output.
-- [parser_rasci.py](parser_rasci.py): generates the "json" and "xml" file from RAS-CI Q-Chem output.
+- [parser_eom.py](parser_eom.py): generates "json" and "xml" input from EOM qchem outputs to be used by the [gtensor.py](gtensor.py) script.
+- [parser_rasci.py](parser_rasci.py): generates "json" and "xml" input from RAS-CI qchem outputs to be used by the [gtensor.py](gtensor.py) script. 
+- [gtensor.py](gtensor.py): calculates g-tensor using "json" input
 
 Contact info
 ------------
