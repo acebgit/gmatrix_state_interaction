@@ -4,7 +4,7 @@ Qchem
 =======
 Python wrapper for Q-Chem (https://www.q-chem.com)
 
-Main features of the code
+Main feature of the code
 --------------------------
 - Calculation of the g-tensor by using Q-Chem outputs. 
 
@@ -19,57 +19,26 @@ Installation requirements
 - matlib
 - sys
 - pymatgen
-
-Examples 
---------
-**Simple API to define the input:** An example is shown below (pending)
-
-[//]: # ()
-[//]: # (```python)
-
-[//]: # (from pyqchem import Structure, QchemInput, get_output_from_qchem)
-
-[//]: # (from pyqchem.parsers.basic import basic_parser_qchem)
-
-[//]: # ()
-[//]: # (molecule = Structure&#40;coordinates=[[0.0, 0.0, 0.0],)
-
-[//]: # (                                  [0.0, 0.0, 0.9]],)
-
-[//]: # (                     symbols=['H', 'H'],)
-
-[//]: # (                     charge=0,)
-
-[//]: # (                     multiplicity=1&#41;)
-
-[//]: # ()
-[//]: # (qc_input = QchemInput&#40;molecule,)
-
-[//]: # (                      jobtype='sp',)
-
-[//]: # (                      exchange='hf',)
-
-[//]: # (                      basis='6-31G'&#41;)
-
-[//]: # ()
-[//]: # (data = get_output_from_qchem&#40;qc_input,)
-
-[//]: # (                             processors=4,)
-
-[//]: # (                             parser=basic_parser_qchem&#41;)
-
-[//]: # ()
-[//]: # (# obtain a python dictionary)
-
-[//]: # (print&#40;'Energy: ', data['scf_energy']&#41;)
-
-[//]: # (```)
+- decimal
 
 Files
 -------------------------
-- [parser_eom.py](parser_eom.py): generates "json" and "xml" input from EOM qchem outputs to be used by the [gtensor.py](gtensor.py) script.
-- [parser_rasci.py](parser_rasci.py): generates "json" and "xml" input from RAS-CI qchem outputs to be used by the [gtensor.py](gtensor.py) script. 
-- [gtensor.py](gtensor.py): calculates g-tensor using "json" input
+- [parser_eom.py](parser_eom_antiguo.py): generates "json" general input from EOM qchem outputs to be used by the [gtensor.py](gtensor.py) script.
+- [parser_rasci.py](parser_rasci.py): generates "json" general input from RAS-CI qchem outputs to be used by the [gtensor.py](gtensor.py) script. 
+- [gtensor.py](gtensor.py): calculates g-tensor using "json" input.
+
+Examples 
+--------
+**Simple command line to obtain the g-tensor:**
+```console
+# To calculate the EOM output gtensor:
+python parser_eom.py example_eom.out 
+python gtensor.py example_eom.out > example_eom_results.out
+
+# To calculate the RAS-CI output gtensor:
+python parser_eom.py example_ras.out 
+python gtensor.py example_ras.out > example_ras_results.out
+```
 
 Contact info
 ------------
