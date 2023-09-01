@@ -427,3 +427,17 @@ def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
     print(np.round(upper_g_tensor_results_ras.real[0], 3), np.round(upper_g_tensor_results_ras.real[1], 3),
           np.round(upper_g_tensor_results_ras.real[2], 3))
     print('')
+
+
+def from_gvalue_to_shift(list):
+    """
+    Obtain the g-shifts from the g-values
+    :param list: g-values
+    :return: g_shift
+    """
+    lande_factor = lande_factor = 2.002319304363
+    g_shift = []
+    for i in range(0, len(list)):
+        value = (list[i] - lande_factor) * 1000
+        g_shift.append(value)
+    print(g_shift)

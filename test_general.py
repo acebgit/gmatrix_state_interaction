@@ -6,20 +6,19 @@ import os
 import numpy as np
 from tabulate import tabulate
 
-from parser_init import get_eigenenergies, get_selected_states, get_number_of_states, get_spin_orbit_couplings
-from parser_gtensor import from_energies_soc_to_g_values, print_g_calculation
-from parser_plots import sos_analysis_and_plot
-from parser_excitstates import get_excited_states_analysis
+from parser_init import *  #get_eigenenergies, get_selected_states, get_number_of_states, get_spin_orbit_couplings
+from parser_gtensor import *  #from_energies_soc_to_g_values, print_g_calculation
+from parser_plots import *  #sos_analysis_and_plot
+from parser_excitstates import *  #get_excited_states_analysis
+
+# from_gvalue_to_shift([2.004])
 
 #####################################
 #            INPUT VALUES
 #####################################
-g_calculation = 0
+g_calculation = 1
 ras_input = '\
-roberto_molecules/C74H32B4_8_8.out'
-
-get_excited_states_analysis(ras_input, cutoff=0.99)
-exit()
+triplets_molecules/benzoquinone_9_10_enerproc_nohole_nopart.out'
 
 several_molecules = 0
 path = "roberto_molecules"
@@ -30,7 +29,7 @@ symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 excited_states_analysis = 0
-sos_analysis = 1
+sos_analysis = 0
 
 # OUTPUT
 write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file
