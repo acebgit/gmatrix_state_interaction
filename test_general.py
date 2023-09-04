@@ -18,10 +18,10 @@ from parser_excitstates import *  #get_excited_states_analysis
 #####################################
 g_calculation = 1
 ras_input = '\
-triplets_molecules/benzoquinone_9_10_enerproc_nohole_nopart.out'
+1_triplets_molecules/benzoquinone_9_10_enerproc_nohole_nopart.out'
 
 several_molecules = 0
-path = "roberto_molecules"
+path = "2_roberto_molecules"
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1, 2, 3, 4, 5]  # States to be included when "selected_states = 0"
