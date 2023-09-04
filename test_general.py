@@ -18,7 +18,7 @@ from parser_excitstates import *  #get_excited_states_analysis
 #####################################
 g_calculation = 1
 ras_input = '\
-1_triplets_molecules/benzoquinone_9_10_enerproc_nohole_nopart.out'
+1_triplets_molecules/quinoline_6_10_chemproc.out'
 
 several_molecules = 0
 path = "2_roberto_molecules"
@@ -28,8 +28,8 @@ states_ras = [1, 2, 3, 4, 5]  # States to be included when "selected_states = 0"
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
-excited_states_analysis = 0
-sos_analysis = 0
+excited_states_analysis = 1
+sos_analysis = 1
 
 # OUTPUT
 write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file
