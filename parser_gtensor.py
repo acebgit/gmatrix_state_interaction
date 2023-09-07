@@ -1,3 +1,6 @@
+"""
+Calculation of the g-tensor using Q-Chem output with RAS-CI
+"""
 import sys
 import numpy as np
 from numpy import linalg, sqrt

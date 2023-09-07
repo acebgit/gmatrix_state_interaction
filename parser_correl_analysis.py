@@ -7,12 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
-from parser_gtensor import get_number_of_states, get_eigenenergies, get_selected_states,  \
-    get_spin_orbit_couplings, get_spin_matrices, get_orbital_matrices, get_socc_values
-
-from parser_gtensor import get_hamiltonian_construction, bolvin_diagonalization, \
-    bolvin_angular_matrixes_obtention, bolvin_g_factor_calculation, bolvin_from_energies_soc_to_g_values, \
-    print_g_calculation
+from parser_gtensor import *
+from parser_excitstates import *
 
 from parser_plots import plot_g_tensor_vs_states
 

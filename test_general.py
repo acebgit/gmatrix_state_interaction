@@ -15,7 +15,7 @@ from parser_excitstates import *  # get_excited_states_analysis
 #####################################
 g_calculation = 1
 ras_input = '\
-triplets_molecules/quinoline_10_8.out'
+triplets_molecules/benzoquinone_8_7.out'
 
 several_molecules = 0
 path = "roberto_molecules"
@@ -26,7 +26,7 @@ symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 excited_states_analysis = 1
-sos_analysis = 0
+sos_analysis = 1
 
 # OUTPUT
 write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file

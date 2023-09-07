@@ -1,11 +1,10 @@
 """
-    EXCITED STATES MOST IMPORTANT CONFIGURATIONS
- Analysis of the excited states and print of those
- orbitals involved in the configurations with the
- highest amplitudes in the excited states
+Obtain an improved active space of RAS-CI Q-Chem output including orbitals
+with unpaired electrons in relevant hole/particle configurations.
 """
 import numpy as np
 import sys
+
 
 def get_number_of_states(file):
     """
@@ -62,13 +61,15 @@ def get_symmetry_states(file, totalstates):
     return all_state_symmetries, ordered_state_symmetries
 
 
-def get_selected_states(file, totalstates, selected_states, states_option, symmetry_selection):
+def get_selected_states(file, totalstates, symmetry_selection):
     """
     Select the states used depending on "states_option" value:
     0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
     :param: file, nstates, selected_states, states_option, symmetry_selection
     :return: selected_states
     """
+    states_option = 1
+    selected_states = [0]
     all_symmetries, ordered_symmetries = get_symmetry_states(file, totalstates)
 
     if states_option == 0:  # Se
@@ -288,6 +289,7 @@ def get_ras_spaces(qchem_file):
     with open(qchem_file, encoding="utf-8") as file:
         data = file.readlines()
 
+    ras_act = 0
     word_search = ['RAS_ACT  ']
     for line in data:
         if any(i in line for i in word_search):
@@ -311,6 +313,7 @@ def get_ras_spaces(qchem_file):
 
     # Number of occupied orbitals
     word_search = ['RAS_OCC']
+    ras_occ = 0
     for line in data:
         if any(i in line for i in word_search):
             split_line = line.split()
@@ -351,6 +354,8 @@ def get_alpha_beta(qchem_file):
 
     # Number of alpha and beta electrons
     word_search = ['beta electrons']
+    alpha = 0
+    beta = 0
     for line in data:
         if any(i in line for i in word_search):
             line = line.split()
@@ -365,8 +370,8 @@ def get_highest_amplitudes(file, amplitude_cutoff):
     """
     Get:
     - index_max_amplitudes: list of the indexes of the configurations with relevant amplitudes (higher than a cut-off)
-    - configurations_orbitals: "| HOLE  | ALPHA | BETA  | PART" information of the configurations with an amplitude higher
-    than a cutoff
+    - configurations_orbitals: "| HOLE  | ALPHA | BETA  | PART" information of the configurations
+    with an amplitude higher than a cutoff
     :param: file
     :return: index_max_amplitudes, configurations_orbitals
     """
@@ -409,14 +414,14 @@ def get_highest_amplitudes(file, amplitude_cutoff):
                     orbitals_information[ii] = change_list
         return amplitude, orbitals_information
 
-    def other_important_orbitals(amplitude, amplitude_cutoff):
+    def other_important_orbitals(amplitude, amplitude_cut_off):
         """
         Get indexes of configurations that have the amplitude higher than a cut-off times the
         amplitude of the first configuration (that is the one with the highest amplitude).
         :param: amplitude, amplitude_cutoff
         :return: indexes
         """
-        cut_off = amplitude_cutoff * amplitude[0]
+        cut_off = amplitude_cut_off * amplitude[0]
 
         indexes_list = ['0']
         for k in range(1, len(amplitude)):  # Value in 0 is ignored since amplitudes are sorted
@@ -484,7 +489,7 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
     orbital_list = []
 
     # If orbital is in hole
-    if (configuration_data[0] != '-1'):
+    if configuration_data[0] != '-1':
         ras_orbital = int(configuration_data[0])
         new_orbital = from_ras_to_scf_order(homo_orbital, initial_active_orbitals, ras_orbital)
         new_orbital = int(new_orbital)
@@ -501,7 +506,7 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
             orbital_list.append(new_orbital)
 
     # If orbital is in particle
-    if (configuration_data[3] != '-1'):
+    if configuration_data[3] != '-1':
         ras_orbital = int(configuration_data[3])
         new_orbital = from_ras_to_scf_order(homo_orbital, initial_active_orbitals, ras_orbital)
         new_orbital = int(new_orbital)
@@ -516,34 +521,6 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
     else:
         orbitals = orbital_list[0]
     return orbitals
-
-
-def print_excited_states(presentation_list, n_states, hole_contributions,
-                         part_contributions, socc_values, excitation_energies_ev,
-                         state_symmetries, new_orbital, orbital_momentum, mulliken_spin, s2_list):
-    """
-    Prepare the presentation list with each excited state values
-    :param: presentation_list, n_states, hole_contributions,
-                         part_contributions, socc_values, excitation_energies_ev,
-                         state_symmetries, new_orbital, orbital_momentum, mulliken_spin
-    :return: presentation_list, SOC
-     """
-    state = np.round(int(n_states), 0) + 1
-    symmetry = state_symmetries[n_states]
-
-    hole = np.around(float(hole_contributions[n_states]), 2)
-    part = np.around(float(part_contributions[n_states]), 2)
-
-    soc = np.round(float(socc_values[n_states]), 0)
-    excit_energy = np.round(float(excitation_energies_ev[n_states]), 3)
-
-    orbital_ground_state = np.round(float(orbital_momentum[n_states]), 3)
-
-    mull_spin = np.round(float(mulliken_spin[n_states]), 3)
-    s2 = s2_list[n_states]
-
-    presentation_list.append([state, symmetry, hole, part, excit_energy, new_orbital, soc, orbital_ground_state, mull_spin, s2])
-    return presentation_list, soc
 
 
 def get_new_active_space_electrons(new_active_space, homo_orbital):
@@ -566,82 +543,13 @@ def get_new_active_space_electrons(new_active_space, homo_orbital):
     return electrons
 
 
-def get_excited_states_analysis(file, cutoff):
-    """
-    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
-    of the 1st configuration that need to have the other configurations to be shown in each state.
-    :param: file, cutoff
-    :return: excited_states_presentation_matrix
-    """
-    totalstates = get_number_of_states(file)
-
-    state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
-
-    states_ras = get_selected_states(file, totalstates, selected_states=0,
-                                     states_option=1, symmetry_selection='None')
-
-    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-
-    s2_list = s2_from_file(file)
-
-    hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates)
-
-    mulliken_charge, mulliken_spin = get_mulliken_spin(file, totalstates, states_ras)
-
-    socc_values = get_socc_values(file, totalstates)
-
-    orbital_momentum = get_ground_state_orbital_momentum(file, totalstates)
-
-    initial_active_orbitals, ras_occ = get_ras_spaces(file)
-
-    alpha, homo_orbital = get_alpha_beta(file)
-
-    excited_states_presentation_list = [['State', 'Symmetry', 'Hole', 'Part',
-                                         'Excitation energy (eV)', 'Orbitals', 'SOCC (cm-1)',
-                                         'Orbital momentum', 'Mulliken Spin', 'S^2']]
-
-    word_search = ' | HOLE  | '
-    n_states = 0
-
-    with open(file, encoding="utf-8") as file:
-        for line in file:
-            if word_search in line:  # Go to configurations line
-
-                index_relevant_amplit, state_orbitals = get_highest_amplitudes(file, cutoff)
-
-                # Include all those configurations with relevant amplitudes in the final list
-                for i in index_relevant_amplit:
-                    new_orbitals = get_orbital(homo_orbital, state_orbitals[i], initial_active_orbitals)
-
-                    excited_states_presentation_list, soc = print_excited_states(excited_states_presentation_list,
-                                                                                 n_states, hole_contributions,
-                                                                                 part_contributions, socc_values,
-                                                                                 excitation_energies_ras * 27.211399,
-                                                                                 ordered_state_symmetries, new_orbitals,
-                                                                                 orbital_momentum, mulliken_spin, s2_list)
-
-                n_states += 1
-
-    excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
-    print("------------------------")
-    print(" EXCITED STATES ANALYSIS")
-    print("------------------------")
-    print('Most important settings for each state (amplitude_cutoff: 0.3) :')
-    print('\n'.join(''.join('{:^20}'.format(item) for item in row)
-                    for row in excited_states_presentation_matrix[:, :]))
-    print(" ")
-
-
 def improved_active_space(file):
-    from parser_gtensor import get_number_of_states, get_eigenenergies, get_selected_states, get_symmetry_states
 
     totalstates = get_number_of_states(file)
 
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
 
-    states_ras = 0
-    selected_states = 1
-    states_ras = get_selected_states(file, totalstates, states_ras, selected_states, symmetry_selection='None')
+    states_ras = get_selected_states(file, totalstates, symmetry_selection='None')
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
 

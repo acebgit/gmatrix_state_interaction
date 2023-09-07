@@ -1,10 +1,7 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-from parser_gtensor import get_eigenenergies, get_number_of_states, get_spin_orbit_couplings
-
-from parser_gtensor import from_energies_soc_to_g_values
+from parser_gtensor import *
 
 
 def plot_obtention(file, x_data, y_data):
@@ -82,7 +79,6 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     #     if minimum < y_min:
     #         y_min = minimum - 10
 
-
     # Major and minor ticks:
     # x_tick = int((max(presentation_matrix[:, 0]))) / 4
     # y_tick = 40
@@ -98,7 +94,7 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
 
     # Lines:
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
-             label='$\mathregular{\Delta g_{xx}}$', linewidth=line_width)
+            label='$\\mathregular{\Delta g_{xx}}$', linewidth=line_width)
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b',
              label='$\mathregular{\Delta g_{yy}}$', linewidth=line_width)
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k',
@@ -158,58 +154,6 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
         plt.savefig(figure_name)
 
 
-def bolvin_sos_analysis_and_plot(file):
-    """"
-    PROGRAM TO CALCULATE THE G-TENSOR OVER FROM
-    AN INITIAL TO A FINAL NUMBER OF STATES IN THE
-    SUM-OVER-STATES EXPANSION
-    """
-    from parser_gtensor import get_number_of_states, get_eigenenergies, get_spin_orbit_couplings, get_symmetry_states
-    from parser_gtensor import bolvin_from_energies_soc_to_g_values
-
-    totalstates = get_number_of_states(file)
-
-    presentation_list = []
-
-    for i in range(1, totalstates + 1):
-        states_ras = list(range(1, i + 1))
-
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-
-        soc_option = 0
-        doublet_socs, sz_values = get_spin_orbit_couplings(file, totalstates, states_ras, soc_option=0)
-
-        ras_upper_g_matrix, ras_g_values = bolvin_from_energies_soc_to_g_values(
-            file, states_ras, totalstates, excitation_energies_ras, doublet_socs, sz_values)
-
-        state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
-
-        # presentation_list.append([ordered_state_symmetries[i-1], np.round(
-        #     ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3), np.round(ras_g_values.real[2], 3)])
-        presentation_list.append([i, np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),
-                                  np.round(ras_g_values.real[2], 3)])
-
-    presentation_matrix = np.array(presentation_list, dtype=object)
-
-    # To presents deviation from previous g-values instead of the total g-values:
-    presentation_matrix_deviation = np.array(presentation_list, dtype=object)
-    for ndim in [1, 2, 3]:
-        for i in range(1, len(presentation_matrix)):
-            # presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim] - presentation_matrix[i-1, ndim])
-            presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim])
-
-
-    print("--------------------------------")
-    print(" SUM-OVER-STATE ANALYSIS")
-    print("--------------------------------")
-    print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
-
-    # plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='State', y_title='g-values deviations (ppt)',
-    #                         main_title='g-tensor sum-over-states analysis', save_picture=0)
-    plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Number of states',
-                            y_title='$\Delta g, ppt$', main_title=file, save_picture=0)
-
-
 def sos_analysis_and_plot(file):
     """"
     Calculate the g-shifts in the sum-over-states expansion using
@@ -225,7 +169,7 @@ def sos_analysis_and_plot(file):
 
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
         soc_options = 0
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options, bolvin=0)
+        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
 
         g_shift = from_energies_soc_to_g_values(file, states_ras,
                                                 totalstates, excitation_energies_ras,
