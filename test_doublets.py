@@ -4,9 +4,9 @@
 import numpy as np
 import sys
 
-from parser_init import get_number_of_states, get_eigenenergies, get_selected_states, \
+from parser_gtensor import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_socc_values, get_ground_state_orbital_momentum, get_symmetry_states, \
-    get_spin_orbit_couplings, get_mulliken_spin
+    get_spin_orbit_couplings
 from parser_gtensor import bolvin_from_energies_soc_to_g_values, print_g_calculation
 from parser_excitstates import get_excited_states_analysis, improved_active_space
 from eom_analysis.parser_excitstates_eom import get_eom_transitions_analysis
@@ -112,10 +112,6 @@ if bar_plots == 1:
     # Printing orbital angular momentum versus orbital symmetries:
     orbital_momentum = get_ground_state_orbital_momentum(ras_input, totalstates)
     get_bar_chart(ras_input, ordered_state_symmetries, orbital_momentum, 'State', 'Orbital angular momentum', '')
-
-    # Printing Mulliken spin:
-    mulliken_charge, mulliken_spin = get_mulliken_spin(ras_input, totalstates, states_ras)
-    get_bar_chart(ras_input, ordered_state_symmetries, mulliken_spin, 'State', 'Mulliken spin', '')
 
 #####################################
 #      eom COMPARISON

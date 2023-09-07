@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-from parser_init import get_eigenenergies, get_number_of_states, get_spin_orbit_couplings
+from parser_gtensor import get_eigenenergies, get_number_of_states, get_spin_orbit_couplings
 
 from parser_gtensor import from_energies_soc_to_g_values
 
@@ -164,7 +164,7 @@ def bolvin_sos_analysis_and_plot(file):
     AN INITIAL TO A FINAL NUMBER OF STATES IN THE
     SUM-OVER-STATES EXPANSION
     """
-    from parser_init import get_number_of_states, get_eigenenergies, get_spin_orbit_couplings, get_symmetry_states
+    from parser_gtensor import get_number_of_states, get_eigenenergies, get_spin_orbit_couplings, get_symmetry_states
     from parser_gtensor import bolvin_from_energies_soc_to_g_values
 
     totalstates = get_number_of_states(file)

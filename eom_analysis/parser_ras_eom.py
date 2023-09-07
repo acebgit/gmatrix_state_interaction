@@ -1,6 +1,6 @@
 import numpy as np
 
-from parser_init import get_number_of_states, get_eigenenergies, get_selected_states, \
+from parser_gtensor import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_spin_orbit_couplings, get_socc_values
 
 from parser_gtensor import bolvin_from_energies_soc_to_g_values
