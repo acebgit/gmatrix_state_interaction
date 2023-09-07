@@ -11,25 +11,25 @@ from parser_gtensor import *  #from_energies_soc_to_g_values, print_g_calculatio
 from parser_plots import *  #sos_analysis_and_plot
 from parser_excitstates import *  #get_excited_states_analysis
 
-# from_gvalue_to_shift([2.004])
+# from_gvalue_to_shift([2.002780, 2.002258])
 
 #####################################
 #            INPUT VALUES
 #####################################
 g_calculation = 1
 ras_input = '\
-3_David_molecules/triangulene_10_10_noholenopart.out'
+triplets_molecules/quinoline_10_8.out'
 
 several_molecules = 0
-path = "2_roberto_molecules"
+path = "roberto_molecules"
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1, 2, 3, 4, 5]  # States to be included when "selected_states = 0"
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
-excited_states_analysis = 0
-sos_analysis = 0
+excited_states_analysis = 1
+sos_analysis = 1
 
 # OUTPUT
 write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file
