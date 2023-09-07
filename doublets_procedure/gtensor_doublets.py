@@ -750,3 +750,25 @@ def gfactor_obtention(ras_input, states_ras, selected_states, symmetry_selection
 
     print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, g_values)
 
+
+def from_energies_soc_to_g_values(file, states_ras, totalstates,
+                                  excitation_energies_ras, soc_ras, sz_list, ground_sz):
+    """"
+    Obtention of the g-values from the eigenenergies and the SOCs.
+    :param:file, states_ras, nstates, excitation_energies_ras, soc_ras, sz_list, ground_sz
+    :return: g_shift
+    """
+    hamiltonian_ras = hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)
+
+    eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
+
+    spin_matrix, standard_spin_matrix = get_spin_matrices(file, states_ras)
+
+    orbital_matrix = get_orbital_matrices(file, totalstates, states_ras, sz_list)
+
+    combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
+
+    combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list)
+
+    g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+                                   sz_list, ground_sz)

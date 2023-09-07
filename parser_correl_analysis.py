@@ -23,12 +23,12 @@ states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_st
 
 eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
-doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_option)
+doublet_soc, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_option)
 
 socc_values = get_socc_values(ras_input, totalstates)
 
 ras_upper_g_matrix, ras_g_values = from_energies_soc_to_g_values(
-    ras_input, states_ras, totalstates, excitation_energies_ras, doublet_socs, sz_values)
+    ras_input, states_ras, totalstates, excitation_energies_ras, doublet_soc, sz_list)
 
 print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
 
