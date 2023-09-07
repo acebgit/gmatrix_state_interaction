@@ -16,7 +16,7 @@ from parser_gtensor import get_hamiltonian_construction, bolvin_diagonalization,
 
 from parser_plots import plot_g_tensor_vs_states
 
-ras_input = '../0_doublets_molecules/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])
+ras_input = '../doublets_molecules/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1, 2]  # States to be included when "selected_states = 0"
 symmetry_selection = 'B1'  # Symmetry selected states
