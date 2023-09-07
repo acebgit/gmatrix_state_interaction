@@ -1,22 +1,7 @@
 import sys
 import numpy as np
+from numpy import linalg, sqrt
 from pyqchem.parsers.parser_rasci import parser_rasci
-
-
-def get_scf_energy(file):
-    """
-    Obtain SCF energy
-    :param: qchem_file
-    :return: scf_energy
-    """
-    word_search = ['SCF   energy in the final basis set']
-
-    with open(file, encoding="utf8") as data:
-        for line in data:
-            if any(i in line for i in word_search):
-                element = line[39:]
-                scf_energy = float(element)
-    return scf_energy
 
 
 def get_number_of_states(file):
@@ -146,80 +131,7 @@ def get_symmetry_states(file, totalstates):
     return all_state_symmetries, ordered_state_symmetries
 
 
-def get_hole_part_contributions(file, totalstates):
-    """
-    Take the hole and particle contributions of each state.
-    :param: file, nstates
-    :return: hole_contributions, part_contributions
-    """
-    with open(file, encoding="utf-8") as file:
-        data = file.readlines()
-
-    word_search = ['   Hole: ']
-    elements = []
-
-    for line in data:
-        if any(i in line for i in word_search):
-            element = line[39:]
-            elements.append(element.split())
-        if len(elements) == totalstates:
-            break
-
-    hole_contributions = np.array(elements, dtype=float)
-
-    word_search = ['   Part: ']
-    elements = []
-
-    for line in data:
-        if any(i in line for i in word_search):
-            element = line[39:]
-            elements.append(element.split())
-        if len(elements) == totalstates:
-            break
-    part_contributions = np.array(elements, dtype=float)
-    return hole_contributions, part_contributions
-
-
-def get_mulliken_spin(file, totalstates, states):
-    """
-    Get Mulliken charge and spin of the first atom, i.e. a metal in transition atom complexes.
-    :param: file, nstates, states
-    :return: charge_mulliken, spin_mulliken
-    """
-    word_search = '    Mulliken population analysis '
-    element_charge = []
-    elements_spin = []
-
-    with open(file, encoding="utf8") as file:
-        for line in file:
-            if word_search in line:
-                for i in range(0, 4):  # Take the 5th line
-                    next_line = next(file)
-                    i += 1
-
-                next_line = next_line.split()
-
-                element = next_line[2]
-                element_charge.append(element)
-
-                element = next_line[3]
-                elements_spin.append(element)
-            if len(element_charge) == totalstates:
-                break
-
-    charge_mulliken_selected = []
-    spin_mulliken_selected = []
-
-    for i in states:
-        charge_mulliken_selected.append(element_charge[i - 1])
-        spin_mulliken_selected.append(elements_spin[i - 1])
-
-    charge_mulliken = np.array(charge_mulliken_selected, dtype=float)
-    spin_mulliken = np.array(spin_mulliken_selected, dtype=float)
-    return charge_mulliken, spin_mulliken
-
-
-def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option, bolvin):
+def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
     and 'ket' in columns, with spin order -Ms , +Ms.
@@ -272,10 +184,6 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option, bol
         :return: soc_matrix
         """
         all_soc = np.zeros((n_states * len(all_sz), n_states * len(all_sz)), dtype=complex)
-        # print('Multip:', state_multiplicities)
-        # print('Sz:', sz_list)
-        # print(len(soc_matrix[0,:]), len(soc_matrix[:,0]))
-        # exit()
 
         for i in range(0, n_states):
             for j in range(0, n_states):
@@ -300,23 +208,6 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option, bol
                     for sz_1 in range(0, len(i_j_soc_matrix)):
                         for sz_2 in range(0, len(i_j_soc_matrix[0])):
                             all_soc[j_position + sz_1, i_position + sz_2] = i_j_soc_matrix[sz_1][sz_2]
-                            # print('j i positions:', j_position+sz_1, i_position+sz_2, 'sz1 2:', sz_1, sz_2)
-
-        # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) \
-        #                  for row in np.round((soc_matrix[:, :]), 5)]))
-        # print(" ")
-        # exit()
-
-        # print('---------------')
-        # state_A = 10
-        # state_B = 8
-        # for i in range(0, len(sz_list)):
-        #     element_A = (state_A-1)*3+i
-        #     element_B = (state_B-1)*3
-        #     print(soc_matrix[element_A, element_B], soc_matrix[element_A, element_B+1], \
-        #           soc_matrix[element_A, element_B+2])
-        # exit()
-
         return all_soc
 
     def get_selected_states_socs(n_states, all_sz, socs):
@@ -385,44 +276,94 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option, bol
     state_multiplicities, sz_list, sz_ground = get_states_sz(output)
     all_socs = get_all_socs(data, totalstates, state_multiplicities, sz_list, soc_search)
     selected_socs = get_selected_states_socs(selected_states, sz_list, all_socs)
+    doublet_soc = get_doublets_soc(selected_states, selected_socs)
+    sz_list = [-0.5, 0.5]
 
-    if bolvin == 1:
-        doublet_soc = get_doublets_soc(selected_states, selected_socs)
-        selected_socs = doublet_soc
-        sz_list = [-0.5, 0.5]
-
-    selected_socs = selected_socs / 219474.63068  # From cm-1 to a.u.
-    return selected_socs, sz_list, sz_ground
+    doublet_soc = doublet_soc / 219474.63068  # From cm-1 to a.u.
+    return doublet_soc, sz_list, sz_ground
 
 
-def get_socc_values(file, totalstates):
+def hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coupling, sz_values):
     """
-    Get spin-orbit coupling constant between states
-    :param: file, nstates
-    :return: socc
+    Hamiltonian is written 'bra' in rows and 'ket' in columns, with spin order -1/2 , +1/2.
+    :param: selected_states, eigenenergies, spin_orbit_coupling
+    :return: hamiltonian
     """
-    with open(file, encoding="utf-8") as file:
-        data = file.readlines()
+    def hermitian_test(matrix):
+        """
+        Check if a matrix is Hermitian. If not, exit.
+        :param: matrix
+        """
+        for i in range(0, len(matrix)):
+            for j in range(i, len(matrix)):
+                element_1 = np.round(matrix[i, j], 4)
+                element_2 = np.round(np.conjugate(matrix[j, i]), 4)
+                if element_1 != element_2:
+                    print("Hamiltonian is not Hermitian")
+                    print('positions: ', i // 2, 'value:', matrix[i, j])
+                    print('positions: ', j // 2, 'value:', matrix[j, i])
+                    exit()
 
-    word_search = ['Mean-Field SOCC']
-    elements = []
-    n_states = 0
+    hamiltonian = np.zeros((len(selected_states) * len(sz_values),
+                            len(selected_states) * len(sz_values)), dtype=complex)
 
-    elements.append('0.000000')  # SOCC between state 1 and 1 is zero
-    for line in data:
-        if any(i in line for i in word_search):
-            line = line.split()
-            element = line[3]
-            elements.append(element)
-            n_states += 1
-        if n_states == totalstates - 1:
-            break
+    for i in range(0, len(selected_states) * len(sz_values)):
+        for j in range(0, len(selected_states) * len(sz_values)):
+            if i == j:
+                hamiltonian[i, i] = eigenenergies[i // len(sz_values)]
+            else:
+                hamiltonian[i, j] = spin_orbit_coupling[i, j]
 
-    socc = np.array(elements, dtype=float)
-    return socc
+    hermitian_test(hamiltonian)
+    return hamiltonian
 
 
-def get_spin_matrices(file, n_states, bolvin):
+def diagonalization(hamiltonian):
+    """
+    1) Hamiltonian is diagonalized
+    2) eigenvectors-eigenvalues are ordered by weight coefficients
+    3) Doublet with the lowest energy is set as the new basis (Kramer doublet)
+    :param: Hamiltonian
+    :return: eigenvalues, eigenvectors, kramer_st: kramer_st is the index
+    of the state set as Kramer doublet * 2
+    """
+
+    def reordering_eigenvectors(eigenval, eigenvect):
+        """
+        Reorder eigenvectors (and eigenenergies) by weight coefficients
+        :param: eigenvalues, eigenvectors
+        :return: eigenvalues, eigenvectors
+        """
+        change_order = np.zeros(len(eigenvect), dtype=complex)
+
+        for v_1 in range(0, len(eigenvect)):
+            for v_2 in range(v_1, len(eigenvect)):
+
+                if abs(eigenvect[v_1, v_2]) > abs(eigenvect[v_1, v_1]):
+                    change_order[:] = eigenvect[:, v_1]
+                    eigenvect[:, v_1] = eigenvect[:, v_2]
+                    eigenvect[:, v_2] = change_order[:]
+
+                    change_order.real[0] = eigenval[v_1]
+                    eigenval[v_1] = eigenval[v_2]
+                    eigenval[v_2] = change_order.real[0]
+        return eigenval, eigenvect
+
+    eigenvalues, eigenvectors = linalg.eigh(hamiltonian)
+    eigenvalues, eigenvectors = reordering_eigenvectors(eigenvalues, eigenvectors)
+
+    # Kramer doublets selection:
+    minimum_energy = min(eigenvalues)
+    eigenvalues_list = list(eigenvalues)
+    kramer_st = eigenvalues_list.index(minimum_energy)
+
+    # The index of the selected state must be even since Kramer doublets are [kramer_st, kramer_st+1]
+    if (kramer_st % 2) != 0:
+        kramer_st = kramer_st - 1
+    return eigenvalues, eigenvectors, kramer_st
+
+
+def get_spin_matrices(file, n_states):
     """
     Obtain the 3 dimensions of spin (s_x, s_y, s_z) from s2 of each state and put them in a 3-dim array.
     Spin is written with 'bra' in rows and 'ket' in columns, with spin order -Ms , +Ms.
@@ -563,60 +504,29 @@ def get_spin_matrices(file, n_states, bolvin):
     standard_spin_matrix = np.zeros((ground_multiplicity, ground_multiplicity, 3), dtype=complex)
     spin_matrix = np.zeros((len(n_states) * max_multiplicity, len(n_states) * max_multiplicity, 3), dtype=complex)
 
-    if bolvin == 1:
+    for i in range(0, number_of_spins):
+        for j in n_states:
+            if s2_states[j - 1] == single_s2_values[i]:
+                s = s2_to_s(single_s2_values[i])
+                sx, sy, sz = spin_matrices(s)
 
-        for i in range(0, number_of_spins):
-            for j in n_states:
-                if s2_states[j - 1] == single_s2_values[i]:
-                    s = s2_to_s(single_s2_values[i])
-                    sx, sy, sz = spin_matrices(s)
+                s_dim = len(sx) // 2 - 1
+                total_dim = n_states.index(j) * 2
 
-                    s_dim = len(sx) // 2 - 1
-                    total_dim = n_states.index(j) * 2
+                spin_matrix[total_dim, total_dim, 0] = sx[s_dim, s_dim]
+                spin_matrix[total_dim + 1, total_dim, 0] = sx[s_dim + 1, s_dim]
+                spin_matrix[total_dim, total_dim + 1, 0] = sx[s_dim, s_dim + 1]
+                spin_matrix[total_dim + 1, total_dim + 1, 0] = sx[s_dim + 1, s_dim + 1]
 
-                    spin_matrix[total_dim, total_dim, 0] = sx[s_dim, s_dim]
-                    spin_matrix[total_dim + 1, total_dim, 0] = sx[s_dim + 1, s_dim]
-                    spin_matrix[total_dim, total_dim + 1, 0] = sx[s_dim, s_dim + 1]
-                    spin_matrix[total_dim + 1, total_dim + 1, 0] = sx[s_dim + 1, s_dim + 1]
+                spin_matrix[total_dim, total_dim, 1] = sy[s_dim, s_dim]
+                spin_matrix[total_dim + 1, total_dim, 1] = sy[s_dim + 1, s_dim]
+                spin_matrix[total_dim, total_dim + 1, 1] = sy[s_dim, s_dim + 1]
+                spin_matrix[total_dim + 1, total_dim + 1, 1] = sy[s_dim + 1, s_dim + 1]
 
-                    spin_matrix[total_dim, total_dim, 1] = sy[s_dim, s_dim]
-                    spin_matrix[total_dim + 1, total_dim, 1] = sy[s_dim + 1, s_dim]
-                    spin_matrix[total_dim, total_dim + 1, 1] = sy[s_dim, s_dim + 1]
-                    spin_matrix[total_dim + 1, total_dim + 1, 1] = sy[s_dim + 1, s_dim + 1]
-
-                    spin_matrix[total_dim, total_dim, 2] = sz[s_dim, s_dim]
-                    spin_matrix[total_dim + 1, total_dim, 2] = sz[s_dim + 1, s_dim]
-                    spin_matrix[total_dim, total_dim + 1, 2] = sz[s_dim, s_dim + 1]
-                    spin_matrix[total_dim + 1, total_dim + 1, 2] = sz[s_dim + 1, s_dim + 1]
-
-    else:
-
-        for i in range(0, number_of_spins):
-            for j in n_states:
-                if s2_states[j - 1] == single_s2_values[i]:
-                    s = s2_to_s(single_s2_values[i])
-                    sx, sy, sz = spin_matrices(s)
-                    sx, sy, sz = long_spin_matrices(sx, sy, sz, max_multiplicity, s2_states[j - 1])
-
-                    s_dim = 0
-                    total_dim = n_states.index(j) * max_multiplicity
-
-                    for row in range(0, max_multiplicity):
-                        for column in range(0, max_multiplicity):
-                            spin_matrix[total_dim, total_dim, 0] = sx[s_dim, s_dim]
-                            spin_matrix[total_dim, total_dim + column, 0] = sx[s_dim, s_dim + column]
-                            spin_matrix[total_dim + row, total_dim, 0] = sx[s_dim + row, s_dim]
-                            spin_matrix[total_dim + row, total_dim + column, 0] = sx[s_dim + row, s_dim + column]
-
-                            spin_matrix[total_dim, total_dim, 1] = sy[s_dim, s_dim]
-                            spin_matrix[total_dim, total_dim + column, 1] = sy[s_dim, s_dim + column]
-                            spin_matrix[total_dim + row, total_dim, 1] = sy[s_dim + row, s_dim]
-                            spin_matrix[total_dim + row, total_dim + column, 1] = sy[s_dim + row, s_dim + column]
-
-                            spin_matrix[total_dim, total_dim, 2] = sz[s_dim, s_dim]
-                            spin_matrix[total_dim, total_dim + column, 2] = sz[s_dim, s_dim + column]
-                            spin_matrix[total_dim + row, total_dim, 2] = sz[s_dim + row, s_dim]
-                            spin_matrix[total_dim + row, total_dim + column, 2] = sz[s_dim + row, s_dim + column]
+                spin_matrix[total_dim, total_dim, 2] = sz[s_dim, s_dim]
+                spin_matrix[total_dim + 1, total_dim, 2] = sz[s_dim + 1, s_dim]
+                spin_matrix[total_dim, total_dim + 1, 2] = sz[s_dim, s_dim + 1]
+                spin_matrix[total_dim + 1, total_dim + 1, 2] = sz[s_dim + 1, s_dim + 1]
 
         # Standard spin matrix
         multip_difference = (max_multiplicity - ground_multiplicity) // 2
@@ -624,63 +534,10 @@ def get_spin_matrices(file, n_states, bolvin):
             for i in range(0, ground_multiplicity):
                 for j in range(0, ground_multiplicity):
                     standard_spin_matrix[i, j, k] = spin_matrix[i + multip_difference, j + multip_difference, k]
-
-    # print('Spin Matrices:')
-    # for k in range(0,3):
-    #    print('Dimension: ', k)
-    #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                     for row in np.round((spin_matrix[:,:,k]),5)]))
-    #    print(" ")
-    # exit()
     return spin_matrix, standard_spin_matrix
 
 
-def get_ground_state_orbital_momentum(file, totalstates):
-    """
-    Obtaining the orbital angular momentum between the ground state and all excited states.
-    :param: file, nstates
-    :return: orbital_momentum
-    """
-    with open(file, encoding="utf8") as f:
-        data = f.readlines()
-
-    word_search = ['< B | Lx | A >', '< B | Ly | A >', '< B | Lz | A >']
-    elements = ['0.000', '0.000', '0.000']  # L between ground state and it-self does not exist (x,y,z)
-
-    for line in data:
-        if any(i in line for i in word_search):
-            line = line.split()
-            element = line[8]
-            element = element.replace('i', '')
-            elements.append(element)
-
-        if len(elements) == totalstates * 3:
-            break  # There are all the Lk values with between ground and excited states
-
-    orbital_momentum = []
-    nstate = 0
-
-    for i in range(0, len(elements), 3):
-        one_state_momentum = []
-
-        x_orb = abs(float(elements[i]))
-        one_state_momentum.append(x_orb)
-
-        y_orb = abs(float(elements[i+1]))
-        one_state_momentum.append(y_orb)
-
-        z_orb = abs(float(elements[i+2]))
-        one_state_momentum.append(z_orb)
-
-        # Select the orbital angular momentum that is higher, to be shown
-        index_max_momentum = one_state_momentum.index(max(one_state_momentum))
-        orbital_momentum.append(float(elements[nstate*3 + index_max_momentum]))
-
-        nstate += 1
-    return orbital_momentum
-
-
-def get_orbital_matrices(file, totalstates, selected_states, sz_list, bolvin):
+def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
     with spin order -Ms , +Ms. Third dimension is the direction.
@@ -760,87 +617,136 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list, bolvin):
 
     all_lk = get_all_momentum(data, totalstates)
     selected_lk = get_selected_states_momentum(selected_states, all_lk)
-    all_multip_lk = get_all_multip_momentum(selected_lk, sz_list)
-
-    if bolvin == 1:
-        doublets_lk = get_doublets_momentum(selected_states, selected_lk)
-        all_multip_lk = doublets_lk
-    return all_multip_lk
+    doublets_lk = get_doublets_momentum(selected_states, selected_lk)
+    return doublets_lk
 
 
-def get_orbital_matrices_manual(file, totalstates, n_states):
+def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angular_matrix):
     """
-    Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
-    with spin order -Ms , +Ms. Third dimension is the direction.
-    :param: file, nstates, n_states
-    :return: orbital_matrix
+    Spin or orbital angular matrix calculation using:
+    1) coeff_bra, coeff_ket: coefficients of the lineal combination of non-relativistic states,
+    that come from Kramer doublet states eigenvectors
+    2) angular_value: angular momentum between states. Depending on the column of the final matrix,
+    it takes real (col 0), imaginary (col 1) or both parts (col 2).
+    :param: eigenvalues, eigenvectors, kramer_st, input_angular_matrix
+    :return: angular_matrix: contains the spin value < B(S,Sz) | Sx | A(S',Sz') >
     """
-    word_search = ['< B | Lx | A >', '< B | Ly | A >', '< B | Lz | A >']
-    elements = []
+    angular_matrix = np.zeros((3, 3), dtype=complex)
 
-    # take L values from output
-    with open(file, encoding="utf8") as f:
-        data = f.readlines()
+    for row in range(0, 3):  # dimension x,y,z
+        for column in range(0, 3):  # dimension x,y,z
 
-    for line in data:
-        if any(i in line for i in word_search):
-            element = line[19:32]
-            elements.append(element.split())
-    # ----------------------------------------------------------------------------------
-    # put orbital angular momentum in the array
-    angular_selection_list = []
+            for bra in range(0, len(eigenvalues)):  # state <B|
+                for ket in range(0, len(eigenvalues)):  # state |A>
 
-    for ket in n_states:  # | A >
-        for bra in n_states:  # < B |
+                    coeff_bra = np.conj(eigenvectors[bra, kramer_st + 1])
+                    coeff_ket = (eigenvectors[ket, kramer_st])
+                    coeff_ket_2 = (eigenvectors[ket, kramer_st + 1])
+                    angular_value = (input_angular_matrix[bra, ket, row])
 
-            n_dim = 0
-            while n_dim < 3:
+                    if column == 0:
+                        element = coeff_bra * coeff_ket * angular_value
+                        angular_matrix[row, column] += 2 * element.real
 
-                if ket == bra:  # momentum between same state values zero
-                    angular_selection_list.append(['0.000000'])
-                    # print('eq',ket,bra)
+                    elif column == 1:
+                        element = coeff_bra * coeff_ket * angular_value
+                        angular_matrix[row, column] += 2 * element.imag
 
-                elif ket < bra:  # In Q-Chem, L written when ket < bra
-                    # print('diff', ket, bra)
-                    ket_position = 0
-                    for i in range(1, ket):
-                        ket_position = ket_position + 3 * (totalstates - i)
-                    bra_position = 3 * (bra - ket - 1)
+                    elif column == 2:
+                        element = coeff_bra * coeff_ket_2 * angular_value
+                        angular_matrix[row, column] += 2 * element
 
-                    orbital_position = ket_position + bra_position + n_dim
-                    angular_selection_list.append(elements[orbital_position])
+    # print('SIGMA matrix with all spin angular momentums:')
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                  for row in np.round((angular_matrix[:,:]),8)]))
+    # print(" ")
+    return angular_matrix
 
-                n_dim = n_dim + 1
 
-    angular_selection = np.array(angular_selection_list, dtype=float)
-    # ----------------------------------------------------------------------------------------------
-    orbital_matrix = np.zeros((len(n_states) * 2, len(n_states) * 2, 3), dtype=complex)
-    nel = 0
+def g_factor_calculation(lambda_matrix, sigma_matrix):
+    """
+    Calculation of the G-tensor with lambda and sigma matrices. Then, g-factors
+    are calculated as square roots of the eigenvalues of the G-tensor.
+    :param: lambda_matrix, sigma_matrix
+    :return: upper_g_matrix, g_tensor_values
+    """
+    # G-tensor matrix obtention:
+    lande_factor = 2.002319304363
+    sigma_plus_lambda = lande_factor * sigma_matrix + lambda_matrix
 
-    for ket in n_states:  # |A, -1/2 >, |A, +1/2 >
-        for bra in n_states:  # <B, -1/2|, <B, +1/2|
-            ket_index = n_states.index(ket) * 2
-            bra_index = n_states.index(bra) * 2
+    # Diagonalize and reorder by weight coefficients:
+    upper_g_matrix = np.matmul(sigma_plus_lambda, np.transpose(sigma_plus_lambda))
+    upper_g_matrix_diagonal, rotation_matrix = linalg.eigh(upper_g_matrix)
 
-            if ket == bra:
-                for k in range(0, 3):
-                    # print('eq', bra, ket, '-->', nel + k)
-                    orbital_matrix[bra_index, ket_index, k] = complex(0, angular_selection[nel + k])
-                    orbital_matrix[bra_index + 1, ket_index + 1, k] = complex(0, angular_selection[nel + k])
+    change_order = np.zeros(len(upper_g_matrix_diagonal), dtype=complex)
+    for i in range(0, 3):
+        for j in range(i, 3):
+            if abs(rotation_matrix[i, j]) > abs(rotation_matrix[i, i]):
+                change_order[:] = rotation_matrix[:, j]
+                rotation_matrix[:, j] = rotation_matrix[:, i]
+                rotation_matrix[:, i] = change_order[:]
 
-                    orbital_matrix[ket_index, bra_index, k] = (-1) * orbital_matrix[bra_index, ket_index, k]
-                    orbital_matrix[ket_index + 1, bra_index + 1, k] = (-1) * orbital_matrix[
-                        bra_index + 1, ket_index + 1, k]
-                nel = nel + 3
+                change_order.real[0] = upper_g_matrix_diagonal[j]
+                upper_g_matrix_diagonal[j] = upper_g_matrix_diagonal[i]
+                upper_g_matrix_diagonal[i] = change_order.real[0]
 
-            if ket < bra:  # In Q-Chem, SOCs written when ket < bra
-                for k in range(0, 3):
-                    # print('diff', bra, ket, '-->', nel + k)
-                    orbital_matrix[bra_index, ket_index, k] = complex(0, angular_selection[nel + k])
-                    orbital_matrix[bra_index + 1, ket_index + 1, k] = complex(0, angular_selection[nel + k])
+    g_tensor_values = np.zeros(3, dtype=complex)
+    for i in range(0, 3):
+        g_tensor_values[i] = (sqrt(upper_g_matrix_diagonal[i]) - lande_factor) * 1000
+    return upper_g_matrix, g_tensor_values
 
-                    orbital_matrix[ket_index, bra_index, k] = (-1) * orbital_matrix[bra_index, ket_index, k]
-                    orbital_matrix[ket_index + 1, bra_index + 1, k] = (-1) * orbital_matrix[
-                        bra_index + 1, ket_index + 1, k]
-                nel = nel + 3
-    return orbital_matrix
+
+def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
+                        states_ras, upper_g_tensor_results_ras):
+    print("------------------------------------")
+    print("     INPUT SECTION")
+    print("------------------------------------")
+    print("File selected: ", file)
+    print("Number of states: ", totalstates)
+    if selected_states == 2:
+        print("Symmetry: ", symmetry_selection)
+        print("Selected states: ", states_ras)
+    else:
+        print("Selected states: ", states_ras)
+
+    print(" ")
+    print("-----------------------------")
+    print(" RAS-CI RESULTS")
+    print("-----------------------------")
+    print('g-factor (x y z dimensions):')
+    print(np.round(upper_g_tensor_results_ras.real[0], 3), np.round(upper_g_tensor_results_ras.real[1], 3),
+          np.round(upper_g_tensor_results_ras.real[2], 3))
+    print('')
+
+
+def gfactor_obtention(ras_input, states_ras, selected_states, symmetry_selection, soc_options):
+    """
+    Returns the g-shifts for doublet ground state molecules.
+    :param file: input
+    :return: g-shifts
+    """
+
+    totalstates = get_number_of_states(ras_input)
+
+    states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_states, symmetry_selection)
+
+    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
+
+    doublet_socs, sz_values, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
+
+    hamiltonian_ras = hamiltonian_construction(states_ras, excitation_energies_ras, doublet_socs, sz_values)
+
+    eigenvalues, eigenvector, kramers_states = diagonalization(hamiltonian_ras)
+
+    spin_matrix, standard_spin_matrix = get_spin_matrices(ras_input, states_ras)
+
+    l_matrix = get_orbital_matrices(ras_input, totalstates, states_ras, sz_values)
+
+    sigma_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, spin_matrix)
+
+    lambda_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, l_matrix)
+
+    upper_g_matrix, g_values = g_factor_calculation(lambda_matrix, sigma_matrix)
+
+    print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, g_values)
+
