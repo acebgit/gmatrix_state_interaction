@@ -4,9 +4,9 @@
 import os
 from tabulate import tabulate
 
-from parser_gtensor import *  # from_energies_soc_to_g_values, print_g_calculation
-from parser_plots import *  # sos_analysis_and_plot
-from parser_excitstates import *  # get_excited_states_analysis
+from parser_gtensor import gfactor_presentation
+from parser_excitstates import get_excited_states_analysis
+from parser_plots import sos_analysis_and_plot
 
 # from_gvalue_to_shift([2.002780, 2.002258])
 

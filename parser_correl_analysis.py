@@ -3,16 +3,15 @@ PROGRAM TO CALCULATE THE CORRELATION
 BETWEEN ENERGIES-SOC-ORBITAL ANGULAR MOMENTUM
 AND THE G-TENSOR VALUES
 """
-import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
-from parser_gtensor import *
+from doublets_procedure.gtensor_doublets import *
 from parser_excitstates import *
 
 from parser_plots import plot_g_tensor_vs_states
 
-ras_input = '../doublets_molecules/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])
+ras_input = 'doublets_molecules/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [1, 2]  # States to be included when "selected_states = 0"
 symmetry_selection = 'B1'  # Symmetry selected states
@@ -24,11 +23,11 @@ states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_st
 
 eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
-doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_option, bolvin=1)
+doublet_socs, sz_values = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_option)
 
 socc_values = get_socc_values(ras_input, totalstates)
 
-ras_upper_g_matrix, ras_g_values = bolvin_from_energies_soc_to_g_values(
+ras_upper_g_matrix, ras_g_values = from_energies_soc_to_g_values(
     ras_input, states_ras, totalstates, excitation_energies_ras, doublet_socs, sz_values)
 
 print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
@@ -54,7 +53,7 @@ def soc_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs,
         socs[3, 0] = np.conj(socs[0, 3])
         socs[2, 1] = np.conj(socs[1, 2])
 
-        upper_g_matrix, g_values = bolvin_from_energies_soc_to_g_values(file,
+        upper_g_matrix, g_values = from_energies_soc_to_g_values(file,
                                                                         n_states, allstates, excit_energies, socs,
                                                                         sz_list)
 
@@ -93,7 +92,7 @@ def energy_and_gvalues_correlation(file, n_states, allstates, excit_energies, so
     for ener_value in np.linspace(min_ener, max_ener, 50):
         excit_energies[1] = ener_value
 
-        upper_g_matrix, g_values = bolvin_from_energies_soc_to_g_values(file, n_states,
+        upper_g_matrix, g_values = from_energies_soc_to_g_values(file, n_states,
                                                                         allstates, excit_energies, socs, sz_list)
 
         presentation_tuple.append([ener_value * 27.211399, np.round(g_values.real[0], 3),
@@ -121,13 +120,13 @@ def orbitmomentum_and_gvalues_correlation(file, n_states, allstates, excit_energ
     """
     hamiltonian_ras = get_hamiltonian_construction(n_states, excit_energies, socs, sz_list)
 
-    eigenvalues, eigenvector, kramers_states = bolvin_diagonalization(hamiltonian_ras)
+    eigenvalues, eigenvector, kramers_states = diagonalization(hamiltonian_ras)
 
-    spin_matrix = get_spin_matrices(file, n_states, bolvin=1)
+    spin_matrix = get_spin_matrices(file, n_states)
 
-    sigma_matrix = bolvin_angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, spin_matrix)
+    sigma_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, spin_matrix)
 
-    l_matrix = get_orbital_matrices(file, allstates, n_states, sz_list, bolvin=1)
+    l_matrix = get_orbital_matrices(file, allstates, n_states, sz_list)
 
     # Change L values
     presentation_tuple = []
@@ -143,9 +142,9 @@ def orbitmomentum_and_gvalues_correlation(file, n_states, allstates, excit_energ
         l_matrix[0, 2, 0] = np.conj(l_matrix[2, 0, 0])
         l_matrix[1, 3, 0] = np.conj(l_matrix[3, 1, 0])
 
-        lambda_matrix = bolvin_angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, l_matrix)
+        lambda_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, l_matrix)
 
-        upper_g_matrix, g_values = bolvin_g_factor_calculation(lambda_matrix, sigma_matrix)
+        upper_g_matrix, g_values = g_factor_calculation(lambda_matrix, sigma_matrix)
 
         presentation_tuple.append([abs(l_value), np.round(g_values.real[0], 3), np.round(g_values.real[1], 3),
                                    np.round(g_values.real[2], 3)])
