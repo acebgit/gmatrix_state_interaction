@@ -9,8 +9,8 @@ from parser_gtensor import get_number_of_states, get_eigenenergies, get_selected
     get_spin_orbit_couplings
 from parser_gtensor import bolvin_from_energies_soc_to_g_values, print_g_calculation
 from parser_excitstates import get_excited_states_analysis, improved_active_space
-from eom_analysis.parser_excitstates_eom import get_eom_transitions_analysis
-from eom_analysis.parser_ras_eom import ras_and_eom_energy_exchange
+from doublets_molecules.parser_excitstates_eom import get_eom_transitions_analysis
+from doublets_molecules.parser_ras_eom import ras_and_eom_energy_exchange
 from parser_plots import get_bar_chart, bolvin_sos_analysis_and_plot
 
 #####################################

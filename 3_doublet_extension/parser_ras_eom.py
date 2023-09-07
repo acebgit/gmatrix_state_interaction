@@ -5,7 +5,7 @@ from parser_gtensor import get_number_of_states, get_eigenenergies, get_selected
 
 from parser_gtensor import bolvin_from_energies_soc_to_g_values
 
-from eom_analysis.parser_excitstates_eom import get_eom_type, get_scf_energy, get_irreps_energies, \
+from doublets_molecules.parser_excitstates_eom import get_eom_type, get_scf_energy, get_irreps_energies, \
     prepare_presentation_list, \
     get_maximum_amplitude_orbitals, get_eom_socc_values, eom_results
 
