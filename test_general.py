@@ -3,19 +3,23 @@
 #####################################
 import os
 from tabulate import tabulate
+import sys
 
-from parser_gtensor import gfactor_presentation
+from parser_gtensor import gfactor_presentation, from_gvalue_to_shift
 from parser_excitstates import get_excited_states_analysis
 from parser_plots import sos_analysis_and_plot
 
-# from_gvalue_to_shift([2.002780, 2.002258])
+# from_gvalue_to_shift([2.0021850, 2.0024658, 2.0026344])
+# C54: 2.0021924, 2.0024626, 2.0026536
+# C64: 2.0021921, 2.0024657, 2.0026347
+# C74: 2.0021850, 2.0024658, 2.0026344
 
 #####################################
 #            INPUT VALUES
 #####################################
 g_calculation = 1
 ras_input = '\
-triplets_molecules/benzoquinone_8_7.out'
+roberto_molecules/C74H32B4_4_4_singletref_concat.out'
 
 several_molecules = 0
 path = "roberto_molecules"
@@ -26,7 +30,7 @@ symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 excited_states_analysis = 1
-sos_analysis = 1
+sos_analysis = 0
 
 # OUTPUT
 write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file

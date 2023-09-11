@@ -859,7 +859,7 @@ def gfactor_presentation(ras_input, states_ras, selected_states, symmetry_select
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground)
 
-    print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, g_shift)
+    print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, g_shift*1000)
 
 
 def from_gvalue_to_shift(lista):
@@ -871,6 +871,6 @@ def from_gvalue_to_shift(lista):
     lande_factor = 2.002319304363
     g_shift = []
     for i in range(0, len(lista)):
-        value = (lista[i] - lande_factor) * 1000
+        value = (lista[i] - lande_factor) * 10**6
         g_shift.append(value)
-    print(g_shift)
+    print(np.round(g_shift, 3))
