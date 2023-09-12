@@ -146,7 +146,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     output = parser_rasci(output)
     data = output['interstate_properties']
 
-    def get_states_sz(qchem_file):
+    def get_states_sz(qchem_file, states_selected):
         """
         Get S² and Sz of all states
         :param: output
@@ -164,9 +164,15 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
             new_multip = 0.75 * n_times
             all_multiplicities.append(new_multip)
 
+        ordered_multip = []
+        for i in range(0, len(states_selected)):
+            selected_mult = states_selected[i] - 1
+            ordered_multip.append(all_multiplicities[selected_mult])
+
         # Obtain maximum and ground state multiplicity and s values
-        s2_max = max(all_multiplicities)
-        s2_ground = all_multiplicities[0]
+        s2_max = max(ordered_multip)
+        # s2_ground = ordered_multip[0]
+        s2_ground = s2_max
         s_max = 0.5 * (-1 + np.sqrt(1 + 4 * s2_max))
         s_ground = 0.5 * (-1 + np.sqrt(1 + 4 * s2_ground))
 
@@ -271,7 +277,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     elif soc_option == 2:
         soc_search = '2e_soc_mat'
 
-    state_multiplicities, sz_list, sz_ground = get_states_sz(output)
+    state_multiplicities, sz_list, sz_ground = get_states_sz(output, selected_states)
     all_socs = get_all_socs(data, totalstates, state_multiplicities, sz_list, soc_search)
     selected_socs = get_selected_states_socs(selected_states, sz_list, all_socs)
 
@@ -361,7 +367,7 @@ def diagonalization(initial_matrix):
 
     # for i in range(0, len(eigenvalues)):
     #     print('eigenvalue:', eigenvalues[i])
-    #     # print('eigenvector:', eigenvectors[:, i])
+    #     print('eigenvector:', eigenvectors[:, i])
     #     print()
     # exit()
     return eigenvalues, eigenvectors, diagonal_matrix
@@ -375,7 +381,7 @@ def get_spin_matrices(file, n_states):
     :return: spin_matrix: matrix with spins < m' | S | m >  in 3-D
     """
 
-    def s2_from_file(file_qchem):
+    def get_all_s2(file_qchem):
         """
         get s2 of each state from Q-Chem otuput
         :param: file
@@ -393,7 +399,7 @@ def get_spin_matrices(file, n_states):
         s2_each_states = np.array(elements, dtype=float)
         return s2_each_states
 
-    def s2_single_values(states_s2):
+    def get_s2_single_values(states_s2):
         """
         get s2 values from the s2 of all the states, to obtain all values of
         s2 only one time.
@@ -497,13 +503,22 @@ def get_spin_matrices(file, n_states):
 
         return s_x, s_y, s_z
 
-    s2_states = s2_from_file(file)  # s2 of each of the states
-    single_s2_values = s2_single_values(s2_states)  # s2 of each of the states, without repetition
+    s2_states = get_all_s2(file)  # s2 of each of the states
+    single_s2_values = get_s2_single_values(s2_states)  # s2 of each of the states, without repetition
     number_of_spins = len(single_s2_values)
 
+    ordered_spin = np.zeros((len(n_states)))  # dtype=int
+    for i in range(0, len(n_states)):
+        selected_mult = n_states[i] - 1
+        ordered_spin[i] = s2_states[selected_mult]
+
+    if ordered_spin[0] == 0:
+        print("Ground state cannot be a singlet. ")
+        exit()
+
     # Spin matrix of non-relativistic states:
-    max_multiplicity = int(2 * s2_to_s(max(single_s2_values)) + 1)
-    ground_multiplicity = int(2 * s2_to_s(single_s2_values[0]) + 1)
+    max_multiplicity = int(2 * s2_to_s(max(ordered_spin)) + 1)
+    ground_multiplicity = int(2 * s2_to_s(ordered_spin[0]) + 1)
 
     standard_spin_matrix = np.zeros((ground_multiplicity, ground_multiplicity, 3), dtype=complex)
     spin_matrix = np.zeros((len(n_states) * max_multiplicity, len(n_states) * max_multiplicity, 3), dtype=complex)
@@ -538,15 +553,15 @@ def get_spin_matrices(file, n_states):
         # Standard spin matrix
         multip_difference = (max_multiplicity - ground_multiplicity) // 2
         for k in range(0, 3):
-            for ii in range(0, ground_multiplicity):
-                for j in range(0, ground_multiplicity):
+            for ii in range(0, max_multiplicity):
+                for j in range(0, max_multiplicity):
                     standard_spin_matrix[ii, j, k] = spin_matrix[ii + multip_difference, j + multip_difference, k]
 
     # print('Spin Matrices:')
     # for k in range(0,3):
     #    print('Dimension: ', k)
     #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                     for row in np.round((spin_matrix[:,:,k]),5)]))
+    #                     for row in np.round((standard_spin_matrix[:,:,k]),5)]))
     #    print(" ")
     # exit()
     return spin_matrix, standard_spin_matrix
@@ -764,7 +779,7 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         #                     for row in np.round((j_matrix[:,:,k]),5)]))
         #    print(" ")
         # exit()
-        j_matrix = j_big_matrix
+
         return j_matrix
 
     j_matrix = j_matrix_formation(lande_factor, s_matrix, l_matrix, sz_list, ground_sz)

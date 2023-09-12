@@ -149,7 +149,7 @@ RAS_ELEC           6       !number of electrons in RAS2
 !RAS_ELEC_BETA             !spin-β electrons in RAS2
 
 RAS_ACT            5       !number of orbitals in RAS2 
-!RAS_ACT_ORB       1       !user-selected RAS2 orbitals
+RAS_ACT_ORB   [3,4,5,6,7]       !user-selected RAS2 orbitals
 RAS_OCC            2       !number of orbitals in RAS1
 !N_FROZEN_CORE      FC     !Number of frozen core orbitals
 !N_FROZEN_VIRTUAL   0      !Number of frozen virtual orbitals
