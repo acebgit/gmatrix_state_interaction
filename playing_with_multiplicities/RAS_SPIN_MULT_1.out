@@ -1,0 +1,3031 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 6.0 (devel), Q-Chem, Inc., Pleasanton, CA (2022)
+
+ E. Epifanovsky,  A. T. B. Gilbert,  Xintian Feng,  Joonho Lee,  Yuezhi Mao,  
+ N. Mardirossian,  P. Pokhilko,  A. White,  M. Wormit,  M. P. Coons,  
+ A. L. Dempwolff,  Zhengting Gan,  D. Hait,  P. R. Horn,  L. D. Jacobson,  
+ I. Kaliman,  J. Kussmann,  A. W. Lange,  Ka Un Lao,  D. S. Levine,  Jie Liu,  
+ S. C. McKenzie,  A. F. Morrison,  K. Nanda,  F. Plasser,  D. R. Rehn,  
+ M. L. Vidal,  Zhi-Qiang You,  Ying Zhu,  B. Alam,  B. Albrecht,  
+ A. Aldossary,  E. Alguire,  J. H. Andersen,  V. Athavale,  D. Barton,  
+ K. Begam,  A. Behn,  N. Bellonzi,  Y. A. Bernard,  E. J. Berquist,  
+ H. Burton,  A. Carreras,  K. Carter-Fenk,  Romit Chakraborty,  
+ Chandrima Chakravarty,  Junhan Chen,  A. D. Chien,  K. D. Closser,  
+ V. Cofer-Shabica,  L. Cunha,  S. Dasgupta,  Jia Deng,  M. de Wergifosse,  
+ M. Diedenhofen,  Hainam Do,  S. Ehlert,  Po-Tung Fang,  S. Fatehi,  
+ Qingguo Feng,  T. Friedhoff,  B. Ganoe,  J. Gayvert,  Qinghui Ge,  
+ G. Gidofalvi,  M. Goldey,  J. Gomes,  C. Gonzalez-Espinoza,  S. Gulania,  
+ A. Gunina,  J. A. Gyamfi,  M. W. D. Hanson-Heine,  P. H. P. Harbach,  
+ A. W. Hauser,  M. F. Herbst,  M. Hernandez Vera,  M. Hodecker,  
+ Z. C. Holden,  S. Houck,  Xunkun Huang,  Kerwin Hui,  B. C. Huynh,  
+ K. Ikeda,  M. Ivanov,  Hyunjun Ji,  Zuxin Jin,  Hanjie Jiang,  B. Kaduk,  
+ S. Kaehler,  R. Kang,  K. Khistyaev,  Jaehoon Kim,  Yongbin Kim,  
+ P. Klunzinger,  Z. Koczor-Benda,  Joong Hoon Koh,  D. Kosenkov,  
+ Saikiran Kotaru,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  K. Kue,  
+ A. Kunitsa,  T. Kus,  A. Landau,  K. V. Lawler,  D. Lefrancois,  S. Lehtola,  
+ Rain Li,  Shaozhi Li,  Yi-Pei Li,  Jiashu Liang,  M. Liebenthal,  
+ Hung-Hsuan Lin,  You-Sheng Lin,  Fenglai Liu,  Kuan-Yu Liu,  
+ M. Loipersberger,  A. Luenser,  C. Malbon,  A. Manjanath,  P. Manohar,  
+ E. Mansoor,  S. F. Manzer,  Shan-Ping Mao,  A. V. Marenich,  T. Markovich,  
+ S. Mason,  F. Matz,  S. A. Maurer,  P. F. McLaughlin,  M. F. S. J. Menger,  
+ J.-M. Mewes,  S. A. Mewes,  P. Morgante,  Mohammad Mostafanejad,  
+ J. W. Mullinax,  K. J. Oosterbaan,  G. Paran,  V. Parravicini,  
+ Alexander C. Paul,  Suranjan K. Paul,  F. Pavosevic,  Zheng Pei,  S. Prager,  
+ E. I. Proynov,  E. Ramos,  B. Rana,  A. E. Rask,  A. Rettig,  R. M. Richard,  
+ F. Rob,  E. Rossomme,  T. Scheele,  M. Scheurer,  M. Schneider,  
+ P. E. Schneider,  N. Sergueev,  S. M. Sharada,  Hengyuan Shen,  
+ W. Skomorowski,  D. W. Small,  C. J. Stein,  Yingli Su,  Yu-Chuan Su,  
+ E. J. Sundstrom,  Zhen Tao,  J. Thirman,  Hung-Yi Tsai,  T. Tsuchimochi,  
+ N. M. Tubman,  C. Utku,  S. P. Veccham,  O. Vydrov,  J. Wenzel,  
+ Jonathan Wong,  J. Witte,  A. Yamada,  Chou-Hsun Yang,  Kun Yao,  
+ S. Yeganeh,  S. R. Yost,  A. Zech,  F. Zeller,  Igor Ying Zhang,  
+ Xing Zhang,  Yu Zhang,  D. Zuev,  A. Aspuru-Guzik,  A. T. Bell,  
+ N. A. Besley,  K. B. Bravaya,  B. R. Brooks,  D. Casanova,  Jeng-Da Chai,  
+ Hsing-Ta Chen,  S. Coriani,  C. J. Cramer,  A. E. DePrince, III,  
+ R. A. DiStasio Jr.,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  
+ W. A. Goddard III,  S. Grimme,  S. Hammes-Schiffer,  T. Head-Gordon,  
+ W. J. Hehre,  Chao-Ping Hsu,  T.-C. Jagau,  Yousung Jung,  A. Klamt,  
+ Jing Kong,  D. S. Lambrecht,  Xiangyuan Li,  WanZhen Liang,  N. J. Mayhall,  
+ C. W. McCurdy,  J. B. Neaton,  T. Neudecker,  C. Ochsenfeld,  
+ J. A. Parkhill,  R. Peverati,  V. A. Rassolov,  Haisheng Ren,  Yihan Shao,  
+ L. V. Slipchenko,  R. P. Steele,  J. E. Subotnik,  A. J. W. Thom,  
+ A. Tkatchenko,  D. G. Truhlar,  T. Van Voorhis,  Fan Wang,  
+ T. A. Wesolowski,  K. B. Whaley,  H. L. Woodcock III,  P. M. Zimmerman,  
+ S. Faraji,  P. M. W. Gill,  M. Head-Gordon,  J. M. Herbert,  A. I. Krylov
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  R. Baer,  J. Baker,  G. J. O. Beran,  
+ K. Brandhorst,  S. T. Brown,  E. F. C. Byrd,  Arup K. Chakraborty,  
+ G. K. L. Chan,  Chun-Min Chang,  Yunqing Chen,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  R. G. Edgar,  J. Fosso-Tande,  
+ L. Fusti-Molnar,  D. Ghosh,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  
+ J. Gonthier,  M. S. Gordon,  S. R. Gwaltney,  G. Hawkins,  J. E. Herr,  
+ A. Heyden,  S. Hirata,  E. G. Hohenstein,  G. Kedziora,  F. J. Keil,  
+ C. Kelley,  Jihan Kim,  R. A. King,  R. Z. Khaliullin,  P. P. Korambath,  
+ W. Kurlancheek,  A. Laurent,  A. M. Lee,  M. S. Lee,  S. V. Levchenko,  
+ Ching Yeh Lin,  D. Liotard,  E. Livshits,  R. C. Lochan,  I. Lotan,  
+ L. A. Martinez-Martinez,  P. E. Maslen,  N. Nair,  D. P. O'Neill,  
+ D. Neuhauser,  E. Neuscamman,  C. M. Oana,  R. Olivares-Amaya,  R. Olson,  
+ T. M. Perrine,  B. Peters,  P. A. Pieniazek,  A. Prociuk,  Y. M. Rhee,  
+ J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  H. F. Schaefer III,  
+ M. W. Schmidt,  N. E. Schultz,  S. Sharma,  N. Shenvi,  C. D. Sherrill,  
+ A. C. Simmonett,  A. Sodt,  T. Stein,  D. Stuck,  K. S. Thanthiriwatte,  
+ V. Vanovschi,  L. Vogt,  Tao Wang,  A. Warshel,  M. A. Watson,  
+ C. F. Williams,  Q. Wu,  X. Xu,  Jun Yang,  W. Zhang,  Yan Zhao
+
+   Please cite Q-Chem as follows:
+  "Software for the frontiers of quantum chemistry:
+   An overview of developments in the Q-Chem 5 package"
+   J. Chem. Phys. 155, 084801 (2021)
+   https://doi.org/10.1063/5.0055522 (open access)
+
+ Q-Chem 6.0.1 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Mon Sep 11 16:25:53 2023  
+
+ Host: atlas-fdr-login-01
+0
+
+     Scratch files written to ./qchem30164//
+ Processing $rem in /scratch/abel/SOFTWARE/qchem/config/preferences:
+ Processing $rem in /dipc/acebg/.qchemrc:
+
+ Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ RAS-SF CALCULATION
+$end
+
+$molecule
+0 1    !charge and multiplicity
+O1
+H1 O1 oh
+H2 O1 oh H1 hoh
+
+oh = 0.997
+hoh = 109.17
+$end
+
+$rem
+!**CALCULATION TYPE***     
+JOBTYPE            sp    
+EXCHANGE           HF
+CORRELATION        RASCI    !RASCI=Casanova; RASCI2=Zimmerman
+BASIS              STO-3G
+
+!***SCF REFERENCE***
+!SKIP_SCFMAN        FALSE
+UNRESTRICTED       FALSE
+!SCF_GUESS          core
+!SCF_GUESS_MIX      FALSE
+!SCF_GUESS_ALWAYS   FALSE
+MAX_SCF_CYCLES     500
+SCF_CONVERGENCE    10
+!SCF_ALGORITHM      DIIS !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
+
+!SYMMETRY           TRUE   !use of symmetry for calculating integrals
+!SYM_IGNORE         FALSE  !turn off using symmetry
+!SYM_TOL            5      !tolerance for determining point group
+!USE_ABELIAN_SUBGROUP      !define to use abelian group
+
+!THRESH             14
+SCF_FINAL_PRINT     1 !0,1,2,3
+
+!****RAS-SF****
+RAS_ROOTS          10       !number of RAS-CI roots to be computed
+SET_ITER           30     !number of iterations in RASCI
+RAS_ELEC           6       !number of electrons in RAS2
+!RAS_ELEC_ALPHA            !spin-α electrons in RAS2 
+!RAS_ELEC_BETA             !spin-β electrons in RAS2
+
+RAS_ACT            5       !number of orbitals in RAS2 
+!RAS_ACT_ORB       1       !user-selected RAS2 orbitals
+RAS_OCC            2       !number of orbitals in RAS1
+!N_FROZEN_CORE      FC     !Number of frozen core orbitals
+!N_FROZEN_VIRTUAL   0      !Number of frozen virtual orbitals
+
+RAS_DO_HOLE        TRUE   !presence of hole excitations in RAS-CI wave function
+RAS_DO_PART        TRUE   !presence of particle excitations
+!RAS_AMPL_PRINT     10     !threshold (×10 2 ) for the CI amplitudes
+
+!RAS_GUESS_CS       0      !number of closed shell guess conﬁgurations
+RAS_SPIN_MULT       1      !spin multiplicity. Only for Ms = 0 
+!RAS_SRDFT          FALSE  !short-range density functional RAS-CI
+!RAS_NFRAG          0     !fragments of excitation analysis in RASCI
+
+RAS_PRINT          2      !level of information
+RAS_NATORB         TRUE   !computation of the natural orbital occupancies
+!RAS_NATORB_STATE  0      !Saves NO of i RAS computed state in .fchk ﬁle
+!RAS_FOD            TRUE
+
+!****RAS-SOC****
+CALC_SOC           TRUE   !calculate SOC for EOM-CC, RAS-CI, ADC, TDDFT/TDA and TDDFT
+!RAS_SOC_2E        TRUE   !two-electron mean-ﬁeld contribution, default=true
+RAS_SOC_SYM_DENS   TRUE   !averaging of α and β densities
+
+!****MEMORY****
+MEM_TOTAL          12000 !Default 2000 MB
+MEM_STATIC         3000  !Default 64 MB
+
+!**Molecular Properties and Analysis **                                                                                          
+POP_MULLIKEN       TRUE   !Run Mulliken population analysis
+LOWDIN_POPULATION  TRUE   !Run Löwdin population analysis
+GUI                0       !Checkpoints generation
+STATE_ANALYSIS     TRUE
+
+!**Wave function analysis of RAS-CI states: MOLDEN**
+!PLOTS = 0     ! Note: This can be omitted, default is 0
+!NTO_PAIRS = 2 ! Note: This can be omitted, default is 2
+!GUI 0
+!MOLDEN_FORMAT      TRUE
+!PRINT_ORBITALS     15
+
+!**Wave function analysis of RAS-CI state: CUBE**
+!NTO_PAIRS = 2 ! Note: This can be omitted, default is 2
+!PLOTS = 1
+!GUI 0
+
+!**SR-DFT**
+!RAS_SRDFT           TRUE !Perform short-range density functional RAS-CI
+!RAS_SRDFT_EXC       0 !EX functional. 0=HF. 
+!RAS_SRDFT_ONLY_COR  TRUE !No use of EXC functional
+!RAS_SRDFT_COR       srPBE !short-range correlation functional
+!ras_srdft_0         TRUE !true: no iteration (one-shot); false: iteration
+!RAS_OMEGA           400 !Coulomb range-separation parameter. def=400
+!RAS_SRDFT_DAMP     0.5 !dumping factor. def=0.5
+$end
+
+!$plots
+!   grid_points 100 100 100
+!   grid_range  (-10,10) (-10,10) (-10,10)
+!$end
+
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      O       0.0000000000     0.0000000000     0.1155512138
+    2      H      -0.8125311840    -0.0000000000    -0.4622048550
+    3      H       0.8125311840    -0.0000000000    -0.4622048550
+ ----------------------------------------------------------------
+ Molecular Point Group                 C2v   NOp =  4
+ Largest Abelian Subgroup              C2v   NOp =  4
+ Nuclear Repulsion Energy =           8.81794733 hartrees
+ There are        5 alpha and        5 beta electrons
+ Requested basis set is STO-3G
+ There are 4 shells and 7 basis functions
+
+ Total QAlloc Memory Limit  12000 MB
+ Mega-Array Size      2933 MB
+ MEM_STATIC part      3000 MB
+
+
+                       Distance Matrix (Angstroms)
+             O (  1)   H (  2)
+   H (  2)  0.997000
+   H (  3)  0.997000  1.625062
+ 
+ A cutoff of  1.0D-14 yielded     10 shell pairs
+ There are        34 function pairs
+ Smallest overlap matrix eigenvalue = 3.69E-01
+
+ Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000001 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 10.000000 electrons
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Hartree-Fock
+ A restricted SCF calculation will be
+ performed using DIIS
+ SCF converges when DIIS error is below 1.0e-10
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1     -74.5817223679      3.90e-01  
+    2     -74.9207299108      6.68e-02  
+    3     -74.9615158562      8.15e-03  
+    4     -74.9619918050      1.63e-03  
+    5     -74.9620170616      5.95e-05  
+    6     -74.9620171310      1.07e-05  
+    7     -74.9620171333      1.02e-07  
+    8     -74.9620171333      8.93e-11  Convergence criterion met
+ ---------------------------------------
+ DFT Correlation    Energy =   0.00000000000000
+ DFT Exchange       Energy =   0.00000000000000
+ HF Exchange        Energy =  -9.07115723497444
+ Kinetic            Energy =   0.00000000000000
+ Nuclear Attraction Energy =   0.00000000000000
+ One-Electron       Energy = -121.74063176216963
+ Total Coulomb      Energy =  47.03182453781312
+ Final Alpha MO Eigenvalues
+            1           2           3           4           5           6
+    1 -20.2397754  -1.2437470  -0.6040226  -0.4368842  -0.3852194   0.5573951
+            7
+    1   0.7101292
+ SCF time:   CPU 0.08s  wall 0.00s 
+ SCF   energy in the final basis set =      -74.9620171333
+ Total energy in the final basis set =      -74.9620171333
+  
+     ##========================================##
+     ||                                        ||
+     ||              R A S M A N 2             ||
+     ||________________________________________||
+     ||                                        ||
+     ||  Author:                               ||
+     ||                                        ||
+     ||        David Casanova (2010)           ||
+     ||                                        ||
+     ##========================================##
+  
+Setting single-point xc-functionals (if necessary)
+
+  ***************************************************
+  *  RAS-CI Dimensions:                             *
+  *                                                 *
+  *  Active Elec.:   6 ( 3, 3)   Active Orb.:   5   *
+  *  Doubly Occ. :   2           Doubly Vir.:   0   *
+  *  Frozen Occ. :   0           Frozen Vir.:   0   *
+  *                                                 *
+  *  Total CI configurations:       300             * 
+  *    Active configurations:       100             * 
+  *      Hole configurations:       200             * 
+  *  Particle configurations:         0             * 
+  *                                                 *
+  *   Requested states:       10                    *
+  *  Spin multiplicity: Singlets                    *
+  *                                                 *
+  ***************************************************
+-----------------------------------------
+    Memory requirements of RASCI
+
+ Each CI-vector requires      0.00 MiB 
+ Max. subspace vectors            300      
+
+ Reduced Lists                0.00 MiB 
+ Excitation Lists             0.00 MiB 
+ Excitation Lists Sign        0.00 MiB 
+ CI-space (Max)               1.40 MiB 
+ Integrals                    0.02 MiB 
+ Memory required (Max)        1.40 MiB 
+ Memory available          2861.02 MiB 
+
+    Disk requirements of RASCI
+
+ Fock matrix                  0.00 MiB 
+ 2-electron integrals         0.02 MiB 
+ CI-space                     1.37 MiB 
+ Disk required                1.39 MiB 
+-----------------------------------------
+  
+RAS1 HF-like energy:            -62.3737743686
+ Computing integrals
+ Computing J and K matrices
+ Computing addressing
+ Making amplitude guesses
+   2 guesses with   0 unpaired electrons
+   6 guesses with   2 unpaired electrons
+   2 guesses with   4 unpaired electrons
+ 
+Direct CI diagonalization
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+   1         0          10      0.170585    0.023075
+   2         0          10      0.112199    0.016301
+   3         0          10      0.111850    0.028496
+   4         0          10      0.034128    0.006693
+   5         0          10      0.086305    0.042146
+   6         0          10      0.022055    0.007977
+   7         0          10      0.029771    0.024589
+   8         0          10      0.015381    0.012067
+   9         2           8      0.015418    0.015031
+  10         5           5      0.020331    0.020143
+  11         6           4      0.009607    0.009549
+  12         6           4      0.004398    0.004378
+  13         6           4      0.001373    0.001359
+  14         8           2      0.000981    0.000978
+  15         9           1      0.000309    0.000308
+  16         9           1      0.000036    0.000035
+  17         9           1      0.000054    0.000053
+  18         9           1      0.000007    0.000006
+  19        10           0      0.000002    0.000001    Roots Converged
+ ---------------------------------------------------
+   
+**************************************************
+ RAS-CI total energy for state   1:    -75.012239391358
+  Excitation energy (eV) =  0.000000000000
+  State symmetry: A1    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:   -0.0000 X     0.0000 Y     0.5986 Z
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999991   1.9982844   1.9976827   1.9741170   1.9694022   0.0308862
+            7
+    1   0.0296282
+ Created directory ./qchem30164/plots
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 11100 |       |     9.8464308545494E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  99.45
+                                 Hole:   0.55
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O   -0.309398       -0.000000 
+   2  H    0.154699       -0.000000 
+   3  H    0.154699       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999991   1.9982844   1.9976827   1.9741170   1.9694022   0.0308862
+            7
+    1   0.0296282
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         0.24
+ Head-Gordon Nu:       0.12
+ Head-Gordon Nu_nl:    0.01
+  
+**************************************************
+ RAS-CI total energy for state   2:    -74.608352031438
+  Excitation energy (eV) = 10.990334234160
+  State symmetry: B2    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:   -0.0000 X     0.0000 Y    -0.0251 Z
+  Trans. Moment:    0.0000 X    -0.1019 Y     0.0000 Z
+  Strength   :  0.002795
+  Natural transition orbitals ( 1 -> 2 ):
+   e-/hole pair  1:  ampl =  0.962744 ( 92.7%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.031200 (  0.1%)   [4 : 7]
+   Sum of square amplitudes: 0.93
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999998   1.9993155   1.9886376   1.9568295   1.0000000   0.9993857
+            7
+    1   0.0558319
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 11010 |       |     6.8231615142063E-01
+ |       | 11010 | 11100 |       |     6.8231615142063E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  99.06
+                                 Hole:   0.94
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O   -0.002947       -0.000000 
+   2  H    0.001474       -0.000000 
+   3  H    0.001474       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999998   1.9993155   1.9886376   1.9568295   1.0000000   0.9993857
+            7
+    1   0.0558319
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         2.22
+ Head-Gordon Nu:       2.11
+ Head-Gordon Nu_nl:    2.02
+  
+**************************************************
+ RAS-CI total energy for state   3:    -74.508516836337
+  Excitation energy (eV) = 13.706988111869
+  State symmetry: A2    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:    0.0000 X     0.0000 Y     0.2067 Z
+  Trans. Moment:    0.0000 X    -0.0000 Y     0.0000 Z
+  Strength   :  0.000000
+  Natural transition orbitals ( 1 -> 3 ):
+   e-/hole pair  1:  ampl =  0.965250 ( 93.2%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.013116 (  0.0%)   [4 : 7]
+   Sum of square amplitudes: 0.93
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999995   1.9994550   1.9784767   1.9611104   1.0000000   0.9938108
+            7
+    1   0.0671475
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 11001 |       |     6.8359389510420E-01
+ |       | 11001 | 11100 |       |     6.8359389510420E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  98.92
+                                 Hole:   1.08
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O   -0.048141       -0.000000 
+   2  H    0.024071       -0.000000 
+   3  H    0.024071       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000       -0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999995   1.9994550   1.9784767   1.9611104   1.0000000   0.9938108
+            7
+    1   0.0671475
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         2.25
+ Head-Gordon Nu:       2.12
+ Head-Gordon Nu_nl:    2.02
+  
+**************************************************
+ RAS-CI total energy for state   4:    -74.466990018827
+  Excitation energy (eV) = 14.836990309026
+  State symmetry: A1    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:   -0.0000 X     0.0000 Y    -0.1451 Z
+  Trans. Moment:   -0.0000 X     0.0000 Y    -0.4194 Z
+  Strength   :  0.063946
+  Natural transition orbitals ( 1 -> 4 ):
+   e-/hole pair  1:  ampl =  0.943675 ( 89.1%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.183635 (  3.4%)   [4 : 7]
+   Sum of square amplitudes: 0.93
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999995   1.9984782   1.9936645   1.9254482   1.1752517   0.8233708
+            7
+    1   0.0837871
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 10110 |       |     6.6928450990967E-01
+ |       | 11100 | 01101 |       |    -1.3500926513935E-01
+ |       | 10110 | 11100 |       |     6.6928450990967E-01
+ |       | 10110 | 10110 |       |    -1.1357197310432E-01
+ |       | 01101 | 11100 |       |    -1.3500926513935E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  98.53
+                                 Hole:   1.47
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O   -0.084159       -0.000000 
+   2  H    0.042080       -0.000000 
+   3  H    0.042080       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999995   1.9984782   1.9936645   1.9254482   1.1752517   0.8233708
+            7
+    1   0.0837871
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         2.26
+ Head-Gordon Nu:       1.81
+ Head-Gordon Nu_nl:    1.92
+  
+**************************************************
+ RAS-CI total energy for state   5:    -74.363608137034
+  Excitation energy (eV) = 17.650154441934
+  State symmetry: B1    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:    0.0000 X    -0.0000 Y     0.1129 Z
+  Trans. Moment:    0.3653 X    -0.0000 Y    -0.0000 Z
+  Strength   :  0.057698
+  Natural transition orbitals ( 1 -> 5 ):
+   e-/hole pair  1:  ampl =  0.872480 ( 76.1%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.388006 ( 15.1%)   [4 : 7]
+   Sum of square amplitudes: 0.91
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999994   1.9972634   1.9923890   1.8027753   1.1465529   0.8304935
+            7
+    1   0.2305264
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 10101 |       |     6.2373675952823E-01
+ |       | 11100 | 01110 |       |    -2.7809579363796E-01
+ |       | 10110 | 10101 |       |    -1.1954839907000E-01
+ |       | 10101 | 11100 |       |     6.2373675952823E-01
+ |       | 10101 | 10110 |       |    -1.1954839907000E-01
+ |       | 01110 | 11100 |       |    -2.7809579363796E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  99.13
+                                 Hole:   0.87
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O   -0.163326       -0.000000 
+   2  H    0.081663       -0.000000 
+   3  H    0.081663       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999994   1.9972634   1.9923890   1.8027753   1.1465529   0.8304935
+            7
+    1   0.2305264
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         2.73
+ Head-Gordon Nu:       2.12
+ Head-Gordon Nu_nl:    2.19
+  
+**************************************************
+ RAS-CI total energy for state   6:    -74.227556464236
+  Excitation energy (eV) = 21.352308818503
+  State symmetry: B1    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:   -0.0000 X    -0.0000 Y     0.3055 Z
+  Trans. Moment:    1.4291 X     0.0000 Y     0.0000 Z
+  Strength   :  1.068425
+  Natural transition orbitals ( 1 -> 6 ):
+   e-/hole pair  1:  ampl =  0.885808 ( 78.5%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.397063 ( 15.8%)   [4 : 7]
+   Sum of square amplitudes: 0.95
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999990   1.9983287   1.9976232   1.8057896   1.1784548   0.8266998
+            7
+    1   0.1931048
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 10101 |       |     2.8234196311667E-01
+ |       | 11100 | 01110 |       |     6.3351215058220E-01
+ |       | 10101 | 11100 |       |     2.8234196311667E-01
+ |       | 01110 | 11100 |       |     6.3351215058220E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  99.49
+                                 Hole:   0.51
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O   -0.222599       -0.000000 
+   2  H    0.111300       -0.000000 
+   3  H    0.111300       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999990   1.9983287   1.9976232   1.8057896   1.1784548   0.8266998
+            7
+    1   0.1931048
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         2.65
+ Head-Gordon Nu:       2.04
+ Head-Gordon Nu_nl:    2.12
+  
+**************************************************
+ RAS-CI total energy for state   7:    -74.093732137556
+  Excitation energy (eV) = 24.993854023512
+  State symmetry: A1    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:   -0.0000 X     0.0000 Y    -0.4184 Z
+  Trans. Moment:   -0.0000 X     0.0000 Y    -0.2874 Z
+  Strength   :  0.050577
+  Natural transition orbitals ( 1 -> 7 ):
+   e-/hole pair  1:  ampl =  0.381591 ( 14.6%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.210272 (  4.4%)   [4 : 7]
+   Sum of square amplitudes: 0.19
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999995   1.9550174   1.9234855   1.7976764   1.2836878   0.5521772
+            7
+    1   0.4879562
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 01101 |       |     2.6578295370666E-01
+ |       | 11010 | 11010 |       |     7.1226899999931E-01
+ |       | 11010 | 01011 |       |    -1.7896125140292E-01
+ |       | 11001 | 11001 |       |    -4.0256591163697E-01
+ |       | 10110 | 10110 |       |    -1.4553395513712E-01
+ |       | 01110 | 01110 |       |    -1.2960054964279E-01
+ |       | 01101 | 11100 |       |     2.6578295370666E-01
+ |       | 01011 | 11010 |       |    -1.7896125140292E-01
+ |   2   | 11110 | 11100 |       |    -1.4831183643358E-01
+ |   2   | 11100 | 11110 |       |    -1.4831183643358E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  95.00
+                                 Hole:   5.00
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O    0.285031       -0.000000 
+   2  H   -0.142515       -0.000000 
+   3  H   -0.142515       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999995   1.9550174   1.9234855   1.7976764   1.2836878   0.5521772
+            7
+    1   0.4879562
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         3.06
+ Head-Gordon Nu:       2.08
+ Head-Gordon Nu_nl:    2.19
+  
+**************************************************
+ RAS-CI total energy for state   8:    -74.027835086439
+  Excitation energy (eV) = 26.787004017012
+  State symmetry: B2    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:   -0.0000 X     0.0000 Y    -0.5531 Z
+  Trans. Moment:    0.0000 X    -0.0100 Y    -0.0000 Z
+  Strength   :  0.000066
+  Natural transition orbitals ( 1 -> 8 ):
+   e-/hole pair  1:  ampl =  0.077709 (  0.6%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.019733 (  0.0%)   [4 : 7]
+   Sum of square amplitudes: 0.01
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999999   1.9981912   1.8991960   1.4522904   1.0953575   1.0000000
+            7
+    1   0.5549651
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 01011 |       |     1.7930098114736E-01
+ |       | 11010 | 10110 |       |    -5.4616889958170E-01
+ |       | 11010 | 00111 |       |     1.1773804020096E-01
+ |       | 11001 | 10101 |       |     3.2359884027500E-01
+ |       | 11001 | 01110 |       |    -1.1239312245714E-01
+ |       | 10110 | 11010 |       |    -5.4616889958170E-01
+ |       | 10101 | 11001 |       |     3.2359884027500E-01
+ |       | 01110 | 11001 |       |    -1.1239312245714E-01
+ |       | 01011 | 11100 |       |     1.7930098114736E-01
+ |       | 00111 | 11010 |       |     1.1773804020096E-01
+ |   2   | 11110 | 11010 |       |    -1.0191997762035E-01
+ |   2   | 11010 | 11110 |       |    -1.0191997762035E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  97.21
+                                 Hole:   2.79
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O    0.301328       -0.000000 
+   2  H   -0.150664       -0.000000 
+   3  H   -0.150664       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999999   1.9981912   1.8991960   1.4522904   1.0953575   1.0000000
+            7
+    1   0.5549651
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         3.78
+ Head-Gordon Nu:       3.11
+ Head-Gordon Nu_nl:    3.29
+  
+**************************************************
+ RAS-CI total energy for state   9:    -73.997055955096
+  Excitation energy (eV) = 27.624546793713
+  State symmetry: A2    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:   -0.0000 X    -0.0000 Y    -0.4882 Z
+  Trans. Moment:   -0.0000 X     0.0000 Y    -0.0000 Z
+  Strength   :  0.000000
+  Natural transition orbitals ( 1 -> 9 ):
+   e-/hole pair  1:  ampl =  0.023596 (  0.1%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.011328 (  0.0%)   [4 : 7]
+   Sum of square amplitudes: 0.00
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999995   1.9990028   1.6201581   1.4216766   1.0898192   1.0000000
+            7
+    1   0.8693437
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 10011 |       |     4.3273784310134E-01
+ |       | 11010 | 10101 |       |     1.9282418013466E-01
+ |       | 11010 | 01110 |       |    -3.4896936844097E-01
+ |       | 11001 | 10110 |       |    -2.3991366296668E-01
+ |       | 11001 | 01101 |       |     2.4564040736017E-01
+ |       | 10110 | 11001 |       |    -2.3991366296668E-01
+ |       | 10110 | 10011 |       |    -1.2313837993308E-01
+ |       | 10101 | 11010 |       |     1.9282418013466E-01
+ |       | 10011 | 11100 |       |     4.3273784310136E-01
+ |       | 10011 | 10110 |       |    -1.2313837993308E-01
+ |       | 01110 | 11010 |       |    -3.4896936844096E-01
+ |       | 01101 | 11001 |       |     2.4564040736016E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  98.58
+                                 Hole:   1.42
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O    0.205201       -0.000000 
+   2  H   -0.102601        0.000000 
+   3  H   -0.102601        0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999995   1.9990028   1.6201581   1.4216766   1.0898192   1.0000000
+            7
+    1   0.8693437
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         4.41
+ Head-Gordon Nu:       3.74
+ Head-Gordon Nu_nl:    4.00
+  
+**************************************************
+ RAS-CI total energy for state  10:    -73.984163647864
+  Excitation energy (eV) = 27.975364322524
+  State symmetry: A1    (C2v      )
+  <S^2>      :  0.0000
+  Dipole Moment:    0.0000 X     0.0000 Y     0.1698 Z
+  Trans. Moment:    0.0000 X     0.0000 Y    -0.7671 Z
+  Strength   :  0.403272
+  Natural transition orbitals ( 1 -> 10 ):
+   e-/hole pair  1:  ampl =  0.830848 ( 69.0%)   [5 : 6]
+   e-/hole pair  2:  ampl =  0.202105 (  4.1%)   [4 : 7]
+   Sum of square amplitudes: 0.74
+
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999973   1.9843872   1.8808984   1.6621737   1.1779783   0.8311308
+            7
+    1   0.4634343
+
+  Amplitudes : 
+  
+ | HOLE  | ALPHA | BETA  | PART  |    AMPLITUDE 
+--------------------------------------------------
+ |       | 11100 | 10110 |       |     1.1200187527520E-01
+ |       | 11100 | 01101 |       |     5.8929266126891E-01
+ |       | 11010 | 11010 |       |    -3.6135907680898E-01
+ |       | 11001 | 11001 |       |     1.5847401244696E-01
+ |       | 10110 | 11100 |       |     1.1200187527520E-01
+ |       | 10110 | 10110 |       |     1.2242688327541E-01
+ |       | 01110 | 01110 |       |    -1.9712211037035E-01
+ |       | 01101 | 11100 |       |     5.8929266126891E-01
+--------------------------------------------------
+*** Contributions RASCI wfn    Active:  98.04
+                                 Hole:   1.96
+                                 Part:   0.00
+
+      Mulliken population analysis 
+ ---------------------------------------------------
+   Atom    Charge (a.u.)   Spin (a.u.)  
+ ---------------------------------------------------
+   1  O   -0.128534       -0.000000 
+   2  H    0.064267       -0.000000 
+   3  H    0.064267       -0.000000 
+ ---------------------------------------------------
+   Sum:   -0.000000        0.000000 
+ ---------------------------------------------------
+ 
+  
+ NATURAL OCCUPATION NUMBERS (higher than 1.0E-05)
+            1           2           3           4           5           6
+    1   1.9999973   1.9843872   1.8808984   1.6621737   1.1779783   0.8311308
+            7
+    1   0.4634343
+  
+*** Unpaired Electrons
+ Yamaguchi Nd:         3.47
+ Head-Gordon Nu:       2.59
+ Head-Gordon Nu_nl:    2.75
+  
+--------------------------------------------------
+ Interstate Transition Properties
+--------------------------------------------------
+State A: Root  1
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =     0.543464634i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.963250
+||gamma^AB||_symmetrized =  0.659109
+||gamma^AB||_anti-symm   =  0.702443
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1   2
+   
+**************************************************
+State A: Root  1
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.700999773i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.965340
+||gamma^AB||_symmetrized =  0.674055
+||gamma^AB||_anti-symm   =  0.691036
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1   3
+   
+**************************************************
+State A: Root  1
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.963412
+||gamma^AB||_symmetrized =  0.662041
+||gamma^AB||_anti-symm   =  0.699903
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1   4
+   
+**************************************************
+State A: Root  1
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.768320711i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.955329
+||gamma^AB||_symmetrized =  0.657587
+||gamma^AB||_anti-symm   =  0.692988
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1   5
+   
+**************************************************
+State A: Root  1
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.041665904i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.973353
+||gamma^AB||_symmetrized =  0.637186
+||gamma^AB||_anti-symm   =  0.735805
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1   6
+   
+**************************************************
+State A: Root  1
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.437996
+||gamma^AB||_symmetrized =  0.301748
+||gamma^AB||_anti-symm   =  0.317473
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1   7
+   
+**************************************************
+State A: Root  1
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =    -0.022569442i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.080176
+||gamma^AB||_symmetrized =  0.060403
+||gamma^AB||_anti-symm   =  0.052722
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1   8
+   
+**************************************************
+State A: Root  1
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.014650277i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.026174
+||gamma^AB||_symmetrized =  0.021099
+||gamma^AB||_anti-symm   =  0.015489
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1   9
+   
+**************************************************
+State A: Root  1
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.861564
+||gamma^AB||_symmetrized =  0.550318
+||gamma^AB||_anti-symm   =  0.662905
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   1) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   1  10
+   
+**************************************************
+State A: Root  2
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =    -0.543464634i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.963250
+||gamma^AB||_symmetrized =  0.659109
+||gamma^AB||_anti-symm   =  0.702443
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2   1
+   
+**************************************************
+State A: Root  2
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.240872274i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.713789
+||gamma^AB||_symmetrized =  0.529802
+||gamma^AB||_anti-symm   =  0.478335
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2   3
+   
+**************************************************
+State A: Root  2
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =    -0.863894608i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.693141
+||gamma^AB||_symmetrized =  0.487035
+||gamma^AB||_anti-symm   =  0.493196
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2   4
+   
+**************************************************
+State A: Root  2
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.359945190i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.274408
+||gamma^AB||_symmetrized =  0.195184
+||gamma^AB||_anti-symm   =  0.192880
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2   5
+   
+**************************************************
+State A: Root  2
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.731794157i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.637407
+||gamma^AB||_symmetrized =  0.455604
+||gamma^AB||_anti-symm   =  0.445771
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2   6
+   
+**************************************************
+State A: Root  2
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =     0.297482591i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.743995
+||gamma^AB||_symmetrized =  0.508689
+||gamma^AB||_anti-symm   =  0.542921
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2   7
+   
+**************************************************
+State A: Root  2
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.606742
+||gamma^AB||_symmetrized =  0.438946
+||gamma^AB||_anti-symm   =  0.418882
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2   8
+   
+**************************************************
+State A: Root  2
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.584909539i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.726207
+||gamma^AB||_symmetrized =  0.499918
+||gamma^AB||_anti-symm   =  0.526743
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2   9
+   
+**************************************************
+State A: Root  2
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =    -0.242030239i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.412479
+||gamma^AB||_symmetrized =  0.362083
+||gamma^AB||_anti-symm   =  0.197573
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   2) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   2  10
+   
+**************************************************
+State A: Root  3
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.700999773i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.965340
+||gamma^AB||_symmetrized =  0.674055
+||gamma^AB||_anti-symm   =  0.691036
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3   1
+   
+**************************************************
+State A: Root  3
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.240872274i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.713789
+||gamma^AB||_symmetrized =  0.529802
+||gamma^AB||_anti-symm   =  0.478335
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3   2
+   
+**************************************************
+State A: Root  3
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.201660951i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.138283
+||gamma^AB||_symmetrized =  0.094359
+||gamma^AB||_anti-symm   =  0.101086
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3   4
+   
+**************************************************
+State A: Root  3
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =    -0.824684454i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.644559
+||gamma^AB||_symmetrized =  0.451832
+||gamma^AB||_anti-symm   =  0.459678
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3   5
+   
+**************************************************
+State A: Root  3
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =    -0.331312720i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.310365
+||gamma^AB||_symmetrized =  0.225996
+||gamma^AB||_anti-symm   =  0.212726
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3   6
+   
+**************************************************
+State A: Root  3
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.679810491i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.502064
+||gamma^AB||_symmetrized =  0.340092
+||gamma^AB||_anti-symm   =  0.369331
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3   7
+   
+**************************************************
+State A: Root  3
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.403716291i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.434558
+||gamma^AB||_symmetrized =  0.278071
+||gamma^AB||_anti-symm   =  0.333942
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3   8
+   
+**************************************************
+State A: Root  3
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.722244
+||gamma^AB||_symmetrized =  0.504369
+||gamma^AB||_anti-symm   =  0.516960
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3   9
+   
+**************************************************
+State A: Root  3
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.533080255i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.630932
+||gamma^AB||_symmetrized =  0.446423
+||gamma^AB||_anti-symm   =  0.445850
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   3) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   3  10
+   
+**************************************************
+State A: Root  4
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.963412
+||gamma^AB||_symmetrized =  0.662041
+||gamma^AB||_anti-symm   =  0.699903
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4   1
+   
+**************************************************
+State A: Root  4
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =     0.863894608i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.693141
+||gamma^AB||_symmetrized =  0.487035
+||gamma^AB||_anti-symm   =  0.493196
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4   2
+   
+**************************************************
+State A: Root  4
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.201660951i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.138283
+||gamma^AB||_symmetrized =  0.094359
+||gamma^AB||_anti-symm   =  0.101086
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4   3
+   
+**************************************************
+State A: Root  4
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.034851991i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.714547
+||gamma^AB||_symmetrized =  0.592361
+||gamma^AB||_anti-symm   =  0.399606
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4   5
+   
+**************************************************
+State A: Root  4
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.868891004i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.701872
+||gamma^AB||_symmetrized =  0.435848
+||gamma^AB||_anti-symm   =  0.550147
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4   6
+   
+**************************************************
+State A: Root  4
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.243817
+||gamma^AB||_symmetrized =  0.210431
+||gamma^AB||_anti-symm   =  0.123147
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4   7
+   
+**************************************************
+State A: Root  4
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =    -0.283701986i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.576657
+||gamma^AB||_symmetrized =  0.403794
+||gamma^AB||_anti-symm   =  0.411684
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4   8
+   
+**************************************************
+State A: Root  4
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.532561814i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.723046
+||gamma^AB||_symmetrized =  0.502387
+||gamma^AB||_anti-symm   =  0.520002
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4   9
+   
+**************************************************
+State A: Root  4
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.295389
+||gamma^AB||_symmetrized =  0.223216
+||gamma^AB||_anti-symm   =  0.193466
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   4) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   4  10
+   
+**************************************************
+State A: Root  5
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.768320711i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.955329
+||gamma^AB||_symmetrized =  0.657587
+||gamma^AB||_anti-symm   =  0.692988
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5   1
+   
+**************************************************
+State A: Root  5
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.359945190i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.274408
+||gamma^AB||_symmetrized =  0.195184
+||gamma^AB||_anti-symm   =  0.192880
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5   2
+   
+**************************************************
+State A: Root  5
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =     0.824684454i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.644559
+||gamma^AB||_symmetrized =  0.451832
+||gamma^AB||_anti-symm   =  0.459678
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5   3
+   
+**************************************************
+State A: Root  5
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.034851991i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.714547
+||gamma^AB||_symmetrized =  0.592361
+||gamma^AB||_anti-symm   =  0.399606
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5   4
+   
+**************************************************
+State A: Root  5
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.542897
+||gamma^AB||_symmetrized =  0.532767
+||gamma^AB||_anti-symm   =  0.104385
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5   6
+   
+**************************************************
+State A: Root  5
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.167186356i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.320126
+||gamma^AB||_symmetrized =  0.211270
+||gamma^AB||_anti-symm   =  0.240511
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5   7
+   
+**************************************************
+State A: Root  5
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.417823921i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.438573
+||gamma^AB||_symmetrized =  0.296943
+||gamma^AB||_anti-symm   =  0.322755
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5   8
+   
+**************************************************
+State A: Root  5
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =     0.451846563i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.725829
+||gamma^AB||_symmetrized =  0.499084
+||gamma^AB||_anti-symm   =  0.527014
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5   9
+   
+**************************************************
+State A: Root  5
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.692867665i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.613683
+||gamma^AB||_symmetrized =  0.378461
+||gamma^AB||_anti-symm   =  0.483088
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   5) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   5  10
+   
+**************************************************
+State A: Root  6
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.041665904i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.973353
+||gamma^AB||_symmetrized =  0.637186
+||gamma^AB||_anti-symm   =  0.735805
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6   1
+   
+**************************************************
+State A: Root  6
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.731794157i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.637407
+||gamma^AB||_symmetrized =  0.455604
+||gamma^AB||_anti-symm   =  0.445771
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6   2
+   
+**************************************************
+State A: Root  6
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =     0.331312720i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.310365
+||gamma^AB||_symmetrized =  0.225996
+||gamma^AB||_anti-symm   =  0.212726
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6   3
+   
+**************************************************
+State A: Root  6
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.868891004i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.701872
+||gamma^AB||_symmetrized =  0.435848
+||gamma^AB||_anti-symm   =  0.550147
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6   4
+   
+**************************************************
+State A: Root  6
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.542897
+||gamma^AB||_symmetrized =  0.532767
+||gamma^AB||_anti-symm   =  0.104385
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6   5
+   
+**************************************************
+State A: Root  6
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.130881216i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.342763
+||gamma^AB||_symmetrized =  0.268791
+||gamma^AB||_anti-symm   =  0.212691
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6   7
+   
+**************************************************
+State A: Root  6
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.201967334i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.162079
+||gamma^AB||_symmetrized =  0.116297
+||gamma^AB||_anti-symm   =  0.112892
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6   8
+   
+**************************************************
+State A: Root  6
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =    -0.068223654i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.063460
+||gamma^AB||_symmetrized =  0.048212
+||gamma^AB||_anti-symm   =  0.041265
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6   9
+   
+**************************************************
+State A: Root  6
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.215198034i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.642903
+||gamma^AB||_symmetrized =  0.543901
+||gamma^AB||_anti-symm   =  0.342778
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   6) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   6  10
+   
+**************************************************
+State A: Root  7
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.437996
+||gamma^AB||_symmetrized =  0.301748
+||gamma^AB||_anti-symm   =  0.317473
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7   1
+   
+**************************************************
+State A: Root  7
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =    -0.297482591i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.743995
+||gamma^AB||_symmetrized =  0.508689
+||gamma^AB||_anti-symm   =  0.542921
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7   2
+   
+**************************************************
+State A: Root  7
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.679810491i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.502064
+||gamma^AB||_symmetrized =  0.340092
+||gamma^AB||_anti-symm   =  0.369331
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7   3
+   
+**************************************************
+State A: Root  7
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.243817
+||gamma^AB||_symmetrized =  0.210431
+||gamma^AB||_anti-symm   =  0.123147
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7   4
+   
+**************************************************
+State A: Root  7
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.167186356i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.320126
+||gamma^AB||_symmetrized =  0.211270
+||gamma^AB||_anti-symm   =  0.240511
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7   5
+   
+**************************************************
+State A: Root  7
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.130881216i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.342763
+||gamma^AB||_symmetrized =  0.268791
+||gamma^AB||_anti-symm   =  0.212691
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7   6
+   
+**************************************************
+State A: Root  7
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =     1.418775440i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.846761
+||gamma^AB||_symmetrized =  0.460216
+||gamma^AB||_anti-symm   =  0.710778
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7   8
+   
+**************************************************
+State A: Root  7
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.852706764i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.542161
+||gamma^AB||_symmetrized =  0.332564
+||gamma^AB||_anti-symm   =  0.428182
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7   9
+   
+**************************************************
+State A: Root  7
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.696613
+||gamma^AB||_symmetrized =  0.696168
+||gamma^AB||_anti-symm   =  0.024901
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   7) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   7  10
+   
+**************************************************
+State A: Root  8
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =     0.022569442i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.080176
+||gamma^AB||_symmetrized =  0.060403
+||gamma^AB||_anti-symm   =  0.052722
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8   1
+   
+**************************************************
+State A: Root  8
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.606742
+||gamma^AB||_symmetrized =  0.438946
+||gamma^AB||_anti-symm   =  0.418882
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8   2
+   
+**************************************************
+State A: Root  8
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.403716291i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.434558
+||gamma^AB||_symmetrized =  0.278071
+||gamma^AB||_anti-symm   =  0.333942
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8   3
+   
+**************************************************
+State A: Root  8
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =     0.283701986i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.576657
+||gamma^AB||_symmetrized =  0.403794
+||gamma^AB||_anti-symm   =  0.411684
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8   4
+   
+**************************************************
+State A: Root  8
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.417823921i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.438573
+||gamma^AB||_symmetrized =  0.296943
+||gamma^AB||_anti-symm   =  0.322755
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8   5
+   
+**************************************************
+State A: Root  8
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.201967334i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.162079
+||gamma^AB||_symmetrized =  0.116297
+||gamma^AB||_anti-symm   =  0.112892
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8   6
+   
+**************************************************
+State A: Root  8
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =    -1.418775440i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.846761
+||gamma^AB||_symmetrized =  0.460216
+||gamma^AB||_anti-symm   =  0.710778
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8   7
+   
+**************************************************
+State A: Root  8
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.342760382i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.450465
+||gamma^AB||_symmetrized =  0.415452
+||gamma^AB||_anti-symm   =  0.174122
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8   9
+   
+**************************************************
+State A: Root  8
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =     0.693194846i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.433268
+||gamma^AB||_symmetrized =  0.202756
+||gamma^AB||_anti-symm   =  0.382898
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   8) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   8  10
+   
+**************************************************
+State A: Root  9
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.014650277i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.026174
+||gamma^AB||_symmetrized =  0.021099
+||gamma^AB||_anti-symm   =  0.015489
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9   1
+   
+**************************************************
+State A: Root  9
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.584909539i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.726207
+||gamma^AB||_symmetrized =  0.499918
+||gamma^AB||_anti-symm   =  0.526743
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9   2
+   
+**************************************************
+State A: Root  9
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.722244
+||gamma^AB||_symmetrized =  0.504369
+||gamma^AB||_anti-symm   =  0.516960
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9   3
+   
+**************************************************
+State A: Root  9
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.532561814i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.723046
+||gamma^AB||_symmetrized =  0.502387
+||gamma^AB||_anti-symm   =  0.520002
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9   4
+   
+**************************************************
+State A: Root  9
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =    -0.451846563i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.725829
+||gamma^AB||_symmetrized =  0.499084
+||gamma^AB||_anti-symm   =  0.527014
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9   5
+   
+**************************************************
+State A: Root  9
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =     0.068223654i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.063460
+||gamma^AB||_symmetrized =  0.048212
+||gamma^AB||_anti-symm   =  0.041265
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9   6
+   
+**************************************************
+State A: Root  9
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.852706764i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.542161
+||gamma^AB||_symmetrized =  0.332564
+||gamma^AB||_anti-symm   =  0.428182
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9   7
+   
+**************************************************
+State A: Root  9
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.342760382i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.450465
+||gamma^AB||_symmetrized =  0.415452
+||gamma^AB||_anti-symm   =  0.174122
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9   8
+   
+**************************************************
+State A: Root  9
+State B: Root 10
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.113062498i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.305522
+||gamma^AB||_symmetrized =  0.289088
+||gamma^AB||_anti-symm   =  0.098853
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root   9) =  0.000 0.000
+BRA: S ,Sz  (Root  10) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:   9  10
+   
+**************************************************
+State A: Root 10
+State B: Root  1
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.861564
+||gamma^AB||_symmetrized =  0.550318
+||gamma^AB||_anti-symm   =  0.662905
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   1) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   1
+   
+**************************************************
+State A: Root 10
+State B: Root  2
+  
+Angular momentum components
+< B | Lx | A > =     0.242030239i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.412479
+||gamma^AB||_symmetrized =  0.362083
+||gamma^AB||_anti-symm   =  0.197573
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   2) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   2
+   
+**************************************************
+State A: Root 10
+State B: Root  3
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.000000000i
+< B | Lz | A > =     0.533080255i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.630932
+||gamma^AB||_symmetrized =  0.446423
+||gamma^AB||_anti-symm   =  0.445850
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   3) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   3
+   
+**************************************************
+State A: Root 10
+State B: Root  4
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.295389
+||gamma^AB||_symmetrized =  0.223216
+||gamma^AB||_anti-symm   =  0.193466
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   4) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   4
+   
+**************************************************
+State A: Root 10
+State B: Root  5
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =     0.692867665i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.613683
+||gamma^AB||_symmetrized =  0.378461
+||gamma^AB||_anti-symm   =  0.483088
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   5) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   5
+   
+**************************************************
+State A: Root 10
+State B: Root  6
+  
+Angular momentum components
+< B | Lx | A > =    -0.000000000i
+< B | Ly | A > =     0.215198034i
+< B | Lz | A > =    -0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.642903
+||gamma^AB||_symmetrized =  0.543901
+||gamma^AB||_anti-symm   =  0.342778
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   6) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   6
+   
+**************************************************
+State A: Root 10
+State B: Root  7
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.696613
+||gamma^AB||_symmetrized =  0.696168
+||gamma^AB||_anti-symm   =  0.024901
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   7) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   7
+   
+**************************************************
+State A: Root 10
+State B: Root  8
+  
+Angular momentum components
+< B | Lx | A > =    -0.693194846i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =     0.000000000i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.433268
+||gamma^AB||_symmetrized =  0.202756
+||gamma^AB||_anti-symm   =  0.382898
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   8) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   8
+   
+**************************************************
+State A: Root 10
+State B: Root  9
+  
+Angular momentum components
+< B | Lx | A > =     0.000000000i
+< B | Ly | A > =    -0.000000000i
+< B | Lz | A > =    -0.113062498i
+  
+Norm of one-particle transition density matrix
+||gamma^AB||_total       =  0.305522
+||gamma^AB||_symmetrized =  0.289088
+||gamma^AB||_anti-symm   =  0.098853
+  
+Spin-orbit couplings
+ Using HF (reference) density for the 2-elec mean-field SOC contribution
+KET: S',Sz' (Root  10) =  0.000 0.000
+BRA: S ,Sz  (Root   9) =  0.000 0.000
+Clebsh-Gordan coefficient: < 0.000, 0.000; 1.000, 0.000| 0.000, 0.000> =  0.000
+WARNING: Clebsh-Gordon coefficient is too small to find a rotationally invariant part of triplet density.
+Skipping SOCs between states:  10   9
+   
+**************************************************
+RAS-CI timing summary (seconds)
+  CPU time          0.59s
+  System time       0.00s
+  Wall time         2.03s
+Detailed CPU timing summary
+     Fock matrix         :         0.0023 s
+     Integrals           :         0.0046 s
+     Addressing matrices :         0.0001 s
+     Guesses             :         0.0006 s
+     Iterations          :         0.5106 s
+     Properties          :         0.0680 s
+     RAS-CI(2) correction:         0.0000 s
+  
+ 
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+ 
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-20.240  -1.244  -0.604  -0.437  -0.385
+  1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.557   0.710
+  4 A1    2 B1                                                                 
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-20.240  -1.244  -0.604  -0.437  -0.385
+  1 A1    2 A1    1 B1    3 A1    1 B2                                         
+ -- Virtual --                   
+  0.557   0.710
+  4 A1    2 B1                                                                 
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 O                    -0.339069
+      2 H                     0.169535
+      3 H                     0.169535
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+  Do orbital-by-orbital Lowdin population analysis
+ 
+
+              Partial Lowdin         Populations for Occupied RHF Orbitals
+
+                         1         2         3         4         5
+                        1A1       2A1       1B1       3A1       1B2  
+   1    O     s     1.99950   1.43372   0.00000   0.25776   0.00000
+   2    O     p     0.00001   0.03015   1.07225   1.44554   2.00000
+   3    H 1   s     0.00025   0.26807   0.46387   0.14835   0.00000
+   4    H 2   s     0.00025   0.26807   0.46387   0.14835   0.00000
+ 
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z      -1.6452
+       Tot       1.6452
+    Quadrupole Moments (Debye-Ang)
+        XX      -4.1871     XY       0.0000     YY      -6.1241
+        XZ      -0.0000     YZ      -0.0000     ZZ      -5.4611
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -0.6139    XYZ      -0.0000
+       YYZ       0.0141    XZZ       0.0000    YZZ      -0.0000
+       ZZZ      -0.1227
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -6.9236   XXXY      -0.0000   XXYY      -1.8995
+      XYYY      -0.0000   YYYY      -3.2652   XXXZ      -0.0000
+      XXYZ      -0.0000   XYYZ      -0.0000   YYYZ      -0.0000
+      XXZZ      -1.7728   XYZZ      -0.0000   YYZZ      -1.3947
+      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -4.9117
+ -----------------------------------------------------------------
+ Mayer SCF Bond Order, atomic valence on the diagonal:
+
+            1           2           3
+    1   1.9123218   0.9561609   0.9561609
+    2   0.9561609   0.9712580   0.0150971
+    3   0.9561609   0.0150971   0.9712580
+
+
+ Total job time:  3.18s(wall), 0.88s(cpu) 
+ Mon Sep 11 16:25:56 2023
+
+======= MOLDEN-FORMATTED INPUT FILE FOLLOWS =======
+[Molden Format]
+[Atoms] (Angs)
+  O      1    8      0.00000000      0.00000000      0.11555121
+  H      2    1     -0.81253118     -0.00000000     -0.46220486
+  H      3    1      0.81253118     -0.00000000     -0.46220486
+
+======= END OF MOLDEN-FORMATTED INPUT FILE =======
+
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+

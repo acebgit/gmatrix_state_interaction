@@ -74,9 +74,8 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     if states_option == 0:  # Se
         for i in selected_states:
             if i <= 0 or i > totalstates:
-                print("The number of states selected must be among the total number of states calculated in QChem.")
-                print("Select a different number of states")
-                sys.exit()
+                raise ValueError("The number of states selected must be among the total number of states calculated in QChem. "
+                                 "Select a different number of states")
 
     elif states_option == 1:
         selected_states = list(range(1, totalstates + 1))
@@ -90,11 +89,7 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
         selected_states = states_selected_by_symmetry
 
         if states_selected_by_symmetry == [1]:
-            print('There is not this symmetry.')
-            print('Change the symmetry selection:')
-            for nstate in range(0, totalstates):
-                print('- State', nstate + 1, ', symmetry', all_symmetries[nstate])
-            sys.exit()
+            raise ValueError("There is not this symmetry. Change the symmetry selection.")
     return selected_states
 
 
@@ -137,63 +132,62 @@ def get_eigenenergies(file, totalstates, selected_states):
 def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
-    and 'ket' in columns, with spin order -Ms , +Ms.
+    and 'ket' in columns, with spin order -Ms , +Ms from first to last selected states.
     :param: file, nstates, selected_states, soc_option
     :return: doublet_soc, sz_list
     """
-    with open(file, encoding="utf8") as f:
-        output = f.read()
-    output = parser_rasci(output)
-    data = output['interstate_properties']
-
     def get_states_sz(qchem_file, states_selected):
         """
         Get S² and Sz of all states
         :param: output
-        :return: all_multiplicities, all_sz, ground_sz
+        :return: all_multip, all_sz, ground_sz
         """
+        def from_s2_to_sz_list(s2):
+            # Obtain s values
+            s = 0.5 * (-1 + np.sqrt(1 + 4 * s2))
+            # Making multiplicity list from -n to +n in 1/2 intervals
+            s = 0.5 * np.round(s / 0.5)
+            sz = list(np.arange(-s, s + 1, 1))
+            return sz
+
         read_multip = []
         for i, state in enumerate(qchem_file['excited_states']):
             read_multip.append(np.round(state['multiplicity'], 2))
 
-        all_multiplicities = []
+        all_multip = []
         for i in range(0, len(read_multip)):
             # Making multiplicity numbers multiples of doublets (s2=0.75).
             element = read_multip[i]
             n_times = np.round(element / 0.75)
             new_multip = 0.75 * n_times
-            all_multiplicities.append(new_multip)
+            all_multip.append(new_multip)
 
         ordered_multip = []
         for i in range(0, len(states_selected)):
             selected_mult = states_selected[i] - 1
-            ordered_multip.append(all_multiplicities[selected_mult])
+            ordered_multip.append(all_multip[selected_mult])
 
-        # Obtain maximum and ground state multiplicity and s values
-        s2_max = max(ordered_multip)
-        # s2_ground = ordered_multip[0]
-        s2_ground = s2_max
-        s_max = 0.5 * (-1 + np.sqrt(1 + 4 * s2_max))
-        s_ground = 0.5 * (-1 + np.sqrt(1 + 4 * s2_ground))
+        # print(all_multip)
+        # print(ordered_multip)
+        # exit()
 
-        # Making multiplicity list from -n to +n in 1/2 intervals
-        s_max = 0.5 * np.round(s_max / 0.5)
-        s_ground = 0.5 * np.round(s_ground / 0.5)
-        all_sz = list(np.arange(-s_max, s_max + 1, 1))
-        ground_sz = list(np.arange(-s_ground, s_ground + 1, 1))
-
-        return all_multiplicities, all_sz, ground_sz
+        all_sz = from_s2_to_sz_list(max(all_multip))
+        ground_sz = from_s2_to_sz_list(ordered_multip[0])
+        if len(ground_sz) == 1:
+            raise ValueError("Warning! It is not allowed the calculation of the g-tensor in a singlet ground state. "
+                             "Ground state corresponds to the first of the included states.")
+        return all_multip, all_sz, ground_sz
 
     def get_all_socs(line, n_states, multiplicities, all_sz, soc_selection):
         """
         Get SOC matrix. For all the states it put values from maximum Sz to -Sz.
         If Sz does not exist (i.e., we consider Sz=-1.5 and Sz of the state is 0.5),
         then the SOC value is 0.
-        :param: data, state_multiplicities, sz_list
+        :param: data, all_multip, sz_list
         :return: soc_matrix
         """
         all_soc = np.zeros((n_states * len(all_sz), n_states * len(all_sz)), dtype=complex)
-        # print('Multip:', state_multiplicities)
+        # print('Multip:', all_multip)
         # print('Sz:', sz_list)
         # print(len(soc_matrix[0,:]), len(soc_matrix[:,0]))
         # exit()
@@ -269,6 +263,11 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         # exit()
         return selected_soc
 
+    with open(file, encoding="utf8") as f:
+        output = f.read()
+    output = parser_rasci(output)
+    data = output['interstate_properties']
+
     soc_search = 'total_soc_mat'
     if soc_option == 0:
         pass
@@ -277,16 +276,17 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     elif soc_option == 2:
         soc_search = '2e_soc_mat'
 
-    state_multiplicities, sz_list, sz_ground = get_states_sz(output, selected_states)
-    all_socs = get_all_socs(data, totalstates, state_multiplicities, sz_list, soc_search)
-    selected_socs = get_selected_states_socs(selected_states, sz_list, all_socs)
+    all_multiplicities, maximum_sz_all_states, sz_ground_state = get_states_sz(output, selected_states)
+    all_socs = get_all_socs(data, totalstates, all_multiplicities, maximum_sz_all_states, soc_search)
+    selected_socs = get_selected_states_socs(selected_states, maximum_sz_all_states, all_socs)
 
     # print('SOC:')
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
     #                 for row in np.round((selected_socs[:,:]),5)]))
     # exit()
+
     selected_socs = selected_socs / 219474.63068  # From cm-1 to a.u.
-    return selected_socs, sz_list, sz_ground
+    return selected_socs, maximum_sz_all_states, sz_ground_state
 
 
 def hermitian_test(matrix):
@@ -299,10 +299,9 @@ def hermitian_test(matrix):
             element_1 = np.round(matrix[i, j], 4)
             element_2 = np.round(np.conjugate(matrix[j, i]), 4)
             if element_1 != element_2:
-                print("Hamiltonian is not Hermitian")
                 print('positions: ', i // 2, 'value:', matrix[i, j])
                 print('positions: ', j // 2, 'value:', matrix[j, i])
-                exit()
+                raise ValueError("Matrix is not Hermitian: see the elements shown above")
 
 
 def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coupling, sz_values):
@@ -321,7 +320,7 @@ def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coup
             else:
                 hamiltonian[i, j] = spin_orbit_coupling[i, j]
 
-    # hermitian_test(hamiltonian)
+    hermitian_test(hamiltonian)
     # print('Hamiltonian:')
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
     #                 for row in np.round((hamiltonian[:,:]),5)]))
@@ -375,58 +374,66 @@ def diagonalization(initial_matrix):
 
 def get_spin_matrices(file, n_states):
     """
-    Obtain the 3 dimensions of spin (s_x, s_y, s_z) from s2 of each state and put them in a 3-dim array.
+    Obtain the 3 dimensions of spin (s_x, s_y, s_z) from s2_all of each state and put them in a 3-dim array.
     Spin is written with 'bra' in rows and 'ket' in columns, with spin order -Ms , +Ms.
+    Abel functions to determine the spin matrix: https://github.com/abelcarreras/PyQchem/blob/1b1a0291f2737474955a5045ffbc56a2efd50911/pyqchem/tools/spin.py#L14
     :param: file, n_states
     :return: spin_matrix: matrix with spins < m' | S | m >  in 3-D
     """
 
-    def get_all_s2(file_qchem):
+    def get_all_s2(file_qchem, n_states):
         """
-        get s2 of each state from Q-Chem otuput
+        get s2_all of each state from Q-Chem otuput
         :param: file
-        :return: s2
+        :return: s2_all
         """
         search = ['  <S^2>      : ']
-        elements = []
+        s2_all_list = []
 
         with open(file_qchem, encoding="utf8") as file_qchem:
             for line in file_qchem:
                 if any(a in line for a in search):
-                    element = line[16:]
-                    elements.append(element.split())
+                    line = line.split()
+                    element = line[2]
+                    s2_all_list.append(element)
 
-        s2_each_states = np.array(elements, dtype=float)
-        return s2_each_states
+        s2_nstates = np.zeros(len(n_states), dtype=float)
+        for i in range(0, len(n_states)):
+            selected_mult = n_states[i] - 1
+            s2_nstates[i] = s2_all_list[selected_mult]
 
-    def get_s2_single_values(states_s2):
+        if s2_nstates[0] == 0:
+            raise ValueError("Warning! It is not allowed the calculation of the g-tensor in a singlet ground state. "
+                             "Ground state corresponds to the first of the included states.")
+
+        s2_all = np.array(s2_all_list, dtype=float)
+        return s2_all, s2_nstates
+
+    def get_s2_single_values(list_s2):
         """
-        get s2 values from the s2 of all the states, to obtain all values of
-        s2 only one time.
-        :param: s2_states
+        get s2_all values from the s2_all of all the states, to obtain all values of
+        s2_all only one time.
+        :param: s2_all_states
         :return: s2_values
         """
-        s2_values_list = []
-        for a in range(0, len(states_s2)):
-            if states_s2[a] not in s2_values_list:
-                s2_values_list.append(states_s2[a])
-
-        s2_values = np.array(s2_values_list, dtype=float)
-        return s2_values
+        set_s2 = set(list_s2)
+        list_s2 = list(set_s2)
+        # matrix_s2 = np.array(s2_all, dtype=float)
+        return list_s2
 
     def s2_to_s(s2):
         """
         get total spin (s) from s^2
-        :param: s2
+        :param: s2_all
         :return: total spin (s)
         """
         return 0.5 * (-1 + np.sqrt(1 + 4 * s2))
 
     def s_to_s2(spin):
         """
-        get s2 from total spin (s)
+        get s2_all from total spin (s)
         :param: spin: total spin (s)
-        :return: s2
+        :return: s2_all
         """
         return spin * (spin + 1)
 
@@ -460,9 +467,6 @@ def get_spin_matrices(file, n_states):
         #                  for row in np.round((long_sx[:, :]), 5)]))
         # exit()
         return long_sx, long_sy, long_sz
-
-    # Abel function to determine the spin matrix:
-    # https://github.com/abelcarreras/PyQchem/blob/1b1a0291f2737474955a5045ffbc56a2efd50911/pyqchem/tools/spin.py#L14
 
     def spin_matrices(spin):
         """
@@ -503,32 +507,21 @@ def get_spin_matrices(file, n_states):
 
         return s_x, s_y, s_z
 
-    s2_states = get_all_s2(file)  # s2 of each of the states
-    single_s2_values = get_s2_single_values(s2_states)  # s2 of each of the states, without repetition
-    number_of_spins = len(single_s2_values)
+    s2_all_states, s2_selected_states = get_all_s2(file, n_states)  # s2_all of each of the states
+    single_s2_values = get_s2_single_values(s2_all_states)  # s2_all of each of the states, without repetition
 
-    ordered_spin = np.zeros((len(n_states)))  # dtype=int
-    for i in range(0, len(n_states)):
-        selected_mult = n_states[i] - 1
-        ordered_spin[i] = s2_states[selected_mult]
-
-    if ordered_spin[0] == 0:
-        print("Ground state cannot be a singlet. ")
-        exit()
-
-    # Spin matrix of non-relativistic states:
-    max_multiplicity = int(2 * s2_to_s(max(ordered_spin)) + 1)
-    ground_multiplicity = int(2 * s2_to_s(ordered_spin[0]) + 1)
+    max_multiplicity = int(2 * s2_to_s(max(s2_all_states)) + 1)
+    ground_multiplicity = int(2 * s2_to_s(s2_selected_states[0]) + 1)
 
     standard_spin_matrix = np.zeros((ground_multiplicity, ground_multiplicity, 3), dtype=complex)
     spin_matrix = np.zeros((len(n_states) * max_multiplicity, len(n_states) * max_multiplicity, 3), dtype=complex)
 
-    for i in range(0, number_of_spins):
+    for i in range(0, len(single_s2_values)):
         for j in n_states:
-            if s2_states[j - 1] == single_s2_values[i]:
+            if s2_all_states[j - 1] == single_s2_values[i]:
                 s = s2_to_s(single_s2_values[i])
                 sx, sy, sz = spin_matrices(s)
-                sx, sy, sz = long_spin_matrices(sx, sy, sz, max_multiplicity, s2_states[j - 1])
+                sx, sy, sz = long_spin_matrices(sx, sy, sz, max_multiplicity, s2_all_states[j - 1])
 
                 s_dim = 0
                 total_dim = n_states.index(j) * max_multiplicity
@@ -553,8 +546,8 @@ def get_spin_matrices(file, n_states):
         # Standard spin matrix
         multip_difference = (max_multiplicity - ground_multiplicity) // 2
         for k in range(0, 3):
-            for ii in range(0, max_multiplicity):
-                for j in range(0, max_multiplicity):
+            for ii in range(0, ground_multiplicity):
+                for j in range(0, ground_multiplicity):
                     standard_spin_matrix[ii, j, k] = spin_matrix[ii + multip_difference, j + multip_difference, k]
 
     # print('Spin Matrices:')
@@ -631,6 +624,14 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     all_lk = get_all_momentum(data, totalstates)
     selected_lk = get_selected_states_momentum(selected_states, all_lk)
     all_multip_lk = get_all_multip_momentum(selected_lk, sz_list)
+
+    # print('Orbital Matrices:')
+    # for k in range(0,3):
+    #    print('Dimension: ', k)
+    #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                     for row in np.round((all_multip_lk[:,:,k]),5)]))
+    #    print(" ")
+    # exit()
     return all_multip_lk
 
 
@@ -738,16 +739,6 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         # exit()
         return eigenvalues, eigenvectors, diagonal_matrix
 
-    # def rotation(rotation_matrix, initial_matrix):
-    #     """
-    #     Make a rotation of the initial_matrix
-    #     :param: rotation_matrix, initial_matrix
-    #     :return: final_matrix
-    #     """
-    #     rotation_inverse = np.linalg.inv(rotation_matrix)
-    #     final_matrix = np.matmul(np.matmul(rotation_inverse, initial_matrix), rotation_matrix)
-    #     return final_matrix
-
     def trace_g_values(total_j, spin_matr):
         a = np.matmul(total_j, spin_matr)
         b = np.matmul(spin_matr, spin_matr)
@@ -756,14 +747,6 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
 
     def j_matrix_formation(landefactor, spin, orbital, list_sz, sz_ground):
         j_big_matrix = landefactor * spin + orbital
-        # print('j_big_matrix:')
-        # for k in range(0,3):
-        #    print('Dimension: ', k)
-        #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-        #                     for row in np.round((j_matrix[:,:,k]),5)]))
-        #    print(" ")
-        # exit()
-
         sz_difference = (len(list_sz) - len(sz_ground)) // 2
         j_matrix = np.zeros((len(sz_ground), len(sz_ground), 3), dtype=complex)
         for k in range(0, 3):
@@ -779,7 +762,6 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         #                     for row in np.round((j_matrix[:,:,k]),5)]))
         #    print(" ")
         # exit()
-
         return j_matrix
 
     j_matrix = j_matrix_formation(lande_factor, s_matrix, l_matrix, sz_list, ground_sz)
