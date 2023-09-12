@@ -19,13 +19,13 @@ from parser_plots import sos_analysis_and_plot
 #####################################
 g_calculation = 1
 ras_input = '\
-roberto_molecules/C74H32B4_4_4_singletref_concat.out'
+RAS_SPIN_MULT_0.out'
 
 several_molecules = 0
 path = "roberto_molecules"
 
-selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1, 2, 3, 4, 5]  # States to be included when "selected_states = 0"
+selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+states_ras = [1, 2]  # States to be included when "selected_states = 0"
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 

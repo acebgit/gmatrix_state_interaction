@@ -275,6 +275,10 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     all_socs = get_all_socs(data, totalstates, state_multiplicities, sz_list, soc_search)
     selected_socs = get_selected_states_socs(selected_states, sz_list, all_socs)
 
+    # print('SOC:')
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                 for row in np.round((selected_socs[:,:]),5)]))
+    # exit()
     selected_socs = selected_socs / 219474.63068  # From cm-1 to a.u.
     return selected_socs, sz_list, sz_ground
 
@@ -311,7 +315,11 @@ def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coup
             else:
                 hamiltonian[i, j] = spin_orbit_coupling[i, j]
 
-    hermitian_test(hamiltonian)
+    # hermitian_test(hamiltonian)
+    # print('Hamiltonian:')
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                 for row in np.round((hamiltonian[:,:]),5)]))
+    # exit()
     return hamiltonian
 
 
@@ -534,13 +542,13 @@ def get_spin_matrices(file, n_states):
                 for j in range(0, ground_multiplicity):
                     standard_spin_matrix[ii, j, k] = spin_matrix[ii + multip_difference, j + multip_difference, k]
 
-    # print('Spin Matrices:')
-    # for k in range(0,3):
-    #    print('Dimension: ', k)
-    #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                     for row in np.round((spin_matrix[:,:,k]),5)]))
-    #    print(" ")
-    # exit()
+    print('Spin Matrices:')
+    for k in range(0,3):
+       print('Dimension: ', k)
+       print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+                        for row in np.round((spin_matrix[:,:,k]),5)]))
+       print(" ")
+    exit()
     return spin_matrix, standard_spin_matrix
 
 
