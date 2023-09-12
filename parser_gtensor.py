@@ -542,13 +542,13 @@ def get_spin_matrices(file, n_states):
                 for j in range(0, ground_multiplicity):
                     standard_spin_matrix[ii, j, k] = spin_matrix[ii + multip_difference, j + multip_difference, k]
 
-    print('Spin Matrices:')
-    for k in range(0,3):
-       print('Dimension: ', k)
-       print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-                        for row in np.round((spin_matrix[:,:,k]),5)]))
-       print(" ")
-    exit()
+    # print('Spin Matrices:')
+    # for k in range(0,3):
+    #    print('Dimension: ', k)
+    #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                     for row in np.round((spin_matrix[:,:,k]),5)]))
+    #    print(" ")
+    # exit()
     return spin_matrix, standard_spin_matrix
 
 
@@ -661,6 +661,8 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
     :return: g_shifts
     """
+    lande_factor = 2.002319304363
+
     def j_diagonalization(initial_matrix, sz_list, ground_sz):
         """
         J-matrix diagonalization including the reorganization of this diagonal values.
@@ -737,16 +739,35 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         g_value = np.trace(a) / np.trace(b)
         return g_value
 
-    lande_factor = 2.002319304363
-    j_big_matrix = lande_factor * s_matrix + l_matrix
+    def j_matrix_formation(landefactor, spin, orbital, list_sz, sz_ground):
+        j_big_matrix = landefactor * spin + orbital
+        # print('j_big_matrix:')
+        # for k in range(0,3):
+        #    print('Dimension: ', k)
+        #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+        #                     for row in np.round((j_matrix[:,:,k]),5)]))
+        #    print(" ")
+        # exit()
 
-    sz_difference = (len(sz_list) - len(ground_sz)) // 2
-    j_matrix = np.zeros((len(ground_sz), len(ground_sz), 3), dtype=complex)
-    for k in range(0, 3):
-        for i in range(0, len(j_matrix)):
-            for j in range(0, len(j_matrix)):
-                j_matrix[i, j, k] = j_big_matrix[i + sz_difference, j + sz_difference, k]
-        hermitian_test(j_matrix[:, :, k])
+        sz_difference = (len(list_sz) - len(sz_ground)) // 2
+        j_matrix = np.zeros((len(sz_ground), len(sz_ground), 3), dtype=complex)
+        for k in range(0, 3):
+            for i in range(0, len(j_matrix)):
+                for j in range(0, len(j_matrix)):
+                    j_matrix[i, j, k] = j_big_matrix[i + sz_difference, j + sz_difference, k]
+            hermitian_test(j_matrix[:, :, k])
+
+        # print('J-matrix:')
+        # for k in range(0,3):
+        #    print('Dimension: ', k)
+        #    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+        #                     for row in np.round((j_matrix[:,:,k]),5)]))
+        #    print(" ")
+        # exit()
+        j_matrix = j_big_matrix
+        return j_matrix
+
+    j_matrix = j_matrix_formation(lande_factor, s_matrix, l_matrix, sz_list, ground_sz)
 
     # 1) g-value zz
     j_eigenvalues_z, j_matrix_rotation, j_matrix_diagonal_z = j_diagonalization(j_matrix[:, :, 2], sz_list, ground_sz)
@@ -779,6 +800,10 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     j_eigenvalues_z, j_matrix_rotation, j_matrix_transformed_x = \
         j_diagonalization(j_matrix[:, :, 0], sz_list, ground_sz)
     g_matrix_triangular[0, 0] = trace_g_values(j_matrix_transformed_x, standard_spin_matrix[:, :, 2])
+    # print('g-matrix:')
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                 for row in np.round((g_matrix_triangular[:,:]),5)]))
+    # exit()
 
     # 9) g-shifts
     upper_g_matrix = np.matmul(g_matrix_triangular, np.transpose(g_matrix_triangular))
