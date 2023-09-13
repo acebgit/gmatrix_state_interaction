@@ -175,6 +175,7 @@ def sos_analysis_and_plot(file):
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
 
+        g_shift = g_shift * 1000
         # state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
         # presentation_list.append([ordered_state_symmetries[i-1], np.round(
         #     ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3), np.round(ras_g_values.real[2], 3)])
@@ -195,4 +196,4 @@ def sos_analysis_and_plot(file):
     print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Number of states',
-                            y_title='$\Delta g, ppt$', main_title=file, save_picture=0)
+                            y_title='$\Delta g, ppm$', main_title=file, save_picture=0)
