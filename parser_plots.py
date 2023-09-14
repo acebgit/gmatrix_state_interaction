@@ -154,7 +154,7 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
         plt.savefig(figure_name)
 
 
-def sos_analysis_and_plot(file):
+def sos_analysis_and_plot(file, nstates):
     """"
     Calculate the g-shifts in the sum-over-states expansion using
     from 2 states to the total number of states shown in the Q-Chem output.
@@ -164,9 +164,8 @@ def sos_analysis_and_plot(file):
     totalstates = get_number_of_states(file)
     presentation_list = []
 
-    for i in range(1, totalstates + 1):
-        states_ras = list(range(1, i + 1))
-
+    for i in range(1, len(nstates)+1):
+        states_ras = nstates[0:i]
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
         soc_options = 0
         selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
@@ -179,7 +178,7 @@ def sos_analysis_and_plot(file):
         # state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
         # presentation_list.append([ordered_state_symmetries[i-1], np.round(
         #     ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3), np.round(ras_g_values.real[2], 3)])
-
+        print('States used: ', states_ras)
         presentation_list.append([i, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
                                   np.round(g_shift.real[2], 3)])
     presentation_matrix = np.array(presentation_list, dtype=object)
@@ -196,4 +195,48 @@ def sos_analysis_and_plot(file):
     print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Number of states',
+                            y_title='$\Delta g, ppm$', main_title=file, save_picture=0)
+
+
+def gfactor_all_states(file, nstates):
+    """
+    Returns the g-shifts for doublet ground state molecules.
+    :param: ras_input, states_ras, selected_states, symmetry_selection, soc_options
+    :return: g-shifts
+    """
+    def swapPositions(list, pos1, pos2):
+        list[pos1], list[pos2] = list[pos2], list[pos1]
+        return list
+
+    totalstates = get_number_of_states(file)
+    presentation_list = []
+    presentation_list.append(['Ground state', 'gxx', 'gyy', 'gzz'])
+
+    for i in range(0, len(nstates)):
+        states_ras = swapPositions(nstates, 0, i)
+
+        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
+        soc_options = 0
+        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
+
+        g_shift = from_energies_soc_to_g_values(file, states_ras,
+                                                totalstates, excitation_energies_ras,
+                                                selected_socs, sz_list, ground_sz)
+        g_shift = g_shift * 1000
+
+        print(nstates)
+        presentation_list.append([nstates[0], np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
+                                  np.round(g_shift.real[2], 3)])
+
+    presentation_matrix = np.array(presentation_list, dtype=object)
+    print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
+    print("----------------------------------------------------------")
+    print(" G-TENSOR WITH DIFERENT GROUND STATES")
+    print("----------------------------------------------------------")
+    print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
+
+    print()
+    presentation_matrix_2 = np.delete(presentation_matrix, 0, 0)
+    print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix_2[:, :])]))
+    plot_g_tensor_vs_states(presentation_matrix_2, x_title='Number of states',
                             y_title='$\Delta g, ppm$', main_title=file, save_picture=0)
