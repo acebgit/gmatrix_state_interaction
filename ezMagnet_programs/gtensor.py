@@ -10,7 +10,7 @@ S_SQUARE_TOL = 0.05
 INVCMTOAU= 1./219474.63068
 
 
-# Load electronic state information from .json file specified in first command 
+# Load electronic state information from .json file_ms_notnull specified in first command
 # line argument.
 input_file_name = sys.argv[1] + ".json"
 with open(input_file_name, 'r') as f:
@@ -32,7 +32,7 @@ transAngMomListDict= input_dict["transAngMomListDict"]
 aveTransSOCListDict = input_dict["aveTransSOCListDict"]
 
 
-# Complex numbers in .json file formatted as string; convert back to complex.
+# Complex numbers in .json file_ms_notnull formatted as string; convert back to complex.
 transAngMomVecDict = {key: np.array(
     [np.complex128(elem) for elem in transAngMomListDict[key]]) for key in transAngMomListDict}
 aveTransSOCDict = {key: np.matrix(
@@ -50,7 +50,7 @@ if print_intermediates:
         print("matrix", matrix)
     print("aveTransSOCDict", aveTransSOCDict)
 
-# Determine label of target state either from .json file or as label of lowest energy state
+# Determine label of target state either from .json file_ms_notnull or as label of lowest energy state
 if lowestEtargetState:
     targetState = min(stateEnergiesDict, key=lambda x: stateEnergiesDict[x][0])
 else:

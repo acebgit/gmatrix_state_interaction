@@ -55,7 +55,7 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     # MAIN FEATURES:
     fuente = 'sans-serif'  # 'serif'
     small_size = 16
-    medium_size = 24
+    medium_size = 28
     bigger_size = 26
     weight_selected = 'normal'
     line_width = 2
@@ -148,15 +148,17 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
         plt.savefig(figure_name)
 
 
-def sos_analysis_and_plot(file, nstates, order_symmetry):
+def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry):
     """"
     Calculate the g-shifts in the sum-over-states expansion using
     from 2 states to the total number of states shown in the Q-Chem output.
-    :param: file
+    :param: file_ms_notnull
     :return: no returned value, it prints the plot
     """
     totalstates = get_number_of_states(file)
     presentation_list = []
+
+    nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
 
     for i in range(1, len(nstates)+1):
         states_ras = nstates[0:i]
@@ -196,7 +198,7 @@ def sos_analysis_and_plot(file, nstates, order_symmetry):
 def gfactor_all_states(file, nstates):
     """
     Returns the g-shifts for doublet ground state molecules.
-    :param: ras_input, states_ras, selected_states, symmetry_selection, soc_options
+    :param: file_ms_notnull, states_ras, selected_states, symmetry_selection, soc_options
     :return: g-shifts
     """
     def swapPositions(list, pos1, pos2):

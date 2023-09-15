@@ -41,7 +41,7 @@ ras_states_to_change = [2, 3, 4]
 eom_states_to_change = [4, 7, 9]
 
 # OUTPUT
-write_file = 0  # 0: write results directly; 1: write in output file
+write_file = 0  # 0: write results directly; 1: write in output file_ms_notnull
 output_file = ras_input + '-gvalues.txt'
 if write_file == 1:
     sys.stdout = open(output_file, "w")
@@ -132,6 +132,6 @@ if eom_change_energies == 1:
         g_shift_eom.real[1], 3), np.round(g_shift_eom.real[2], 3))
     print('')
 
-    print("ras file selected: ", ras_input)
-    print("eom-CC file selected: ", eom_input)
+    print("ras file_ms_notnull selected: ", ras_input)
+    print("eom-CC file_ms_notnull selected: ", eom_input)
     print('\n'.join(''.join('{:^30}'.format(item) for item in row) for row in comparison_presentation_list))

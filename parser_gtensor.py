@@ -10,7 +10,7 @@ from pyqchem.parsers.parser_rasci import parser_rasci
 def get_number_of_states(file):
     """
     Obtain the total number of states in ras
-    :param: file
+    :param: file_ms_notnull
     :return: nstates
     """
     with open(file, encoding="utf8") as f:
@@ -66,7 +66,7 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     """
     Select the states used depending on "states_option" value:
     0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-    :param: file, nstates, selected_states, states_option, symmetry_selection
+    :param: file_ms_notnull, nstates, selected_states, states_option, symmetry_selection
     :return: selected_states
     """
     all_symmetries, ordered_symmetries = get_symmetry_states(file, totalstates)
@@ -96,7 +96,7 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
 def get_eigenenergies(file, totalstates, selected_states):
     """
     Get energies of the RAS-CI states.
-    :param: file, nstates, selected_states
+    :param: file_ms_notnull, nstates, selected_states
     :return: eigenenergies, excitation_energies
     """
     word_search = ' RAS-CI total energy for state  '
@@ -133,7 +133,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
     and 'ket' in columns, with spin order -Ms , +Ms from first to last selected states.
-    :param: file, nstates, selected_states, soc_option
+    :param: file_ms_notnull, nstates, selected_states, soc_option
     :return: doublet_soc, sz_list
     """
     def get_states_sz(qchem_file, states_selected):
@@ -377,14 +377,14 @@ def get_spin_matrices(file, n_states):
     Obtain the 3 dimensions of spin (s_x, s_y, s_z) from s2_all of each state and put them in a 3-dim array.
     Spin is written with 'bra' in rows and 'ket' in columns, with spin order -Ms , +Ms.
     Abel functions to determine the spin matrix: https://github.com/abelcarreras/PyQchem/blob/1b1a0291f2737474955a5045ffbc56a2efd50911/pyqchem/tools/spin.py#L14
-    :param: file, n_states
+    :param: file_ms_notnull, n_states
     :return: spin_matrix: matrix with spins < m' | S | m >  in 3-D
     """
 
     def get_all_s2(file_qchem, n_states):
         """
         get s2_all of each state from Q-Chem otuput
-        :param: file
+        :param: file_ms_notnull
         :return: s2_all
         """
         search = ['  <S^2>      : ']
@@ -564,7 +564,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
     with spin order -Ms , +Ms. Third dimension is the direction.
-    :param: file, nstates, selected_states, sz_list
+    :param: file_ms_notnull, nstates, selected_states, sz_list
     :return: orbital_matrix
     """
     def get_all_momentum(line, n_states):
@@ -816,7 +816,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                   excitation_energies_ras, soc_ras, sz_list, ground_sz):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param:file, states_ras, nstates, excitation_energies_ras, soc_ras, sz_list, ground_sz
+    :param:file_ms_notnull, states_ras, nstates, excitation_energies_ras, soc_ras, sz_list, ground_sz
     :return: g_shift
     """
     hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)
@@ -863,7 +863,7 @@ def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
 def gfactor_presentation(ras_input, states_ras, selected_states, symmetry_selection, soc_options):
     """
     Returns the g-shifts for doublet ground state molecules.
-    :param: ras_input, states_ras, selected_states, symmetry_selection, soc_options
+    :param: file_ms_notnull, states_ras, selected_states, symmetry_selection, soc_options
     :return: g-shifts
     """
     totalstates = get_number_of_states(ras_input)
@@ -904,3 +904,84 @@ def from_gvalue_to_shift(lista):
         value = (lista[i] - lande_factor) * 10**6
         g_shift.append(value)
     print(np.round(g_shift, 3))
+
+
+def gfactor_two_files(file_ms_notnull, file_ms_null, states_ras, states_option):
+    """
+    Returns the g-shifts for doublet ground state molecules.
+    :param: file_ms_notnull, nstates, selected_states, symmetry_selection, soc_options
+    :return: g-shifts
+    """
+    def get_energies_socs(file, nstates, states_option):
+        totalstates = get_number_of_states(file)
+        symmetry_selections = 'None'
+        nstates = get_selected_states(file, totalstates, nstates, states_option, symmetry_selections)
+
+        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
+
+        selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(file, totalstates, nstates, soc_option=0)
+        return totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
+
+    totalstates_ms_notnull, eigenenergies_ms_notnull, selected_socs_ms_notnull, sz_list_ms_notnull, sz_ground_ms_notnull = get_energies_socs(file_ms_notnull, states_ras, states_option)
+
+    totalstates_ms_null, eigenenergies_ms_null, selected_socs_ms_null, sz_list_ms_null, sz_ground_ms_null = get_energies_socs(file_ms_null, states_ras, states_option)
+
+    map_msnotnull_msnull_list = []
+
+    for i in range(0, len(eigenenergies_ms_notnull)):
+        for j in range(0, len(eigenenergies_ms_null)):
+
+            ener_ms_notnull = np.round(eigenenergies_ms_notnull[i], 5)
+            ener_ms_null = np.round(eigenenergies_ms_null[j], 5)
+            if ener_ms_notnull == ener_ms_null:
+                mapping_dict = {'state ms not null': i, 'state ms null': j}
+                map_msnotnull_msnull_list.append(mapping_dict)
+
+    # for mapping_dict in map_msnotnull_msnull_list:
+    #     print(mapping_dict['state ms not null'], eigenenergies_ms_notnull[mapping_dict['state ms not null']],
+    #           mapping_dict['state ms null'], eigenenergies_ms_null[mapping_dict['state ms null']])
+
+    selected_socs_ms_notnull = selected_socs_ms_notnull * 219474.63068
+    selected_socs_ms_null = selected_socs_ms_null * 219474.63068
+
+    for i in map_msnotnull_msnull_list:
+        for j in map_msnotnull_msnull_list:
+            if i['state ms not null'] != j['state ms not null']: # If states are not the same (in Ms not null list)
+
+                for sz_1 in range(0, len(sz_list_ms_notnull)):
+                    for sz_2 in range(0, len(sz_list_ms_notnull)):
+                        i_msnotnull = i['state ms not null'] * len(sz_list_ms_notnull) + sz_1
+                        j_msnotnull = j['state ms not null'] * len(sz_list_ms_notnull) + sz_2
+                        print('State Ms 0', )
+
+                        i_msnull = i['state ms null'] * len(sz_list_ms_notnull) + sz_1
+                        j_msnull = j['state ms null'] * len(sz_list_ms_notnull) + sz_2
+
+                        print(selected_socs_ms_null[i_msnull, j_msnull], selected_socs_ms_notnull[i_msnotnull, j_msnotnull])
+                        selected_socs_ms_null[i_msnull, j_msnull] = selected_socs_ms_notnull[i_msnotnull, j_msnotnull]
+                        print('.')
+                print('---')
+
+    print('SOC:')
+    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+                    for row in np.round((selected_socs_ms_notnull[:,:]),5)])) # * 219474.63068
+    exit()
+
+    exit()
+
+    hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, selected_socs, sz_list)
+
+    eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
+
+    spin_matrix, standard_spin_matrix = get_spin_matrices(file_ms_notnull, states_ras)
+
+    orbital_matrix = get_orbital_matrices(file_ms_notnull, totalstates, states_ras, sz_list)
+
+    combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
+
+    combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list)
+
+    g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+                                   sz_list, sz_ground)
+
+    print_g_calculation(file_ms_notnull, totalstates, states_ras, symmetry_selections, states_ras, g_shift * 1000)

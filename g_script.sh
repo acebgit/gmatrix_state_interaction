@@ -14,8 +14,8 @@ done
 ##reference="d10"
 ##basis="6-31Gd def2-TZVP"
 #
-#for file in $molecule/$molecule*/*.out; do
-# echo $file | cut -f3 -d "/"
-# python g_main.py $file
+#for file_ms_notnull in $molecule/$molecule*/*.out; do
+# echo $file_ms_notnull | cut -f3 -d "/"
+# python g_main.py $file_ms_notnull
 #done
 

@@ -7,7 +7,7 @@ from pyqchem.parsers.parser_rasci import parser_rasci
 def get_number_of_states(file):
     """
     Obtain the total number of states in ras
-    :param: file
+    :param: file_ms_notnull
     :return: nstates
     """
     with open(file, encoding="utf8") as f:
@@ -29,7 +29,7 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     """
     Select the states used depending on "states_option" value:
     0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-    :param: file, nstates, selected_states, states_option, symmetry_selection
+    :param: file_ms_notnull, nstates, selected_states, states_option, symmetry_selection
     :return: selected_states
     """
     all_symmetries, ordered_symmetries = get_symmetry_states(file, totalstates)
@@ -64,7 +64,7 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
 def get_eigenenergies(file, totalstates, selected_states):
     """
     Get energies of the RAS-CI states.
-    :param: file, nstates, selected_states
+    :param: file_ms_notnull, nstates, selected_states
     :return: eigenenergies, excitation_energies
     """
     word_search = ' RAS-CI total energy for state  '
@@ -135,7 +135,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
     and 'ket' in columns, with spin order -Ms , +Ms.
-    :param: file, nstates, selected_states, soc_option
+    :param: file_ms_notnull, nstates, selected_states, soc_option
     :return: doublet_soc, sz_list
     """
     with open(file, encoding="utf8") as f:
@@ -367,14 +367,14 @@ def get_spin_matrices(file, n_states):
     """
     Obtain the 3 dimensions of spin (s_x, s_y, s_z) from s2 of each state and put them in a 3-dim array.
     Spin is written with 'bra' in rows and 'ket' in columns, with spin order -Ms , +Ms.
-    :param: file, n_states
+    :param: file_ms_notnull, n_states
     :return: spin_matrix: matrix with spins < m' | S | m >  in 3-D
     """
 
     def s2_from_file(file_qchem):
         """
         get s2 of each state from Q-Chem otuput
-        :param: file
+        :param: file_ms_notnull
         :return: s2
         """
         search = ['  <S^2>      : ']
@@ -541,7 +541,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
     with spin order -Ms , +Ms. Third dimension is the direction.
-    :param: file, nstates, selected_states, sz_list
+    :param: file_ms_notnull, nstates, selected_states, sz_list
     :return: orbital_matrix
     """
     def get_all_momentum(line, n_states):
@@ -722,7 +722,7 @@ def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
 def gfactor_obtention(ras_input, states_ras, selected_states, symmetry_selection, soc_options):
     """
     Returns the g-shifts for doublet ground state molecules.
-    :param file: input
+    :param file_ms_notnull: input
     :return: g-shifts
     """
 
@@ -755,7 +755,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                   excitation_energies_ras, soc_ras, sz_list, ground_sz):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param:file, states_ras, nstates, excitation_energies_ras, soc_ras, sz_list, ground_sz
+    :param:file_ms_notnull, states_ras, nstates, excitation_energies_ras, soc_ras, sz_list, ground_sz
     :return: g_shift
     """
     hamiltonian_ras = hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)

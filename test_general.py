@@ -5,26 +5,22 @@ from parser_gtensor import *
 from parser_excitstates import *
 from parser_plots import *
 
-# from_gvalue_to_shift([2.0021850, 2.0024658, 2.0026344])
-# C54: 2.0021924, 2.0024626, 2.0026536
-# C64: 2.0021921, 2.0024657, 2.0026347
-# C74: 2.0021850, 2.0024658, 2.0026344
-
 #####################################
 #            INPUT VALUES
 #####################################
-g_calculation = 1
-excited_states_analysis = 1
-sos_analysis = 1
+g_calculation = 0
+excited_states_analysis = 0
+sos_analysis = 0
 gfactor_excited_states = 0
+gfactor_two_inputs = 1
 
 ras_input = '\
-roberto_molecules/C64H28B4/C64H28B4_8_8_singletref_concat_triplets.out'
-several_molecules = 0
-path = "roberto_molecules"
+roberto_molecules/C54H24B4/C54H24B4_4_4_singletref_concat.out'
+file_ms_zero = '\
+roberto_molecules/C54H24B4/C54H24B4_4_4_singletref_concat_allmultip.out'
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]  # States to be included when "selected_states = 0"
+states_ras = [2,1,3,4,5]  # States to be included when "selected_states = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
@@ -38,15 +34,17 @@ if write_ras_input == 1:
 ###########################################
 #      ACTING IN SEVERAL MOLECULES
 ###########################################
+# several_molecules = 0
+# path = "roberto_molecules"
 # Import Module
 # https://www.geeksforgeeks.org/how-to-read-multiple-text-files-from-folder-in-python/
 # if several_molecules == 1:
 #     os.chdir(path)  # Change the directory
 #
 #     g_list = []
-#     # iterate through all file
-#     for file in os.listdir():
-#         qchem_file = f"{file}"
+#     # iterate through all file_ms_notnull
+#     for file_ms_notnull in os.listdir():
+#         qchem_file = f"{file_ms_notnull}"
 #
 #         totalstates = get_number_of_states(qchem_file)
 #         states_ras = get_selected_states(qchem_file, totalstates, states_ras, selected_states, symmetry_selection)
@@ -75,7 +73,10 @@ if excited_states_analysis == 1:
     get_excited_states_analysis(ras_input, cutoff=0.9)
 
 if sos_analysis == 1:
-    sos_analysis_and_plot(ras_input, states_ras, order_symmetry=1)
+    sos_analysis_and_plot(ras_input, states_ras, selected_states, order_symmetry=1)
 
 if gfactor_excited_states == 1:
     gfactor_all_states(ras_input, states_ras)
+
+if gfactor_two_inputs == 1:
+    gfactor_two_files(ras_input, file_ms_zero, states_ras, selected_states)

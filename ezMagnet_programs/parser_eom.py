@@ -15,7 +15,7 @@ from decimal import Decimal
 # flag for extra print
 print_intermediates = False
 
-# open EOM output file
+# open EOM output file_ms_notnull
 lowestEtargetState = False
 if len(sys.argv) == 3:
     targetState = sys.argv[2]
@@ -100,7 +100,7 @@ def printFoundTransPropMessage():
     print("eomStateAngMomVecsDict:")
     print(str(eomStateAngMomVecsDict))
 
-# iteratre through file search for state properties and start of transtion properties section
+# iteratre through file_ms_notnull search for state properties and start of transtion properties section
 for line in contents:
     if eomRe.match(line):
         foundEOM = True

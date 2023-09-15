@@ -295,10 +295,10 @@ class Structure:
 
     def get_xyz(self, title=''):
         """
-        generates a XYZ formatted file
+        generates a XYZ formatted file_ms_notnull
 
         :param title: title of the molecule
-        :return: string with the formatted XYZ file
+        :return: string with the formatted XYZ file_ms_notnull
         """
         txt = '{}\n{}'.format(self.get_number_of_atoms(), title)
         for s, c in zip(self.get_symbols(), self.get_coordinates()):
@@ -941,7 +941,7 @@ def get_symmetry_states(file, totalstates):
 def get_number_of_states(file):
     """
     Obtain the total number of states in ras
-    :param: file
+    :param: file_ms_notnull
     :return: nstates
     """
     with open(file, encoding="utf8") as f:
@@ -1085,4 +1085,4 @@ output_dict = {
 }
 
 output_json(file)
-# output_xml(file, output_dict)
+# output_xml(file_ms_notnull, output_dict)
