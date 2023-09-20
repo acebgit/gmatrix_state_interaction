@@ -914,13 +914,17 @@ def gfactor_two_files(file_ms_notnull, file_ms_null, states_ras, states_option):
     """
     def get_energies_socs(file, nstates, states_option):
         totalstates = get_number_of_states(file)
+        
         symmetry_selections = 'None'
         nstates = get_selected_states(file, totalstates, nstates, states_option, symmetry_selections)
 
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
-
         selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(file, totalstates, nstates, soc_option=0)
         return totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
+
+    print('File ms not null: ', file_ms_notnull)
+    print('File ms null: ', file_ms_null)
+    print('States: ', states_ras)
 
     totalstates_ms_notnull, eigenenergies_ms_notnull, selected_socs_ms_notnull, sz_list_ms_notnull, sz_ground_ms_notnull = get_energies_socs(file_ms_notnull, states_ras, states_option)
 
@@ -930,16 +934,19 @@ def gfactor_two_files(file_ms_notnull, file_ms_null, states_ras, states_option):
 
     for i in range(0, len(eigenenergies_ms_notnull)):
         for j in range(0, len(eigenenergies_ms_null)):
-
             ener_ms_notnull = np.round(eigenenergies_ms_notnull[i], 5)
             ener_ms_null = np.round(eigenenergies_ms_null[j], 5)
+
             if ener_ms_notnull == ener_ms_null:
                 mapping_dict = {'state ms not null': i, 'state ms null': j}
                 map_msnotnull_msnull_list.append(mapping_dict)
 
-    # for mapping_dict in map_msnotnull_msnull_list:
-    #     print(mapping_dict['state ms not null'], eigenenergies_ms_notnull[mapping_dict['state ms not null']],
-    #           mapping_dict['state ms null'], eigenenergies_ms_null[mapping_dict['state ms null']])
+    print('-----------')
+    for mapping_dict in map_msnotnull_msnull_list:
+        a = mapping_dict['state ms not null']
+        b = mapping_dict['state ms null']
+        print('file_ms_notnull', states_ras[a], 'file_ms_null', states_ras[b])
+    exit()
 
     selected_socs_ms_notnull = selected_socs_ms_notnull * 219474.63068
     selected_socs_ms_null = selected_socs_ms_null * 219474.63068
