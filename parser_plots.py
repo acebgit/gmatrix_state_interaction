@@ -80,7 +80,7 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
 
     # LIMIT TO AXIS:
     # ax.set_xlim(xmin=0, xmax=20)
-    ax.set_ylim(ymin=-0.5, ymax=9)
+    # ax.set_ylim(ymin=-0.5, ymax=9)
 
     # LINES:
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',

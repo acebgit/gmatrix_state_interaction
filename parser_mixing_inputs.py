@@ -842,6 +842,7 @@ def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, st
         :return:
         """
         mapping_list = []
+        mapping_dict = {}
 
         for i in range(0, len(ms_notnull_energies)):
             for j in range(0, len(ms_null_energies)):
@@ -976,51 +977,6 @@ def print_g_calculation(file, totalstates, selected_states,
     print('')
 
 
-def plot_obtention(file, x_data, y_data):
-    # "matplotlib" help: https://aprendeconalf.es/docencia/python/manual/matplotlib/
-    # https://chartio.com/resources/tutorials/how-to-save-a-plot-to-a-file-using-matplotlib/
-    # https://pythonspot.com/matplotlib-bar-chart/
-
-    fuente = "Sans"
-    size = 12
-
-    y_pos = np.arange(len(x_data))
-    plt.bar(y_pos, y_data, align='center', alpha=0.5, color='red')
-    plt.xticks(y_pos, x_data)
-
-    plt.title(file, fontsize=size, fontname=fuente)
-    plt.ylabel('Energies (eV)', fontsize=size, fontname=fuente)
-    plt.xlabel('number of state', fontsize=size, fontname=fuente)
-    plt.axis([min(x_data) - 2, max(x_data), min(y_data), max(y_data) + 0.1 * max(y_data)])
-    # plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
-    # plt.grid(True)
-
-    plt.plot()
-    figure_name = file + '.png'
-    plt.savefig(figure_name)
-
-    # plt.show()
-    plt.close()
-
-
-def get_bar_chart(file, x_list, y_list, x_title, y_title, main_title):
-    y_pos = (list(x_list))
-    plt.bar(x_list, y_list, align='center', width=0.5, color='r', edgecolor="black")
-    plt.xticks(y_pos)
-
-    fuente = 'serif'
-
-    plt.xlabel(x_title, fontsize=14, fontfamily=fuente)
-    plt.ylabel(y_title, fontsize=14, fontfamily=fuente)
-    plt.title(main_title, fontsize=18, fontfamily=fuente)
-
-    plt.plot()
-    figure_name = file + '_' + main_title + '.png'
-    plt.savefig(figure_name)
-    plt.show()
-    plt.close()
-
-
 def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):
     fig, ax = plt.subplots()
 
@@ -1038,21 +994,21 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     # x_tick = int((max(presentation_matrix[:, 0]))) / 4
     # y_tick = int((max(presentation_matrix[:, :]))) / 4
     # x_tick = 20
-    y_tick = 1
+    # y_tick = 1
     # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
-    ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+    # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
 
     # x_tick_min = x_tick / 2
-    y_tick_min = y_tick / 2
+    # y_tick_min = y_tick / 2
     # ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
-    ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
+    # ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
 
     # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     # LIMIT TO AXIS:
     # ax.set_xlim(xmin=0, xmax=20)
-    ax.set_ylim(ymin=-0.5, ymax=9)
+    # ax.set_ylim(ymin=-0.5, ymax=9)
 
     # LINES:
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
@@ -1120,30 +1076,32 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
         plt.savefig(figure_name)
 
 
-def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry):
+def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state, order_symmetry):
     """"
     Calculate the g-shifts in the sum-over-states expansion using
     from 2 states to the total number of states shown in the Q-Chem output.
     :param: file_ms_notnull
     :return: no returned value, it prints the plot
     """
-    totalstates = get_number_of_states(file)
+    totalstates = get_number_of_states(file_ms_null)
     presentation_list = []
 
-    nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
+    nstates = get_selected_states(file_ms_null, totalstates, nstates, selected_state, symmetry_selection=0)
 
     for i in range(1, len(nstates)+1):
         states_ras = nstates[0:i]
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-        soc_options = 0
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
+        # eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
+        # soc_options = 0
+        # selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
+        excitation_energies_ras, selected_socs, sz_list, ground_sz, totalstates \
+            = gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, selected_state)
 
-        g_shift = from_energies_soc_to_g_values(file, states_ras,
+        g_shift = from_energies_soc_to_g_values(file_ms_null, states_ras,
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
 
         g_shift = g_shift * 1000
-        state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
+        state_symmetries, ordered_state_symmetries = get_symmetry_states(file_ms_null, nstates)
         if order_symmetry == 1:
             presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),
                                   np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
@@ -1164,44 +1122,4 @@ def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry):
     # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Electronic State',
-                            y_title=r'$\Delta g, ppm$', main_title=file, save_picture=0)
-
-
-def gfactor_all_states(file, nstates):
-    """
-    Returns the g-shifts for doublet ground state molecules.
-    :param: file_ms_notnull, states_ras, selected_states, symmetry_selection, soc_options
-    :return: g-shifts
-    """
-    def swapPositions(list, pos1, pos2):
-        list[pos1], list[pos2] = list[pos2], list[pos1]
-        return list
-
-    totalstates = get_number_of_states(file)
-    presentation_list = []
-    presentation_list.append(['Ground state', 'gxx', 'gyy', 'gzz'])
-
-    for i in range(0, len(nstates)):
-        states_ras = swapPositions(nstates, 0, i)
-
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-        soc_options = 0
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
-
-        g_shift = from_energies_soc_to_g_values(file, states_ras,
-                                                totalstates, excitation_energies_ras,
-                                                selected_socs, sz_list, ground_sz)
-        g_shift = g_shift * 1000
-
-        presentation_list.append([nstates[0], np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
-                                  np.round(g_shift.real[2], 3)])
-
-    presentation_matrix = np.array(presentation_list, dtype=object)
-    print("----------------------------------------------------------")
-    print(" G-TENSOR WITH DIFERENT GROUND STATES")
-    print("----------------------------------------------------------")
-    print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
-
-    presentation_matrix_2 = np.delete(presentation_matrix, 0, 0)
-    plot_g_tensor_vs_states(presentation_matrix_2, x_title='Number of states',
-                            y_title=r'$\Delta g, ppm$', main_title=file, save_picture=0)
+                            y_title=r'$\Delta g, ppm$', main_title=file_ms_null, save_picture=0)
