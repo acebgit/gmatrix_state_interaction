@@ -837,8 +837,8 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
     return g_shift
 
 
-def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
-                        states_ras, upper_g_tensor_results_ras):
+def print_g_calculation(file, totalstates, selected_states,
+                        states_ras, upper_g_tensor_results_ras, symmetry_selection):
     print("--------------------------------------")
     print("     INPUT SECTION")
     print("--------------------------------------")
@@ -889,7 +889,7 @@ def gfactor_presentation(ras_input, states_ras, selected_states, symmetry_select
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground)
 
-    print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, g_shift*1000)
+    print_g_calculation(ras_input, totalstates, selected_states, states_ras, g_shift*1000, symmetry_selection)
 
 
 def from_gvalue_to_shift(lista):
@@ -906,89 +906,113 @@ def from_gvalue_to_shift(lista):
     print(np.round(g_shift, 3))
 
 
-def gfactor_two_files(file_ms_notnull, file_ms_null, states_ras, states_option):
-    """
-    Returns the g-shifts for doublet ground state molecules.
-    :param: file_ms_notnull, nstates, selected_states, symmetry_selection, soc_options
-    :return: g-shifts
-    """
-    def get_energies_socs(file, nstates, states_option):
-        totalstates = get_number_of_states(file)
-        
-        symmetry_selections = 'None'
-        nstates = get_selected_states(file, totalstates, nstates, states_option, symmetry_selections)
-
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
-        selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(file, totalstates, nstates, soc_option=0)
-        return totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
-
-    print('File ms not null: ', file_ms_notnull)
-    print('File ms null: ', file_ms_null)
-    print('States: ', states_ras)
-
-    totalstates_ms_notnull, eigenenergies_ms_notnull, selected_socs_ms_notnull, sz_list_ms_notnull, sz_ground_ms_notnull = get_energies_socs(file_ms_notnull, states_ras, states_option)
-
-    totalstates_ms_null, eigenenergies_ms_null, selected_socs_ms_null, sz_list_ms_null, sz_ground_ms_null = get_energies_socs(file_ms_null, states_ras, states_option)
-
-    map_msnotnull_msnull_list = []
-
-    for i in range(0, len(eigenenergies_ms_notnull)):
-        for j in range(0, len(eigenenergies_ms_null)):
-            ener_ms_notnull = np.round(eigenenergies_ms_notnull[i], 5)
-            ener_ms_null = np.round(eigenenergies_ms_null[j], 5)
-
-            if ener_ms_notnull == ener_ms_null:
-                mapping_dict = {'state ms not null': i, 'state ms null': j}
-                map_msnotnull_msnull_list.append(mapping_dict)
-
-    print('-----------')
-    for mapping_dict in map_msnotnull_msnull_list:
-        a = mapping_dict['state ms not null']
-        b = mapping_dict['state ms null']
-        print('file_ms_notnull', states_ras[a], 'file_ms_null', states_ras[b])
-    exit()
-
-    selected_socs_ms_notnull = selected_socs_ms_notnull * 219474.63068
-    selected_socs_ms_null = selected_socs_ms_null * 219474.63068
-
-    for i in map_msnotnull_msnull_list:
-        for j in map_msnotnull_msnull_list:
-            if i['state ms not null'] != j['state ms not null']: # If states are not the same (in Ms not null list)
-
-                for sz_1 in range(0, len(sz_list_ms_notnull)):
-                    for sz_2 in range(0, len(sz_list_ms_notnull)):
-                        i_msnotnull = i['state ms not null'] * len(sz_list_ms_notnull) + sz_1
-                        j_msnotnull = j['state ms not null'] * len(sz_list_ms_notnull) + sz_2
-                        print('State Ms 0', )
-
-                        i_msnull = i['state ms null'] * len(sz_list_ms_notnull) + sz_1
-                        j_msnull = j['state ms null'] * len(sz_list_ms_notnull) + sz_2
-
-                        print(selected_socs_ms_null[i_msnull, j_msnull], selected_socs_ms_notnull[i_msnotnull, j_msnotnull])
-                        selected_socs_ms_null[i_msnull, j_msnull] = selected_socs_ms_notnull[i_msnotnull, j_msnotnull]
-                        print('.')
-                print('---')
-
-    print('SOC:')
-    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-                    for row in np.round((selected_socs_ms_notnull[:,:]),5)])) # * 219474.63068
-    exit()
-
-    exit()
-
-    hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, selected_socs, sz_list)
-
-    eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
-
-    spin_matrix, standard_spin_matrix = get_spin_matrices(file_ms_notnull, states_ras)
-
-    orbital_matrix = get_orbital_matrices(file_ms_notnull, totalstates, states_ras, sz_list)
-
-    combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
-
-    combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list)
-
-    g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
-                                   sz_list, sz_ground)
-
-    print_g_calculation(file_ms_notnull, totalstates, states_ras, symmetry_selections, states_ras, g_shift * 1000)
+# def gfactor_two_files(file_ms_notnull, file_ms_null, states_ras, states_option):
+#     """
+#     Returns the g-shifts for doublet ground state molecules.
+#     :param: file_ms_notnull, nstates, selected_states, symmetry_selection, soc_options
+#     :return: g-shifts
+#     """
+#     def get_energies_socs(file, nstates, states_option):
+#         """
+#         Having the selected states, get the energy and SOCs between them
+#         :param: file, nstates, states_option
+#         :return: totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
+#         """
+#         totalstates = get_number_of_states(file)
+#
+#         symmetry_selections = 'None'
+#         nstates = get_selected_states(file, totalstates, nstates, states_option, symmetry_selections)
+#
+#         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
+#         selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(file, totalstates, nstates, soc_option=0)
+#         return totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
+#
+#     def mapping_between_states(ms_notnull_energies, ms_null_energies):
+#         """
+#         Comparing the energies, mapping between states with Ms = 0, that do not have coupling between states triplets,
+#         and states with Ms not 0, that do have this coupling.
+#         :return:
+#         """
+#         mapping_list = []
+#
+#         for i in range(0, len(ms_notnull_energies)):
+#             for j in range(0, len(ms_null_energies)):
+#                 ener_ms_notnull = np.round(ms_notnull_energies[i], 5)
+#                 ener_ms_null = np.round(ms_null_energies[j], 5)
+#
+#                 if ener_ms_notnull == ener_ms_null:
+#                     mapping_dict = {'state ms not null': i, 'state ms null': j}
+#                     mapping_list.append(mapping_dict)
+#
+#         # for mapping_dict in mapping_list:
+#         #     a = mapping_dict['state ms not null']
+#         #     b = mapping_dict['state ms null']
+#         #     print('file_ms_notnull', states_ras[a], 'file_ms_null', states_ras[b])
+#         # exit()
+#         return mapping_dict, mapping_list
+#
+#     def exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_null, sz_list):
+#         """
+#         Put SOCs between states with Ms different than 0 (that are obtained in the output) in the
+#         SOC matrix of states with Ms 0 (that are not obtained since Clebsh-Gordan coefficient is too small)
+#         :return:
+#         """
+#         for i in mapping_list:
+#             for j in mapping_list:
+#                 if i['state ms not null'] != j['state ms not null']:  # If states are not the same (in Ms not null list)
+#                     i_state_ms_notnull = i['state ms not null']
+#                     j_state_ms_notnull = j['state ms not null']
+#
+#                     i_state_ms_null = i['state ms null']
+#                     j_state_ms_null = j['state ms null']
+#
+#                     # print('State Ms not null', states_ras[i_state_ms_notnull], '(', i_state_ms_notnull, ')',
+#                     #       states_ras[j_state_ms_notnull], '(', j_state_ms_notnull, ')', '; ',
+#                     #       'State Ms null', states_ras[i_state_ms_null], '(', i_state_ms_null, ')',
+#                     #       states_ras[j_state_ms_null], '(', j_state_ms_null, ')',)
+#
+#                     for sz_1 in range(0, len(sz_list)):
+#                         for sz_2 in range(0, len(sz_list)):
+#                             i_msnotnull = i_state_ms_notnull * len(sz_list) + sz_1
+#                             j_msnotnull = j_state_ms_notnull * len(sz_list) + sz_2
+#
+#                             i_msnull = i_state_ms_null * len(sz_list) + sz_1
+#                             j_msnull = j_state_ms_null * len(sz_list) + sz_2
+#
+#                             # print(selected_socs_ms_null[i_msnull, j_msnull], '<--->', selected_socs_ms_notnull[i_msnotnull, j_msnotnull])
+#                             selected_socs_ms_null[i_msnull, j_msnull] = selected_socs_ms_notnull[i_msnotnull, j_msnotnull]
+#                     # print('--END LOOP--')
+#         # print('SOC:')
+#         # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+#         #                 for row in np.round((selected_socs_ms_null[:,:]),5)])) # * 219474.63068
+#         # exit()
+#         return selected_socs_ms_null
+#
+#     # print('File ms not null: ', file_ms_notnull)
+#     # print('File ms null: ', file_ms_null)
+#     # print('States: ', states_ras)
+#
+#     totalstates_ms_notnull, energies_ms_notnull, selected_socs_ms_notnull, sz_list_ms_notnull, sz_ground_ms_notnull = get_energies_socs(file_ms_notnull, states_ras, states_option)
+#
+#     totalstates_ms_null, energies_ms_null, selected_socs_ms_null, sz_list_ms_null, sz_ground_ms_null = get_energies_socs(file_ms_null, states_ras, states_option)
+#
+#     mapping_dict, mapping_list = mapping_between_states(energies_ms_notnull, energies_ms_null)
+#
+#     selected_socs_ms_null = exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_null, sz_list_ms_notnull)
+#
+#     hamiltonian_ras = get_hamiltonian_construction(states_ras, energies_ms_null, selected_socs_ms_null, sz_list_ms_null)
+#
+#     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
+#
+#     spin_matrix, standard_spin_matrix = get_spin_matrices(file_ms_notnull, states_ras)
+#
+#     orbital_matrix = get_orbital_matrices(file_ms_notnull, totalstates_ms_null, states_ras, sz_list_ms_null)
+#
+#     combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list_ms_null)
+#
+#     combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list_ms_null)
+#
+#     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+#                                    sz_list_ms_null, sz_ground_ms_null)
+#
+#     print_g_calculation(file_ms_notnull, totalstates_ms_null, states_ras, states_ras, g_shift * 1000, symmetry_selection=0)

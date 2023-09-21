@@ -8,19 +8,16 @@ from parser_plots import *
 #####################################
 #            INPUT VALUES
 #####################################
-g_calculation = 0
+g_calculation = 1
 excited_states_analysis = 0
-sos_analysis = 0
+sos_analysis = 1
 gfactor_excited_states = 0
-gfactor_two_inputs = 1
 
 ras_input = '\
-roberto_molecules/C54H24B4/C54H24B4_4_4_singletref_concat.out'
-file_ms_zero = '\
-roberto_molecules/C54H24B4/C54H24B4_4_4_singletref_concat_allmultip.out'
+roberto_molecules/C54H24B4/ms_null.out'
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [2,1,3,4,5]  # States to be included when "selected_states = 0"
+states_ras = [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]  # States to be included when "selected_states = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
@@ -77,6 +74,3 @@ if sos_analysis == 1:
 
 if gfactor_excited_states == 1:
     gfactor_all_states(ras_input, states_ras)
-
-if gfactor_two_inputs == 1:
-    gfactor_two_files(ras_input, file_ms_zero, states_ras, selected_states)

@@ -66,14 +66,14 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     # x_tick = int((max(presentation_matrix[:, 0]))) / 4
     # y_tick = int((max(presentation_matrix[:, :]))) / 4
     # x_tick = 20
-    y_tick = 1
+    # y_tick = 1
     # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
-    ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+    # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
 
     # x_tick_min = x_tick / 2
-    y_tick_min = y_tick / 2
+    # y_tick_min = y_tick / 2
     # ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
-    ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
+    # ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
 
     # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
