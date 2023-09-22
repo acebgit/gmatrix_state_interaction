@@ -860,7 +860,7 @@ def print_g_calculation(file, totalstates, selected_states,
     print('')
 
 
-def gfactor_presentation(ras_input, states_ras, selected_states, symmetry_selection, soc_options):
+def gfactor_presentation(ras_input, states_ras, selected_states, symmetry_selection, soc_options, ppm):
     """
     Returns the g-shifts for doublet ground state molecules.
     :param: file_ms_notnull, states_ras, selected_states, symmetry_selection, soc_options
@@ -889,7 +889,10 @@ def gfactor_presentation(ras_input, states_ras, selected_states, symmetry_select
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground)
 
-    print_g_calculation(ras_input, totalstates, selected_states, states_ras, g_shift*1000, symmetry_selection)
+    if ppm == 1:
+        g_shift = g_shift * 1000
+
+    print_g_calculation(ras_input, totalstates, selected_states, states_ras, g_shift, symmetry_selection)
 
 
 def from_gvalue_to_shift(lista):

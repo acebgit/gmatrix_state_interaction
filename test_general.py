@@ -14,9 +14,10 @@ sos_analysis = 0
 gfactor_excited_states = 0
 
 ras_input = '\
-roberto_molecules/C54H24B4/ms_null.out'
+triplets_molecules/quinoline_10_8_30_states.out'
+ppms = 0
 
-selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [2,1,3,4,5,6,7,8,9,10]  # States to be included when "selected_states = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states
@@ -63,7 +64,7 @@ if write_ras_input == 1:
 
 #      G-VALUE CALCULATION
 if g_calculation == 1:
-    gfactor_presentation(ras_input, states_ras, selected_states, symmetry_selection, soc_options)
+    gfactor_presentation(ras_input, states_ras, selected_states, symmetry_selection, soc_options, ppms)
 
 #        PLOT ANALYSIS
 if excited_states_analysis == 1:
