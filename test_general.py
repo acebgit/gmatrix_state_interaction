@@ -4,7 +4,8 @@
 from parser_gtensor import *
 from parser_excitstates import *
 from parser_plots import *
-
+from_gvalue_to_shift([2.0035])
+exit()
 #####################################
 #            INPUT VALUES
 #####################################
@@ -14,8 +15,8 @@ sos_analysis = 0
 gfactor_excited_states = 0
 
 ras_input = '\
-triplets_molecules/quinoline_10_8_30_states.out'
-ppms = 0
+david_molecules/triangulene_10_10_triplets.out'
+ppms = 1
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [2,1,3,4,5,6,7,8,9,10]  # States to be included when "selected_states = 0"
