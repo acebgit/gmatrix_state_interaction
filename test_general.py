@@ -1,11 +1,10 @@
 #####################################
 #          MODULES SELECTION
 #####################################
-from parser_gtensor import *
-from parser_excitstates import *
-from parser_plots import *
-from_gvalue_to_shift([2.0035])
-exit()
+from parser_gtensor import gfactor_presentation
+from parser_excitstates import get_excited_states_analysis
+from parser_plots import sos_analysis_and_plot, gfactor_all_states
+
 #####################################
 #            INPUT VALUES
 #####################################
@@ -15,7 +14,7 @@ sos_analysis = 0
 gfactor_excited_states = 0
 
 ras_input = '\
-david_molecules/triangulene_10_10_triplets.out'
+roberto_molecules/C74H32B4/C74H32B4_8_8_singletref_concat_triplets.out'
 ppms = 1
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
@@ -69,7 +68,7 @@ if g_calculation == 1:
 
 #        PLOT ANALYSIS
 if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, cutoff=0.9)
+    get_excited_states_analysis(ras_input, cutoff=0.8)
 
 if sos_analysis == 1:
     sos_analysis_and_plot(ras_input, states_ras, selected_states, order_symmetry=1)
