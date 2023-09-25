@@ -4,52 +4,49 @@ from matplotlib.ticker import MaxNLocator, MultipleLocator
 from parser_gtensor import *
 
 
-def plot_obtention(file, x_data, y_data):
+def save_picture(save_options, file, main_title):
+    """
+    Function that shows the plot (save_options=0) or save it (save_options=1).
+    :param save_options, file, main_title.
+    :return: plot (saved or shown)
+    """
+    if save_options == 1:
+        plt.plot()
+        figure_name = file + '_' + main_title + '.png'
+        plt.savefig(figure_name)
+        plt.close()
+    else:
+        plt.plot()
+        plt.show()
+
+
+def get_bar_chart(file, x_list, y_list, x_title, y_title, main_title, save_pict):
+    """
+    Print Bar plots: y_list vs x_list.
+    :param:
+    :return:
+    """
     # "matplotlib" help: https://aprendeconalf.es/docencia/python/manual/matplotlib/
     # https://chartio.com/resources/tutorials/how-to-save-a-plot-to-a-file-using-matplotlib/
     # https://pythonspot.com/matplotlib-bar-chart/
+    fuente = 'serif'  # "Sans"
+    medium_size = 16
+    big_size = 20
 
-    fuente = "Sans"
-    size = 12
-
-    y_pos = np.arange(len(x_data))
-    plt.bar(y_pos, y_data, align='center', alpha=0.5, color='red')
-    plt.xticks(y_pos, x_data)
-
-    plt.title(file, fontsize=size, fontname=fuente)
-    plt.ylabel('Energies (eV)', fontsize=size, fontname=fuente)
-    plt.xlabel('number of state', fontsize=size, fontname=fuente)
-    plt.axis([min(x_data) - 2, max(x_data), min(y_data), max(y_data) + 0.1 * max(y_data)])
-    # plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
-    # plt.grid(True)
-
-    plt.plot()
-    figure_name = file + '.png'
-    plt.savefig(figure_name)
-
-    # plt.show()
-    plt.close()
-
-
-def get_bar_chart(file, x_list, y_list, x_title, y_title, main_title):
     y_pos = (list(x_list))
     plt.bar(x_list, y_list, align='center', width=0.5, color='r', edgecolor="black")
     plt.xticks(y_pos)
 
-    fuente = 'serif'
+    plt.title(main_title, fontsize=big_size, fontname=fuente)
+    plt.xlabel(x_title, fontsize=medium_size, fontfamily=fuente)
+    plt.ylabel(y_title, fontsize=medium_size, fontfamily=fuente)
+    # plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+    plt.grid(True)
 
-    plt.xlabel(x_title, fontsize=14, fontfamily=fuente)
-    plt.ylabel(y_title, fontsize=14, fontfamily=fuente)
-    plt.title(main_title, fontsize=18, fontfamily=fuente)
-
-    plt.plot()
-    figure_name = file + '_' + main_title + '.png'
-    plt.savefig(figure_name)
-    plt.show()
-    plt.close()
+    save_picture(save_pict, file, main_title)
 
 
-def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):
+def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_title, save_options):
     fig, ax = plt.subplots()
 
     # MAIN FEATURES:
@@ -140,15 +137,10 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
     ax.spines["left"].set_linewidth(line_width)
     ax.spines["right"].set_linewidth(line_width)
 
-    if save_picture == 0:
-        plt.show()
-        plt.close()
-    else:
-        figure_name = main_title + '_sos_analysis.png'
-        plt.savefig(figure_name)
+    save_picture(save_options, file, main_title)
 
 
-def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry):
+def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry, save_option):
     """"
     Calculate the g-shifts in the sum-over-states expansion using
     from 2 states to the total number of states shown in the Q-Chem output.
@@ -185,14 +177,18 @@ def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry):
     for ndim in [1, 2, 3]:
         for i in range(1, len(presentation_matrix)):
             presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim])
+    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     print("--------------------------------")
     print(" SUM-OVER-STATE ANALYSIS")
     print("--------------------------------")
-    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
+    file = file[:-4]
+    x_title = 'Electronic State'
+    y_title = r'$\Delta g, ppm$'
+    main_title = 'sos_analysis'
 
-    plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Electronic State',
-                            y_title=r'$\Delta g, ppm$', main_title=file, save_picture=0)
+    plot_g_tensor_vs_states(file, presentation_matrix_deviation, x_title, y_title,
+                            main_title, save_option)
 
 
 def gfactor_all_states(file, nstates):
@@ -231,5 +227,5 @@ def gfactor_all_states(file, nstates):
     print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     presentation_matrix_2 = np.delete(presentation_matrix, 0, 0)
-    plot_g_tensor_vs_states(presentation_matrix_2, x_title='Number of states',
+    plot_g_tensor_vs_states(file, presentation_matrix_2, x_title='Number of states',
                             y_title=r'$\Delta g, ppm$', main_title=file, save_picture=0)

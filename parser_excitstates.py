@@ -5,6 +5,8 @@
 import numpy as np
 import sys
 
+from parser_plots import get_bar_chart
+
 
 def get_number_of_states(file):
     """
@@ -550,7 +552,7 @@ def print_excited_states(presentation_list, n_states, hole_contributions,
     return presentation_list, soc
 
 
-def get_excited_states_analysis(file, cutoff):
+def get_excited_states_analysis(file, cutoff, plots, save_pict):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
     of the 1st configuration that need to have the other configurations to be shown in each state.
@@ -587,6 +589,7 @@ def get_excited_states_analysis(file, cutoff):
     word_search = ' | HOLE  | '
     n_states = 0
 
+    file_string = file
     with open(file, encoding="utf-8") as file:
         for line in file:
             if word_search in line:  # Go to configurations line
@@ -615,3 +618,9 @@ def get_excited_states_analysis(file, cutoff):
     print('\n'.join(''.join('{:^20}'.format(item) for item in row)
                     for row in excited_states_presentation_matrix[:, :]))
     print(" ")
+
+    if plots == 1:
+        get_bar_chart(file_string[:-4], states_ras, orbital_momentum, 'Electronic State',
+                      'Orbital angular momentum', 'orbitmoment_analysis', save_pict)
+        get_bar_chart(file_string[:-4], states_ras, socc_values, 'Electronic State',
+                      'SOCC (cm-1)', 'socc_analysis', save_pict)

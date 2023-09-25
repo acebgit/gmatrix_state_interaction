@@ -5,18 +5,20 @@ from parser_gtensor import *
 from parser_excitstates import *
 from parser_plots import *
 
+# from_gvalue_to_shift([2.00292, 2.00323, 2.00246])
+# exit()
 #####################################
 #            INPUT VALUES
 #####################################
-g_calculation = 1
-excited_states_analysis = 0
+g_calculation = 0
+excited_states_analysis = 1
 sos_analysis = 0
 gfactor_excited_states = 0
 
 ras_input = '\
-roberto_molecules/C54H24B4/ms_null.out'
+doublets_molecules/h2o/h2o_def2tzvp_5_5.out'
 
-selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
 states_ras = [2,1,3,4,5,6,7,8,9,10]  # States to be included when "selected_states = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states
@@ -67,10 +69,10 @@ if g_calculation == 1:
 
 #        PLOT ANALYSIS
 if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, cutoff=0.9)
+    get_excited_states_analysis(ras_input, cutoff=0.9, plots=1, save_pict=0)
 
 if sos_analysis == 1:
-    sos_analysis_and_plot(ras_input, states_ras, selected_states, order_symmetry=1)
+    sos_analysis_and_plot(ras_input, states_ras, selected_states, order_symmetry=1,save_option=1)
 
 if gfactor_excited_states == 1:
     gfactor_all_states(ras_input, states_ras)
