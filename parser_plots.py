@@ -182,7 +182,7 @@ def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry, save_op
     print("--------------------------------")
     print(" SUM-OVER-STATE ANALYSIS")
     print("--------------------------------")
-    file = file[:-4]
+    file = file[:-3]
     x_title = 'Electronic State'
     y_title = r'$\Delta g, ppm$'
     main_title = 'sos_analysis'
