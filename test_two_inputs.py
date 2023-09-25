@@ -13,12 +13,12 @@ excited_states_analysis = 0
 sos_analysis = 0
 
 file_ms_notnull = '\
-roberto_molecules/C54H24B4/ms_notnull.out'
+roberto_molecules/C74H32B4/C74H32B4_6_6_singletref_concat_triplets.out'
 file_ms_null = '\
-roberto_molecules/C54H24B4/ms_null.out'
+roberto_molecules/C74H32B4/C74H32B4_6_6_singletref_concat_allmultip.out'
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [2, 1, 3, 4, 5]  # States to be included when "selected_states = 0"
+states_ras = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]  # States to be included when "selected_states = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states
 
