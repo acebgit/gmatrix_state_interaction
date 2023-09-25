@@ -63,7 +63,7 @@ def get_symmetry_states(file, totalstates):
     return all_state_symmetries, ordered_state_symmetries
 
 
-def get_selected_states(file, totalstates, selected_states, states_option, symmetry_selection):
+def get_selected_states(file, totalstates, nstates, state_selection, symmetry_selection):
     """
     Select the states used depending on "states_option" value:
     0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
@@ -72,23 +72,23 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     """
     all_symmetries, ordered_symmetries = get_symmetry_states(file, totalstates)
 
-    if states_option == 0:  # Se
-        for i in selected_states:
+    if state_selection == 0:  # Se
+        for i in nstates:
             if i <= 0 or i > totalstates:
                 print("The number of states selected must be among the total number of states calculated in QChem.")
                 print("Select a different number of states")
                 sys.exit()
 
-    elif states_option == 1:
-        selected_states = list(range(1, totalstates + 1))
+    elif state_selection == 1:
+        nstates = list(range(1, totalstates + 1))
 
-    elif states_option == 2:
+    elif state_selection == 2:
         states_selected_by_symmetry = [1]  # GS is always added
 
         for nstate in range(1, totalstates + 1):
             if (all_symmetries[nstate - 1] == symmetry_selection) and (nstate != 1):
                 states_selected_by_symmetry.append(nstate)
-        selected_states = states_selected_by_symmetry
+        nstates = states_selected_by_symmetry
 
         if states_selected_by_symmetry == [1]:
             print('There is not this symmetry.')
@@ -96,7 +96,7 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
             for nstate in range(0, totalstates):
                 print('- State', nstate + 1, ', symmetry', all_symmetries[nstate])
             sys.exit()
-    return selected_states
+    return nstates
 
 
 def get_eigenenergies(file, totalstates, selected_states):
@@ -323,7 +323,7 @@ def get_ras_spaces(qchem_file):
     return ras_act_orb, ras_occ
 
 
-def s2_from_file(qchem_file):
+def s2_from_file(qchem_file, selected_states):
     """
     get s2 of each state from Q-Chem otuput
     :param: file_ms_notnull
@@ -339,7 +339,11 @@ def s2_from_file(qchem_file):
                 element = float(line[2])
                 elements.append(np.round(element, 2))
 
-    s2_each_states = np.array(elements, dtype=float)
+    s2_selected = []
+    for i in selected_states:
+        s2_selected.append(elements[i - 1])
+
+    s2_each_states = np.array(s2_selected, dtype=float)
     return s2_each_states
 
 
@@ -552,7 +556,7 @@ def print_excited_states(presentation_list, n_states, hole_contributions,
     return presentation_list, soc
 
 
-def get_excited_states_analysis(file, cutoff, plots, save_pict):
+def get_excited_states_analysis(file, state_selections, states_ras, cutoff, plots, save_pict):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
     of the 1st configuration that need to have the other configurations to be shown in each state.
@@ -563,12 +567,11 @@ def get_excited_states_analysis(file, cutoff, plots, save_pict):
 
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
 
-    states_ras = get_selected_states(file, totalstates, selected_states=0,
-                                     states_option=1, symmetry_selection='None')
+    states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selection='None')
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
 
-    s2_list = s2_from_file(file)
+    s2_list = s2_from_file(file, states_ras)
 
     hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates)
 

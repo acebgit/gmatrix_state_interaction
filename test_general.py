@@ -10,16 +10,17 @@ from parser_plots import *
 #####################################
 #            INPUT VALUES
 #####################################
+ras_input = '\
+doublets_molecules/h2o/h2o_def2tzvp_5_5.out'
+
 g_calculation = 0
 excited_states_analysis = 1
 sos_analysis = 0
 gfactor_excited_states = 0
+ppm = 0
 
-ras_input = '\
-doublets_molecules/h2o/h2o_def2tzvp_5_5.out'
-
-selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [2,1,3,4,5,6,7,8,9,10]  # States to be included when "selected_states = 0"
+state_selection = 0 # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+states_ras = [1,2,3,4]  # States to be included when "selected_states = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
@@ -65,14 +66,14 @@ if write_ras_input == 1:
 
 #      G-VALUE CALCULATION
 if g_calculation == 1:
-    gfactor_presentation(ras_input, states_ras, selected_states, symmetry_selection, soc_options)
+    gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
 
 #        PLOT ANALYSIS
 if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, cutoff=0.9, plots=1, save_pict=0)
+    get_excited_states_analysis(ras_input, state_selection, states_ras, cutoff=0.9, plots=1, save_pict=0)
 
 if sos_analysis == 1:
-    sos_analysis_and_plot(ras_input, states_ras, selected_states, order_symmetry=1,save_option=1)
+    sos_analysis_and_plot(ras_input, states_ras, state_selection, order_symmetry=1, save_option=0)
 
 if gfactor_excited_states == 1:
     gfactor_all_states(ras_input, states_ras)
