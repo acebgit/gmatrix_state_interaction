@@ -63,20 +63,20 @@ else:
 
 
 
-# Collect all states that differ in total angular momentum by less than 
+# Collect all states_selected that differ in total angular momentum by less than
 # S_SQUARE_TOL from targetState angular momentum.
 totAng = stateTotalAngMomDict[targetState]
 matchingStatesDict = {state: stateEnergiesDict[state] for state in filter(
     lambda x: abs(totAng - stateTotalAngMomDict[x]) < S_SQUARE_TOL, 
     stateTotalAngMomDict)}
 
-# Sort states matching in in angular momentum by energy.
+# Sort states_selected matching in in angular momentum by energy.
 stateList = sorted(matchingStatesDict, key=lambda x: stateEnergiesDict[x][0])
 nStates = len(stateList)
 
 if print_intermediates:
     #print("totalAngValues: " + str(totalAngValues))
-    print("""Collecting states of matching angular momentum and sorting them by 
+    print("""Collecting states_selected of matching angular momentum and sorting them by 
           energy:""")
     print("totAng {ang} type(totAng) {angtype}".format(ang=totAng, angtype=type(totAng)))
     print("matchingStatesDict", matchingStatesDict)
@@ -187,7 +187,7 @@ if print_intermediates:
 
 def sorted_diag(H):
     [e_vec_unord, c_mat_unord] = np.linalg.eigh(H)
-    # Diagonalization may have changed order of states. Reorder ensure that
+    # Diagonalization may have changed order of states_selected. Reorder ensure that
     # state labels still correspond to LS-coupled state with largest coefficient
     # of that uncoupled state.
     col_max_coeff = np.where(abs(c_mat_unord) == numpy.amax(abs(c_mat_unord), axis=0)[0])
@@ -199,7 +199,7 @@ def sorted_diag(H):
 # Compute spin orbit coupled energies and transformation matrix.
 e_vec, c_mat = sorted_diag(H)
 if print_intermediates:
-    print("Spin coupled energy eigenvalues and coefficient of uncoupled states:")    
+    print("Spin coupled energy eigenvalues and coefficient of uncoupled states_selected:")
     print("e_vec", str(e_vec))
     print("c_mat", str(c_mat))
 

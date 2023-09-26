@@ -6,7 +6,7 @@ from pyqchem.parsers.parser_rasci import parser_rasci
 
 def get_number_of_states(file):
     """
-    Obtain the total number of states in ras
+    Obtain the total number of states_selected in ras
     :param: file_ms_notnull
     :return: nstates
     """
@@ -14,7 +14,7 @@ def get_number_of_states(file):
         data = f.readlines()
 
     element = 0
-    word_search = ['Requested states: ']
+    word_search = ['Requested states_selected: ']
 
     for line in data:
         if any(i in line for i in word_search):
@@ -27,8 +27,8 @@ def get_number_of_states(file):
 
 def get_selected_states(file, totalstates, selected_states, states_option, symmetry_selection):
     """
-    Select the states used depending on "states_option" value:
-    0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+    Select the states_selected used depending on "states_option" value:
+    0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
     :param: file_ms_notnull, nstates, selected_states, states_option, symmetry_selection
     :return: selected_states
     """
@@ -37,8 +37,8 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     if states_option == 0:  # Se
         for i in selected_states:
             if i <= 0 or i > totalstates:
-                print("The number of states selected must be among the total number of states calculated in QChem.")
-                print("Select a different number of states")
+                print("The number of states_selected selected must be among the total number of states_selected calculated in QChem.")
+                print("Select a different number of states_selected")
                 sys.exit()
 
     elif states_option == 1:
@@ -63,7 +63,7 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
 
 def get_eigenenergies(file, totalstates, selected_states):
     """
-    Get energies of the RAS-CI states.
+    Get energies of the RAS-CI states_selected.
     :param: file_ms_notnull, nstates, selected_states
     :return: eigenenergies, excitation_energies
     """
@@ -145,7 +145,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
 
     def get_states_sz(qchem_file):
         """
-        Get S² and Sz of all states
+        Get S² and Sz of all states_selected
         :param: output
         :return: all_multiplicities, all_sz, ground_sz
         """
@@ -177,7 +177,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
 
     def get_all_socs(line, n_states, multiplicities, all_sz, soc_selection):
         """
-        Get SOC matrix. For all the states it put values from maximum Sz to -Sz.
+        Get SOC matrix. For all the states_selected it put values from maximum Sz to -Sz.
         If Sz does not exist (i.e., we consider Sz=-1.5 and Sz of the state is 0.5),
         then the SOC value is 0.
         :param: data, state_multiplicities, sz_list
@@ -212,7 +212,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
 
     def get_selected_states_socs(n_states, all_sz, socs):
         """
-        Get SOC matrix between selected states. For all the states it put values
+        Get SOC matrix between selected states_selected. For all the states_selected it put values
         from maximum Sz to -Sz. If Sz does not exist (i.e., we consider Sz=-1.5 and
         Sz of the state is 0.5), then the SOC value is 0.
         :param: selected_states, sz_list, all_soc
@@ -241,7 +241,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
 
     def get_doublets_soc(n_states, all_soc):
         """
-        Get SOC matrix between selected states in doublets,
+        Get SOC matrix between selected states_selected in doublets,
         meaning Sz = -0.5, 0.5.
         :param: selected_states, sz_list, all_soc
         :return: soc_matrix
@@ -391,7 +391,7 @@ def get_spin_matrices(file, n_states):
 
     def s2_single_values(states_s2):
         """
-        get s2 values from the s2 of all the states, to obtain all values of
+        get s2 values from the s2 of all the states_selected, to obtain all values of
         s2 only one time.
         :param: s2_states
         :return: s2_values
@@ -456,7 +456,7 @@ def get_spin_matrices(file, n_states):
 
     def spin_matrices(spin):
         """
-        Get spin matrices s_x, s_y, s_z between two spin states (s,m) and (s,m') such that
+        Get spin matrices s_x, s_y, s_z between two spin states_selected (s,m) and (s,m') such that
         sx = < m' | s_x | m >, sy = < m' | s_y | m > and sz = < m' | s_z | m >
         :param: spin: total spin (s)
         :return: s_x, s_y, s_z
@@ -493,11 +493,11 @@ def get_spin_matrices(file, n_states):
 
         return s_x, s_y, s_z
 
-    s2_states = s2_from_file(file)  # s2 of each of the states
-    single_s2_values = s2_single_values(s2_states)  # s2 of each of the states, without repetition
+    s2_states = s2_from_file(file)  # s2 of each of the states_selected
+    single_s2_values = s2_single_values(s2_states)  # s2 of each of the states_selected, without repetition
     number_of_spins = len(single_s2_values)
 
-    # Spin matrix of non-relativistic states:
+    # Spin matrix of non-relativistic states_selected:
     max_multiplicity = int(2 * s2_to_s(max(single_s2_values)) + 1)
     ground_multiplicity = int(2 * s2_to_s(single_s2_values[0]) + 1)
 
@@ -546,7 +546,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     def get_all_momentum(line, n_states):
         """
-        Get Lk between all the states in x,y,z dimensions. | A > in columns, < B | in rows.
+        Get Lk between all the states_selected in x,y,z dimensions. | A > in columns, < B | in rows.
         :param: line, n_states
         :return: all_orbital_momentum
         """
@@ -563,7 +563,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
     def get_selected_states_momentum(n_states, all_momentum):
         """
-        Get Lk between the selected states in x,y,z dimensions.
+        Get Lk between the selected states_selected in x,y,z dimensions.
         :param: n_states, all_momentum
         :return: selected_momentum
         """
@@ -578,7 +578,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
     def get_doublets_momentum(n_states, selected_momentum):
         """
-        Get Lk between the selected states in x,y,z dimensions for doublets,
+        Get Lk between the selected states_selected in x,y,z dimensions for doublets,
         i.e. in each row (column) there are state A,-1/2 and A,+1/2.
         :param: n_states, selected_momentum
         :return: doublets_momentum
@@ -595,7 +595,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
     def get_all_multip_momentum(all_momentums, all_sz):
         """
-        Get Lk between the selected states in x,y,z dimensions for doublets,
+        Get Lk between the selected states_selected in x,y,z dimensions for doublets,
         i.e. in each row (column) there are state A,-1/2 and A,+1/2.
         :param: all_momentums, all_sz
         :return: lk_values
@@ -624,9 +624,9 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angular_matrix):
     """
     Spin or orbital angular matrix calculation using:
-    1) coeff_bra, coeff_ket: coefficients of the lineal combination of non-relativistic states,
-    that come from Kramer doublet states eigenvectors
-    2) angular_value: angular momentum between states. Depending on the column of the final matrix,
+    1) coeff_bra, coeff_ket: coefficients of the lineal combination of non-relativistic states_selected,
+    that come from Kramer doublet states_selected eigenvectors
+    2) angular_value: angular momentum between states_selected. Depending on the column of the final matrix,
     it takes real (col 0), imaginary (col 1) or both parts (col 2).
     :param: eigenvalues, eigenvectors, kramer_st, input_angular_matrix
     :return: angular_matrix: contains the spin value < B(S,Sz) | Sx | A(S',Sz') >
@@ -702,12 +702,12 @@ def print_g_calculation(file, totalstates, selected_states, symmetry_selection,
     print("     INPUT SECTION")
     print("------------------------------------")
     print("File selected: ", file)
-    print("Number of states: ", totalstates)
+    print("Number of states_selected: ", totalstates)
     if selected_states == 2:
         print("Symmetry: ", symmetry_selection)
-        print("Selected states: ", states_ras)
+        print("Selected states_selected: ", states_ras)
     else:
-        print("Selected states: ", states_ras)
+        print("Selected states_selected: ", states_ras)
 
     print(" ")
     print("-----------------------------")

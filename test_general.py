@@ -11,7 +11,7 @@ from parser_plots import *
 #            INPUT VALUES
 #####################################
 ras_input = '\
-doublets_molecules/h2o/h2o_def2tzvp_5_5.out'
+roberto_molecules/C64H28B4/C64H28B4_8_8_singletref_concat_triplets.out'
 
 g_calculation = 0
 excited_states_analysis = 1
@@ -19,10 +19,10 @@ sos_analysis = 0
 gfactor_excited_states = 0
 ppm = 0
 
-state_selection = 0 # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
-states_ras = [1,2,3,4]  # States to be included when "selected_states = 0"
+state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+states_ras = [1,2,3,4,5,6,7,8,9,10]  # States to be included when "selected_states = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-symmetry_selection = 'A2'  # Symmetry selected states
+symmetry_selection = 'A2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # OUTPUT
@@ -30,6 +30,21 @@ write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file
 output_ras_input = ras_input + '-gvalues.txt'
 if write_ras_input == 1:
     sys.stdout = open(output_ras_input, "w")
+
+#      G-VALUE CALCULATION
+if g_calculation == 1:
+    gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
+
+#        PLOT ANALYSIS
+if excited_states_analysis == 1:
+    get_excited_states_analysis(ras_input, state_selection, states_ras, cut_off=0.9, plots=0, save_pict=0)
+
+if sos_analysis == 1:
+    sos_analysis_and_plot(ras_input, states_ras, state_selection, order_symmetry=1, save_option=0)
+
+if gfactor_excited_states == 1:
+    gfactor_all_states(ras_input, states_ras)
+
 
 ###########################################
 #      ACTING IN SEVERAL MOLECULES
@@ -63,17 +78,3 @@ if write_ras_input == 1:
 #     #     print(sorted_list[i, :])
 #     print(tabulate(sorted_list, headers=["molecule", "gxx", "gyy", "gzz"]))
 #     exit()
-
-#      G-VALUE CALCULATION
-if g_calculation == 1:
-    gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
-
-#        PLOT ANALYSIS
-if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, state_selection, states_ras, cutoff=0.9, plots=1, save_pict=0)
-
-if sos_analysis == 1:
-    sos_analysis_and_plot(ras_input, states_ras, state_selection, order_symmetry=1, save_option=0)
-
-if gfactor_excited_states == 1:
-    gfactor_all_states(ras_input, states_ras)

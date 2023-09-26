@@ -142,8 +142,8 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
 
 def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry, save_option):
     """"
-    Calculate the g-shifts in the sum-over-states expansion using
-    from 2 states to the total number of states shown in the Q-Chem output.
+    Calculate the g-shifts in the sum-over-states_selected expansion using
+    from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
     :param: file_ms_notnull
     :return: no returned value, it prints the plot
     """
@@ -227,5 +227,5 @@ def gfactor_all_states(file, nstates):
     print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     presentation_matrix_2 = np.delete(presentation_matrix, 0, 0)
-    plot_g_tensor_vs_states(file, presentation_matrix_2, x_title='Number of states',
+    plot_g_tensor_vs_states(file, presentation_matrix_2, x_title='Number of states_selected',
                             y_title=r'$\Delta g, ppm$', main_title=file, save_picture=0)

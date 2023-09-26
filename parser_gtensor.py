@@ -9,7 +9,7 @@ from pyqchem.parsers.parser_rasci import parser_rasci
 
 def get_number_of_states(file):
     """
-    Obtain the total number of states in ras
+    Obtain the total number of states selected in ras
     :param: file_ms_notnull
     :return: nstates
     """
@@ -64,8 +64,8 @@ def get_symmetry_states(file, totalstates):
 
 def get_selected_states(file, totalstates, selected_states, states_option, symmetry_selection):
     """
-    Select the states used depending on "states_option" value:
-    0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+    Select the states selected used depending on "states_option" value:
+    0: use "state_ras" ; 1: use all states selected ; 2: use states selected by selected symmetry
     :param: file_ms_notnull, nstates, selected_states, states_option, symmetry_selection
     :return: selected_states
     """
@@ -74,8 +74,8 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     if states_option == 0:  # Se
         for i in selected_states:
             if i <= 0 or i > totalstates:
-                raise ValueError("The number of states selected must be among the total number of states calculated in QChem. "
-                                 "Select a different number of states")
+                raise ValueError("The number of states selected selected must be among the total number of states selected calculated in QChem. "
+                                 "Select a different number of states selected")
 
     elif states_option == 1:
         selected_states = list(range(1, totalstates + 1))
@@ -93,9 +93,20 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     return selected_states
 
 
+def order_by_states(input_list, selected_states):
+    """
+    Order the list by the selected.
+    :return:
+    """
+    output_list = []
+    for i in selected_states:
+        output_list.append(input_list[i - 1])
+    return output_list
+
+
 def get_eigenenergies(file, totalstates, selected_states):
     """
-    Get energies of the RAS-CI states.
+    Get energies of the RAS-CI states selected.
     :param: file_ms_notnull, nstates, selected_states
     :return: eigenenergies, excitation_energies
     """
@@ -117,11 +128,8 @@ def get_eigenenergies(file, totalstates, selected_states):
             if len(element_energy) == totalstates:
                 break
 
-    energies_selected = []
-    excited_energies_selected = []
-    for i in selected_states:
-        energies_selected.append(element_energy[i - 1])
-        excited_energies_selected.append(elements_excitenergy[i - 1])
+    energies_selected = order_by_states(element_energy, selected_states)
+    excited_energies_selected = order_by_states(elements_excitenergy, selected_states)
 
     eigenenergies = np.array(energies_selected, dtype=float)
     excitation_energies_ev = np.array(excited_energies_selected, dtype=float)
@@ -132,13 +140,13 @@ def get_eigenenergies(file, totalstates, selected_states):
 def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
-    and 'ket' in columns, with spin order -Ms , +Ms from first to last selected states.
+    and 'ket' in columns, with spin order -Ms , +Ms from first to last selected states selected.
     :param: file_ms_notnull, nstates, selected_states, soc_option
     :return: doublet_soc, sz_list
     """
     def get_states_sz(qchem_file, states_selected):
         """
-        Get S² and Sz of all states
+        Get S² and Sz of all states selected
         :param: output
         :return: all_multip, all_sz, ground_sz
         """
@@ -175,12 +183,12 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         ground_sz = from_s2_to_sz_list(ordered_multip[0])
         if len(ground_sz) == 1:
             raise ValueError("Warning! It is not allowed the calculation of the g-tensor in a singlet ground state. "
-                             "Ground state corresponds to the first of the included states.")
+                             "Ground state corresponds to the first of the included states selected.")
         return all_multip, all_sz, ground_sz
 
     def get_all_socs(line, n_states, multiplicities, all_sz, soc_selection):
         """
-        Get SOC matrix. For all the states it put values from maximum Sz to -Sz.
+        Get SOC matrix. For all the states selected it put values from maximum Sz to -Sz.
         If Sz does not exist (i.e., we consider Sz=-1.5 and Sz of the state is 0.5),
         then the SOC value is 0.
         :param: data, all_multip, sz_list
@@ -236,7 +244,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
 
     def get_selected_states_socs(n_states, all_sz, socs):
         """
-        Get SOC matrix between selected states. For all the states it put values
+        Get SOC matrix between selected states selected. For all the states selected it put values
         from maximum Sz to -Sz. If Sz does not exist (i.e., we consider Sz=-1.5 and
         Sz of the state is 0.5), then the SOC value is 0.
         :param: selected_states, sz_list, all_soc
@@ -404,14 +412,14 @@ def get_spin_matrices(file, n_states):
 
         if s2_nstates[0] == 0:
             raise ValueError("Warning! It is not allowed the calculation of the g-tensor in a singlet ground state. "
-                             "Ground state corresponds to the first of the included states.")
+                             "Ground state corresponds to the first of the included states selected.")
 
         s2_all = np.array(s2_all_list, dtype=float)
         return s2_all, s2_nstates
 
     def get_s2_single_values(list_s2):
         """
-        get s2_all values from the s2_all of all the states, to obtain all values of
+        get s2_all values from the s2_all of all the states selected, to obtain all values of
         s2_all only one time.
         :param: s2_all_states
         :return: s2_values
@@ -470,7 +478,7 @@ def get_spin_matrices(file, n_states):
 
     def spin_matrices(spin):
         """
-        Get spin matrices s_x, s_y, s_z between two spin states (s,m) and (s,m') such that
+        Get spin matrices s_x, s_y, s_z between two spin states selected (s,m) and (s,m') such that
         sx = < m' | s_x | m >, sy = < m' | s_y | m > and sz = < m' | s_z | m >
         :param: spin: total spin (s)
         :return: s_x, s_y, s_z
@@ -507,8 +515,8 @@ def get_spin_matrices(file, n_states):
 
         return s_x, s_y, s_z
 
-    s2_all_states, s2_selected_states = get_all_s2(file, n_states)  # s2_all of each of the states
-    single_s2_values = get_s2_single_values(s2_all_states)  # s2_all of each of the states, without repetition
+    s2_all_states, s2_selected_states = get_all_s2(file, n_states)  # s2_all of each of the states selected
+    single_s2_values = get_s2_single_values(s2_all_states)  # s2_all of each of the states selected, without repetition
 
     max_multiplicity = int(2 * s2_to_s(max(s2_all_states)) + 1)
     ground_multiplicity = int(2 * s2_to_s(s2_selected_states[0]) + 1)
@@ -569,7 +577,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     def get_all_momentum(line, n_states):
         """
-        Get Lk between all the states in x,y,z dimensions. | A > in columns, < B | in rows.
+        Get Lk between all the states selected in x,y,z dimensions. | A > in columns, < B | in rows.
         :param: line, n_states
         :return: all_orbital_momentum
         """
@@ -586,7 +594,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
     def get_selected_states_momentum(n_states, all_momentum):
         """
-        Get Lk between the selected states in x,y,z dimensions.
+        Get Lk between the selected states selected in x,y,z dimensions.
         :param: n_states, all_momentum
         :return: selected_momentum
         """
@@ -601,7 +609,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
     def get_all_multip_momentum(all_momentums, all_sz):
         """
-        Get Lk between the selected states in x,y,z dimensions for doublets,
+        Get Lk between the selected states selected in x,y,z dimensions for doublets,
         i.e. in each row (column) there are state A,-1/2 and A,+1/2.
         :param: all_momentums, all_sz
         :return: lk_values
@@ -843,12 +851,12 @@ def print_g_calculation(file, totalstates, selected_states,
     print("     INPUT SECTION")
     print("--------------------------------------")
     print("File selected: ", file)
-    print("Number of states: ", totalstates)
+    print("Number of states selected: ", totalstates)
     if selected_states == 2:
         print("Symmetry: ", symmetry_selection)
-        print("Selected states: ", states_ras)
+        print("Selected states selected: ", states_ras)
     else:
-        print("Selected states: ", states_ras)
+        print("Selected states selected: ", states_ras)
 
     print(" ")
     print("------------------------")
@@ -917,7 +925,7 @@ def from_gvalue_to_shift(lista):
 #     """
 #     def get_energies_socs(file, nstates, states_option):
 #         """
-#         Having the selected states, get the energy and SOCs between them
+#         Having the selected states selected, get the energy and SOCs between them
 #         :param: file, nstates, states_option
 #         :return: totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
 #         """
@@ -932,8 +940,8 @@ def from_gvalue_to_shift(lista):
 #
 #     def mapping_between_states(ms_notnull_energies, ms_null_energies):
 #         """
-#         Comparing the energies, mapping between states with Ms = 0, that do not have coupling between states triplets,
-#         and states with Ms not 0, that do have this coupling.
+#         Comparing the energies, mapping between states selected with Ms = 0, that do not have coupling between states selected triplets,
+#         and states selected with Ms not 0, that do have this coupling.
 #         :return:
 #         """
 #         mapping_list = []
@@ -956,13 +964,13 @@ def from_gvalue_to_shift(lista):
 #
 #     def exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_null, sz_list):
 #         """
-#         Put SOCs between states with Ms different than 0 (that are obtained in the output) in the
-#         SOC matrix of states with Ms 0 (that are not obtained since Clebsh-Gordan coefficient is too small)
+#         Put SOCs between states selected with Ms different than 0 (that are obtained in the output) in the
+#         SOC matrix of states selected with Ms 0 (that are not obtained since Clebsh-Gordan coefficient is too small)
 #         :return:
 #         """
 #         for i in mapping_list:
 #             for j in mapping_list:
-#                 if i['state ms not null'] != j['state ms not null']:  # If states are not the same (in Ms not null list)
+#                 if i['state ms not null'] != j['state ms not null']:  # If states selected are not the same (in Ms not null list)
 #                     i_state_ms_notnull = i['state ms not null']
 #                     j_state_ms_notnull = j['state ms not null']
 #

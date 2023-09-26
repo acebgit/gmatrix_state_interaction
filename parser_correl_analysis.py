@@ -12,9 +12,9 @@ from parser_excitstates import *
 from parser_plots import plot_g_tensor_vs_states
 
 ras_input = 'doublets_molecules/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])
-selected_states = 0  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+selected_states = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 states_ras = [1, 2]  # States to be included when "selected_states = 0"
-symmetry_selection = 'B1'  # Symmetry selected states
+symmetry_selection = 'B1'  # Symmetry selected states_selected
 soc_option = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 totalstates = get_number_of_states(ras_input)
@@ -25,7 +25,7 @@ eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totals
 
 doublet_soc, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_option)
 
-socc_values = get_socc_values(ras_input, totalstates)
+socc_values = get_groundst_socc_values(ras_input, totalstates)
 
 ras_upper_g_matrix, ras_g_values = from_energies_soc_to_g_values(
     ras_input, states_ras, totalstates, excitation_energies_ras, doublet_soc, sz_list)

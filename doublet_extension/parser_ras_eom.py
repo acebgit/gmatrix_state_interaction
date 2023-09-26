@@ -13,7 +13,7 @@ from doublets_molecules.parser_excitstates_eom import get_eom_type, get_scf_ener
 def change_ras_with_eom_energies(ras_states_to_change, eom_states_to_be_changed,
                                  excitation_energies_ras, eom_excitation_energies):
     """
-    Change the RAS energies with the eom energies of the states selected.
+    Change the RAS energies with the eom energies of the states_selected selected.
     :param: ras_states_to_change, eom_states_to_be_changed, excitation_energies_ras, eom_excitation_energies
     :return SOC_matrix: SOC matrix
     """
@@ -100,8 +100,8 @@ def ras_and_eom_energy_exchange(eom_input, file, states_ras, ras_states_to_chang
     print('eom SCF reference energy:', eom_scf_reference_energy)
     print('')
 
-    print('RAS states to be changed:', ras_states_to_change)
-    print('eom states to be changed:', eom_states_to_change)
+    print('RAS states_selected to be changed:', ras_states_to_change)
+    print('eom states_selected to be changed:', eom_states_to_change)
     print('')
 
     return comparison_presentation_list, g_shifts

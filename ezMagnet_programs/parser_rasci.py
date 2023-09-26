@@ -635,7 +635,7 @@ def parser_rasci(output):
     Include:
     - Diabatization scheme data
     - Structure
-    - Adiabatic states
+    - Adiabatic states_selected
     - SOC
 
     :param output:
@@ -695,7 +695,7 @@ def parser_rasci(output):
 
     data_dict.update({'rasci_dimensions': rasci_dimensions})
 
-    # excited states data
+    # excited states_selected data
     excited_states = []
     for m in re.finditer('RAS-CI total energy for state', output):
         # print('ll found', m.start(), m.end())
@@ -856,7 +856,7 @@ def parser_rasci(output):
                     spinmat_z = _read_soc_matrix(lines[i + 6 + 2*nb:], [nb, na])
                     pair_dict['spin_matrices'] = [spinmat_x, spinmat_y, spinmat_z]
 
-                if 'Spin matrices Sx, Sy and Sz for states' in line:
+                if 'Spin matrices Sx, Sy and Sz for states_selected' in line:
                     warnings.warn('Spin Matrices parsing is deprecated')
                     pair_dict['spin_matrices'] = [np.zeros((nb, na)).tolist()]*3
 
@@ -882,7 +882,7 @@ def parser_rasci(output):
                     pair_dict['mf_socc'] = float(line.split()[-2])
                     pair_dict['units'] = line.split()[-1]
 
-                if 'Skipping SOCs between states' in line:
+                if 'Skipping SOCs between states_selected' in line:
                     pair_dict['1e_soc_mat'] = np.zeros((nb, na)).tolist()
                     pair_dict['1e_socc'] = 0.0
 
@@ -940,7 +940,7 @@ def get_symmetry_states(file, totalstates):
 
 def get_number_of_states(file):
     """
-    Obtain the total number of states in ras
+    Obtain the total number of states_selected in ras
     :param: file_ms_notnull
     :return: nstates
     """
@@ -948,7 +948,7 @@ def get_number_of_states(file):
         data = f.readlines()
 
     element = 0
-    word_search = ['Requested states: ']
+    word_search = ['Requested states_selected: ']
 
     for line in data:
         if any(i in line for i in word_search):
@@ -995,7 +995,7 @@ def get_socs(outpuut, nstates, selected_state):
 
 def get_energies(outpuut, nstates, selected_state):
     """
-    Obtain a dictionary with eigenenergies of all the states, written as floats.
+    Obtain a dictionary with eigenenergies of all the states_selected, written as floats.
     :param outpuut:
     :param nstates:
     :param selected_state:

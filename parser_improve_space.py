@@ -8,7 +8,7 @@ import sys
 
 def get_number_of_states(file):
     """
-    Obtain the total number of states in ras
+    Obtain the total number of states_selected in ras
     :param: file_ms_notnull
     :return: nstates
     """
@@ -16,7 +16,7 @@ def get_number_of_states(file):
         data = f.readlines()
 
     element = 0
-    word_search = ['Requested states: ']
+    word_search = ['Requested states_selected: ']
 
     for line in data:
         if any(i in line for i in word_search):
@@ -63,8 +63,8 @@ def get_symmetry_states(file, totalstates):
 
 def get_selected_states(file, totalstates, symmetry_selection):
     """
-    Select the states used depending on "states_option" value:
-    0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+    Select the states_selected used depending on "states_option" value:
+    0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
     :param: file_ms_notnull, nstates, selected_states, states_option, symmetry_selection
     :return: selected_states
     """
@@ -75,8 +75,8 @@ def get_selected_states(file, totalstates, symmetry_selection):
     if states_option == 0:  # Se
         for i in selected_states:
             if i <= 0 or i > totalstates:
-                print("The number of states selected must be among the total number of states calculated in QChem.")
-                print("Select a different number of states")
+                print("The number of states_selected selected must be among the total number of states_selected calculated in QChem.")
+                print("Select a different number of states_selected")
                 sys.exit()
 
     elif states_option == 1:
@@ -101,7 +101,7 @@ def get_selected_states(file, totalstates, symmetry_selection):
 
 def get_eigenenergies(file, totalstates, selected_states):
     """
-    Get energies of the RAS-CI states.
+    Get energies of the RAS-CI states_selected.
     :param: file_ms_notnull, nstates, selected_states
     :return: eigenenergies, excitation_energies
     """
@@ -172,7 +172,7 @@ def get_hole_part_contributions(file, totalstates):
 def get_mulliken_spin(file, totalstates, states):
     """
     Get Mulliken charge and spin of the first atom, i.e. a metal in transition atom complexes.
-    :param: file_ms_notnull, nstates, states
+    :param: file_ms_notnull, nstates, states_selected
     :return: charge_mulliken, spin_mulliken
     """
     word_search = '    Mulliken population analysis '
@@ -210,7 +210,7 @@ def get_mulliken_spin(file, totalstates, states):
 
 def get_socc_values(file, totalstates):
     """
-    Get spin-orbit coupling constant between states
+    Get spin-orbit coupling constant between states_selected
     :param: file_ms_notnull, nstates
     :return: socc
     """
@@ -237,7 +237,7 @@ def get_socc_values(file, totalstates):
 
 def get_ground_state_orbital_momentum(file, totalstates):
     """
-    Obtaining the orbital angular momentum between the ground state and all excited states.
+    Obtaining the orbital angular momentum between the ground state and all excited states_selected.
     :param: file_ms_notnull, nstates
     :return: orbital_momentum
     """
@@ -255,7 +255,7 @@ def get_ground_state_orbital_momentum(file, totalstates):
             elements.append(element)
 
         if len(elements) == totalstates * 3:
-            break  # There are all the Lk values with between ground and excited states
+            break  # There are all the Lk values with between ground and excited states_selected
 
     orbital_momentum = []
     nstate = 0
