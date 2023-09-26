@@ -11,9 +11,9 @@ from parser_plots import *
 #            INPUT VALUES
 #####################################
 ras_input = '\
-roberto_molecules/C64H28B4/C64H28B4_8_8_singletref_concat_triplets.out'
+triplets_molecules/o2_11_9_allmultip.out'
 
-g_calculation = 0
+g_calculation = 1
 excited_states_analysis = 1
 sos_analysis = 0
 gfactor_excited_states = 0
