@@ -224,6 +224,11 @@ def get_ras_spaces(qchem_file):
             line = line.replace(',', ' ')
             line = line.split()
 
+            try:
+                prueba = float(line[1])
+            except ValueError:
+                raise ValueError("'RAS_ACT_ORB' has not been manually selected.")
+
             for i in range(1, ras_act+1):
                 elements.append(line[i])
             break
@@ -473,7 +478,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
     states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selection='None')
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-    excitation_energies_ras[:] = excitation_energies_ras[:] - excitation_energies_ras[0]
+    excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
 
     s2_list = s2_from_file(file, states_ras)
 
@@ -501,7 +506,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
         hole = np.around(float(hole_contributions[state_index]), 2)
         part = np.around(float(part_contributions[state_index]), 2)
 
-        excit_energy = np.round(float(excitation_energies_ras[state_index])*27.211399, 3)
+        excit_energy = np.round(float(excitation_energies_ras[state_index]), 3)
         orbital = configuration_orbitals[i]["Orbitals"]
         soc = np.round(float(socc_values[state_index]), 0)
 

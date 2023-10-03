@@ -7,10 +7,90 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator, MultipleLocator
 from numpy import linalg, sqrt
 from pyqchem.parsers.parser_rasci import parser_rasci
-from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, order_by_states, \
-    get_eigenenergies, get_spin_orbit_couplings, hermitian_test, get_hamiltonian_construction, reordering_eigenvectors, \
-    diagonalization, get_spin_matrices, get_orbital_matrices, angular_matrixes_obtention, from_energies_soc_to_g_values, \
-    print_g_calculation
+from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
+    get_spin_orbit_couplings, from_energies_soc_to_g_values, from_ppt_to_ppm
+
+
+def get_energies_socs(file, nstates, states_option):
+    """
+    Having the selected states_selected, get the energy and SOCs between them
+    :param: file, nstates, states_option
+    :return: totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
+    """
+    totalstates = get_number_of_states(file)
+
+    symmetry_selections = 'None'
+    nstates = get_selected_states(file, totalstates, nstates, states_option, symmetry_selections)
+
+    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
+    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(file, totalstates, nstates, soc_option=0)
+    return totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
+
+
+def mapping_between_states(ms_notnull_energies, ms_null_energies):
+    """
+    Comparing the energies, mapping between states_selected with Ms = 0, that do not have coupling between states_selected triplets,
+    and states_selected with Ms not 0, that do have this coupling. Prepared also for degenerated states.
+    :return:
+    """
+    def check_mapping(energ_ms_notnull, energ_ms_null, mapping_dic, list):
+        """
+        Check if states "Ms=0" and "Ms ≠ 0" have the same energy. If so, to include them in the list, check that states
+        have not been already included in the list, meaning checking for degeneracies.
+        :return: list
+        """
+        if (energ_ms_notnull == energ_ms_null):
+            list.append(mapping_dic)
+
+            for k in range(0, len(list) - 1):
+                if (mapping_dic['state ms not null'] == list[k]['state ms not null']) or \
+                        (mapping_dic['state ms null'] == list[k]['state ms null']):
+                    list.remove(mapping_dic)
+        return list
+
+    mapping_list = []
+    mapping_dict = {}
+
+    for i in range(0, len(ms_notnull_energies)):
+        for j in range(0, len(ms_null_energies)):
+            ener_ms_notnull = np.round(ms_notnull_energies[i], 5)
+            ener_ms_null = np.round(ms_null_energies[j], 5)
+
+            mapping_dict = {'state ms not null': i, 'state ms null': j}
+            mapping_list = check_mapping(ener_ms_notnull, ener_ms_null, mapping_dict, mapping_list)
+    return mapping_dict, mapping_list
+
+
+def exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_null, sz_list):
+    """
+    Put SOCs between states_selected with Ms different than 0 (that are obtained in the output) in the
+    SOC matrix of states_selected with Ms 0 (that are not obtained since Clebsh-Gordan coefficient is too small)
+    :return:
+    """
+    for i in mapping_list:
+        for j in mapping_list:
+            if i['state ms not null'] != j['state ms not null']:  # If states_selected are not the same (in Ms not null list)
+                # print('State Ms not null', states_ras[i['state ms not null']], '(', i['state ms not null'], ')',
+                #       states_ras[j['state ms not null']], '(', j['state ms not null'], ')', '; ',
+                #       'State Ms null', states_ras[i['state ms null']], '(', i['state ms null'], ')',
+                #       states_ras[j['state ms null']], '(', j['state ms null'], ')',)
+
+                for sz_1 in range(0, len(sz_list)):
+                    for sz_2 in range(0, len(sz_list)):
+                        i_msnotnull = i['state ms not null'] * len(sz_list) + sz_1
+                        j_msnotnull = j['state ms not null'] * len(sz_list) + sz_2
+
+                        i_msnull = i['state ms null'] * len(sz_list) + sz_1
+                        j_msnull = j['state ms null'] * len(sz_list) + sz_2
+
+                        selected_socs_ms_null[i_msnull, j_msnull] = selected_socs_ms_notnull[i_msnotnull, j_msnotnull]
+                        # print(socs_msnotnull[i_msnull, j_msnull], '<--->', socs_msnull[i_msnotnull, j_msnotnull])
+                # print('--END LOOP--')
+    # print('SOC:')
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                 for row in np.round((socs_msnotnull[:,:]),5)])) # * 219474.63068
+    # exit()
+    return selected_socs_ms_null
 
 
 def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, states_option):
@@ -19,83 +99,6 @@ def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, st
     :param: file_ms_notnull, nstates, selected_states, symmetry_selection, soc_options
     :return: g-shifts
     """
-    def get_energies_socs(file, nstates, states_option):
-        """
-        Having the selected states_selected, get the energy and SOCs between them
-        :param: file, nstates, states_option
-        :return: totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
-        """
-        totalstates = get_number_of_states(file)
-
-        symmetry_selections = 'None'
-        nstates = get_selected_states(file, totalstates, nstates, states_option, symmetry_selections)
-
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
-        selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(file, totalstates, nstates, soc_option=0)
-        return totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
-
-    def mapping_between_states(ms_notnull_energies, ms_null_energies):
-        """
-        Comparing the energies, mapping between states_selected with Ms = 0, that do not have coupling between states_selected triplets,
-        and states_selected with Ms not 0, that do have this coupling.
-        :return:
-        """
-        mapping_list = []
-        mapping_dict = {}
-
-        for i in range(0, len(ms_notnull_energies)):
-            for j in range(0, len(ms_null_energies)):
-                ener_ms_notnull = np.round(ms_notnull_energies[i], 5)
-                ener_ms_null = np.round(ms_null_energies[j], 5)
-
-                if ener_ms_notnull == ener_ms_null:
-                    mapping_dict = {'state ms not null': i, 'state ms null': j}
-                    mapping_list.append(mapping_dict)
-
-        # for mapping_dict in mapping_list:
-        #     a = mapping_dict['state ms not null']
-        #     b = mapping_dict['state ms null']
-        #     print('file_ms_notnull', states_ras[a], 'file_ms_null', states_ras[b])
-        # exit()
-        return mapping_dict, mapping_list
-
-    def exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_null, sz_list):
-        """
-        Put SOCs between states_selected with Ms different than 0 (that are obtained in the output) in the
-        SOC matrix of states_selected with Ms 0 (that are not obtained since Clebsh-Gordan coefficient is too small)
-        :return:
-        """
-        for i in mapping_list:
-            for j in mapping_list:
-                if i['state ms not null'] != j['state ms not null']:  # If states_selected are not the same (in Ms not null list)
-                    i_state_ms_notnull = i['state ms not null']
-                    j_state_ms_notnull = j['state ms not null']
-
-                    i_state_ms_null = i['state ms null']
-                    j_state_ms_null = j['state ms null']
-
-                    # print('State Ms not null', states_ras[i_state_ms_notnull], '(', i_state_ms_notnull, ')',
-                    #       states_ras[j_state_ms_notnull], '(', j_state_ms_notnull, ')', '; ',
-                    #       'State Ms null', states_ras[i_state_ms_null], '(', i_state_ms_null, ')',
-                    #       states_ras[j_state_ms_null], '(', j_state_ms_null, ')',)
-
-                    for sz_1 in range(0, len(sz_list)):
-                        for sz_2 in range(0, len(sz_list)):
-                            i_msnotnull = i_state_ms_notnull * len(sz_list) + sz_1
-                            j_msnotnull = j_state_ms_notnull * len(sz_list) + sz_2
-
-                            i_msnull = i_state_ms_null * len(sz_list) + sz_1
-                            j_msnull = j_state_ms_null * len(sz_list) + sz_2
-
-                            # print(socs_msnotnull[i_msnull, j_msnull], '<--->', socs_msnull[i_msnotnull, j_msnotnull])
-                            selected_socs_ms_null[i_msnull, j_msnull] = selected_socs_ms_notnull[i_msnotnull, j_msnotnull]
-                    # print('--END LOOP--')
-        # print('SOC:')
-        # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-        #                 for row in np.round((socs_msnotnull[:,:]),5)])) # * 219474.63068
-        # exit()
-        return selected_socs_ms_null
-
     # print('File ms not null: ', file_ms_notnull)
     # print('File ms null: ', file_ms_null)
     # print('States: ', states_ras)
@@ -105,6 +108,12 @@ def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, st
     totalstates_ms_null, energies_ms_null, selected_socs_ms_null, sz_list_ms_null, sz_ground_ms_null = get_energies_socs(file_ms_null, states_ras, states_option)
 
     mapping_dict, mapping_list = mapping_between_states(energies_ms_notnull, energies_ms_null)
+    # for mapping_dict in mapping_list:
+    #     a = mapping_dict['state ms not null']
+    #     b = mapping_dict['state ms null']
+    #     print('file_ms_notnull', states_ras[a], 'file_ms_null', states_ras[b])
+    # print(mapping_list)
+    # exit()
 
     selected_socs_ms_null = exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_null, sz_list_ms_notnull)
 
@@ -227,13 +236,17 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
         plt.savefig(figure_name)
 
 
-def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state, order_symmetry):
+def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state, ppms, order_symmetry):
     """"
     Calculate the g-shifts in the sum-over-states_selected expansion using
     from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
     :param: file_ms_notnull
     :return: no returned value, it prints the plot
     """
+    print("--------------------------------")
+    print(" SUM-OVER-STATE ANALYSIS")
+    print("--------------------------------")
+
     totalstates = get_number_of_states(file_ms_null)
     presentation_list = []
 
@@ -247,17 +260,19 @@ def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state
         excitation_energies_ras, selected_socs, sz_list, ground_sz, totalstates \
             = gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, selected_state)
 
+        print('Selected states: ', states_ras)
         g_shift = from_energies_soc_to_g_values(file_ms_null, states_ras,
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
 
-        g_shift = g_shift * 1000
+        g_shift = from_ppt_to_ppm(ppms, g_shift)
+
         state_symmetries, ordered_state_symmetries = get_symmetry_states(file_ms_null, nstates)
         if order_symmetry == 1:
             presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),
                                   np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
         else:
-            presentation_list.append([i, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
+            presentation_list.append([states_ras[i-1], np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
                                   np.round(g_shift.real[2], 3)])
     presentation_matrix = np.array(presentation_list, dtype=object)
 
@@ -267,10 +282,6 @@ def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state
         for i in range(1, len(presentation_matrix)):
             presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim])
 
-    print("--------------------------------")
-    print(" SUM-OVER-STATE ANALYSIS")
-    print("--------------------------------")
     # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
-
     plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Electronic State',
                             y_title=r'$\Delta g, ppm$', main_title=file_ms_null, save_picture=0)

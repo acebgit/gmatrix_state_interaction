@@ -121,6 +121,11 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
             :param: soc_msnull, soc_msnotnull, list_mapping, list_sz
             :return: soc_msnull
             """
+            # print('SOC of Ms null (not include SOCs between triplets):')
+            # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+            #                  for row in np.round((soc_msnull[:, :] * 219474.63068), 5)]))  # * 219474.63068
+            # print()
+
             for i in list_mapping:
                 for j in list_mapping:
                     if i['state ms not null'] != j['state ms not null']:  # If states_selected are not the same (in Ms not null list)
@@ -134,10 +139,11 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
                                 j_msnull = j['state ms null'] * len(list_sz) + sz_2
 
                                 soc_msnull[i_msnull, j_msnull] = soc_msnotnull[i_msnotnull, j_msnotnull]
-            print('SOC of Ms null (inclusing SOCs between triplets):')
-            print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-                             for row in np.round((soc_msnull[:, :] * 219474.63068), 5)]))  # * 219474.63068
-            exit()
+
+            # print('SOC of Ms null (include SOCs between triplets):')
+            # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+            #                  for row in np.round((soc_msnull[:, :] * 219474.63068), 5)]))  # * 219474.63068
+            # print()
             return soc_msnull
 
         total_soc = np.zeros((totalstates * len(sz_list), totalstates * len(sz_list)), dtype=complex)

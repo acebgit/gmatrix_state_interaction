@@ -297,7 +297,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     return selected_socs, maximum_sz_all_states, sz_ground_state
 
 
-def hermitian_test(matrix):
+def hermitian_test(matrix, sz_list):
     """
     Check if a matrix is Hermitian. If not, exit.
     :param: matrix
@@ -307,9 +307,14 @@ def hermitian_test(matrix):
             element_1 = np.round(matrix[i, j], 4)
             element_2 = np.round(np.conjugate(matrix[j, i]), 4)
             if element_1 != element_2:
-                print('positions: ', i // 2, 'value:', matrix[i, j])
-                print('positions: ', j // 2, 'value:', matrix[j, i])
-                raise ValueError("Matrix is not Hermitian: see the elements shown above")
+                state_1 = i // len(sz_list)
+                state_2 = j // len(sz_list)
+
+                print('State 1:', state_1, ', State 2:', state_2, ', row:', i, ', column:', j,
+                      ', value:', matrix[i, j])
+                print('State 2:', state_2, ', State 1:', state_2, ', row:', j, ', column:', i,
+                      ', value:', matrix[j, i])
+                raise ValueError("Matrix is not Hermitian: see the elements shown above (SOCs in cm-1)")
 
 
 def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coupling, sz_values):
@@ -328,11 +333,13 @@ def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coup
             else:
                 hamiltonian[i, j] = spin_orbit_coupling[i, j]
 
-    hermitian_test(hamiltonian)
     # print('Hamiltonian:')
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                 for row in np.round((hamiltonian[:,:]),5)]))
+    #                 for row in np.round((hamiltonian[:,:]),5)]))  # * 219474.63068
+    # print()
     # exit()
+
+    hermitian_test(hamiltonian, sz_values)
     return hamiltonian
 
 
@@ -761,7 +768,7 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
             for i in range(0, len(j_matrix)):
                 for j in range(0, len(j_matrix)):
                     j_matrix[i, j, k] = j_big_matrix[i + sz_difference, j + sz_difference, k]
-            hermitian_test(j_matrix[:, :, k])
+            hermitian_test(j_matrix[:, :, k], list_sz)
 
         # print('J-matrix:')
         # for k in range(0,3):
@@ -846,7 +853,10 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
 
 def print_g_calculation(file, totalstates, selected_states,
-                        states_ras, upper_g_tensor_results_ras, symmetry_selection):
+                        states_ras, upper_g_tensor_results_ras, ppms, symmetry_selection):
+
+    upper_g_tensor_results_ras = from_ppt_to_ppm(ppms, upper_g_tensor_results_ras)
+
     print("--------------------------------------")
     print("     INPUT SECTION")
     print("--------------------------------------")
@@ -916,6 +926,18 @@ def from_gvalue_to_shift(lista):
         g_shift.append(value)
     print(np.round(g_shift, 3))
 
+
+def from_ppt_to_ppm(ppm, gvalues):
+    """
+    Pass from ppt to ppm the gvalues.
+    :param gvalues:
+    :return:
+    """
+    if ppm == 1:
+        gvalues[:] = gvalues[:] * 1000
+    else:
+        pass
+    return gvalues
 
 # def gfactor_two_files(file_ms_notnull, file_ms_null, states_ras, states_option):
 #     """
