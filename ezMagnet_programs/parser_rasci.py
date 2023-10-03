@@ -908,7 +908,7 @@ def get_symmetry_states(file, totalstates):
     """
     Create two lists: first with the symmetry of each state (A1,A2,A3...) and second with
     the order of these symmetries (1A1,2A2,3A3...)
-    :param: file_ras, nstates
+    :param: file_ras, selected_states
     :return: all_state_symmetries, ordered_state_symmetries
     """
     with open(file, encoding="utf8") as f:
@@ -942,7 +942,7 @@ def get_number_of_states(file):
     """
     Obtain the total number of states_selected in ras
     :param: file_ms_notnull
-    :return: nstates
+    :return: selected_states
     """
     with open(file, encoding="utf8") as f:
         data = f.readlines()
@@ -1033,7 +1033,7 @@ def get_spin_momentum(outpuut, nstates):
     """
     get s2 of each state from Q-Chem otuput
     :param: outpuut
-    :param: nstates
+    :param: selected_states
     :return: s2
     """
     search = ['  <S^2>      : ']

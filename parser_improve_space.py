@@ -10,7 +10,7 @@ def get_number_of_states(file):
     """
     Obtain the total number of states_selected in ras
     :param: file_ms_notnull
-    :return: nstates
+    :return: selected_states
     """
     with open(file, encoding="utf8") as f:
         data = f.readlines()
@@ -31,7 +31,7 @@ def get_symmetry_states(file, totalstates):
     """
     Create two lists: first with the symmetry of each state (A1,A2,A3...) and second with
     the order of these symmetries (1A1,2A2,3A3...)
-    :param: file_ras, nstates
+    :param: file_ras, selected_states
     :return: all_state_symmetries, ordered_state_symmetries
     """
     with open(file, encoding="utf8") as f:
@@ -65,7 +65,7 @@ def get_selected_states(file, totalstates, symmetry_selection):
     """
     Select the states_selected used depending on "states_option" value:
     0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-    :param: file_ms_notnull, nstates, selected_states, states_option, symmetry_selection
+    :param: file_ms_notnull, selected_states, selected_states, states_option, symmetry_selection
     :return: selected_states
     """
     states_option = 1
@@ -102,7 +102,7 @@ def get_selected_states(file, totalstates, symmetry_selection):
 def get_eigenenergies(file, totalstates, selected_states):
     """
     Get energies of the RAS-CI states_selected.
-    :param: file_ms_notnull, nstates, selected_states
+    :param: file_ms_notnull, selected_states, selected_states
     :return: eigenenergies, excitation_energies
     """
     word_search = ' RAS-CI total energy for state  '
@@ -138,7 +138,7 @@ def get_eigenenergies(file, totalstates, selected_states):
 def get_hole_part_contributions(file, totalstates):
     """
     Take the hole and particle contributions of each state.
-    :param: file_ms_notnull, nstates
+    :param: file_ms_notnull, selected_states
     :return: hole_contributions, part_contributions
     """
     with open(file, encoding="utf-8") as file:
@@ -172,7 +172,7 @@ def get_hole_part_contributions(file, totalstates):
 def get_mulliken_spin(file, totalstates, states):
     """
     Get Mulliken charge and spin of the first atom, i.e. a metal in transition atom complexes.
-    :param: file_ms_notnull, nstates, states_selected
+    :param: file_ms_notnull, selected_states, states_selected
     :return: charge_mulliken, spin_mulliken
     """
     word_search = '    Mulliken population analysis '
@@ -211,7 +211,7 @@ def get_mulliken_spin(file, totalstates, states):
 def get_socc_values(file, totalstates):
     """
     Get spin-orbit coupling constant between states_selected
-    :param: file_ms_notnull, nstates
+    :param: file_ms_notnull, selected_states
     :return: socc
     """
     with open(file, encoding="utf-8") as file:
@@ -238,7 +238,7 @@ def get_socc_values(file, totalstates):
 def get_ground_state_orbital_momentum(file, totalstates):
     """
     Obtaining the orbital angular momentum between the ground state and all excited states_selected.
-    :param: file_ms_notnull, nstates
+    :param: file_ms_notnull, selected_states
     :return: orbital_momentum
     """
     with open(file, encoding="utf8") as f:
