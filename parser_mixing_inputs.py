@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
-    get_spin_orbit_couplings, from_energies_soc_to_g_values, get_spin_matrices, get_orbital_matrices, hermitian_test
-
+    get_spin_orbit_couplings, from_energies_soc_to_g_values, get_spin_matrices, get_orbital_matrices, hermitian_test, \
+    get_hamiltonian_construction, diagonalization, angular_matrixes_obtention, g_factor_calculation, print_g_calculation
 
 def mapping_between_states(file_msnull, file_msnotnull, states_ras, states_option, states_sym):
     """
@@ -54,12 +54,12 @@ def mapping_between_states(file_msnull, file_msnotnull, states_ras, states_optio
             mapping_dict = {'state ms not null': i, 'state ms null': j}
             mapping_list = check_mapping(ener_ms_notnull, ener_ms_null, mapping_dict, mapping_list)
 
-    print('Mapping: state Ms not 0 - Ms 0')
-    for mapping_dict in mapping_list:
-        a = mapping_dict['state ms not null']
-        b = mapping_dict['state ms null']
-        print(states_msnotnull[a], ' - ', states_msnotnull[b])
-    print('---')
+    # print('Mapping: state Ms not 0 - Ms 0')
+    # for mapping_dict in mapping_list:
+    #     a = mapping_dict['state ms not null']
+    #     b = mapping_dict['state ms null']
+    #     print(states_msnotnull[a], ' - ', states_msnotnull[b])
+    # print('---')
     # exit()
     return mapping_dict, mapping_list
 
@@ -292,6 +292,50 @@ def angular_momentums_mix(msnull_ang, msnotnull_ang, mapping_list, sz_list, tota
     # print('---')
     return total_ang
 
+
+def gfactor_presentation(file_msnull, file_ms_notnull, states_ras, states_option, states_sym, ppms):
+    """
+
+    :return:
+    """
+    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option,
+                                                        states_sym)
+
+    totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1, \
+    spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = get_input_values(file_msnull, states_ras, states_option,
+                                                                               states_sym, soc_options=0)
+
+    totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2, \
+    spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = get_input_values(file_ms_notnull, states_ras,
+                                                                               states_option,
+                                                                               states_sym, soc_options=0)
+
+    totalstates = totalstates_mix(states_ras_1, states_ras_1, list_mapping)
+
+    eigenenergy = eigenenergy_mix(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
+
+    socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list_1, totalstates)
+
+    hamiltonian = get_hamiltonian_construction(states_ras, eigenenergy, socs, sz_list_1)
+    # print('Hamiltonian:')
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+    #                  for row in np.round((hamiltonian[:, :] * 219474.63068), 5)]))  # * 219474.63068
+    # print('---')
+
+    eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
+
+    spin_matrix = angular_momentums_mix(spin_matrix_1, spin_matrix_2, list_mapping, sz_list_1, totalstates)
+
+    orbital_matrix = angular_momentums_mix(orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list_1, totalstates)
+
+    combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list_1)
+
+    combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list_1)
+
+    g_shift = g_factor_calculation(standard_spin_matrix_1, combination_spin_matrix, combination_orbital_matrix,
+                                   sz_list_1, sz_ground_1)
+
+    print_g_calculation(file_msnull, totalstates_1, states_option, states_ras_1, g_shift, ppms, states_sym)
 
 def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):
     fig, ax = plt.subplots()
