@@ -1,7 +1,10 @@
 #####################################
 #          MODULES SELECTION
 #####################################
-from parser_mixing_inputs import *
+import numpy as np
+
+from parser_gtensor import get_hamiltonian_construction, diagonalization
+from parser_mixing_inputs import mapping_between_states, get_input_values, totalstates_mix, eigenenergy_mix, socs_mix
 from parser_excitstates import get_excited_states_analysis
 
 #####################################
@@ -44,6 +47,13 @@ totalstates = totalstates_mix(states_ras_1, states_ras_1, list_mapping)
 eigenenergy = eigenenergy_mix(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
 
 socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list_1, totalstates)
+
+hamiltonian = get_hamiltonian_construction(states_ras, eigenenergy, socs, sz_list_1)
+print('Hamiltonian:')
+print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                 for row in np.round((hamiltonian[:, :] * 219474.63068), 5)]))  # * 219474.63068
+
+eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
 exit()
 
