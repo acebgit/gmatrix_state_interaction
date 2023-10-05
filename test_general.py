@@ -64,10 +64,10 @@ if gfactor_excited_states == 1:
 #         totalstates = get_number_of_states(qchem_file)
 #         states_ras = get_selected_states(qchem_file, totalstates, states_ras, selected_states, symmetry_selection)
 #         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(qchem_file, totalstates, states_ras)
-#         selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(qchem_file, totalstates, states_ras, soc_options)
+#         selected_socs, list_sz, sz_ground = get_spin_orbit_couplings(qchem_file, totalstates, states_ras, soc_options)
 #         g_shift = from_energies_soc_to_g_values(qchem_file, states_ras,
 #                                                 totalstates, excitation_energies_ras,
-#                                                 selected_socs, sz_list, sz_ground)
+#                                                 selected_socs, list_sz, sz_ground)
 #
 #         qchem_file = qchem_file.replace('.out', '')
 #         g_list.append([qchem_file, np.round(g_shift.real[0]*1000, 3),

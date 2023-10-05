@@ -93,8 +93,8 @@ def totalstates_mix(states_1, states_2, list_mapping):
         :return: totalstates
         """
         totalstates = len(states_1) + len(states_2) - len(list_mapping)
-        print('totalstates: ', totalstates)
-        print('---')
+        # print('totalstates: ', totalstates)
+        # print('---')
         return totalstates
 
 
@@ -116,16 +116,69 @@ def eigenenergy_mix(eigenenergies_1, eigenenergies_2, mapping_list):
                     elements.append(eigenenergies_2[state])
 
         eigenenergies = np.array(elements)
-        print('Eigenenergies: ', eigenenergies)
-        print('---')
+        # print('Eigenenergies: ', eigenenergies)
+        # print('---')
         return eigenenergies
+
+
+def get_no_mapped_states(list_mapping, nstate):
+    """
+    Obtain a list of not mapped states
+    :return: not_mapped_states
+    """
+    mapped_states = []
+    for mapping_dict in list_mapping:
+        mapped_states.append(mapping_dict['state ms not null'])
+
+    not_mapped_states = []
+    for state in range(0, nstate):
+        if state not in mapped_states:
+            not_mapped_states.append(state)
+    return not_mapped_states
+
+
+def include_msnotnull_states(nstate, not_mapped_states, soc_msnotnull, total_socs, list_sz):
+    """
+    SOCs between states Ms ≠ 0 that have not been included in total SOC matrix are now included
+    :return:
+    """
+    for state_i in range(0, nstate):
+        for state_j in range(0, nstate):
+
+            if (state_i in not_mapped_states) or (state_j in not_mapped_states):
+                state_i_total = nstate
+                state_j_total = nstate
+
+                if (state_i in not_mapped_states) and (state_j not in not_mapped_states):
+                    state_i_total += not_mapped_states.index(state_i)
+                    state_j_total = state_j
+                elif (state_i not in not_mapped_states) and (state_j in not_mapped_states):
+                    state_i_total = state_i
+                    state_j_total += not_mapped_states.index(state_j)
+                elif (state_i in not_mapped_states) and (state_j in not_mapped_states):
+                    state_i_total += not_mapped_states.index(state_i)
+                    state_j_total += not_mapped_states.index(state_j)
+
+                # print('States:', state_i, state_j, ', states total: ', state_i_total, state_j_total)
+
+                for sz_1 in range(0, len(list_sz)):
+                    for sz_2 in range(0, len(list_sz)):
+                        soc_row = state_i * len(list_sz) + sz_1
+                        soc_col = state_j * len(list_sz) + sz_2
+
+                        soc_row_final = state_i_total * len(list_sz) + sz_1
+                        soc_col_final = state_j_total * len(list_sz) + sz_2
+                        # print(soc_row, soc_col, '-->', soc_row_final, soc_col_final)
+
+                        total_socs[soc_row_final, soc_col_final] = soc_msnotnull[soc_row, soc_col]
+    return total_socs
 
 
 def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
         """
-        Give the SOCS of the states in socs_msnull and soc_msnotnull without those states that are
+        Give the SOCS of the states in msnull_ang and soc_msnotnull without those states that are
         repeat in both lists (meaning those that are in the mapping list)
-        :param: socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates
+        :param: msnull_ang, msnotnull_ang, mapping_list, list_sz, totalstates
         :return: total_soc
         """
         def exchanging_socs(total_soc, soc_msnotnull, list_mapping, list_sz):
@@ -160,57 +213,6 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
             # print()
             return total_soc
 
-        def get_no_mapped_states(list_mapping, nstate):
-            """
-            Obtain a list of not mapped states
-            :return: not_mapped_states
-            """
-            mapped_states = []
-            for mapping_dict in list_mapping:
-                mapped_states.append(mapping_dict['state ms not null'])
-
-            not_mapped_states = []
-            for state in range(0, nstate):
-                if state not in mapped_states:
-                    not_mapped_states.append(state)
-            return not_mapped_states
-
-        def include_msnotnull_states(nstate, not_mapped_states, soc_msnotnull, total_socs):
-            """
-            SOCs between states Ms ≠ 0 that have not been included in total SOC matrix are now included
-            :return:
-            """
-            for state_i in range(0, nstate):
-                for state_j in range(0, nstate):
-
-                    if (state_i in not_mapped_states) or (state_j in not_mapped_states):
-                        state_i_total = nstate
-                        state_j_total = nstate
-
-                        if (state_i in not_mapped_states) and (state_j not in not_mapped_states):
-                            state_i_total += not_mapped_states.index(state_i)
-                            state_j_total = state_j
-                        elif (state_i not in not_mapped_states) and (state_j in not_mapped_states):
-                            state_i_total = state_i
-                            state_j_total += not_mapped_states.index(state_j)
-                        elif (state_i in not_mapped_states) and (state_j in not_mapped_states):
-                            state_i_total += not_mapped_states.index(state_i)
-                            state_j_total += not_mapped_states.index(state_j)
-
-                        # print('States:', state_i, state_j, ', states total: ', state_i_total, state_j_total)
-
-                        for sz_1 in range(0, len(sz_list)):
-                            for sz_2 in range(0, len(sz_list)):
-                                soc_row = state_i * len(sz_list) + sz_1
-                                soc_col = state_j * len(sz_list) + sz_2
-
-                                soc_row_final = state_i_total * len(sz_list) + sz_1
-                                soc_col_final = state_j_total * len(sz_list) + sz_2
-                                # print(soc_row, soc_col, '-->', soc_row_final, soc_col_final)
-
-                                total_socs[soc_row_final, soc_col_final] = soc_msnotnull[soc_row, soc_col]
-            return total_socs
-
         # 1) First block of SOC total matrix is the SOCs of Ms = 0
         total_soc = np.zeros((totalstates * len(sz_list), totalstates * len(sz_list)), dtype=complex)
         for i in range(0, len(socs_msnull)):
@@ -226,15 +228,15 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
         not_mapped_states_msnotnull = get_no_mapped_states(mapping_list, nstates)
 
         # 4) Those SOCs between states Ms ≠ 0 that have not been included in total SOC matrix are now included
-        total_soc = include_msnotnull_states(nstates, not_mapped_states_msnotnull, socs_msnotnull, total_soc)
+        total_soc = include_msnotnull_states(nstates, not_mapped_states_msnotnull, socs_msnotnull, total_soc, sz_list)
 
-        # print('socs_msnull:')
+        # print('msnull_ang:')
         # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-        #                 for row in np.round((socs_msnull[:,:]* 219474.63068),5)])) # * 219474.63068
+        #                 for row in np.round((msnull_ang[:,:]* 219474.63068),5)])) # * 219474.63068
         # print('---')
-        # print('socs_msnotnull:')
+        # print('msnotnull_ang:')
         # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-        #                 for row in np.round((socs_msnotnull[:,:]* 219474.63068),5)])) # * 219474.63068
+        #                 for row in np.round((msnotnull_ang[:,:]* 219474.63068),5)])) # * 219474.63068
         # print('---')
         # print('Total SOC:')
         # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
@@ -243,51 +245,52 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
         return total_soc
 
 
-def angular_momentums_mix(angular_matrix_1, angular_matrix_2, sz_list, totalstates):
+def angular_momentums_mix(msnull_ang, msnotnull_ang, mapping_list, sz_list, totalstates):
     """
-
-    :param angular_matrix_1:
-    :param angular_matrix_2:
-    :param sz_list:
-    :param totalstates:
+    Give the angular momentum of the states in msnull_ang and soc_msnotnull without those states that are
+    repeat in both lists (meaning those that are in the mapping list)
+    :param:
     :return:
     """
+    # 1) First block of momentum total matrix is the angular moment of Ms = 0
+    total_ang = np.zeros((totalstates * len(sz_list), totalstates * len(sz_list), 3), dtype=complex)
+    for k in range(0, 3):
+        for i in range(0, len(msnull_ang)):
+            for j in range(0, len(msnull_ang)):
+                total_ang[i, j, k] = msnull_ang[i, j, k]
 
+    # 2) Obtain list of not mapped states
+    nstates = int(len(msnotnull_ang) / len(sz_list))
+    not_mapped_states_msnotnull = get_no_mapped_states(mapping_list, nstates)
 
-def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, states_option):
-    """
-    Returns the g-shifts for doublet ground state molecules.
-    :param: file_ms_notnull, selected_states, selected_states, symmetry_selection, soc_options
-    :return: g-shifts
-    """
-    totalstates_ms_notnull, energies_ms_notnull, selected_socs_ms_notnull, sz_list_ms_notnull, sz_ground_ms_notnull \
-        = get_energies_socs(file_ms_notnull, states_ras, states_option)
+    # 3) Those momentums between states Ms ≠ 0 that have not been included in total momentum matrix are now included
+    for k in range(0, 3):
+        total_ang[:,:,k] = include_msnotnull_states(nstates, not_mapped_states_msnotnull, msnotnull_ang[:,:,k],
+                                                    total_ang[:,:,k], sz_list)
+        hermitian_test(total_ang[:,:,k], sz_list)
 
-    totalstates_ms_null, energies_ms_null, selected_socs_ms_null, sz_list_ms_null, sz_ground_ms_null \
-        = get_energies_socs(file_ms_null, states_ras, states_option)
-
-    mapping_dict, mapping_list = mapping_between_states(energies_ms_notnull, energies_ms_null)
-
-    selected_socs_ms_null = exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_null, sz_list_ms_notnull)
-
-    return energies_ms_null, selected_socs_ms_null, sz_list_ms_null, sz_ground_ms_null, totalstates_ms_null
-    #
-    # hamiltonian_ras = get_hamiltonian_construction(states_ras, energies_ms_null, socs_msnotnull, sz_list_ms_null)
-    #
-    # eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
-    #
-    # spin_matrix, standard_spin_matrix = get_spin_matrices(file_ms_notnull, states_ras)
-    #
-    # orbital_matrix = get_orbital_matrices(file_ms_notnull, totalstates_ms_null, states_ras, sz_list_ms_null)
-    #
-    # combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list_ms_null)
-    #
-    # combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list_ms_null)
-    #
-    # g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
-    #                                sz_list_ms_null, sz_ground_ms_null)
-    #
-    # print_g_calculation(file_ms_notnull, totalstates_ms_null, states_ras, states_ras, g_shift * 1000, symmetry_selection=0)
+    # print('msnull_ang:')
+    # for k in range(1, 2):
+    #     print('Dimension: ', k)
+    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+    #                      for row in np.round((msnull_ang[:, :, k]), 5)]))
+    #     print(" ")
+    # print('---')
+    # print('msnotnull_ang:')
+    # for k in range(1, 2):
+    #     print('Dimension: ', k)
+    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+    #                      for row in np.round((msnotnull_ang[:, :, k]), 5)]))
+    #     print(" ")
+    # print('---')
+    # print('total_ang:')
+    # for k in range(1, 2):
+    #     print('Dimension: ', k)
+    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+    #                      for row in np.round((total_ang[:, :, k]), 5)]))
+    #     print(" ")
+    # print('---')
+    return total_ang
 
 
 def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):
@@ -405,7 +408,7 @@ def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state
         states_ras = nstates[0:i]
         # eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
         # soc_options = 0
-        # selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
+        # selected_socs, list_sz, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
         excitation_energies_ras, selected_socs, sz_list, ground_sz, totalstates \
             = gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, selected_state)
 

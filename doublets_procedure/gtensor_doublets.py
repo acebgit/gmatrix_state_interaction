@@ -136,7 +136,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     Spin-orbit coupling values are written in matrix with 'bra' in rows
     and 'ket' in columns, with spin order -Ms , +Ms.
     :param: file_ms_notnull, selected_states, selected_states, soc_option
-    :return: doublet_soc, sz_list
+    :return: doublet_soc, list_sz
     """
     with open(file, encoding="utf8") as f:
         output = f.read()
@@ -180,7 +180,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         Get SOC matrix. For all the states_selected it put values from maximum Sz to -Sz.
         If Sz does not exist (i.e., we consider Sz=-1.5 and Sz of the state is 0.5),
         then the SOC value is 0.
-        :param: data, state_multiplicities, sz_list
+        :param: data, state_multiplicities, list_sz
         :return: soc_matrix
         """
         all_soc = np.zeros((n_states * len(all_sz), n_states * len(all_sz)), dtype=complex)
@@ -215,7 +215,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         Get SOC matrix between selected states_selected. For all the states_selected it put values
         from maximum Sz to -Sz. If Sz does not exist (i.e., we consider Sz=-1.5 and
         Sz of the state is 0.5), then the SOC value is 0.
-        :param: selected_states, sz_list, all_soc
+        :param: selected_states, list_sz, all_soc
         :return: soc_matrix
         """
         selected_soc = np.zeros((len(n_states) * len(all_sz), len(n_states) * len(all_sz)), dtype=complex)
@@ -243,7 +243,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         """
         Get SOC matrix between selected states_selected in doublets,
         meaning Sz = -0.5, 0.5.
-        :param: selected_states, sz_list, all_soc
+        :param: selected_states, list_sz, all_soc
         :return: soc_matrix
         """
         doublets_soc = np.zeros((len(n_states) * 2, len(n_states) * 2), dtype=complex)
@@ -541,7 +541,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
     with spin order -Ms , +Ms. Third dimension is the direction.
-    :param: file_ms_notnull, selected_states, selected_states, sz_list
+    :param: file_ms_notnull, selected_states, selected_states, list_sz
     :return: orbital_matrix
     """
     def get_all_momentum(line, n_states):
@@ -755,7 +755,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                   excitation_energies_ras, soc_ras, sz_list, ground_sz):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param:file_ms_notnull, states_ras, selected_states, excitation_energies_ras, soc_ras, sz_list, ground_sz
+    :param:file_ms_notnull, states_ras, selected_states, excitation_energies_ras, soc_ras, list_sz, ground_sz
     :return: g_shift
     """
     hamiltonian_ras = hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)

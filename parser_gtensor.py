@@ -142,7 +142,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     Spin-orbit coupling values are written in matrix with 'bra' in rows
     and 'ket' in columns, with spin order -Ms , +Ms from first to last selected states selected.
     :param: file_ms_notnull, selected_states, selected_states, soc_option
-    :return: doublet_soc, sz_list
+    :return: doublet_soc, list_sz
     """
     def get_states_sz(qchem_file, states_selected):
         """
@@ -191,12 +191,12 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         Get SOC matrix. For all the states selected it put values from maximum Sz to -Sz.
         If Sz does not exist (i.e., we consider Sz=-1.5 and Sz of the state is 0.5),
         then the SOC value is 0.
-        :param: data, all_multip, sz_list
+        :param: data, all_multip, list_sz
         :return: soc_matrix
         """
         all_soc = np.zeros((n_states * len(all_sz), n_states * len(all_sz)), dtype=complex)
         # print('Multip:', all_multip)
-        # print('Sz:', sz_list)
+        # print('Sz:', list_sz)
         # print(len(soc_matrix[0,:]), len(soc_matrix[:,0]))
         # exit()
 
@@ -233,7 +233,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         # print('---------------')
         # state_A = 10
         # state_B = 8
-        # for i in range(0, len(sz_list)):
+        # for i in range(0, len(list_sz)):
         #     element_A = (state_A-1)*3+i
         #     element_B = (state_B-1)*3
         #     print(soc_matrix[element_A, element_B], soc_matrix[element_A, element_B+1], \
@@ -247,7 +247,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         Get SOC matrix between selected states selected. For all the states selected it put values
         from maximum Sz to -Sz. If Sz does not exist (i.e., we consider Sz=-1.5 and
         Sz of the state is 0.5), then the SOC value is 0.
-        :param: selected_states, sz_list, all_soc
+        :param: selected_states, list_sz, all_soc
         :return: soc_matrix
         """
         selected_soc = np.zeros((len(n_states) * len(all_sz), len(n_states) * len(all_sz)), dtype=complex)
@@ -579,7 +579,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
     with spin order -Ms , +Ms. Third dimension is the direction.
-    :param: file_ms_notnull, selected_states, selected_states, sz_list
+    :param: file_ms_notnull, selected_states, selected_states, list_sz
     :return: orbital_matrix
     """
     def get_all_momentum(line, n_states):
@@ -688,8 +688,8 @@ def angular_matrixes_obtention(eigenvectors, input_angular_matrix, sz_list):
 def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz):
     """
     Calculation of the g-shift with orbital and spin angular momentum matrices. J-values
-    are reorganized using sz_list and ground_sz.
-    :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
+    are reorganized using list_sz and ground_sz.
+    :param: standard_spin_matrix, s_matrix, l_matrix, list_sz, ground_sz
     :return: g_shifts
     """
     lande_factor = 2.002319304363
@@ -732,7 +732,7 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
 
         # Obtain the difference between the maximum sz, that determines J dimensions, and the ground
         # state sz to set the positions of j-values in the diagonal
-        # sz_max = max(sz_list)
+        # sz_max = max(list_sz)
         # if sz_max - ground_sz != 0:
         #     s_difference = int(sz_max - ground_sz)
         #
@@ -831,7 +831,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                   excitation_energies_ras, soc_ras, sz_list, ground_sz):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param:file_ms_notnull, states_ras, selected_states, excitation_energies_ras, soc_ras, sz_list, ground_sz
+    :param:file_ms_notnull, states_ras, selected_states, excitation_energies_ras, soc_ras, list_sz, ground_sz
     :return: g_shift
     """
     hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)
@@ -949,7 +949,7 @@ def from_ppt_to_ppm(ppm, gvalues):
 #         """
 #         Having the selected states selected, get the energy and SOCs between them
 #         :param: file, selected_states, states_option
-#         :return: totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
+#         :return: totalstates, eigenenergies_ras, selected_socs, list_sz, sz_ground
 #         """
 #         totalstates = get_number_of_states(file)
 #
@@ -957,8 +957,8 @@ def from_ppt_to_ppm(ppm, gvalues):
 #         selected_states = get_selected_states(file, totalstates, selected_states, states_option, symmetry_selections)
 #
 #         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, selected_states)
-#         selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(file, totalstates, selected_states, soc_option=0)
-#         return totalstates, eigenenergies_ras, selected_socs, sz_list, sz_ground
+#         selected_socs, list_sz, sz_ground = get_spin_orbit_couplings(file, totalstates, selected_states, soc_option=0)
+#         return totalstates, eigenenergies_ras, selected_socs, list_sz, sz_ground
 #
 #     def mapping_between_states(ms_notnull_energies, ms_null_energies):
 #         """
@@ -984,7 +984,7 @@ def from_ppt_to_ppm(ppm, gvalues):
 #         # exit()
 #         return mapping_dict, mapping_list
 #
-#     def exchange_coupling(mapping_list, socs_msnull, socs_msnotnull, sz_list):
+#     def exchange_coupling(mapping_list, msnull_ang, msnotnull_ang, list_sz):
 #         """
 #         Put SOCs between states selected with Ms different than 0 (that are obtained in the output) in the
 #         SOC matrix of states selected with Ms 0 (that are not obtained since Clebsh-Gordan coefficient is too small)
@@ -1004,36 +1004,36 @@ def from_ppt_to_ppm(ppm, gvalues):
 #                     #       'State Ms null', states_ras[i_state_ms_null], '(', i_state_ms_null, ')',
 #                     #       states_ras[j_state_ms_null], '(', j_state_ms_null, ')',)
 #
-#                     for sz_1 in range(0, len(sz_list)):
-#                         for sz_2 in range(0, len(sz_list)):
-#                             i_msnotnull = i_state_ms_notnull * len(sz_list) + sz_1
-#                             j_msnotnull = j_state_ms_notnull * len(sz_list) + sz_2
+#                     for sz_1 in range(0, len(list_sz)):
+#                         for sz_2 in range(0, len(list_sz)):
+#                             i_msnotnull = i_state_ms_notnull * len(list_sz) + sz_1
+#                             j_msnotnull = j_state_ms_notnull * len(list_sz) + sz_2
 #
-#                             i_msnull = i_state_ms_null * len(sz_list) + sz_1
-#                             j_msnull = j_state_ms_null * len(sz_list) + sz_2
+#                             i_msnull = i_state_ms_null * len(list_sz) + sz_1
+#                             j_msnull = j_state_ms_null * len(list_sz) + sz_2
 #
-#                             # print(socs_msnotnull[i_msnull, j_msnull], '<--->', socs_msnull[i_msnotnull, j_msnotnull])
-#                             socs_msnotnull[i_msnull, j_msnull] = socs_msnull[i_msnotnull, j_msnotnull]
+#                             # print(msnotnull_ang[i_msnull, j_msnull], '<--->', msnull_ang[i_msnotnull, j_msnotnull])
+#                             msnotnull_ang[i_msnull, j_msnull] = msnull_ang[i_msnotnull, j_msnotnull]
 #                     # print('--END LOOP--')
 #         # print('SOC:')
 #         # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-#         #                 for row in np.round((socs_msnotnull[:,:]),5)])) # * 219474.63068
+#         #                 for row in np.round((msnotnull_ang[:,:]),5)])) # * 219474.63068
 #         # exit()
-#         return socs_msnotnull
+#         return msnotnull_ang
 #
 #     # print('File ms not null: ', file_ms_notnull)
 #     # print('File ms null: ', file_ms_null)
 #     # print('States: ', states_ras)
 #
-#     totalstates_ms_notnull, energies_ms_notnull, socs_msnull, sz_list_ms_notnull, sz_ground_ms_notnull = get_energies_socs(file_ms_notnull, states_ras, states_option)
+#     totalstates_ms_notnull, energies_ms_notnull, msnull_ang, sz_list_ms_notnull, sz_ground_ms_notnull = get_energies_socs(file_ms_notnull, states_ras, states_option)
 #
-#     totalstates_ms_null, energies_ms_null, socs_msnotnull, sz_list_ms_null, sz_ground_ms_null = get_energies_socs(file_ms_null, states_ras, states_option)
+#     totalstates_ms_null, energies_ms_null, msnotnull_ang, sz_list_ms_null, sz_ground_ms_null = get_energies_socs(file_ms_null, states_ras, states_option)
 #
 #     mapping_dict, mapping_list = mapping_between_states(energies_ms_notnull, energies_ms_null)
 #
-#     socs_msnotnull = exchange_coupling(mapping_list, socs_msnull, socs_msnotnull, sz_list_ms_notnull)
+#     msnotnull_ang = exchange_coupling(mapping_list, msnull_ang, msnotnull_ang, sz_list_ms_notnull)
 #
-#     hamiltonian_ras = get_hamiltonian_construction(states_ras, energies_ms_null, socs_msnotnull, sz_list_ms_null)
+#     hamiltonian_ras = get_hamiltonian_construction(states_ras, energies_ms_null, msnotnull_ang, sz_list_ms_null)
 #
 #     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
 #
