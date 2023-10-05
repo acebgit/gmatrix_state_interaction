@@ -77,13 +77,13 @@ def get_input_values(ras_input, states_ras, selected_states, symmetry_selection,
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
     selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
-    #
-    # spin_matrix, standard_spin_matrix = get_spin_matrices(ras_input, states_ras)
-    #
-    # orbital_matrix = get_orbital_matrices(ras_input, totalstates, states_ras, sz_list)
 
-    return totalstates, states_ras, eigenenergies_ras, selected_socs, sz_list, sz_ground  #, , spin_matrix, \
-           # standard_spin_matrix, orbital_matrix
+    spin_matrix, standard_spin_matrix = get_spin_matrices(ras_input, states_ras)
+
+    orbital_matrix = get_orbital_matrices(ras_input, totalstates, states_ras, sz_list)
+
+    return totalstates, states_ras, eigenenergies_ras, selected_socs, sz_list, sz_ground, spin_matrix, \
+           standard_spin_matrix, orbital_matrix
 
 
 def totalstates_mix(states_1, states_2, list_mapping):
@@ -241,6 +241,17 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
         #                 for row in np.round((total_soc[:,:]* 219474.63068),5)])) # * 219474.63068
         # exit()
         return total_soc
+
+
+def angular_momentums_mix(angular_matrix_1, angular_matrix_2, sz_list, totalstates):
+    """
+
+    :param angular_matrix_1:
+    :param angular_matrix_2:
+    :param sz_list:
+    :param totalstates:
+    :return:
+    """
 
 
 def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, states_option):

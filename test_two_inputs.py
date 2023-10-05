@@ -4,7 +4,8 @@
 import numpy as np
 
 from parser_gtensor import get_hamiltonian_construction, diagonalization
-from parser_mixing_inputs import mapping_between_states, get_input_values, totalstates_mix, eigenenergy_mix, socs_mix
+from parser_mixing_inputs import mapping_between_states, get_input_values, totalstates_mix, eigenenergy_mix, socs_mix, \
+    angular_momentums_mix
 from parser_excitstates import get_excited_states_analysis
 
 #####################################
@@ -28,18 +29,12 @@ states_sym = 'A1'
 #####################################
 dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option, states_sym)
 
-# totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1, \
-# spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = get_input_values(file_ms_1, states_ras, states_option,
-#                                                                      states_sym, soc_options=0)
-#
-# totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2, \
-# spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = get_input_values(file_ms_2, states_ras, states_option,
-#                                                                      states_sym, soc_options=0)
-
-totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1 = get_input_values(file_msnull, states_ras, states_option,
+totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1, \
+spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = get_input_values(file_msnull, states_ras, states_option,
                                                                                                              states_sym, soc_options=0)
 
-totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2 = get_input_values(file_ms_notnull, states_ras, states_option,
+totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2, \
+spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2= get_input_values(file_ms_notnull, states_ras, states_option,
                                                                                                              states_sym, soc_options=0)
 
 totalstates = totalstates_mix(states_ras_1, states_ras_1, list_mapping)
@@ -52,8 +47,11 @@ hamiltonian = get_hamiltonian_construction(states_ras, eigenenergy, socs, sz_lis
 print('Hamiltonian:')
 print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
                  for row in np.round((hamiltonian[:, :] * 219474.63068), 5)]))  # * 219474.63068
+print('---')
 
 eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
+
+spin_matrix = angular_momentums_mix(spin_matrix_1, spin_matrix_2, sz_list_1, totalstates)
 
 exit()
 
