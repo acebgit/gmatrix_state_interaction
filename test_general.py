@@ -45,7 +45,6 @@ if sos_analysis == 1:
 if gfactor_excited_states == 1:
     gfactor_all_states(ras_input, states_ras, ppm)
 
-
 ###########################################
 #      ACTING IN SEVERAL MOLECULES
 ###########################################
