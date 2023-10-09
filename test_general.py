@@ -11,7 +11,7 @@ from parser_plots import *
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/o2_11_9_triplets.out'
+triplets_molecules/nh_8_7_triplets.out'
 
 g_calculation = 0
 excited_states_analysis = 0

@@ -9,15 +9,15 @@ from parser_mixing_inputs import gfactor_presentation_mixinputs, sos_analysis_an
 gfactor_two_inputs = 0
 excited_states_analysis = 0
 sos_analysis = 1
-ppm = 1
+ppm = 0
 
 file_msnull = '\
-triplets_molecules/o2_11_9_allmultip.out'
+triplets_molecules/nh_8_7_allmultip.out'
 file_ms_notnull = '\
-triplets_molecules/o2_11_9_triplets.out'
+triplets_molecules/nh_8_7_triplets.out'
 
-states_option = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # States to be included when "selected_states = 0"
+states_option = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+states_ras = [2 ,1, 3, 4, 5, 6, 7, 8, 9, 10,11,12, 13,14,15,16,17,18,19,20]  # States to be included when "selected_states = 0"
 states_sym = 'A1'
 
 #####################################
