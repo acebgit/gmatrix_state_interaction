@@ -5,8 +5,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
-    get_spin_orbit_couplings, from_energies_soc_to_g_values, get_spin_matrices, get_orbital_matrices, hermitian_test, \
-    get_hamiltonian_construction, diagonalization, angular_matrixes_obtention, g_factor_calculation, print_g_calculation
+    get_spin_orbit_couplings, get_spin_matrices, get_orbital_matrices, hermitian_test, \
+    get_hamiltonian_construction, diagonalization, angular_matrixes_obtention, g_factor_calculation, print_g_calculation, \
+    from_ppt_to_ppm
+from parser_excitstates import s2_from_file, get_hole_part_contributions, get_groundst_socc_values, \
+    get_groundst_orbital_momentum, get_bar_chart
 
 def mapping_between_states(file_msnull, file_msnotnull, states_ras, states_option, states_sym):
     """
@@ -98,27 +101,25 @@ def totalstates_mix(states_1, states_2, list_mapping):
         return totalstates
 
 
-def eigenenergy_mix(eigenenergies_1, eigenenergies_2, mapping_list):
+def mixing_lists(list_1, list_2, mapping_list):
         """
-        Give the energies of the states in eigenenergies_1 and eigenenergies_2 without those states that are
+        Give the energies of the states in list_1 and list_2 without those states that are
         repeat in both lists (meaning those that are in the mapping list)
-        :param: eigenenergies_1, eigenenergies_2, mapping_list
-        :return: eigenenergies
+        :param: list_1, list_2, mapping_list
+        :return: final_list
         """
-        elements = list(eigenenergies_1)
+        elements = list(list_1)
 
         repeat_states = []
-        for mapping_dict in mapping_list:  # States that are in eigenenergies_1 and eigenenergies_2
-            repeat_states.append(mapping_dict['state ms null'])
+        for mapping_dict in mapping_list:  # States that are in list_1 and list_2
+            repeat_states.append(mapping_dict['state ms not null'])
 
-        for state in range(0, len(eigenenergies_2)):  # States that are in eigenenergies_2
+        for state in range(0, len(list_2)):  # States that are in list_2
                 if state not in repeat_states:
-                    elements.append(eigenenergies_2[state])
+                    elements.append(list_2[state])
 
-        eigenenergies = np.array(elements)
-        # print('Eigenenergies: ', eigenenergies)
-        # print('---')
-        return eigenenergies
+        final_list = np.array(elements)
+        return final_list
 
 
 def get_no_mapped_states(list_mapping, nstate):
@@ -293,26 +294,24 @@ def angular_momentums_mix(msnull_ang, msnotnull_ang, mapping_list, sz_list, tota
     return total_ang
 
 
-def gfactor_presentation(file_msnull, file_ms_notnull, states_ras, states_option, states_sym, ppms):
+def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, states_ras, states_option, states_sym, ppms):
     """
-
-    :return:
+    From both files with Ms = 0 and Ms ≠0 state, obtain the presentation list with the g-values obtained.
     """
     dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option,
                                                         states_sym)
 
     totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1, \
-    spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = get_input_values(file_msnull, states_ras, states_option,
-                                                                               states_sym, soc_options=0)
+    spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = \
+        get_input_values(file_msnull, states_ras, states_option, states_sym, soc_options=0)
 
     totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2, \
-    spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = get_input_values(file_ms_notnull, states_ras,
-                                                                               states_option,
-                                                                               states_sym, soc_options=0)
+    spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = \
+        get_input_values(file_ms_notnull, states_ras, states_option, states_sym, soc_options=0)
 
     totalstates = totalstates_mix(states_ras_1, states_ras_1, list_mapping)
 
-    eigenenergy = eigenenergy_mix(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
+    eigenenergy = mixing_lists(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
 
     socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list_1, totalstates)
 
@@ -335,7 +334,159 @@ def gfactor_presentation(file_msnull, file_ms_notnull, states_ras, states_option
     g_shift = g_factor_calculation(standard_spin_matrix_1, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list_1, sz_ground_1)
 
-    print_g_calculation(file_msnull, totalstates_1, states_option, states_ras_1, g_shift, ppms, states_sym)
+    g_shift = from_ppt_to_ppm(ppms, g_shift)
+
+    print_g_calculation(file_msnull, totalstates_1, states_option, states_ras_1, g_shift, states_sym)
+
+
+def get_input_data_excited_states(file, state_selections, states_ras):
+    """
+    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
+    of the 1st configuration that need to have the other configurations to be shown in each state.
+    :param: file_ms_notnull, cutoff
+    :return: excited_states_presentation_matrix
+    """
+    totalstates = get_number_of_states(file)
+
+    states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selection='None')
+
+    state_symmetries_all, ordered_state_symmetries_all = get_symmetry_states(file, totalstates)
+
+    state_symmetries = []
+    ordered_state_symmetries = []
+    for i in states_ras:
+        state_symmetries.append(state_symmetries_all[i-1])
+        ordered_state_symmetries.append(ordered_state_symmetries_all[i-1])
+
+    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
+    excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
+
+    s2_list = s2_from_file(file, states_ras)
+
+    hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates, states_ras)
+
+    socc_values = get_groundst_socc_values(file, totalstates, states_ras)
+
+    orbital_momentum = get_groundst_orbital_momentum(file, totalstates, states_ras)
+
+    return states_ras, totalstates, state_symmetries, eigenenergies_ras, s2_list, hole_contributions, part_contributions, \
+        socc_values, orbital_momentum
+
+
+def excited_states_analysis_mixinputs(file_msnull, file_ms_notnull, states_ras, states_option, states_sym, plots, save_pict):
+    """
+    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
+    of the 1st configuration that need to have the other configurations to be shown in each state.
+    :param: file_ms_notnull, cutoff
+    :return: excited_states_presentation_matrix
+    """
+    # Data obtaining from both inputs
+    states_ras_1, totalstates_1, ordered_state_symmetries_1, eigenenergies_ras_1, s2_list_1, hole_contributions_1, part_contributions_1, \
+        socc_values_1, orbital_momentum_1 =  get_input_data_excited_states(file_msnull, states_option, states_ras)
+
+    states_ras_2, totalstates_2, ordered_state_symmetries_2, eigenenergies_ras_2, s2_list_2, hole_contributions_2, part_contributions_2, \
+        socc_values_2, orbital_momentum_2 =  get_input_data_excited_states(file_ms_notnull, states_option, states_ras)
+
+    # Mapping between states
+    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option,
+                                                        states_sym)
+
+    # Mapping data between states
+    totalstates = totalstates_mix(states_ras_1, states_ras_2, list_mapping)
+
+    ordered_state_symmetries = mixing_lists(ordered_state_symmetries_1, ordered_state_symmetries_2, list_mapping)
+
+    eigenenergy = mixing_lists(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
+    eigenenergy[:] = (eigenenergy[:] - eigenenergy[0]) * 27.211399
+
+    s2_list = mixing_lists(s2_list_1, s2_list_2, list_mapping)
+
+    hole_contributions = mixing_lists(hole_contributions_1, hole_contributions_2, list_mapping)
+
+    part_contributions = mixing_lists(part_contributions_1, part_contributions_2, list_mapping)
+
+    socc_values = mixing_lists(socc_values_1, socc_values_2, list_mapping)
+
+    orbital_momentum = mixing_lists(orbital_momentum_1, orbital_momentum_2, list_mapping)
+
+    file_string = file_msnull
+
+    excited_states_presentation_list = [['State', 'Symmetry', 'Hole', 'Part',
+                                         'Excitation energy(eV)', 'SOCC(cm-1)',
+                                         'Orbital momentum(máx)', 'S^2']]
+
+    for state_index in range(0, totalstates):
+        symmetry = ordered_state_symmetries[state_index]
+
+        hole = np.around(float(hole_contributions[state_index]), 2)
+        part = np.around(float(part_contributions[state_index]), 2)
+
+        excit_energy = np.round(float(eigenenergy[state_index]), 3)
+        soc = np.round(float(socc_values[state_index]), 0)
+
+        orbital_ground_state = np.round(float(orbital_momentum[state_index]), 3)
+        s2 = s2_list[state_index]
+
+        excited_states_presentation_list.append([state_index+1, symmetry, hole, part, excit_energy,
+                                                 soc, orbital_ground_state, s2])
+
+    excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
+
+    print("------------------------")
+    print(" EXCITED STATES ANALYSIS")
+    print("------------------------")
+    print('Most important settings for each state (amplitude_cutoff: 0.3) :')
+    print('\n'.join(''.join('{:^20}'.format(item) for item in row)
+                    for row in excited_states_presentation_matrix[:, :]))
+    print(" ")
+
+    states = list(range(1, totalstates+1))
+    if plots == 1:
+        get_bar_chart(file_string[:-4], states, eigenenergy, 'Electronic State',
+                      'Excitation energy (eV)', 'energ_analysis', save_pict)
+        get_bar_chart(file_string[:-4], states, orbital_momentum, 'Electronic State',
+                      'Orbital angular momentum', 'orbitmoment_analysis', save_pict)
+        get_bar_chart(file_string[:-4], states, socc_values, 'Electronic State',
+                      'SOCC (cm-1)', 'socc_analysis', save_pict)
+
+
+def gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option, states_sym):
+    """
+    From both files with Ms = 0 and Ms ≠0 state, obtain the presentation list with the g-values obtained.
+    """
+    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option,
+                                                        states_sym)
+
+    totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1, \
+    spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = \
+        get_input_values(file_msnull, states_ras, states_option, states_sym, soc_options=0)
+
+    totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2, \
+    spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = \
+        get_input_values(file_ms_notnull, states_ras, states_option, states_sym, soc_options=0)
+
+    totalstates = totalstates_mix(states_ras_1, states_ras_1, list_mapping)
+
+    eigenenergy = mixing_lists(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
+
+    socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list_1, totalstates)
+
+    hamiltonian = get_hamiltonian_construction(states_ras, eigenenergy, socs, sz_list_1)
+
+    eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
+
+    spin_matrix = angular_momentums_mix(spin_matrix_1, spin_matrix_2, list_mapping, sz_list_1, totalstates)
+
+    orbital_matrix = angular_momentums_mix(orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list_1, totalstates)
+
+    combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list_1)
+
+    combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list_1)
+
+    g_shift = g_factor_calculation(standard_spin_matrix_1, combination_spin_matrix, combination_orbital_matrix,
+                                   sz_list_1, sz_ground_1)
+    return g_shift
+
 
 def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):
     fig, ax = plt.subplots()
@@ -436,50 +587,43 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
         plt.savefig(figure_name)
 
 
-def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state, order_symmetry):
+def sos_analysis_and_plot_mixinputs(file_msnull, file_ms_notnull, states_selected, states_option, states_sym, ppms):
     """"
     Calculate the g-shifts in the sum-over-states_selected expansion using
     from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
     :param: file_ms_notnull
     :return: no returned value, it prints the plot
     """
-    totalstates = get_number_of_states(file_ms_null)
+    totalstates = get_number_of_states(file_msnull)
     presentation_list = []
 
-    nstates = get_selected_states(file_ms_null, totalstates, nstates, selected_state, symmetry_selection=0)
+    nstates = get_selected_states(file_msnull, totalstates, states_selected, states_option, symmetry_selection=0)
 
     for i in range(1, len(nstates)+1):
         states_ras = nstates[0:i]
-        # eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-        # soc_options = 0
-        # selected_socs, list_sz, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
-        excitation_energies_ras, selected_socs, sz_list, ground_sz, totalstates \
-            = gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, selected_state)
 
-        g_shift = from_energies_soc_to_g_values(file_ms_null, states_ras,
-                                                totalstates, excitation_energies_ras,
-                                                selected_socs, sz_list, ground_sz)
+        g_shift = gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option, states_sym)
+        g_shift = from_ppt_to_ppm(ppms, g_shift)
 
-        g_shift = g_shift * 1000
-        state_symmetries, ordered_state_symmetries = get_symmetry_states(file_ms_null, nstates)
-        if order_symmetry == 1:
-            presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),
-                                  np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
-        else:
-            presentation_list.append([i, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
+        # if order_symmetry == 1:
+        #     presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),
+        #                           np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
+        # else:
+        presentation_list.append([i, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
                                   np.round(g_shift.real[2], 3)])
+        print('Done: ', states_ras)
     presentation_matrix = np.array(presentation_list, dtype=object)
 
     # To presents deviation from previous g-values instead of the total g-values:
-    presentation_matrix_deviation = np.array(presentation_list, dtype=object)
-    for ndim in [1, 2, 3]:
-        for i in range(1, len(presentation_matrix)):
-            presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim])
+    # presentation_matrix_deviation = np.array(presentation_list, dtype=object)
+    # for ndim in [1, 2, 3]:
+    #     for i in range(1, len(presentation_matrix)):
+    #         presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim])
 
     print("--------------------------------")
     print(" SUM-OVER-STATE ANALYSIS")
     print("--------------------------------")
     # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
-    plot_g_tensor_vs_states(presentation_matrix_deviation, x_title='Electronic State',
-                            y_title=r'$\Delta g, ppm$', main_title=file_ms_null, save_picture=0)
+    plot_g_tensor_vs_states(presentation_matrix, x_title='Electronic State',
+                            y_title=r'$\Delta g, ppm$', main_title=file_msnull, save_picture=0)

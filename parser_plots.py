@@ -140,7 +140,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     save_picture(save_options, file, main_title)
 
 
-def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry, save_option):
+def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, save_option):
     """"
     Calculate the g-shifts in the sum-over-states_selected expansion using
     from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
@@ -162,7 +162,8 @@ def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry, save_op
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
 
-        g_shift = g_shift * 1000
+        g_shift = from_ppt_to_ppm(ppms, g_shift)
+
         state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
         if order_symmetry == 1:
             presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),
@@ -191,7 +192,7 @@ def sos_analysis_and_plot(file, nstates, selected_state, order_symmetry, save_op
                             main_title, save_option)
 
 
-def gfactor_all_states(file, nstates):
+def gfactor_all_states(file, nstates, ppms):
     """
     Returns the g-shifts for doublet ground state molecules.
     :param: file_ms_notnull, states_ras, selected_states, symmetry_selection, soc_options
@@ -215,7 +216,8 @@ def gfactor_all_states(file, nstates):
         g_shift = from_energies_soc_to_g_values(file, states_ras,
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
-        g_shift = g_shift * 1000
+
+        g_shift = from_ppt_to_ppm(ppms, g_shift)
 
         presentation_list.append([nstates[0], np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
                                   np.round(g_shift.real[2], 3)])

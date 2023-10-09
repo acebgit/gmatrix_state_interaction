@@ -853,9 +853,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
 
 def print_g_calculation(file, totalstates, selected_states,
-                        states_ras, upper_g_tensor_results_ras, ppms, symmetry_selection):
-
-    upper_g_tensor_results_ras = from_ppt_to_ppm(ppms, upper_g_tensor_results_ras)
+                        states_ras, upper_g_tensor_results_ras, symmetry_selection):
 
     print("--------------------------------------")
     print("     INPUT SECTION")
@@ -907,8 +905,7 @@ def gfactor_presentation(ras_input, states_ras, selected_states, symmetry_select
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground)
 
-    if ppm == 1:
-        g_shift = g_shift * 1000
+    g_shift = from_ppt_to_ppm(ppm, g_shift)
 
     print_g_calculation(ras_input, totalstates, selected_states, states_ras, g_shift, symmetry_selection)
 
