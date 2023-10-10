@@ -387,7 +387,7 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
     spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = \
         get_input_values(file_ms_notnull, states_msnotnull, selection_states, symmetry_selection='None', soc_options=0)
 
-    # In case both maximum multiplicities differ, expand one of the matrices to the multiplicity of the other one
+    # In case both maximum multiplicities differ, expand matrices of the shortest to the largest multiplicity
     sz_list = sz_list_1
     if len(sz_list_1) < len(sz_list_2):
         sz_list, selected_socs_1, orbital_matrix_1, spin_matrix_1 = \
@@ -406,22 +406,12 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
     socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list, totalstates)
 
     hamiltonian = get_hamiltonian_construction(states_ras_1, eigenenergy, socs, sz_list)
-    # print('Hamiltonian:')
-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                  for row in np.round((hamiltonian[:, :] * 219474.63068), 5)]))  # * 219474.63068
-    # print('---')
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
     spin_matrix = angular_momentums_mix(spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
 
     orbital_matrix = angular_momentums_mix(orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list, totalstates)
-    # for k in range(0, 3):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((standard_spin_matrix_1[:, :, k]), 5)]))
-    #     print(" ")
-    # exit()
 
     combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
 
