@@ -6,18 +6,18 @@ from parser_mixing_inputs import gfactor_presentation_mixinputs, sos_analysis_an
 #####################################
 #            INPUT VALUES
 #####################################
-gfactor_two_inputs = 0
-excited_states_analysis = 0
-sos_analysis = 1
+gfactor_two_inputs = 1
+excited_states_analysis = 1
+sos_analysis = 0
 ppm = 0
 
 file_msnull = '\
-triplets_molecules/nh_8_7_allmultip.out'
+triplets_molecules/s2_10_9_allmultip.out'
 file_ms_notnull = '\
-triplets_molecules/nh_8_7_triplets.out'
+triplets_molecules/s2_10_9_triplets.out'
 
-states_option = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [2 ,1, 3, 4, 5, 6, 7, 8, 9, 10,11,12, 13,14,15,16,17,18,19,20]  # States to be included when "selected_states = 0"
+states_option = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+states_ras = [1, 2, 3]  # States to be included when "selected_states = 0"
 states_sym = 'A1'
 
 #####################################

@@ -67,6 +67,56 @@ def mapping_between_states(file_msnull, file_msnotnull, states_ras, states_optio
     return mapping_dict, mapping_list
 
 
+def matrix_expansion(sz_small, sz_big, nstates, socs, orbit_moments, spin_moments):
+        """
+        Expanded the small matrixes with multiplicities "sz_small" to a big matrix with multiplicities
+        "sz_big"
+        :return: matrix_big
+        """
+        def general_matrix_expansion(nstates, matrix_small, sz_small, sz_big):
+            """
+            Expanded the small matrix with multiplicities "sz_small" to a big matrix with multiplicities
+            "sz_big"
+            :return: matrix_big
+            """
+            if (matrix_small.ndim == 2):
+                matrix_big = np.zeros((len(nstates) * len(sz_big), len(nstates) * len(sz_big)), dtype=complex)
+                for i in range(0, len(nstates)):
+                    for j in range(0, len(nstates)):
+                        i_position = i * len(sz_small)
+                        j_position = j * len(sz_small)
+
+                        i_reordered = i * len(sz_big) + (len(sz_big) - len(sz_small)) // 2
+                        j_reordered = j * len(sz_big) + (len(sz_big) - len(sz_small)) // 2
+
+                        for sz_1 in range(0, len(sz_small)):
+                            for sz_2 in range(0, len(sz_small)):
+                                matrix_big[i_reordered + sz_1, j_reordered + sz_2] = \
+                                    matrix_small[i_position + sz_1, j_position + sz_2]
+
+            elif (matrix_small.ndim == 3):
+                matrix_big = np.zeros((len(nstates) * len(sz_big), len(nstates) * len(sz_big), 3), dtype=complex)
+                for k in range(0, 3):
+                    for i in range(0, len(nstates)):
+                        for j in range(0, len(nstates)):
+                            i_position = i * len(sz_small)
+                            j_position = j * len(sz_small)
+
+                            i_reordered = i * len(sz_big) + (len(sz_big) - len(sz_small)) // 2
+                            j_reordered = j * len(sz_big) + (len(sz_big) - len(sz_small)) // 2
+
+                            for sz_1 in range(0, len(sz_small)):
+                                for sz_2 in range(0, len(sz_small)):
+                                    matrix_big[i_reordered + sz_1, j_reordered + sz_2, k] = \
+                                        matrix_small[i_position + sz_1, j_position + sz_2, k]
+            return matrix_big
+
+        socs = general_matrix_expansion(nstates, socs, sz_small, sz_big)
+        orbit_moments = general_matrix_expansion(nstates, orbit_moments, sz_small, sz_big)
+        spin_moments = general_matrix_expansion(nstates, spin_moments, sz_small, sz_big)
+        return sz_big, socs, orbit_moments, spin_moments
+
+
 def get_input_values(ras_input, states_ras, selected_states, symmetry_selection, soc_options):
     """
     Returns the g-shifts for doublet ground state molecules.
@@ -293,14 +343,55 @@ def angular_momentums_mix(msnull_ang, msnotnull_ang, mapping_list, sz_list, tota
     # print('---')
     return total_ang
 
+def count_state_multiplicities(file_msnull, file_ms_notnull, states_ras, list_mapping):
+    """
+    Count number of triplet and singlet states included.
+    :param file_msnull, file_ms_notnull, states_ras, list_mapping:
+    :return: triplets, singlets
+    """
+    s2_list_1 = s2_from_file(file_msnull, states_ras)
+    s2_list_2 = s2_from_file(file_ms_notnull, states_ras)
+    s2_matrix = mixing_lists(s2_list_1, s2_list_2, list_mapping)
+
+    singlets = 0
+    triplets = 0
+    for i in range(0, len(s2_matrix)):
+        if 0 == s2_matrix[i]:
+            singlets += 1
+        if 2 == s2_matrix[i]:
+            triplets += 1
+    return singlets, triplets
+
+
+def print_g_calculation_mixinputs(file, totalstates, selected_states,
+                        states_ras, upper_g_tensor_results_ras, symmetry_selection, singlets, triplets):
+
+    print("--------------------------------------")
+    print("     INPUT SECTION")
+    print("--------------------------------------")
+    print("File selected: ", file)
+    print("Number of states selected: ", totalstates, "states (" , singlets, "singlets and", triplets, "triplets)")
+    if selected_states == 2:
+        print("Symmetry: ", symmetry_selection)
+        print("Selected states selected in one input: ", states_ras)
+    else:
+        print("Selected states selected in one input: ", states_ras)
+
+    print(" ")
+    print("------------------------")
+    print(" RAS-CI RESULTS")
+    print("------------------------")
+    print('g-factor (x y z dimensions):')
+    print(np.round(upper_g_tensor_results_ras.real[0], 3), np.round(upper_g_tensor_results_ras.real[1], 3),
+          np.round(upper_g_tensor_results_ras.real[2], 3))
+    print('')
+
 
 def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, states_ras, states_option, states_sym, ppms):
     """
     From both files with Ms = 0 and Ms ≠0 state, obtain the presentation list with the g-values obtained.
     """
-    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option,
-                                                        states_sym)
-
+    # Obtain all the data from both inputs
     totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1, \
     spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = \
         get_input_values(file_msnull, states_ras, states_option, states_sym, soc_options=0)
@@ -309,13 +400,27 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, states_ras, sta
     spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = \
         get_input_values(file_ms_notnull, states_ras, states_option, states_sym, soc_options=0)
 
+    # In case both maximum multiplicities differ, expand one of the matrices to the multiplicity of the other one
+    if len(sz_list_1) < len(sz_list_2):
+        sz_list, selected_socs_1, orbital_matrix_1, spin_matrix_1 = \
+            matrix_expansion(sz_list_1, sz_list_2, states_ras_1, selected_socs_1, orbital_matrix_1, spin_matrix_1)
+    elif len(sz_list_1) > len(sz_list_2):
+        sz_list, selected_socs_2, orbital_matrix_2, spin_matrix_2 = \
+            matrix_expansion(sz_list_2, sz_list_1, states_ras_2, selected_socs_2, orbital_matrix_2, spin_matrix_2)
+    elif len(sz_list_1) == len(sz_list_2):
+        sz_list = sz_list_1
+
+    # Make a list with the mapping between states of Ms = 0 and Ms ≠0
+    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras_1, states_option,
+                                                        states_sym)
+
     totalstates = totalstates_mix(states_ras_1, states_ras_1, list_mapping)
 
     eigenenergy = mixing_lists(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
 
-    socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list_1, totalstates)
+    socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list, totalstates)
 
-    hamiltonian = get_hamiltonian_construction(states_ras, eigenenergy, socs, sz_list_1)
+    hamiltonian = get_hamiltonian_construction(states_ras_1, eigenenergy, socs, sz_list)
     # print('Hamiltonian:')
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
     #                  for row in np.round((hamiltonian[:, :] * 219474.63068), 5)]))  # * 219474.63068
@@ -323,20 +428,22 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, states_ras, sta
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
-    spin_matrix = angular_momentums_mix(spin_matrix_1, spin_matrix_2, list_mapping, sz_list_1, totalstates)
+    spin_matrix = angular_momentums_mix(spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
 
-    orbital_matrix = angular_momentums_mix(orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list_1, totalstates)
+    orbital_matrix = angular_momentums_mix(orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list, totalstates)
 
-    combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list_1)
+    combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
 
-    combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list_1)
+    combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list)
 
     g_shift = g_factor_calculation(standard_spin_matrix_1, combination_spin_matrix, combination_orbital_matrix,
-                                   sz_list_1, sz_ground_1)
+                                   sz_list, sz_ground_1)
 
     g_shift = from_ppt_to_ppm(ppms, g_shift)
 
-    print_g_calculation(file_msnull, totalstates_1, states_option, states_ras_1, g_shift, states_sym)
+    singlet, triplet = count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_1, list_mapping)
+
+    print_g_calculation_mixinputs(file_msnull, totalstates, states_option, states_ras_1, g_shift, states_sym, singlet, triplet)
 
 
 def get_input_data_excited_states(file, state_selections, states_ras):
@@ -464,6 +571,16 @@ def gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option
     totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2, \
     spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = \
         get_input_values(file_ms_notnull, states_ras, states_option, states_sym, soc_options=0)
+
+    # In case both maximum multiplicities differ, expand one of the matrices to the multiplicity of the other one
+    if len(sz_list_1) < len(sz_list_2):
+        sz_list, selected_socs_1, orbital_matrix_1, spin_matrix_1 = \
+            matrix_expansion(sz_list_1, sz_list_2, states_ras_1, selected_socs_1, orbital_matrix_1, spin_matrix_1)
+    elif len(sz_list_1) > len(sz_list_2):
+        sz_list, selected_socs_2, orbital_matrix_2, spin_matrix_2 = \
+            matrix_expansion(sz_list_2, sz_list_1, states_ras_2, selected_socs_2, orbital_matrix_2, spin_matrix_2)
+    elif len(sz_list_1) == len(sz_list_2):
+        sz_list = sz_list_1
 
     totalstates = totalstates_mix(states_ras_1, states_ras_1, list_mapping)
 
