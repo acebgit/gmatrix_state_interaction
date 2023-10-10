@@ -11,23 +11,12 @@ from parser_gtensor import get_number_of_states, get_symmetry_states, get_select
 from parser_excitstates import s2_from_file, get_hole_part_contributions, get_groundst_socc_values, \
     get_groundst_orbital_momentum, get_bar_chart
 
-def mapping_between_states(file_msnull, file_msnotnull, states_ras, states_option, states_sym):
+def mapping_between_states(file_msnull, file_msnotnull, states_msnull, states_msnotnull, totalstates_msnull, totalstates_msnotnull):
     """
     Comparing the energies, map states_selected with Ms = 0, that do not have coupling between states_selected triplets,
     and states_selected with Ms not 0, that do have this coupling.
     :return: mapping_list
     """
-    def get_all_energies(file, states_ras, states_option, states_sym):
-        """
-        Get all energies of RAS-CI states.
-        :param: file
-        :return: eigenenergies_ras (in atomic units)
-        """
-        totalstates = get_number_of_states(file)
-        selected_states = get_selected_states(file, totalstates, states_ras, states_option, states_sym)
-        eigenenergies, excitation_energies = get_eigenenergies(file, totalstates, selected_states)
-        return eigenenergies, selected_states
-
     def check_mapping(energ_ms_notnull, energ_ms_null, mapping_dic, list):
         """
         Check if states "Ms=0" and "Ms ≠ 0" have the same energy. If so, to include them in the list, check that states
@@ -43,8 +32,8 @@ def mapping_between_states(file_msnull, file_msnotnull, states_ras, states_optio
                     list.remove(mapping_dic)
         return list
 
-    ms_notnull_energies, states_msnotnull = get_all_energies(file_msnotnull, states_ras, states_option, states_sym)
-    ms_null_energies, states_msnull = get_all_energies(file_msnull, states_ras, states_option, states_sym)
+    ms_notnull_energies, ms_notnull_excit_energ = get_eigenenergies(file_msnotnull, totalstates_msnotnull, states_msnotnull)
+    ms_null_energies, ms_null_excit_energ = get_eigenenergies(file_msnull, totalstates_msnull, states_msnull)
 
     mapping_list = []
     mapping_dict = {}
@@ -64,6 +53,8 @@ def mapping_between_states(file_msnull, file_msnotnull, states_ras, states_optio
     #     print(states_msnotnull[a], ' - ', states_msnotnull[b])
     # print('---')
     # exit()
+    if mapping_list == []:
+        raise ValueError("No mapping between states is possible: the states of the two inputs are different.")
     return mapping_dict, mapping_list
 
 
@@ -120,7 +111,7 @@ def matrix_expansion(sz_small, sz_big, nstates, socs, orbit_moments, spin_moment
 def get_input_values(ras_input, states_ras, selected_states, symmetry_selection, soc_options):
     """
     Returns the g-shifts for doublet ground state molecules.
-    :param: file_ms_notnull, states_ras, selected_states, symmetry_selection, soc_options
+    :param: file_ms_notnull, states_msnull, selected_states, symmetry_selection, soc_options
     :return: g-shifts
     """
     totalstates = get_number_of_states(ras_input)
@@ -142,7 +133,7 @@ def get_input_values(ras_input, states_ras, selected_states, symmetry_selection,
 def totalstates_mix(states_1, states_2, list_mapping):
         """
         Total number of states is the sum of both total number of states substrating those that are in common
-        :param: totalstates_1, totalstates_2, list_mapping
+        :param: totalstates_msnull, totalstates_msnotnull, list_mapping
         :return: totalstates
         """
         totalstates = len(states_1) + len(states_2) - len(list_mapping)
@@ -243,7 +234,6 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
             # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
             #                  for row in np.round((total_socs[:, :] * 219474.63068), 5)]))  # * 219474.63068
             # print()
-
             for i in list_mapping:
                 for j in list_mapping:
                     if i['state ms not null'] != j['state ms not null']:  # If states_selected are not the same (in Ms not null list)
@@ -260,8 +250,9 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
 
             # print('SOC of Ms null (include SOCs between triplets):')
             # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-            #                  for row in np.round((total_socs[:, :] * 219474.63068), 5)]))  # * 219474.63068
+            #                  for row in np.round((total_soc[:, :] * 219474.63068), 5)]))  # * 219474.63068
             # print()
+            # exit()
             return total_soc
 
         # 1) First block of SOC total matrix is the SOCs of Ms = 0
@@ -346,7 +337,7 @@ def angular_momentums_mix(msnull_ang, msnotnull_ang, mapping_list, sz_list, tota
 def count_state_multiplicities(file_msnull, file_ms_notnull, states_ras, list_mapping):
     """
     Count number of triplet and singlet states included.
-    :param file_msnull, file_ms_notnull, states_ras, list_mapping:
+    :param file_msnull, file_ms_notnull, states_msnull, list_mapping:
     :return: triplets, singlets
     """
     s2_list_1 = s2_from_file(file_msnull, states_ras)
@@ -364,18 +355,14 @@ def count_state_multiplicities(file_msnull, file_ms_notnull, states_ras, list_ma
 
 
 def print_g_calculation_mixinputs(file, totalstates, selected_states,
-                        states_ras, upper_g_tensor_results_ras, symmetry_selection, singlets, triplets):
+                        states_ras, upper_g_tensor_results_ras, singlets, triplets):
 
     print("--------------------------------------")
     print("     INPUT SECTION")
     print("--------------------------------------")
     print("File selected: ", file)
     print("Number of states selected: ", totalstates, "states (" , singlets, "singlets and", triplets, "triplets)")
-    if selected_states == 2:
-        print("Symmetry: ", symmetry_selection)
-        print("Selected states selected in one input: ", states_ras)
-    else:
-        print("Selected states selected in one input: ", states_ras)
+    print("Selected states selected in one input: ", states_ras)
 
     print(" ")
     print("------------------------")
@@ -387,34 +374,32 @@ def print_g_calculation_mixinputs(file, totalstates, selected_states,
     print('')
 
 
-def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, states_ras, states_option, states_sym, ppms):
+def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_states, states_msnull, states_msnotnull, ppms):
     """
     From both files with Ms = 0 and Ms ≠0 state, obtain the presentation list with the g-values obtained.
     """
     # Obtain all the data from both inputs
     totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1, \
     spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = \
-        get_input_values(file_msnull, states_ras, states_option, states_sym, soc_options=0)
+        get_input_values(file_msnull, states_msnull, selection_states, symmetry_selection='None', soc_options=0)
 
     totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2, \
     spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = \
-        get_input_values(file_ms_notnull, states_ras, states_option, states_sym, soc_options=0)
+        get_input_values(file_ms_notnull, states_msnotnull, selection_states, symmetry_selection='None', soc_options=0)
 
     # In case both maximum multiplicities differ, expand one of the matrices to the multiplicity of the other one
+    sz_list = sz_list_1
     if len(sz_list_1) < len(sz_list_2):
         sz_list, selected_socs_1, orbital_matrix_1, spin_matrix_1 = \
             matrix_expansion(sz_list_1, sz_list_2, states_ras_1, selected_socs_1, orbital_matrix_1, spin_matrix_1)
     elif len(sz_list_1) > len(sz_list_2):
         sz_list, selected_socs_2, orbital_matrix_2, spin_matrix_2 = \
             matrix_expansion(sz_list_2, sz_list_1, states_ras_2, selected_socs_2, orbital_matrix_2, spin_matrix_2)
-    elif len(sz_list_1) == len(sz_list_2):
-        sz_list = sz_list_1
 
     # Make a list with the mapping between states of Ms = 0 and Ms ≠0
-    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras_1, states_option,
-                                                        states_sym)
+    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras_1, states_ras_2, totalstates_1,totalstates_2)
 
-    totalstates = totalstates_mix(states_ras_1, states_ras_1, list_mapping)
+    totalstates = totalstates_mix(states_ras_1, states_ras_2, list_mapping)
 
     eigenenergy = mixing_lists(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
 
@@ -431,19 +416,25 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, states_ras, sta
     spin_matrix = angular_momentums_mix(spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
 
     orbital_matrix = angular_momentums_mix(orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list, totalstates)
+    # for k in range(0, 3):
+    #     print('Dimension: ', k)
+    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+    #                      for row in np.round((standard_spin_matrix_1[:, :, k]), 5)]))
+    #     print(" ")
+    # exit()
 
     combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
 
     combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list)
 
-    g_shift = g_factor_calculation(standard_spin_matrix_1, combination_spin_matrix, combination_orbital_matrix,
+    g_shift = g_factor_calculation(standard_spin_matrix_2, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground_1)
 
     g_shift = from_ppt_to_ppm(ppms, g_shift)
 
     singlet, triplet = count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_1, list_mapping)
 
-    print_g_calculation_mixinputs(file_msnull, totalstates, states_option, states_ras_1, g_shift, states_sym, singlet, triplet)
+    print_g_calculation_mixinputs(file_msnull, totalstates, selection_states, states_ras_1, g_shift, singlet, triplet)
 
 
 def get_input_data_excited_states(file, state_selections, states_ras):

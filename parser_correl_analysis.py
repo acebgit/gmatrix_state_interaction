@@ -37,7 +37,7 @@ def soc_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs,
     """"
     Correlation analysis between SOC and gvalues. Variation is done only
     for imaginary part of SOC between ground and first excited state.
-    :param: qchem_file, states_ras, selected_states, excitation_energies_ras, doublet_socs,socc_values
+    :param: qchem_file, states_msnull, selected_states, excitation_energies_ras, doublet_socs,socc_values
     :return: soc_gvalues_matrix, r_square of fit
     """
     presentation_tuple = []
@@ -81,7 +81,7 @@ def energy_and_gvalues_correlation(file, n_states, allstates, excit_energies, so
     """"
     Correlation analysis between energies and gvalues. Change is done only for energy
     between ground and first excited state.
-    :param: qchem_file, states_ras, selected_states, excitation_energies_ras, doublet_socs,SOCC_values
+    :param: qchem_file, states_msnull, selected_states, excitation_energies_ras, doublet_socs,SOCC_values
     :return: soc_gvalues_matrix, r_square of fit
     """
     presentation_tuple = []
@@ -115,7 +115,7 @@ def orbitmomentum_and_gvalues_correlation(file, n_states, allstates, excit_energ
     """"
     Correlation analysis between energies and gvalues. Change is done only for energy
     between ground and first excited state.
-    :param: qchem_file, states_ras, selected_states, excitation_energies_ras, doublet_socs,SOCC_values
+    :param: qchem_file, states_msnull, selected_states, excitation_energies_ras, doublet_socs,SOCC_values
     :return: soc_gvalues_matrix, r_square of fit
     """
     hamiltonian_ras = get_hamiltonian_construction(n_states, excit_energies, socs, sz_list)

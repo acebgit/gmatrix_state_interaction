@@ -755,7 +755,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                   excitation_energies_ras, soc_ras, sz_list, ground_sz):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param:file_ms_notnull, states_ras, selected_states, excitation_energies_ras, soc_ras, list_sz, ground_sz
+    :param:file_ms_notnull, states_msnull, selected_states, excitation_energies_ras, soc_ras, list_sz, ground_sz
     :return: g_shift
     """
     hamiltonian_ras = hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)

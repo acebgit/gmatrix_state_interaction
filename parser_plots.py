@@ -195,7 +195,7 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
 def gfactor_all_states(file, nstates, ppms):
     """
     Returns the g-shifts for doublet ground state molecules.
-    :param: file_ms_notnull, states_ras, selected_states, symmetry_selection, soc_options
+    :param: file_ms_notnull, states_msnull, selected_states, symmetry_selection, soc_options
     :return: g-shifts
     """
     def swapPositions(list, pos1, pos2):

@@ -70,10 +70,10 @@ def exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_n
     for i in mapping_list:
         for j in mapping_list:
             if i['state ms not null'] != j['state ms not null']:  # If states_selected are not the same (in Ms not null list)
-                # print('State Ms not null', states_ras[i['state ms not null']], '(', i['state ms not null'], ')',
-                #       states_ras[j['state ms not null']], '(', j['state ms not null'], ')', '; ',
-                #       'State Ms null', states_ras[i['state ms null']], '(', i['state ms null'], ')',
-                #       states_ras[j['state ms null']], '(', j['state ms null'], ')',)
+                # print('State Ms not null', states_msnull[i['state ms not null']], '(', i['state ms not null'], ')',
+                #       states_msnull[j['state ms not null']], '(', j['state ms not null'], ')', '; ',
+                #       'State Ms null', states_msnull[i['state ms null']], '(', i['state ms null'], ')',
+                #       states_msnull[j['state ms null']], '(', j['state ms null'], ')',)
 
                 for sz_1 in range(0, len(sz_list)):
                     for sz_2 in range(0, len(sz_list)):
@@ -101,7 +101,7 @@ def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, st
     """
     # print('File ms not null: ', file_ms_notnull)
     # print('File ms null: ', file_ms_null)
-    # print('States: ', states_ras)
+    # print('States: ', states_msnull)
 
     totalstates_ms_notnull, energies_ms_notnull, selected_socs_ms_notnull, sz_list_ms_notnull, sz_ground_ms_notnull = get_energies_socs(file_ms_notnull, states_ras, states_option)
 
@@ -111,7 +111,7 @@ def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, st
     # for mapping_dict in mapping_list:
     #     a = mapping_dict['state ms not null']
     #     b = mapping_dict['state ms null']
-    #     print('file_ms_notnull', states_ras[a], 'file_ms_null', states_ras[b])
+    #     print('file_ms_notnull', states_msnull[a], 'file_ms_null', states_msnull[b])
     # print(mapping_list)
     # exit()
 
@@ -119,13 +119,13 @@ def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, st
 
     return energies_ms_null, selected_socs_ms_null, sz_list_ms_null, sz_ground_ms_null, totalstates_ms_null
     #
-    # hamiltonian_ras = get_hamiltonian_construction(states_ras, energies_ms_null, msnotnull_ang, sz_list_ms_null)
+    # hamiltonian_ras = get_hamiltonian_construction(states_msnull, energies_ms_null, msnotnull_ang, sz_list_ms_null)
     #
     # eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
     #
-    # spin_matrix, standard_spin_matrix = get_spin_matrices(file_ms_notnull, states_ras)
+    # spin_matrix, standard_spin_matrix = get_spin_matrices(file_ms_notnull, states_msnull)
     #
-    # orbital_matrix = get_orbital_matrices(file_ms_notnull, totalstates_ms_null, states_ras, sz_list_ms_null)
+    # orbital_matrix = get_orbital_matrices(file_ms_notnull, totalstates_ms_null, states_msnull, sz_list_ms_null)
     #
     # combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list_ms_null)
     #
@@ -134,7 +134,7 @@ def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, st
     # g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
     #                                sz_list_ms_null, sz_ground_ms_null)
     #
-    # print_g_calculation(file_ms_notnull, totalstates_ms_null, states_ras, states_ras, g_shift * 1000, symmetry_selection=0)
+    # print_g_calculation(file_ms_notnull, totalstates_ms_null, states_msnull, states_msnull, g_shift * 1000, symmetry_selection=0)
 
 
 def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):
@@ -254,9 +254,9 @@ def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state
 
     for i in range(1, len(nstates)+1):
         states_ras = nstates[0:i]
-        # eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
+        # eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_msnull)
         # soc_options = 0
-        # selected_socs, list_sz, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
+        # selected_socs, list_sz, ground_sz = get_spin_orbit_couplings(file, totalstates, states_msnull, soc_options)
         excitation_energies_ras, selected_socs, sz_list, ground_sz, totalstates \
             = gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, selected_state)
 
