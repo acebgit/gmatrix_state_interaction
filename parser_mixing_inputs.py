@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
     get_spin_orbit_couplings, get_spin_matrices, get_orbital_matrices, hermitian_test, \
-    get_hamiltonian_construction, diagonalization, angular_matrixes_obtention, g_factor_calculation, print_g_calculation, \
+    get_hamiltonian_construction, diagonalization, angular_matrixes_obtention, g_factor_calculation, \
     from_ppt_to_ppm
 from parser_excitstates import s2_from_file, get_hole_part_contributions, get_groundst_socc_values, \
     get_groundst_orbital_momentum, get_bar_chart
@@ -70,6 +70,8 @@ def matrix_expansion(sz_small, sz_big, nstates, socs, orbit_moments, spin_moment
             "sz_big"
             :return: matrix_big
             """
+            matrix_big = 0
+
             if (matrix_small.ndim == 2):
                 matrix_big = np.zeros((len(nstates) * len(sz_big), len(nstates) * len(sz_big)), dtype=complex)
                 for i in range(0, len(nstates)):
@@ -163,60 +165,88 @@ def mixing_lists(list_1, list_2, mapping_list):
         return final_list
 
 
-def get_no_mapped_states(list_mapping, nstate):
+def get_no_mapped_states(list_mapping, states):
     """
     Obtain a list of not mapped states
-    :return: not_mapped_states
+    :return: no_mapped_states
     """
-    mapped_states = []
+    mapped_states_index = []
     for mapping_dict in list_mapping:
-        mapped_states.append(mapping_dict['state ms not null'])
+        mapped_states_index.append(mapping_dict['state ms not null'])
 
-    not_mapped_states = []
-    for state in range(0, nstate):
-        if state not in mapped_states:
-            not_mapped_states.append(state)
-    return not_mapped_states
+    no_mapped_states = []
+    for i in range(0, len(states)):
+        if i not in mapped_states_index:
+            no_mapped_states.append(states[i])
+    return no_mapped_states
 
 
-def include_msnotnull_states(nstate, not_mapped_states, soc_msnotnull, total_socs, list_sz):
+def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_msnotnull, total_socs, list_sz):
     """
     SOCs between states Ms ≠ 0 that have not been included in total SOC matrix are now included
     :return:
     """
-    for state_i in range(0, nstate):
-        for state_j in range(0, nstate):
+    def state_arrangement_in_matrix(i, j, states_msnull, state_i_msnotnull, no_mapped_states,
+                                    state_j_msnotnull, mapping_list):
+        """
+        Set the final SOC matrix row or column defined by the state selected.
+        :param
+        :return: state_i_final, state_j_final
+        """
+        # Upper left part of the matrix: Begins the writing after the SOCs matrix between states with Ms = 0
+        state_i_final = len(states_msnull)
+        state_j_final = len(states_msnull)
 
-            if (state_i in not_mapped_states) or (state_j in not_mapped_states):
-                state_i_total = nstate
-                state_j_total = nstate
+        if (state_i_msnotnull in no_mapped_states) and (state_j_msnotnull in no_mapped_states):
+            # Lower right part of the matrix: when both states are not in mapping
+            state_i_final += no_mapped_states.index(state_i_msnotnull)
+            state_j_final += no_mapped_states.index(state_j_msnotnull)
+            print('LR')  # "Lower Right"
 
-                if (state_i in not_mapped_states) and (state_j not in not_mapped_states):
-                    state_i_total += not_mapped_states.index(state_i)
-                    state_j_total = state_j
-                elif (state_i not in not_mapped_states) and (state_j in not_mapped_states):
-                    state_i_total = state_i
-                    state_j_total += not_mapped_states.index(state_j)
-                elif (state_i in not_mapped_states) and (state_j in not_mapped_states):
-                    state_i_total += not_mapped_states.index(state_i)
-                    state_j_total += not_mapped_states.index(state_j)
+        elif (state_i_msnotnull in no_mapped_states) and (state_j_msnotnull not in no_mapped_states):
+            # Lower left part of the matrix: when rows are in matrix but not the columns
+            state_i_final += no_mapped_states.index(state_i_msnotnull)
+            state_j_final = mapping_list[j-1]['state ms null']
+            print()
+            print('LL')  # "Lower Left"
 
-                # print('States:', state_i, state_j, ', states total: ', state_i_total, state_j_total)
+        elif (state_i_msnotnull not in no_mapped_states) and (state_j_msnotnull in no_mapped_states):
+            # Upper right part of the matrix: when columns are in matrix but not the columns rows
+            state_i_final = mapping_list[i-1]['state ms null']
+            state_j_final += no_mapped_states.index(state_j_msnotnull)
+            print('UR')  # "Upper Right"
+        print('Index states Ms not null:', i, j, ', Index states total: ', state_i_final, state_j_final)
+        return state_i_final, state_j_final
+
+    # Obtain list of not mapped states
+    no_mapped_states = get_no_mapped_states(mapping_list, states_msnotnull)
+
+    # Substitution
+    for i in range(0, len(states_msnotnull)):
+        for j in range(0, len(states_msnotnull)):
+            state_i_msnotnull = states_msnotnull[i]
+            state_j_msnotnull = states_msnotnull[j]
+
+            if (state_i_msnotnull in no_mapped_states) or (state_j_msnotnull in no_mapped_states):
+                state_i_final, state_j_final = state_arrangement_in_matrix(i, j, states_msnull, state_i_msnotnull, no_mapped_states,
+                                    state_j_msnotnull, mapping_list)
 
                 for sz_1 in range(0, len(list_sz)):
                     for sz_2 in range(0, len(list_sz)):
-                        soc_row = state_i * len(list_sz) + sz_1
-                        soc_col = state_j * len(list_sz) + sz_2
+                        soc_row = i * len(list_sz) + sz_1
+                        soc_col = j * len(list_sz) + sz_2
 
-                        soc_row_final = state_i_total * len(list_sz) + sz_1
-                        soc_col_final = state_j_total * len(list_sz) + sz_2
+                        soc_row_final = state_i_final * len(list_sz) + sz_1
+                        soc_col_final = state_j_final * len(list_sz) + sz_2
                         # print(soc_row, soc_col, '-->', soc_row_final, soc_col_final)
 
                         total_socs[soc_row_final, soc_col_final] = soc_msnotnull[soc_row, soc_col]
+    print('----------------')
+    # exit()
     return total_socs
 
 
-def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
+def socs_mix(states_msnull, states_msnotnull, socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
         """
         Give the SOCS of the states in msnull_ang and soc_msnotnull without those states that are
         repeat in both lists (meaning those that are in the mapping list)
@@ -255,7 +285,7 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
             # exit()
             return total_soc
 
-        # 1) First block of SOC total matrix is the SOCs of Ms = 0
+        # 1) Upper left part of the matrix: First block of SOC total matrix is the SOCs of Ms = 0
         total_soc = np.zeros((totalstates * len(sz_list), totalstates * len(sz_list)), dtype=complex)
         for i in range(0, len(socs_msnull)):
             for j in range(0, len(socs_msnull)):
@@ -265,12 +295,8 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
         # not calculated) are exchanged by those calculated couplings in Ms ≠ 0.
         total_soc = exchanging_socs(total_soc, socs_msnotnull, mapping_list, sz_list)
 
-        # 3) Obtain list of not mapped states
-        nstates = int(len(socs_msnotnull) / len(sz_list))
-        not_mapped_states_msnotnull = get_no_mapped_states(mapping_list, nstates)
-
-        # 4) Those SOCs between states Ms ≠ 0 that have not been included in total SOC matrix are now included
-        total_soc = include_msnotnull_states(nstates, not_mapped_states_msnotnull, socs_msnotnull, total_soc, sz_list)
+        # 3) Those SOCs between states Ms ≠ 0 that have not been included in total SOC matrix are now included
+        total_soc = include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, socs_msnotnull, total_soc, sz_list)
 
         # print('msnull_ang:')
         # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
@@ -287,7 +313,7 @@ def socs_mix(socs_msnull, socs_msnotnull, mapping_list, sz_list, totalstates):
         return total_soc
 
 
-def angular_momentums_mix(msnull_ang, msnotnull_ang, mapping_list, sz_list, totalstates):
+def angular_momentums_mix(states_msnull, states_msnotnull, msnull_ang, msnotnull_ang, mapping_list, sz_list, totalstates):
     """
     Give the angular momentum of the states in msnull_ang and soc_msnotnull without those states that are
     repeat in both lists (meaning those that are in the mapping list)
@@ -301,14 +327,9 @@ def angular_momentums_mix(msnull_ang, msnotnull_ang, mapping_list, sz_list, tota
             for j in range(0, len(msnull_ang)):
                 total_ang[i, j, k] = msnull_ang[i, j, k]
 
-    # 2) Obtain list of not mapped states
-    nstates = int(len(msnotnull_ang) / len(sz_list))
-    not_mapped_states_msnotnull = get_no_mapped_states(mapping_list, nstates)
-
-    # 3) Those momentums between states Ms ≠ 0 that have not been included in total momentum matrix are now included
+    # 2) Those momentums between states Ms ≠ 0 that have not been included in total momentum matrix are now included
     for k in range(0, 3):
-        total_ang[:,:,k] = include_msnotnull_states(nstates, not_mapped_states_msnotnull, msnotnull_ang[:,:,k],
-                                                    total_ang[:,:,k], sz_list)
+        total_ang[:,:,k] = include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, msnotnull_ang[:,:,k], total_ang[:,:,k], sz_list)
         hermitian_test(total_ang[:,:,k], sz_list)
 
     # print('msnull_ang:')
@@ -334,14 +355,14 @@ def angular_momentums_mix(msnull_ang, msnotnull_ang, mapping_list, sz_list, tota
     # print('---')
     return total_ang
 
-def count_state_multiplicities(file_msnull, file_ms_notnull, states_ras, list_mapping):
+def count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_msnull, states_ras_msnotnull, list_mapping):
     """
     Count number of triplet and singlet states included.
     :param file_msnull, file_ms_notnull, states_msnull, list_mapping:
     :return: triplets, singlets
     """
-    s2_list_1 = s2_from_file(file_msnull, states_ras)
-    s2_list_2 = s2_from_file(file_ms_notnull, states_ras)
+    s2_list_1 = s2_from_file(file_msnull, states_ras_msnull)
+    s2_list_2 = s2_from_file(file_ms_notnull, states_ras_msnotnull)
     s2_matrix = mixing_lists(s2_list_1, s2_list_2, list_mapping)
 
     singlets = 0
@@ -354,15 +375,16 @@ def count_state_multiplicities(file_msnull, file_ms_notnull, states_ras, list_ma
     return singlets, triplets
 
 
-def print_g_calculation_mixinputs(file, totalstates, selected_states,
-                        states_ras, upper_g_tensor_results_ras, singlets, triplets):
+def print_g_calculation_mixinputs(file, totalstates, states_ras_1,
+                        states_ras_2, upper_g_tensor_results_ras, singlets, triplets):
 
     print("--------------------------------------")
     print("     INPUT SECTION")
     print("--------------------------------------")
     print("File selected: ", file)
-    print("Number of states selected: ", totalstates, "states (" , singlets, "singlets and", triplets, "triplets)")
-    print("Selected states selected in one input: ", states_ras)
+    print("Number of states: ", totalstates, " (" , singlets, "singlets and", triplets, "triplets)")
+    print("Selected states selected in Ms = 0: ", states_ras_1)
+    print("Selected states selected in Ms≠ 0: ", states_ras_2)
 
     print(" ")
     print("------------------------")
@@ -403,15 +425,23 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
 
     eigenenergy = mixing_lists(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
 
-    socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list, totalstates)
+    socs = socs_mix(states_ras_1, states_ras_2 , selected_socs_1, selected_socs_2, list_mapping, sz_list, totalstates)
 
-    hamiltonian = get_hamiltonian_construction(states_ras_1, eigenenergy, socs, sz_list)
+    hamiltonian = get_hamiltonian_construction(list(range(0, totalstates)), eigenenergy, socs, sz_list)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
-    spin_matrix = angular_momentums_mix(spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
+    spin_matrix = angular_momentums_mix(states_msnull, states_msnotnull, spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
 
-    orbital_matrix = angular_momentums_mix(orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list, totalstates)
+    orbital_matrix = angular_momentums_mix(states_msnull, states_msnotnull, orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list, totalstates)
+
+    for k in range(0, 3):
+        print('Dimension: ', k)
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                         for row in np.round((orbital_matrix[:, :, k]), 5)]))
+        print(" ")
+    print('---')
+    exit()
 
     combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
 
@@ -422,9 +452,9 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
 
     g_shift = from_ppt_to_ppm(ppms, g_shift)
 
-    singlet, triplet = count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_1, list_mapping)
+    singlet, triplet = count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_1, states_ras_2, list_mapping)
 
-    print_g_calculation_mixinputs(file_msnull, totalstates, selection_states, states_ras_1, g_shift, singlet, triplet)
+    print_g_calculation_mixinputs(file_msnull, totalstates, states_ras_1, states_ras_2, g_shift, singlet, triplet)
 
 
 def get_input_data_excited_states(file, state_selections, states_ras):
@@ -461,7 +491,7 @@ def get_input_data_excited_states(file, state_selections, states_ras):
         socc_values, orbital_momentum
 
 
-def excited_states_analysis_mixinputs(file_msnull, file_ms_notnull, states_ras, states_option, states_sym, plots, save_pict):
+def excited_states_analysis_mixinputs(file_msnull, file_ms_notnull, states_ras, states_option, plots, save_pict):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
     of the 1st configuration that need to have the other configurations to be shown in each state.
@@ -476,8 +506,7 @@ def excited_states_analysis_mixinputs(file_msnull, file_ms_notnull, states_ras, 
         socc_values_2, orbital_momentum_2 =  get_input_data_excited_states(file_ms_notnull, states_option, states_ras)
 
     # Mapping between states
-    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option,
-                                                        states_sym)
+    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras_1, states_ras_2, totalstates_1, totalstates_2)
 
     # Mapping data between states
     totalstates = totalstates_mix(states_ras_1, states_ras_2, list_mapping)
@@ -538,20 +567,20 @@ def excited_states_analysis_mixinputs(file_msnull, file_ms_notnull, states_ras, 
                       'SOCC (cm-1)', 'socc_analysis', save_pict)
 
 
-def gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option, states_sym):
+def gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option):
     """
     From both files with Ms = 0 and Ms ≠0 state, obtain the presentation list with the g-values obtained.
+    :return: analysis
     """
-    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option,
-                                                        states_sym)
+    dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras, states_option)
 
     totalstates_1, states_ras_1, eigenenergies_ras_1, selected_socs_1, sz_list_1, sz_ground_1, \
     spin_matrix_1, standard_spin_matrix_1, orbital_matrix_1 = \
-        get_input_values(file_msnull, states_ras, states_option, states_sym, soc_options=0)
+        get_input_values(file_msnull, states_ras, states_option, soc_options=0)
 
     totalstates_2, states_ras_2, eigenenergies_ras_2, selected_socs_2, sz_list_2, sz_ground_2, \
     spin_matrix_2, standard_spin_matrix_2, orbital_matrix_2 = \
-        get_input_values(file_ms_notnull, states_ras, states_option, states_sym, soc_options=0)
+        get_input_values(file_ms_notnull, states_ras, states_option, soc_options=0)
 
     # In case both maximum multiplicities differ, expand one of the matrices to the multiplicity of the other one
     if len(sz_list_1) < len(sz_list_2):
@@ -685,7 +714,7 @@ def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, s
         plt.savefig(figure_name)
 
 
-def sos_analysis_and_plot_mixinputs(file_msnull, file_ms_notnull, states_selected, states_option, states_sym, ppms):
+def sos_analysis_and_plot_mixinputs(file_msnull, file_ms_notnull, states_selected, states_option, ppms):
     """"
     Calculate the g-shifts in the sum-over-states_selected expansion using
     from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
@@ -700,7 +729,7 @@ def sos_analysis_and_plot_mixinputs(file_msnull, file_ms_notnull, states_selecte
     for i in range(1, len(nstates)+1):
         states_ras = nstates[0:i]
 
-        g_shift = gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option, states_sym)
+        g_shift = gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option)
         g_shift = from_ppt_to_ppm(ppms, g_shift)
 
         # if order_symmetry == 1:
