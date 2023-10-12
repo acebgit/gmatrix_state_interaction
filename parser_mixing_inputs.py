@@ -183,14 +183,12 @@ def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_
         mapped_states = []
         for i in range(0, len(states)):
             if i in mapped_states_index:
-                mapped_states.append(states[i])
+                mapped_states.append(i)
             else:
-                no_mapped_states.append(states[i])
-
+                no_mapped_states.append(i)
         return mapped_states, no_mapped_states
 
-    def state_arrangement_in_matrix(i, j, states_msnull, states_msnotnull, state_i_msnotnull, mapped_states, no_mapped_states,
-                                    state_j_msnotnull, mapping_list):
+    def state_arrangement_in_matrix(i, j, states_msnull, states_msnotnull, mapped_states, no_mapped_states, mapping_list):
         """
         Set the final SOC matrix row or column defined by the state selected.
         :param
@@ -200,30 +198,55 @@ def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_
         state_i_final = len(states_msnull)
         state_j_final = len(states_msnull)
 
-        if (state_i_msnotnull in no_mapped_states) and (state_j_msnotnull in no_mapped_states):
+        if (i in no_mapped_states) and (j in no_mapped_states):
             # Lower right part of the matrix: when both states are not in mapping
             print('LR')  # "Lower Right"
-            state_i_final += no_mapped_states.index(state_i_msnotnull)
-            state_j_final += no_mapped_states.index(state_j_msnotnull)
+            state_i_final += no_mapped_states.index(i)
+            state_j_final += no_mapped_states.index(j)
 
-        elif (state_i_msnotnull in no_mapped_states) and (state_j_msnotnull not in no_mapped_states):
+        elif (i in no_mapped_states) and (j not in no_mapped_states):
             # Lower left part of the matrix: when rows are in matrix but not the columns
-            print(j, state_j_msnotnull)
+            for k in range(0, len(mapping_list)):
+                if (j == mapping_list[k]['state ms not null']):
+                    index = k
             print(mapping_list)
-            print(mapping_list[state_j_msnotnull]['state ms not null'])
+            print(mapping_list[k]['state ms null'])
+            exit()
             # exit()
             print('LL')  # "Lower Left"
-            state_i_final += no_mapped_states.index(state_i_msnotnull)
+            state_i_final += no_mapped_states.index(i)
             state_j_final = mapping_list[j]['state ms null']
             # exit()
 
-        elif (state_i_msnotnull not in no_mapped_states) and (state_j_msnotnull in no_mapped_states):
+        elif (i not in no_mapped_states) and (j in no_mapped_states):
             # Upper right part of the matrix: when columns are in matrix but not the columns rows
             print('UR')  # "Upper Right"
             state_i_final = mapping_list[i-1]['state ms null'] - 1
-            state_j_final += no_mapped_states.index(state_j_msnotnull)
+            state_j_final += no_mapped_states.index(j)
 
-        print('States Ms not null:', state_i_msnotnull, state_j_msnotnull,
+        # if (state_i_msnotnull in no_mapped_states) and (state_j_msnotnull in no_mapped_states):
+        #     # Lower right part of the matrix: when both states are not in mapping
+        #     print('LR')  # "Lower Right"
+        #     state_i_final += no_mapped_states.index(state_i_msnotnull)
+        #     state_j_final += no_mapped_states.index(state_j_msnotnull)
+        #
+        # elif (state_i_msnotnull in no_mapped_states) and (state_j_msnotnull not in no_mapped_states):
+        #     # Lower left part of the matrix: when rows are in matrix but not the columns
+        #     print(j, state_j_msnotnull)
+        #     print(mapping_list)
+        #     # exit()
+        #     print('LL')  # "Lower Left"
+        #     state_i_final += no_mapped_states.index(state_i_msnotnull)
+        #     state_j_final = mapping_list[j]['state ms null']
+        #     # exit()
+        #
+        # elif (state_i_msnotnull not in no_mapped_states) and (state_j_msnotnull in no_mapped_states):
+        #     # Upper right part of the matrix: when columns are in matrix but not the columns rows
+        #     print('UR')  # "Upper Right"
+        #     state_i_final = mapping_list[i-1]['state ms null'] - 1
+        #     state_j_final += no_mapped_states.index(state_j_msnotnull)
+
+        print('States Ms not null:', i, j,
               ', Index states final: ', state_i_final, state_j_final)
         # exit()
         return state_i_final, state_j_final
@@ -234,12 +257,9 @@ def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_
     # Substitution
     for i in range(0, len(states_msnotnull)):
         for j in range(0, len(states_msnotnull)):
-            state_i_msnotnull = states_msnotnull[i]
-            state_j_msnotnull = states_msnotnull[j]
 
-            if (state_i_msnotnull in no_mapped_states) or (state_j_msnotnull in no_mapped_states):
-                state_i_final, state_j_final = state_arrangement_in_matrix(i, j, states_msnull, states_msnotnull, state_i_msnotnull, mapped_states, no_mapped_states,
-                                    state_j_msnotnull, mapping_list)
+            if (i in no_mapped_states) or (j in no_mapped_states):
+                state_i_final, state_j_final = state_arrangement_in_matrix(i, j, states_msnull, states_msnotnull, mapped_states, no_mapped_states, mapping_list)
 
                 # if (state_i_final in mapped_states) or (state_j_final in mapped_states):
                 for sz_1 in range(0, len(list_sz)):
@@ -255,6 +275,30 @@ def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_
                 # print('SOC in Ms not null:', soc_msnotnull[i * len(list_sz), j * len(list_sz)],
                 #       'SOC in total:', total_socs[state_i_final * len(list_sz), state_j_final * len(list_sz)])
                 # exit()
+
+    # for i in range(0, len(states_msnotnull)):
+    #     for j in range(0, len(states_msnotnull)):
+    #         state_i_msnotnull = states_msnotnull[i]
+    #         state_j_msnotnull = states_msnotnull[j]
+    #
+    #         if (state_i_msnotnull in no_mapped_states) or (state_j_msnotnull in no_mapped_states):
+    #             state_i_final, state_j_final = state_arrangement_in_matrix(i, j, states_msnull, states_msnotnull, state_i_msnotnull, mapped_states, no_mapped_states,
+    #                                 state_j_msnotnull, mapping_list)
+    #
+    #             # if (state_i_final in mapped_states) or (state_j_final in mapped_states):
+    #             for sz_1 in range(0, len(list_sz)):
+    #                 for sz_2 in range(0, len(list_sz)):
+    #                     soc_row = i * len(list_sz) + sz_1
+    #                     soc_col = j * len(list_sz) + sz_2
+    #
+    #                     soc_row_final = state_i_final * len(list_sz) + sz_1
+    #                     soc_col_final = state_j_final * len(list_sz) + sz_2
+    #                     # print(soc_row, soc_col, '-->', soc_row_final, soc_col_final)
+    #
+    #                     total_socs[soc_row_final, soc_col_final] = soc_msnotnull[soc_row, soc_col]
+    #             # print('SOC in Ms not null:', soc_msnotnull[i * len(list_sz), j * len(list_sz)],
+    #             #       'SOC in total:', total_socs[state_i_final * len(list_sz), state_j_final * len(list_sz)])
+    #             # exit()
     print('----------------')
     # exit()
     return total_socs
