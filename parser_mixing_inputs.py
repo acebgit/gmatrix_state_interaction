@@ -165,28 +165,31 @@ def mixing_lists(list_1, list_2, mapping_list):
         return final_list
 
 
-def get_no_mapped_states(list_mapping, states):
-    """
-    Obtain a list of not mapped states
-    :return: no_mapped_states
-    """
-    mapped_states_index = []
-    for mapping_dict in list_mapping:
-        mapped_states_index.append(mapping_dict['state ms not null'])
-
-    no_mapped_states = []
-    for i in range(0, len(states)):
-        if i not in mapped_states_index:
-            no_mapped_states.append(states[i])
-    return no_mapped_states
-
-
 def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_msnotnull, total_socs, list_sz):
     """
     SOCs between states Ms ≠ 0 that have not been included in total SOC matrix are now included
     :return:
     """
-    def state_arrangement_in_matrix(i, j, states_msnull, state_i_msnotnull, no_mapped_states,
+    def get_mapped_states(list_mapping, states):
+        """
+        Obtain a list of not mapped states
+        :return: no_mapped_states
+        """
+        mapped_states_index = []
+        for mapping_dict in list_mapping:
+            mapped_states_index.append(mapping_dict['state ms not null'])
+
+        no_mapped_states = []
+        mapped_states = []
+        for i in range(0, len(states)):
+            if i in mapped_states_index:
+                mapped_states.append(states[i])
+            else:
+                no_mapped_states.append(states[i])
+
+        return mapped_states, no_mapped_states
+
+    def state_arrangement_in_matrix(i, j, states_msnull, states_msnotnull, state_i_msnotnull, mapped_states, no_mapped_states,
                                     state_j_msnotnull, mapping_list):
         """
         Set the final SOC matrix row or column defined by the state selected.
@@ -199,27 +202,34 @@ def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_
 
         if (state_i_msnotnull in no_mapped_states) and (state_j_msnotnull in no_mapped_states):
             # Lower right part of the matrix: when both states are not in mapping
+            print('LR')  # "Lower Right"
             state_i_final += no_mapped_states.index(state_i_msnotnull)
             state_j_final += no_mapped_states.index(state_j_msnotnull)
-            print('LR')  # "Lower Right"
 
         elif (state_i_msnotnull in no_mapped_states) and (state_j_msnotnull not in no_mapped_states):
             # Lower left part of the matrix: when rows are in matrix but not the columns
-            state_i_final += no_mapped_states.index(state_i_msnotnull)
-            state_j_final = mapping_list[j-1]['state ms null']
-            print()
+            print(j, state_j_msnotnull)
+            print(mapping_list)
+            print(mapping_list[state_j_msnotnull]['state ms not null'])
+            # exit()
             print('LL')  # "Lower Left"
+            state_i_final += no_mapped_states.index(state_i_msnotnull)
+            state_j_final = mapping_list[j]['state ms null']
+            # exit()
 
         elif (state_i_msnotnull not in no_mapped_states) and (state_j_msnotnull in no_mapped_states):
             # Upper right part of the matrix: when columns are in matrix but not the columns rows
-            state_i_final = mapping_list[i-1]['state ms null']
-            state_j_final += no_mapped_states.index(state_j_msnotnull)
             print('UR')  # "Upper Right"
-        print('Index states Ms not null:', i, j, ', Index states total: ', state_i_final, state_j_final)
+            state_i_final = mapping_list[i-1]['state ms null'] - 1
+            state_j_final += no_mapped_states.index(state_j_msnotnull)
+
+        print('States Ms not null:', state_i_msnotnull, state_j_msnotnull,
+              ', Index states final: ', state_i_final, state_j_final)
+        # exit()
         return state_i_final, state_j_final
 
     # Obtain list of not mapped states
-    no_mapped_states = get_no_mapped_states(mapping_list, states_msnotnull)
+    mapped_states, no_mapped_states = get_mapped_states(mapping_list, states_msnotnull)
 
     # Substitution
     for i in range(0, len(states_msnotnull)):
@@ -228,9 +238,10 @@ def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_
             state_j_msnotnull = states_msnotnull[j]
 
             if (state_i_msnotnull in no_mapped_states) or (state_j_msnotnull in no_mapped_states):
-                state_i_final, state_j_final = state_arrangement_in_matrix(i, j, states_msnull, state_i_msnotnull, no_mapped_states,
+                state_i_final, state_j_final = state_arrangement_in_matrix(i, j, states_msnull, states_msnotnull, state_i_msnotnull, mapped_states, no_mapped_states,
                                     state_j_msnotnull, mapping_list)
 
+                # if (state_i_final in mapped_states) or (state_j_final in mapped_states):
                 for sz_1 in range(0, len(list_sz)):
                     for sz_2 in range(0, len(list_sz)):
                         soc_row = i * len(list_sz) + sz_1
@@ -241,6 +252,9 @@ def include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, soc_
                         # print(soc_row, soc_col, '-->', soc_row_final, soc_col_final)
 
                         total_socs[soc_row_final, soc_col_final] = soc_msnotnull[soc_row, soc_col]
+                # print('SOC in Ms not null:', soc_msnotnull[i * len(list_sz), j * len(list_sz)],
+                #       'SOC in total:', total_socs[state_i_final * len(list_sz), state_j_final * len(list_sz)])
+                # exit()
     print('----------------')
     # exit()
     return total_socs
@@ -332,27 +346,28 @@ def angular_momentums_mix(states_msnull, states_msnotnull, msnull_ang, msnotnull
         total_ang[:,:,k] = include_msnotnull_states(states_msnull, states_msnotnull, mapping_list, msnotnull_ang[:,:,k], total_ang[:,:,k], sz_list)
         hermitian_test(total_ang[:,:,k], sz_list)
 
-    # print('msnull_ang:')
-    # for k in range(1, 2):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((msnull_ang[:, :, k]), 5)]))
-    #     print(" ")
-    # print('---')
-    # print('msnotnull_ang:')
-    # for k in range(1, 2):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((msnotnull_ang[:, :, k]), 5)]))
-    #     print(" ")
-    # print('---')
-    # print('total_ang:')
-    # for k in range(1, 2):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((total_ang[:, :, k]), 5)]))
-    #     print(" ")
-    # print('---')
+    print('msnull_ang:')
+    for k in range(0, 1):
+        print('Dimension: ', k)
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                         for row in np.round((msnull_ang[:, :, k]), 5)]))
+        print(" ")
+    print('---')
+    print('msnotnull_ang:')
+    for k in range(0, 1):
+        print('Dimension: ', k)
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                         for row in np.round((msnotnull_ang[:, :, k]), 5)]))
+        print(" ")
+    print('---')
+    print('total_ang:')
+    for k in range(0, 1):
+        print('Dimension: ', k)
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                         for row in np.round((total_ang[:, :, k]), 5)]))
+        print(" ")
+    print('---')
+    exit()
     return total_ang
 
 def count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_msnull, states_ras_msnotnull, list_mapping):
@@ -425,23 +440,15 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
 
     eigenenergy = mixing_lists(eigenenergies_ras_1, eigenenergies_ras_2, list_mapping)
 
-    socs = socs_mix(states_ras_1, states_ras_2 , selected_socs_1, selected_socs_2, list_mapping, sz_list, totalstates)
-
-    hamiltonian = get_hamiltonian_construction(list(range(0, totalstates)), eigenenergy, socs, sz_list)
-
-    eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
-
-    spin_matrix = angular_momentums_mix(states_msnull, states_msnotnull, spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
+    # socs = socs_mix(states_ras_1, states_ras_2 , selected_socs_1, selected_socs_2, list_mapping, sz_list, totalstates)
+    #
+    # hamiltonian = get_hamiltonian_construction(list(range(0, totalstates)), eigenenergy, socs, sz_list)
+    #
+    # eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
     orbital_matrix = angular_momentums_mix(states_msnull, states_msnotnull, orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list, totalstates)
 
-    for k in range(0, 3):
-        print('Dimension: ', k)
-        print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-                         for row in np.round((orbital_matrix[:, :, k]), 5)]))
-        print(" ")
-    print('---')
-    exit()
+    spin_matrix = angular_momentums_mix(states_msnull, states_msnotnull, spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
 
     combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
 
