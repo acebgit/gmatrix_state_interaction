@@ -46,13 +46,13 @@ def mapping_between_states(file_msnull, file_msnotnull, states_msnull, states_ms
             mapping_dict = {'state ms not null': i, 'state ms null': j}
             mapping_list = check_mapping(ener_ms_notnull, ener_ms_null, mapping_dict, mapping_list)
 
-    # print('Mapping: state Ms not 0 - Ms 0')
-    # for mapping_dict in mapping_list:
-    #     a = mapping_dict['state ms not null']
-    #     b = mapping_dict['state ms null']
-    #     print(states_msnotnull[a], ' - ', states_msnull[b])
-    # print('---')
-    # exit()
+    print('Mapping: state Ms not 0 - Ms 0')
+    for mapping_dict in mapping_list:
+        a = mapping_dict['state ms not null']
+        b = mapping_dict['state ms null']
+        print(states_msnotnull[a], ' - ', states_msnull[b])
+    print('---')
+    exit()
     if mapping_list == []:
         raise ValueError("No mapping between states is possible: the states of the two inputs are different.")
     return mapping_dict, mapping_list
