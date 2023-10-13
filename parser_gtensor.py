@@ -17,7 +17,7 @@ def get_number_of_states(file):
         data = f.readlines()
 
     element = 0
-    word_search = ['Requested states: ']
+    word_search = ['Computed states:']
 
     for line in data:
         if any(i in line for i in word_search):

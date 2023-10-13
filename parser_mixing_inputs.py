@@ -50,7 +50,7 @@ def mapping_between_states(file_msnull, file_msnotnull, states_msnull, states_ms
     # for mapping_dict in mapping_list:
     #     a = mapping_dict['state ms not null']
     #     b = mapping_dict['state ms null']
-    #     print(states_msnotnull[a], ' - ', states_msnotnull[b])
+    #     print(states_msnotnull[a], ' - ', states_msnull[b])
     # print('---')
     # exit()
     if mapping_list == []:
@@ -432,14 +432,6 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
         standard_spin_matrix = standard_spin_matrix_1
         sz_list, selected_socs_2, orbital_matrix_2, spin_matrix_2 = \
             matrix_expansion(sz_list_2, sz_list_1, states_ras_2, selected_socs_2, orbital_matrix_2, spin_matrix_2)
-    # for k in range(0, 3):
-    #     print('standard_spin_matrix:')
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((standard_spin_matrix[:, :, k]), 5)]))
-    #     print(" ")
-    #     print('---')
-    # exit()
 
     # Make a list with the mapping between states of Ms = 0 and Ms ≠0
     dict_mapping, list_mapping = mapping_between_states(file_msnull, file_ms_notnull, states_ras_1, states_ras_2, totalstates_1,totalstates_2)
@@ -458,43 +450,14 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
     # exit()
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
-    # for i in range(0, len(eigenvector)):
-    #     print(eigenvalue[i])
-    #     print(eigenvector[:, i])
-    #     print('---')
-    # exit()
 
     orbital_matrix = angular_momentums_mix(states_msnull, states_msnotnull, orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list, totalstates)
 
     spin_matrix = angular_momentums_mix(states_msnull, states_msnotnull, spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
-    # print('spin_matrix:')
-    # for k in range(0, 3):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((spin_matrix[:, :, k]), 5)]))
-    #     print(" ")
-    #     print('---')
-    # exit()
 
     combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list)
-    # print('combination_spin_matrix:')
-    # for k in range(0, 3):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((combination_spin_matrix[:, :, k]), 5)]))
-    #     print(" ")
-    #     print('---')
-    # exit()
 
     combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list)
-    # print('combination_orbital_matrix:')
-    # for k in range(0, 3):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((combination_orbital_matrix[:, :, k]), 5)]))
-    #     print(" ")
-    #     print('---')
-    # exit()
 
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground)
