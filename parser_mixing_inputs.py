@@ -467,7 +467,7 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
     orbital_matrix = angular_momentums_mix(states_msnull, states_msnotnull, orbital_matrix_1, orbital_matrix_2, list_mapping, sz_list, totalstates)
 
     spin_matrix = angular_momentums_mix(states_msnull, states_msnotnull, spin_matrix_1, spin_matrix_2, list_mapping, sz_list, totalstates)
-    print('spin_matrix:')
+    # print('spin_matrix:')
     # for k in range(0, 3):
     #     print('Dimension: ', k)
     #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \

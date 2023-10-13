@@ -707,8 +707,9 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         # reordering_eigenvectors(eigenvalues, eigenvectors)
 
         # for i in range(0, len(eigenvectors)):
-        #     print(np.round(eigenvectors[i,:]))
+        #     print(np.round(eigenvectors[:, i]))
         # print()
+        # exit()
         #
         # lista = [0, 2, 1, 2, 2, 3, 3, 4]
         # nuevo = np.zeros(len(eigenvectors), dtype=complex)
