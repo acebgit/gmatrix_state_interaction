@@ -33,7 +33,7 @@ def s2_from_file(qchem_file, states_selected):
 def get_hole_part_contributions(file, totalstates, states_selected):
     """
     Take the hole and particle contributions of each state.
-    :param: file_ms_notnull, selected_states
+    :param: file_ms_notnull, states_option
     :return: hole_contributions, part_contributions
     """
     with open(file, encoding="utf-8") as file:
@@ -70,7 +70,7 @@ def get_hole_part_contributions(file, totalstates, states_selected):
 def get_mulliken_spin(file, totalstates, states_selected):
     """
     Get Mulliken charge and spin of the first atom, i.e. a metal in transition atom complexes.
-    :param: file_ms_notnull, selected_states, states_selected
+    :param: file_ms_notnull, states_option, states_selected
     :return: charge_mulliken, spin_mulliken
     """
     word_search = '    Mulliken population analysis '
@@ -105,7 +105,7 @@ def get_mulliken_spin(file, totalstates, states_selected):
 def get_groundst_socc_values(file, totalstates, states_selected):
     """
     Get spin-orbit coupling constant between states_selected
-    :param: file_ms_notnull, selected_states
+    :param: file_ms_notnull, states_option
     :return: socc
     """
     with open(file, encoding="utf-8") as file:
@@ -144,7 +144,7 @@ def get_groundst_socc_values(file, totalstates, states_selected):
 def get_groundst_orbital_momentum(file, totalstates, states_selected):
     """
     Obtaining the orbital angular momentum between the ground state and all excited states_selected.
-    :param: file_ms_notnull, selected_states
+    :param: file_ms_notnull, states_option
     :return: orbital_momentum
     """
     with open(file, encoding="utf8") as f:

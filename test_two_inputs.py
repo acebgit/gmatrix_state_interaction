@@ -18,7 +18,7 @@ file_ms_notnull = '\
 triplets_molecules/nf_4_4_sto3g_triplets.out'
 
 states_option = 1  # 0: use "state_ras" ; 1: use all states_selected
-states_msnull = [1, 6]  # States to be included when "selected_states = 0"
+states_msnull = [1, 6]  # States to be included when "states_option = 0"
 states_msnotnull = [1, 3]
 # 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ,15, 16, 17, 18, 19, 20
 #####################################

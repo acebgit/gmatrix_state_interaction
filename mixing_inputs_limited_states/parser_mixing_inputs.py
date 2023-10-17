@@ -96,7 +96,7 @@ def exchange_coupling(mapping_list, selected_socs_ms_notnull, selected_socs_ms_n
 def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, states_option):
     """
     Returns the g-shifts for doublet ground state molecules.
-    :param: file_ms_notnull, nstates, selected_states, symmetry_selection, soc_options
+    :param: file_ms_notnull, nstates, states_option, symmetry_selection, soc_options
     :return: g-shifts
     """
     # print('File ms not null: ', file_ms_notnull)

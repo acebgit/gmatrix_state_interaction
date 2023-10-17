@@ -8,7 +8,7 @@ def get_number_of_states(file):
     """
     Obtain the total number of states_selected in ras
     :param: file_ms_notnull
-    :return: selected_states
+    :return: states_option
     """
     with open(file, encoding="utf8") as f:
         data = f.readlines()
@@ -29,8 +29,8 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
     """
     Select the states_selected used depending on "states_option" value:
     0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-    :param: file_ms_notnull, selected_states, selected_states, states_option, symmetry_selection
-    :return: selected_states
+    :param: file_ms_notnull, states_option, states_option, states_option, symmetry_selection
+    :return: states_option
     """
     all_symmetries, ordered_symmetries = get_symmetry_states(file, totalstates)
 
@@ -64,7 +64,7 @@ def get_selected_states(file, totalstates, selected_states, states_option, symme
 def get_eigenenergies(file, totalstates, selected_states):
     """
     Get energies of the RAS-CI states_selected.
-    :param: file_ms_notnull, selected_states, selected_states
+    :param: file_ms_notnull, states_option, states_option
     :return: eigenenergies, excitation_energies
     """
     word_search = ' RAS-CI total energy for state  '
@@ -101,7 +101,7 @@ def get_symmetry_states(file, totalstates):
     """
     Create two lists: first with the symmetry of each state (A1,A2,A3...) and second with
     the order of these symmetries (1A1,2A2,3A3...)
-    :param: file_ras, selected_states
+    :param: file_ras, states_option
     :return: all_state_symmetries, ordered_state_symmetries
     """
     with open(file, encoding="utf8") as f:
@@ -135,7 +135,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     """
     Spin-orbit coupling values are written in matrix with 'bra' in rows
     and 'ket' in columns, with spin order -Ms , +Ms.
-    :param: file_ms_notnull, selected_states, selected_states, soc_option
+    :param: file_ms_notnull, states_option, states_option, soc_option
     :return: doublet_soc, list_sz
     """
     with open(file, encoding="utf8") as f:
@@ -215,7 +215,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         Get SOC matrix between selected states_selected. For all the states_selected it put values
         from maximum Sz to -Sz. If Sz does not exist (i.e., we consider Sz=-1.5 and
         Sz of the state is 0.5), then the SOC value is 0.
-        :param: selected_states, list_sz, all_soc
+        :param: states_option, list_sz, all_soc
         :return: soc_matrix
         """
         selected_soc = np.zeros((len(n_states) * len(all_sz), len(n_states) * len(all_sz)), dtype=complex)
@@ -243,7 +243,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         """
         Get SOC matrix between selected states_selected in doublets,
         meaning Sz = -0.5, 0.5.
-        :param: selected_states, list_sz, all_soc
+        :param: states_option, list_sz, all_soc
         :return: soc_matrix
         """
         doublets_soc = np.zeros((len(n_states) * 2, len(n_states) * 2), dtype=complex)
@@ -286,7 +286,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
 def hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coupling, sz_values):
     """
     Hamiltonian is written 'bra' in rows and 'ket' in columns, with spin order -1/2 , +1/2.
-    :param: selected_states, eigenenergies, spin_orbit_coupling
+    :param: states_option, eigenenergies, spin_orbit_coupling
     :return: hamiltonian
     """
     def hermitian_test(matrix):
@@ -541,7 +541,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
     Orbital angular momentum values are written in matrix with 'bra' in rows and 'ket' in columns,
     with spin order -Ms , +Ms. Third dimension is the direction.
-    :param: file_ms_notnull, selected_states, selected_states, list_sz
+    :param: file_ms_notnull, states_option, states_option, list_sz
     :return: orbital_matrix
     """
     def get_all_momentum(line, n_states):
@@ -755,7 +755,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
                                   excitation_energies_ras, soc_ras, sz_list, ground_sz):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
-    :param:file_ms_notnull, states_msnull, selected_states, excitation_energies_ras, soc_ras, list_sz, ground_sz
+    :param:file_ms_notnull, states_msnull, states_option, excitation_energies_ras, soc_ras, list_sz, ground_sz
     :return: g_shift
     """
     hamiltonian_ras = hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)

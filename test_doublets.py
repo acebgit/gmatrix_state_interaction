@@ -22,7 +22,7 @@ ras_input = '\
 doublets_molecules/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])
 
 selected_states = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1, 4, 5]  # States to be included when "selected_states = 0"
+states_ras = [1, 4, 5]  # States to be included when "states_option = 0"
 symmetry_selection = 'A2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 

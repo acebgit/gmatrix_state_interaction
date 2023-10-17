@@ -19,7 +19,7 @@ file_ms_null = '\
 ../triplets_molecules/o2_11_9_allmultip.out'
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1,9,10]  # States to be included when "selected_states = 0"
+states_ras = [1,9,10]  # States to be included when "states_option = 0"
 
 #####################################
 #      G-TENSOR CALCULATION

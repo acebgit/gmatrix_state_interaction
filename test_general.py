@@ -13,7 +13,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/nf_12_9_enerproc_triplets.out'
+triplets_molecules/o2_11_9_triplets.out'
 
 g_calculation = 1
 excited_states_analysis = 0
@@ -22,7 +22,7 @@ gfactor_excited_states = 0
 ppm = 0
 
 state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1,3]  # States to be included when "selected_states = 0"
+states_ras = [1,5,6]  # States to be included when "states_option = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
@@ -39,7 +39,7 @@ if g_calculation == 1:
 
 #        PLOT ANALYSIS
 if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, state_selection, states_ras, cut_off=0.9, plots=0, save_pict=0)
+    get_excited_states_analysis(ras_input, state_selection, states_ras, cut_off=0.9, plots=1, save_pict=0)
 
 if sos_analysis == 1:
     sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, order_symmetry=1, save_option=0)
@@ -63,7 +63,7 @@ if gfactor_excited_states == 1:
 #         qchem_file = f"{file_ms_notnull}"
 #
 #         totalstates = get_number_of_states(qchem_file)
-#         states_msnull = get_selected_states(qchem_file, totalstates, states_msnull, selected_states, symmetry_selection)
+#         states_msnull = get_selected_states(qchem_file, totalstates, states_msnull, states_option, symmetry_selection)
 #         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(qchem_file, totalstates, states_msnull)
 #         selected_socs, list_sz, sz_ground = get_spin_orbit_couplings(qchem_file, totalstates, states_msnull, soc_options)
 #         g_shift = from_energies_soc_to_g_values(qchem_file, states_msnull,

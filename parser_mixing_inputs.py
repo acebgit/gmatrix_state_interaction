@@ -113,7 +113,7 @@ def matrix_expansion(sz_small, sz_big, nstates, socs, orbit_moments, spin_moment
 def get_input_values(ras_input, states_ras, selected_states, symmetry_selection, soc_options):
     """
     Returns the g-shifts for doublet ground state molecules.
-    :param: file_ms_notnull, states_msnull, selected_states, symmetry_selection, soc_options
+    :param: file_ms_notnull, states_msnull, states_option, symmetry_selection, soc_options
     :return: g-shifts
     """
     totalstates = get_number_of_states(ras_input)
