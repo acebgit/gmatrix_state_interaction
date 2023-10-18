@@ -13,7 +13,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/s2_10_9_triplets.out'
+triplets_molecules/s2_10_9_triplets.ou'
 
 g_calculation = 1
 excited_states_analysis = 1
