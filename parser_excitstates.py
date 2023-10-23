@@ -202,7 +202,7 @@ def get_ras_spaces(qchem_file):
     """
     Get the active space selected in input and the number of orbitals in RAS1.
     :param: qchem_file
-    :return: ras_act_orb, ras_occ
+    :return: act_orbitals_array, ras_occ
     """
     with open(qchem_file, encoding="utf-8") as file:
         data = file.readlines()
@@ -232,7 +232,7 @@ def get_ras_spaces(qchem_file):
             for i in range(1, ras_act+1):
                 elements.append(line[i])
             break
-    ras_act_orb = np.array(elements, dtype=int)
+    act_orbitals_array = np.array(elements, dtype=int)
 
     # Number of occupied orbitals
     word_search = ['RAS_OCC']
@@ -242,8 +242,7 @@ def get_ras_spaces(qchem_file):
             split_line = line.split()
             ras_occ = int(split_line[1])
             break
-
-    return ras_act_orb, ras_occ
+    return act_orbitals_array, ras_occ
 
 
 def get_alpha_beta(qchem_file):
@@ -432,7 +431,7 @@ def get_configurations_unpaired_orbitals(ras_input, cutoff, states_selected):
     :return:
     """
     initial_active_orbitals, ras_occ = get_ras_spaces(ras_input)
-    alpha, homo_orbital = get_alpha_beta(ras_input)
+    elec_alpha, elec_beta = get_alpha_beta(ras_input)
 
     word_search = ' | HOLE  | '
     orbit_list = []
@@ -447,8 +446,8 @@ def get_configurations_unpaired_orbitals(ras_input, cutoff, states_selected):
 
                 # Include all those configurations with relevant amplitudes in the final list
                 for i in index_relevant_amplit:
-                    new_orbitals = get_orbital(homo_orbital, state_orbitals[i], initial_active_orbitals)
-                    orbit_dict = {'State': n_state+1, 'Configuration': n_configuration+1, 'Orbitals': new_orbitals}
+                    new_orbitals = get_orbital(elec_beta, state_orbitals[i], initial_active_orbitals)
+                    orbit_dict = {'State': n_state+1, 'Configuration': n_configuration+1, 'SOMO orbitals': new_orbitals}
                     orbit_list.append(orbit_dict)
 
                     n_configuration += 1
@@ -459,7 +458,10 @@ def get_configurations_unpaired_orbitals(ras_input, cutoff, states_selected):
         for i in range(0, len(orbit_list)):
             if orbit_list[i]["State"] == state:
                 orbit_list_selected.append(orbit_list[i])
-    return orbit_list_selected
+
+
+    initial_active_orbitals_list = list(initial_active_orbitals)
+    return orbit_list_selected, initial_active_orbitals_list
 
 
 def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plots, save_pict):
@@ -490,7 +492,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
 
     orbital_momentum = get_groundst_orbital_momentum(file, totalstates, states_ras)
 
-    configuration_orbitals = get_configurations_unpaired_orbitals(file, cut_off, states_ras)
+    configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, cut_off, states_ras)
 
     excited_states_presentation_list = [['State', 'Configuration', 'Symmetry', 'Hole', 'Part',
                                          'Excitation energy(eV)', 'Unpaired orbitals', 'SOCC(cm-1)',
@@ -534,3 +536,67 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
                       'Orbital angular momentum', 'orbitmoment_analysis', save_pict)
         get_bar_chart(file_string[:-4], states_ras, socc_values, 'Electronic State',
                       'SOCC (cm-1)', 'socc_analysis', save_pict)
+
+
+def get_new_active_space_electrons(new_active_space, alpha, beta):
+    """
+    Electrons in the new active space considering if they are occupied
+    or unoccupied observing the HOMO position
+     """
+    electrons = 0
+    for i in range(0, len(new_active_space)):
+        if new_active_space[i] < beta:
+            electrons += 2
+        elif new_active_space[i] >= beta and new_active_space[i] < alpha:
+            electrons += 1
+        elif new_active_space[i] >= alpha:
+            pass
+    return electrons
+
+
+def improved_active_space(file, cut_off, see_soc):
+    """
+    Obtain an improved active space of RAS-CI Q-Chem output including orbitals with unpaired electrons in relevant
+    hole/particle configurations.
+    :param file:
+    :return:
+    """
+    totalstates = get_number_of_states(file)
+
+    states_ras = get_selected_states(file, totalstates, selected_states='None', states_option=1, symmetry_selection='None')
+
+    elec_alpha, elec_beta = get_alpha_beta(file)
+
+    configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, cut_off, states_ras)
+
+    socc_values = get_groundst_socc_values(file, totalstates, states_ras)
+
+    final_active_orbitals = []
+    for i in range(0, len(configuration_orbitals)):
+        conf_orbital = configuration_orbitals[i]['SOMO orbitals']
+        conf_orbital = conf_orbital.split(',')
+
+        for i in range(0, len(conf_orbital)):
+
+            if see_soc == 1:
+                state = configuration_orbitals[i]['State'] - 1
+                if socc_values[state] != 0:
+                        final_active_orbitals.append(int(conf_orbital[i]))
+            else:
+                final_active_orbitals.append(int(conf_orbital[i]))
+
+    orbital_set = set(final_active_orbitals)
+    final_active_orbitals = list(orbital_set)
+    final_active_orbitals.sort()
+
+    print("------------------------")
+    print(" IMPROVED ACTIVE SPACE ")
+    print("------------------------")
+
+    electrons = get_new_active_space_electrons(initial_active_orbitals, elec_alpha, elec_beta)
+    print('Initial active space (HOMO =', elec_beta, '):', '[', electrons, ',', len(initial_active_orbitals), '] ;',
+          initial_active_orbitals)
+
+    electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
+    print('Final active space (HOMO =', elec_beta, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
+          final_active_orbitals)
