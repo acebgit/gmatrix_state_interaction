@@ -574,16 +574,25 @@ def improved_active_space(file, cut_off, see_soc):
     final_active_orbitals = []
     for i in range(0, len(configuration_orbitals)):
         conf_orbital = configuration_orbitals[i]['SOMO orbitals']
-        conf_orbital = conf_orbital.split(',')
 
-        for i in range(0, len(conf_orbital)):
-
+        if type(conf_orbital) == str:
             if see_soc == 1:
                 state = configuration_orbitals[i]['State'] - 1
                 if socc_values[state] != 0:
-                        final_active_orbitals.append(int(conf_orbital[i]))
+                        final_active_orbitals.append(int(conf_orbital))
             else:
-                final_active_orbitals.append(int(conf_orbital[i]))
+                final_active_orbitals.append(int(conf_orbital))
+
+        elif type(conf_orbital) == list:
+            conf_orbital = conf_orbital.split(',')
+
+            for i in range(0, len(conf_orbital)):
+                if see_soc == 1:
+                    state = configuration_orbitals[i]['State'] - 1
+                    if socc_values[state] != 0:
+                            final_active_orbitals.append(int(conf_orbital[i]))
+                else:
+                    final_active_orbitals.append(int(conf_orbital[i]))
 
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)

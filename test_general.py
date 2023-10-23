@@ -13,7 +13,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/benzophenone_14_11_triplets.out'
+doublets_molecules/h2o/h2o_def2tzvp_5_5.out'
 
 g_calculation = 0
 sos_analysis = 0
@@ -41,7 +41,7 @@ if g_calculation == 1:
 
 #        PLOT ANALYSIS
 if improve_as == 1:
-    improved_active_space(ras_input, cut_off=0.7, see_soc=0)
+    improved_active_space(ras_input, cut_off=0.9, see_soc=1)
 
 if excited_states_analysis == 1:
     get_excited_states_analysis(ras_input, state_selection, states_ras, cut_off=0.9, plots=1, save_pict=0)
