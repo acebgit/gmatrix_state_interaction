@@ -324,7 +324,7 @@ def get_highest_amplitudes(file, amplitude_cutoff):
         :param: amplitude, amplitude_cutoff
         :return: indexes
         """
-        cut_off = amplitude_cut_off  # * amplitude[0]
+        cut_off = amplitude_cut_off * amplitude[0]
 
         indexes_list = ['0']
         for k in range(1, len(amplitude)):  # Value in 0 is ignored since amplitudes are sorted
@@ -510,7 +510,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
         part = np.around(float(part_contributions[state_index]), 2)
 
         excit_energy = np.round(float(excitation_energies_ras[state_index]), 3)
-        orbital = configuration_orbitals[i]["Orbitals"]
+        orbital = configuration_orbitals[i]["SOMO orbitals"]
         soc = np.round(float(socc_values[state_index]), 0)
 
         orbital_ground_state = np.round(float(orbital_momentum[state_index]), 3)
@@ -575,7 +575,10 @@ def improved_active_space(file, cut_off, see_soc):
     for i in range(0, len(configuration_orbitals)):
         conf_orbital = configuration_orbitals[i]['SOMO orbitals']
 
-        if type(conf_orbital) == int:
+        if conf_orbital == '-':  # In case it is a singlet and there is no SOMO, add HOMO
+            final_active_orbitals.append(elec_alpha)
+
+        elif type(conf_orbital) == int:
             if see_soc == 1:
                 state = configuration_orbitals[i]['State'] - 1
                 if socc_values[state] != 0:
@@ -603,9 +606,9 @@ def improved_active_space(file, cut_off, see_soc):
     print("------------------------")
 
     electrons = get_new_active_space_electrons(initial_active_orbitals, elec_alpha, elec_beta)
-    print('Initial active space (HOMO =', elec_beta, '):', '[', electrons, ',', len(initial_active_orbitals), '] ;',
+    print('Initial active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(initial_active_orbitals), '] ;',
           initial_active_orbitals)
 
     electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
-    print('Final active space (HOMO =', elec_beta, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
+    print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
           final_active_orbitals)

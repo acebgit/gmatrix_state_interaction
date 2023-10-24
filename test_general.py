@@ -15,7 +15,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/benzophenone_14_11_triplets.out'
+improvement_active_space/s2_12_8_sto3g.out'
 
 g_calculation = 0
 sos_analysis = 0
@@ -26,7 +26,7 @@ excited_states_analysis = 0
 improve_as = 1
 
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1,5,6]  # States to be included when "states_option = 0"
+states_ras = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]  # States to be included when "states_option = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
@@ -41,12 +41,11 @@ if write_ras_input == 1:
 if g_calculation == 1:
     gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
 
-#        PLOT ANALYSIS
-if improve_as == 1:
-    improved_active_space(ras_input, cut_off=0.5, see_soc=1)
-
 if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, state_selection, states_ras, cut_off=0.5, plots=1, save_pict=0)
+    get_excited_states_analysis(ras_input, state_selection, states_ras, cut_off=0.9, plots=0, save_pict=0)
+
+if improve_as == 1:
+    improved_active_space(ras_input, cut_off=0.9, see_soc=0)
 
 if sos_analysis == 1:
     sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, order_symmetry=1, save_option=0)
