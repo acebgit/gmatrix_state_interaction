@@ -1,3 +1,5 @@
+__author__ = 'Antonio Cebreiro-Gallardo'
+
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator, MultipleLocator
 

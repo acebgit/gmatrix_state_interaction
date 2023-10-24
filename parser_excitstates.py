@@ -2,8 +2,9 @@
  Analysis of the excited states_selected. Printing orbitals involved in the configurations
  with the highest amplitudes in the excited states_selected
 """
+__author__ = 'Antonio Cebreiro-Gallardo'
+
 import numpy as np
-import sys
 
 from parser_plots import get_bar_chart
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, order_by_states
@@ -323,7 +324,7 @@ def get_highest_amplitudes(file, amplitude_cutoff):
         :param: amplitude, amplitude_cutoff
         :return: indexes
         """
-        cut_off = amplitude_cut_off * amplitude[0]
+        cut_off = amplitude_cut_off  # * amplitude[0]
 
         indexes_list = ['0']
         for k in range(1, len(amplitude)):  # Value in 0 is ignored since amplitudes are sorted
@@ -538,18 +539,18 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
                       'SOCC (cm-1)', 'socc_analysis', save_pict)
 
 
-def get_new_active_space_electrons(new_active_space, alpha, beta):
+def get_new_active_space_electrons(active_space, alpha, beta):
     """
     Electrons in the new active space considering if they are occupied
     or unoccupied observing the HOMO position
      """
     electrons = 0
-    for i in range(0, len(new_active_space)):
-        if new_active_space[i] < beta:
+    for i in range(0, len(active_space)):
+        if active_space[i] <= beta:
             electrons += 2
-        elif new_active_space[i] >= beta and new_active_space[i] < alpha:
+        elif active_space[i] > beta and active_space[i] <= alpha:
             electrons += 1
-        elif new_active_space[i] >= alpha:
+        elif active_space[i] > alpha:
             pass
     return electrons
 
@@ -557,9 +558,8 @@ def get_new_active_space_electrons(new_active_space, alpha, beta):
 def improved_active_space(file, cut_off, see_soc):
     """
     Obtain an improved active space of RAS-CI Q-Chem output including orbitals with unpaired electrons in relevant
-    hole/particle configurations.
-    :param file:
-    :return:
+    hole/particle configurations. Cut_off is the amplitude at which the second-highest amplitude configuration is included.
+    :param file, cut_off, see_soc
     """
     totalstates = get_number_of_states(file)
 
@@ -575,7 +575,7 @@ def improved_active_space(file, cut_off, see_soc):
     for i in range(0, len(configuration_orbitals)):
         conf_orbital = configuration_orbitals[i]['SOMO orbitals']
 
-        if type(conf_orbital) == str:
+        if type(conf_orbital) == int:
             if see_soc == 1:
                 state = configuration_orbitals[i]['State'] - 1
                 if socc_values[state] != 0:
@@ -583,7 +583,7 @@ def improved_active_space(file, cut_off, see_soc):
             else:
                 final_active_orbitals.append(int(conf_orbital))
 
-        elif type(conf_orbital) == list:
+        elif type(conf_orbital) == str:
             conf_orbital = conf_orbital.split(',')
 
             for i in range(0, len(conf_orbital)):

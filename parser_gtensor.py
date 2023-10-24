@@ -1,7 +1,8 @@
 """
 Calculation of the g-tensor using Q-Chem output with RAS-CI
 """
-import sys
+__author__ = 'Antonio Cebreiro-Gallardo'
+
 import numpy as np
 from numpy import linalg, sqrt
 from pyqchem.parsers.parser_rasci import parser_rasci

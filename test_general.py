@@ -1,6 +1,8 @@
 #####################################
 #          MODULES SELECTION
 #####################################
+__author__ = 'Antonio Cebreiro-Gallardo'
+
 import sys
 
 from parser_gtensor import gfactor_presentation
@@ -13,7 +15,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-doublets_molecules/h2o/h2o_def2tzvp_5_5.out'
+triplets_molecules/benzophenone_14_11_triplets.out'
 
 g_calculation = 0
 sos_analysis = 0
@@ -41,10 +43,10 @@ if g_calculation == 1:
 
 #        PLOT ANALYSIS
 if improve_as == 1:
-    improved_active_space(ras_input, cut_off=0.9, see_soc=1)
+    improved_active_space(ras_input, cut_off=0.5, see_soc=1)
 
 if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, state_selection, states_ras, cut_off=0.9, plots=1, save_pict=0)
+    get_excited_states_analysis(ras_input, state_selection, states_ras, cut_off=0.5, plots=1, save_pict=0)
 
 if sos_analysis == 1:
     sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, order_symmetry=1, save_option=0)

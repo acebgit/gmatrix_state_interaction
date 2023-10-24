@@ -1,6 +1,8 @@
 """
 Calculation of the g-tensor using Q-Chem output with RAS-CI
 """
+__author__ = 'Antonio Cebreiro-Gallardo'
+
 import numpy as np
 import matplotlib.pyplot as plt
 
