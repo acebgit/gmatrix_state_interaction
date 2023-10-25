@@ -7,7 +7,7 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 import numpy as np
 
 from parser_plots import get_bar_chart
-from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, order_by_states
+from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, take_selected_states_values
 
 
 def s2_from_file(qchem_file, states_selected):
@@ -26,7 +26,7 @@ def s2_from_file(qchem_file, states_selected):
                 element = float(line[2])
                 elements.append(np.round(element, 2))
 
-    s2_selected = order_by_states(elements, states_selected)
+    s2_selected = take_selected_states_values(elements, states_selected)
     s2_each_states = np.array(s2_selected, dtype=float)
     return s2_each_states
 
@@ -50,7 +50,7 @@ def get_hole_part_contributions(file, totalstates, states_selected):
         if len(elements) == totalstates:
             break
 
-    hole_elements = order_by_states(elements, states_selected)
+    hole_elements = take_selected_states_values(elements, states_selected)
     hole_contributions = np.array(hole_elements, dtype=float)
 
     word_search = ['   Part: ']
@@ -63,7 +63,7 @@ def get_hole_part_contributions(file, totalstates, states_selected):
         if len(elements) == totalstates:
             break
 
-    part_elements = order_by_states(elements, states_selected)
+    part_elements = take_selected_states_values(elements, states_selected)
     part_contributions = np.array(part_elements, dtype=float)
     return hole_contributions, part_contributions
 
@@ -95,8 +95,8 @@ def get_mulliken_spin(file, totalstates, states_selected):
             if len(element_charge) == totalstates:
                 break
 
-    charge_mulliken_selected = order_by_states(element_charge, states_selected)
-    spin_mulliken_selected = order_by_states(elements_spin, states_selected)
+    charge_mulliken_selected = take_selected_states_values(element_charge, states_selected)
+    spin_mulliken_selected = take_selected_states_values(elements_spin, states_selected)
 
     charge_mulliken = np.array(charge_mulliken_selected, dtype=float)
     spin_mulliken = np.array(spin_mulliken_selected, dtype=float)
@@ -137,7 +137,7 @@ def get_groundst_socc_values(file, totalstates, states_selected):
         ground_state_soccs.append(all_soccs[i])
 
     # Take SOCCs between the considered ground state and the selected states.
-    socc_list = order_by_states(ground_state_soccs, states_selected)
+    socc_list = take_selected_states_values(ground_state_soccs, states_selected)
     socc = np.array(socc_list, dtype=float)
     return socc
 
@@ -194,7 +194,7 @@ def get_groundst_orbital_momentum(file, totalstates, states_selected):
         orbital_list.append(float(ground_state_orbit[nstate * 3 + index_max_momentum]))
         nstate += 1
 
-    orbital_list = order_by_states(orbital_list, states_selected)
+    orbital_list = take_selected_states_values(orbital_list, states_selected)
     final_momentum = np.array(orbital_list, dtype=float)
     return final_momentum
 
