@@ -1,0 +1,37 @@
+$comment
+ RAS-SF CALCULATION
+$end
+
+$molecule
+1 2    !charge and multiplicity
+O1
+H1 O1 oh
+H2 O1 oh H1 hoh
+
+oh = 0.997
+hoh = 109.17
+$end
+
+$rem
+!**CALCULATION TYPE***     
+JOBTYPE            sp    
+EXCHANGE           HF
+CORRELATION        RASCI    !RASCI=Casanova; RASCI2=Zimmerman
+BASIS              STO-3G
+
+!***SCF REFERENCE***
+UNRESTRICTED       FALSE
+!SCF_ALGORITHM      DIIS_GDM !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
+SCF_FINAL_PRINT     1 !0,1,2,3
+
+!****RAS-SF****
+RAS_ROOTS          5       !number of RAS-CI roots to be computed
+SET_ITER           30     !number of iterations in RASCI
+RAS_ELEC           10       !number of electrons in RAS2
+RAS_ELEC_ALPHA     7      !spin-α electrons in RAS2 
+RAS_ELEC_BETA      3      !spin-β electrons in RAS2
+RAS_ACT            7       !number of orbitals in RAS2 
+RAS_OCC            0       !number of orbitals in RAS1
+CALC_SOC           TRUE   !calculate SOC for EOM-CC, RAS-CI, ADC, TDDFT/TDA and TDDFT
+RAS_SOC_SYM_DENS   TRUE   !averaging of α and β densities
+$end                                           
