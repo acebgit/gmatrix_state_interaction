@@ -127,9 +127,9 @@ def gfactor_exchange_energies_socs(file_ms_notnull, file_ms_null, states_ras, st
     #
     # orbital_matrix = get_orbital_matrices(file_ms_notnull, totalstates_ms_null, states_msnull, sz_list_ms_null)
     #
-    # combination_spin_matrix = angular_matrixes_obtention(eigenvector, spin_matrix, sz_list_ms_null)
+    # combination_spin_matrix = angular_matrices_obtention(eigenvector, spin_matrix, sz_list_ms_null)
     #
-    # combination_orbital_matrix = angular_matrixes_obtention(eigenvector, orbital_matrix, sz_list_ms_null)
+    # combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list_ms_null)
     #
     # g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
     #                                sz_list_ms_null, sz_ground_ms_null)
