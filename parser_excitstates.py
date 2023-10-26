@@ -7,7 +7,8 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 import numpy as np
 
 from parser_plots import get_bar_chart
-from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, take_selected_states_values
+from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
+    take_selected_states_values
 
 
 def s2_from_file(qchem_file, states_selected):
@@ -459,8 +460,6 @@ def get_configurations_unpaired_orbitals(ras_input, cutoff, states_selected):
         for i in range(0, len(orbit_list)):
             if orbit_list[i]["State"] == state:
                 orbit_list_selected.append(orbit_list[i])
-
-
     initial_active_orbitals_list = list(initial_active_orbitals)
     return orbit_list_selected, initial_active_orbitals_list
 
@@ -487,7 +486,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
 
     hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates, states_ras)
 
-    mulliken_charge, mulliken_spin = get_mulliken_spin(file, totalstates, states_ras)
+    # mulliken_charge, mulliken_spin = get_mulliken_spin(file, totalstates, states_ras)
 
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
 
@@ -495,9 +494,9 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
 
     configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, cut_off, states_ras)
 
-    excited_states_presentation_list = [['State', 'Configuration', 'Symmetry', 'Hole', 'Part',
-                                         'Excitation energy(eV)', 'Unpaired orbitals', 'SOCC(cm-1)',
-                                         'Orbital momentum(máx)', 'S^2']]
+    excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
+                                         'ΔE (eV)', 'Unpaired orb.', 'SOCC',
+                                         'Máx Lk', 'S^2']]
 
     for i in range(0, len(configuration_orbitals)):
         n_states = configuration_orbitals[i]["State"]
@@ -514,7 +513,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
         soc = np.round(float(socc_values[state_index]), 0)
 
         orbital_ground_state = np.round(float(orbital_momentum[state_index]), 3)
-        mull_spin = np.round(float(mulliken_spin[state_index]), 3)
+        # mull_spin = np.round(float(mulliken_spin[state_index]), 3)
         s2 = s2_list[state_index]
 
         excited_states_presentation_list.append([n_states, configuration, symmetry, hole, part, excit_energy, orbital,
@@ -525,10 +524,22 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
     print("------------------------")
     print(" EXCITED STATES ANALYSIS")
     print("------------------------")
-    print('Most important settings for each state (amplitude_cutoff: 0.3) :')
-    print('\n'.join(''.join('{:^20}'.format(item) for item in row)
+    print('Most important settings for each state (amplitude_cutoff:', cut_off, ') :')
+    print('\n'.join(''.join('{:^15}'.format(item) for item in row)
                     for row in excited_states_presentation_matrix[:, :]))
     print(" ")
+
+    def count_singlet_triplets(states, s2_lists):
+        singlets = []
+        triplets = []
+        for ii in range(0, len(states)):
+            if s2_lists[ii] == 0:
+                singlets.append(ii+1)
+            elif s2_lists[ii] == 2:
+                triplets.append(ii+1)
+        print(len(singlets), 'singlet states: ', singlets)
+        print(len(triplets), 'Triplet states: ', triplets)
+    count_singlet_triplets(states_ras, s2_list)
 
     if plots == 1:
         get_bar_chart(file_string[:-4], states_ras, excitation_energies_ras, 'Electronic State',

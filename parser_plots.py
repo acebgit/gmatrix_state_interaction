@@ -212,8 +212,8 @@ def gfactor_all_states(file, nstates, ppms):
         states_ras = swapPositions(nstates, 0, i)
 
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-        soc_options = 0
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
+
+        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_option=0)
 
         g_shift = from_energies_soc_to_g_values(file, states_ras,
                                                 totalstates, excitation_energies_ras,
@@ -225,11 +225,11 @@ def gfactor_all_states(file, nstates, ppms):
                                   np.round(g_shift.real[2], 3)])
 
     presentation_matrix = np.array(presentation_list, dtype=object)
-    print("----------------------------------------------------------")
-    print(" G-TENSOR WITH DIFERENT GROUND STATES")
-    print("----------------------------------------------------------")
+    print("-----------------------------------------------")
+    print(" G-TENSOR WITH DIFFERENT GROUND STATES")
+    print("-----------------------------------------------")
     print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     presentation_matrix_2 = np.delete(presentation_matrix, 0, 0)
     plot_g_tensor_vs_states(file, presentation_matrix_2, x_title='Number of states_selected',
-                            y_title=r'$\Delta g, ppm$', main_title=file, save_picture=0)
+                            y_title=r'$\Delta g, ppm$', main_title=file, save_options=0)
