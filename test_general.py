@@ -15,7 +15,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-different_multiplicities/h2o_doublet.out'
+5_pyqchem/h2o_quintet.out'
 
 g_calculation = 1
 sos_analysis = 0
