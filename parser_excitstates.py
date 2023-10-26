@@ -531,14 +531,22 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
 
     def count_singlet_triplets(states, s2_lists):
         singlets = []
+        doublets = []
         triplets = []
+        quartets = []
         for ii in range(0, len(states)):
             if s2_lists[ii] == 0:
                 singlets.append(ii+1)
+            elif s2_lists[ii] == 0.75:
+                doublets.append(ii+1)
             elif s2_lists[ii] == 2:
                 triplets.append(ii+1)
-        print(len(singlets), 'singlet states: ', singlets)
+            elif s2_lists[ii] == 3.75:
+                quartets.append(ii+1)
+        print(len(singlets), 'Singlet states: ', singlets)
+        print(len(doublets), 'Doublet states: ', doublets)
         print(len(triplets), 'Triplet states: ', triplets)
+        print(len(quartets), 'Quartet states: ', quartets)
     count_singlet_triplets(states_ras, s2_list)
 
     if plots == 1:
