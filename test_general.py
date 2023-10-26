@@ -15,7 +15,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/s2_10_9_triplets.out'
+different_multiplicities/h2o_doublet.out'
 
 g_calculation = 1
 sos_analysis = 0
@@ -25,7 +25,7 @@ ppm = 0
 excited_states_analysis = 0
 improve_as = 0
 
-state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 states_ras = [1, 2, 10]  # States to be included when "states_option = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states_selected

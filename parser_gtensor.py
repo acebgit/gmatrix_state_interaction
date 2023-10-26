@@ -457,10 +457,6 @@ def get_spin_matrices(file, selected_states):
             long_sx = s_x
             long_sy = s_y
             long_sz = s_z
-
-        # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-        #                  for row in np.round((long_sx[:, :]), 5)]))
-        # exit()
         return long_sx, long_sy, long_sz
 
     def form_big_spin_matrix(st, selected_state, max_mult, sxx, syy, szz, spin_matr):
@@ -496,7 +492,7 @@ def get_spin_matrices(file, selected_states):
         :param: s2_selected_dict, max_mult, spin_mat
         :return: standard_spin_mat
         """
-        s2_ground = int(float(s2_selected_dict[0]['s2']))
+        s2_ground = (float(s2_selected_dict[0]['s2']))
         ground_multip = int(2 * s2_to_s(s2_ground) + 1)
         standard_spin_mat = np.zeros((ground_multip, ground_multip, 3), dtype=complex)
 
@@ -516,7 +512,7 @@ def get_spin_matrices(file, selected_states):
 
     for state in range(0, len(selected_states)):
         # Form the spin matrix of the state
-        s2_state = int(float(s2_selected_dicts[state]['s2']))
+        s2_state = (float(s2_selected_dicts[state]['s2']))
         s = s2_to_s(s2_state)
         sx, sy, sz = spin_matrices(s)
 
