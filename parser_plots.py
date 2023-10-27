@@ -164,7 +164,7 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
 
-        g_shift = from_ppt_to_ppm(ppms, g_shift)
+        g_shift = from_ppt_to_ppm(g_shift, ppms)
 
         state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
         if order_symmetry == 1:
@@ -219,7 +219,7 @@ def gfactor_all_states(file, nstates, ppms):
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
 
-        g_shift = from_ppt_to_ppm(ppms, g_shift)
+        g_shift = from_ppt_to_ppm(g_shift, ppms)
 
         presentation_list.append([nstates[0], np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
                                   np.round(g_shift.real[2], 3)])

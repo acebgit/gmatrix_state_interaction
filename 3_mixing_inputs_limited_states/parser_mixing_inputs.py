@@ -265,7 +265,7 @@ def sos_analysis_and_plot(file_ms_notnull, file_ms_null, nstates, selected_state
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz)
 
-        g_shift = from_ppt_to_ppm(ppms, g_shift)
+        g_shift = from_ppt_to_ppm(g_shift, ppms)
 
         state_symmetries, ordered_state_symmetries = get_symmetry_states(file_ms_null, nstates)
         if order_symmetry == 1:

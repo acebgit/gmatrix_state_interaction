@@ -3,70 +3,64 @@ PROGRAM TO CALCULATE THE CORRELATION
 BETWEEN ENERGIES-SOC-ORBITAL ANGULAR MOMENTUM
 AND THE G-TENSOR VALUES
 """
-import matplotlib.pyplot as plt
+import numpy as np
 from scipy import stats
 
-from doublets_procedure.gtensor_doublets import *
-from parser_excitstates import *
-
+from parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, get_spin_orbit_couplings, \
+    from_energies_soc_to_g_values, get_hamiltonian_construction, diagonalization, get_spin_matrices, \
+    get_orbital_matrices, angular_matrices_obtention, g_factor_calculation
 from parser_plots import plot_g_tensor_vs_states
 
-ras_input = 'doublets_molecules/h2o/h2o_def2tzvp_5_5.out'  # str(sys.argv[1])
-selected_states = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1, 2]  # States to be included when "states_option = 0"
-symmetry_selection = 'B1'  # Symmetry selected states_selected
-soc_option = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
-
-totalstates = get_number_of_states(ras_input)
-
-states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_states, symmetry_selection)
-
-eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
-
-doublet_soc, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_option)
-
-socc_values = get_groundst_socc_values(ras_input, totalstates)
-
-ras_upper_g_matrix, ras_g_values = from_energies_soc_to_g_values(
-    ras_input, states_ras, totalstates, excitation_energies_ras, doublet_soc, sz_list)
-
-print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)
+ras_input = 'triplets_molecules/o2_11_9_triplets.out'  # str(sys.argv[1])
+state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+states_ras = [1, 5]  # States to be included when "states_option = 0"
+symmetry_selection = 'A2'  # Symmetry selected states_selected
+soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 
-def soc_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs, soccs, sz_list):
+def soc_and_gvalues_correlation(file, n_states, totalstate, excit_ener, socs, list_sz, ground_sz):
     """"
     Correlation analysis between SOC and gvalues. Variation is done only
     for imaginary part of SOC between ground and first excited state.
-    :param: qchem_file, states_msnull, states_option, excitation_energies_ras, doublet_socs,socc_values
+    :param: qchem_file, states_msnull, states_option, excit_energ, doublet_socs,socc_values
     :return: soc_gvalues_matrix, r_square of fit
     """
     presentation_tuple = []
+    if len(n_states) != 2:
+        raise ValueError("SOC correlation only works with two states")
 
-    max_socc = (max(soccs)) * 3
-    min_socc = (min(soccs)) / 20
+    min_socc = 0
+    max_socc = 0
+    for i in range(0, len(socs)):
+        if socs[0, i] != 0:
+            min_socc = socs[0, i] / 10
+            max_socc = socs[0, i] * 3
+            break
+    step_socc = 20
 
-    for soc_value in np.linspace(min_socc, max_socc, 50):
-        soc_value = 0 + soc_value * 1j / 219474.63068  # from cm-1 to au
+    for soc_value in np.linspace(min_socc, max_socc, step_socc):
+        socs[3, 1] = soc_value.real + soc_value.imag * 1j
+        socs[4, 2] = soc_value.real + soc_value.imag * 1j
+        socs[4, 0] = -soc_value.real + soc_value.imag * 1j
+        socs[5, 1] = -soc_value.real + soc_value.imag * 1j
+        for i in range(0, len(socs)):
+            for j in range(i, len(socs)):
+                socs[i, j] = np.conjugate(socs[j, i])
 
-        socs[0, 3] = soc_value
-        socs[1, 2] = soc_value
-        socs[3, 0] = np.conj(socs[0, 3])
-        socs[2, 1] = np.conj(socs[1, 2])
+        # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+        #                  for row in np.round((socs[:, :]), 5)]))
+        # print("----")
+        # exit()
 
-        upper_g_matrix, g_values = from_energies_soc_to_g_values(file,
-                                                                        n_states, allstates, excit_energies, socs,
-                                                                        sz_list)
-
-        presentation_tuple.append([abs(soc_value), np.round(g_values.real[0], 3),
-                                   np.round(g_values.real[1], 3), np.round(g_values.real[2], 3)])
+        g_shift = from_energies_soc_to_g_values(file, n_states, totalstate,
+                                                excit_ener, socs, list_sz, ground_sz)
+        presentation_tuple.append([abs(soc_value), np.round(g_shift.real[0], 3),
+                                   np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
 
     presentation_matrix = np.array(presentation_tuple, dtype=object)
     presentation_matrix[:, 0] = presentation_matrix[:, 0] * 27.211399  # from au to eV
-
-    plot_g_tensor_vs_states(presentation_matrix, x_title='SOC (eV)', y_title='g-values (ppt)',
-                            main_title='g-factor evolution with SOC', save_picture=0)
-    plt.show()
-    plt.close()
+    plot_g_tensor_vs_states(file, presentation_matrix, x_title='SOC (eV)', y_title='g-values (ppt)',
+                            main_title='g-factor evolution with SOC', save_options=0)
 
     # R-squares obtention
     r_square = []
@@ -77,85 +71,80 @@ def soc_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs,
     return presentation_matrix, r_square
 
 
-def energy_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs, sz_list):
+def energy_and_gvalues_correlation(file, n_states, excit_energies, socs, list_sz, ground_sz):
     """"
     Correlation analysis between energies and gvalues. Change is done only for energy
     between ground and first excited state.
-    :param: qchem_file, states_msnull, states_option, excitation_energies_ras, doublet_socs,SOCC_values
+    :param: qchem_file, states_msnull, states_option, excit_energ, doublet_socs,SOCC_values
     :return: soc_gvalues_matrix, r_square of fit
     """
     presentation_tuple = []
 
-    max_ener = (max(excit_energies)) * 5
-    min_ener = (max(excit_energies)) / 20
+    max_ener = (max(excit_energies)) * 3
+    min_ener = (max(excit_energies)) / 10
+    steps_ener = 25
 
-    for ener_value in np.linspace(min_ener, max_ener, 50):
+    for ener_value in np.linspace(min_ener, max_ener, steps_ener):
         excit_energies[1] = ener_value
 
-        upper_g_matrix, g_values = from_energies_soc_to_g_values(file, n_states,
-                                                                        allstates, excit_energies, socs, sz_list)
+        g_shift = from_energies_soc_to_g_values(file, n_states, totalstates,
+                                                excitation_energies_ras, socs, list_sz, ground_sz)
 
-        presentation_tuple.append([ener_value * 27.211399, np.round(g_values.real[0], 3),
-                                   np.round(g_values.real[1], 3), np.round(g_values.real[2], 3)])
-        # print(ener_value * 27.211399, np.round(g_values.real[0], 3),
-        #       np.round(g_values.real[1], 3), np.round(g_values.real[2], 3))
-
+        presentation_tuple.append([ener_value * 27.211399, np.round(g_shift.real[0], 3),
+                                   np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
     presentation_matrix = np.array(presentation_tuple, dtype=object)
-
-    plot_g_tensor_vs_states(presentation_matrix, x_title='Energy (eV)', y_title='g-values (ppt)',
-                            main_title='g-factor evolution with energy', save_picture=0)
-
-    plt.show()
-    plt.close()
+    plot_g_tensor_vs_states(file, presentation_matrix, x_title='Energy (eV)', y_title='g-values (ppt)',
+                            main_title='g-factor evolution with Excitation Energy', save_options=0)
 
     return presentation_matrix
 
 
-def orbitmomentum_and_gvalues_correlation(file, n_states, allstates, excit_energies, socs, sz_list):
+def orbitmomentum_and_gvalues_correlation(file, nstates, excit_energ, socs, list_sz, ground_sz):
     """"
     Correlation analysis between energies and gvalues. Change is done only for energy
     between ground and first excited state.
-    :param: qchem_file, states_msnull, states_option, excitation_energies_ras, doublet_socs,SOCC_values
+    :param: qchem_file, states_msnull, states_option, excit_energ, doublet_socs,SOCC_values
     :return: soc_gvalues_matrix, r_square of fit
     """
-    hamiltonian_ras = get_hamiltonian_construction(n_states, excit_energies, socs, sz_list)
+    hamiltonian_ras = get_hamiltonian_construction(nstates, excit_energ, socs, list_sz)
 
-    eigenvalues, eigenvector, kramers_states = diagonalization(hamiltonian_ras)
+    eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
 
-    spin_matrix = get_spin_matrices(file, n_states)
+    spin_matrix, standard_spin_matrix = get_spin_matrices(file, nstates)
 
-    sigma_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, spin_matrix)
+    combination_spin_matrix = angular_matrices_obtention(eigenvector, spin_matrix, list_sz)
 
-    l_matrix = get_orbital_matrices(file, allstates, n_states, sz_list)
+    orbital_matrix = get_orbital_matrices(file, totalstates, nstates, list_sz)
+    orbital_matrix[:, :, :] = 0
 
     # Change L values
     presentation_tuple = []
-
-    max_momentum = 1.5
+    max_momentum = 0.99
     min_momentum = 0.01
 
-    for l_value in np.linspace(min_momentum, max_momentum, 100):
+    for l_value in np.linspace(min_momentum, max_momentum, 30):
         l_value = 0 + l_value * 1j
 
-        l_matrix[2, 0, 0] = l_value
-        l_matrix[3, 1, 0] = l_value
-        l_matrix[0, 2, 0] = np.conj(l_matrix[2, 0, 0])
-        l_matrix[1, 3, 0] = np.conj(l_matrix[3, 1, 0])
+        orbital_matrix[3, 0, 0] = l_value
+        orbital_matrix[4, 1, 0] = l_value
+        orbital_matrix[5, 2, 0] = l_value
+        for i in range(0, len(orbital_matrix)):
+            for j in range(i, len(orbital_matrix)):
+                orbital_matrix[i, j, 0] = np.conjugate(orbital_matrix[j, i, 0])
+        # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) for row in
+        #                  np.round((orbital_matrix[:, :, 0]), 5)]))
+        # print("----")
+        # exit()
 
-        lambda_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, l_matrix)
-
-        upper_g_matrix, g_values = g_factor_calculation(lambda_matrix, sigma_matrix)
-
-        presentation_tuple.append([abs(l_value), np.round(g_values.real[0], 3), np.round(g_values.real[1], 3),
-                                   np.round(g_values.real[2], 3)])
+        combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, list_sz)
+        g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+                                       list_sz, ground_sz)
+        presentation_tuple.append([abs(l_value), np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
+                                   np.round(g_shift.real[2], 3)])
 
     presentation_matrix = np.array(presentation_tuple, dtype=object)
-
-    plot_g_tensor_vs_states(presentation_matrix, x_title='Orbital Angular Momentum', y_title='g-values (ppt)',
-                            main_title='g-factor evolution with orbital angular momentum', save_picture=0)
-
-    plt.show()
-    plt.close()
+    plot_g_tensor_vs_states(file, presentation_matrix, x_title='Orbital Angular Momentum', y_title='g-values (ppt)',
+                            main_title='g-factor evolution with orbital angular momentum', save_options=0)
 
     # R-squares obtention
     r_square = []
@@ -165,18 +154,24 @@ def orbitmomentum_and_gvalues_correlation(file, n_states, allstates, excit_energ
     return presentation_matrix, r_square
 
 
+# 1st part of the calculation
+totalstates = get_number_of_states(ras_input)
+states_ras = get_selected_states(ras_input, totalstates, states_ras, state_selection, symmetry_selection)
+eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
+selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
+
 # SOC CORRELATION
-soc_gvalues_matrix, r2 = soc_and_gvalues_correlation(ras_input, states_ras,
-                                                     totalstates, excitation_energies_ras, doublet_socs,
-                                                     socc_values, sz_values)
-print('R-square in three dimmensions: ', np.round(r2[0], 2), np.round(r2[1], 3), np.round(r2[2], 3))
+# soc_gvalues_matrix, r2 = soc_and_gvalues_correlation(file, nstates, totalstate, excit_energ,
+#                                                      socs, list_sz, sz_ground)
+# print('R-square in three dimmensions: ', np.round(r2[0], 2), np.round(r2[1], 3), np.round(r2[2], 3))
 
 # ENERGY CORRELATION
-ener_gvalues_matrix = energy_and_gvalues_correlation(ras_input, states_ras,
-                                                     totalstates, excitation_energies_ras, doublet_socs, sz_values)
+# ener_gvalues_matrix = energy_and_gvalues_correlation(file, nstates, excit_energ, socs,
+#                                                      list_sz, sz_ground)
 
 # ORBITAL ANGULAR MOMENTUM CORRELATION
-momentum_gvalues_matrix, r2_momentum = orbitmomentum_and_gvalues_correlation(
-    ras_input, states_ras, totalstates, excitation_energies_ras, doublet_socs, sz_values)
-print('R-square in three dimmensions: ', np.round(r2_momentum[0], 2),
-      np.round(r2_momentum[1], 3), np.round(r2_momentum[2], 3))
+# momentum_gvalues_matrix, r2_momentum = orbitmomentum_and_gvalues_correlation(ras_input, states_ras,
+#                                                                              excitation_energies_ras, selected_socs,
+#                                                                              sz_list, sz_ground)
+# print('R-square in three dimmensions: ', np.round(r2_momentum[0], 2),
+#       np.round(r2_momentum[1], 3), np.round(r2_momentum[2], 3))

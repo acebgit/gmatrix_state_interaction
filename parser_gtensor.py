@@ -794,7 +794,7 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground)
 
-    g_shift = from_ppt_to_ppm(ppm, g_shift)
+    g_shift = from_ppt_to_ppm(g_shift, ppm)
 
     print_g_calculation(ras_input, totalstates, states_option, states_ras, g_shift, symmetry_selection)
 
@@ -812,7 +812,7 @@ def from_gvalue_to_shift(lista):
     print(np.round(g_shift, 3))
 
 
-def from_ppt_to_ppm(ppm, gvalues):
+def from_ppt_to_ppm(gvalues, ppm):
     """
     Pass from ppt to ppm the gvalues.
     :param: ppm, gvalues

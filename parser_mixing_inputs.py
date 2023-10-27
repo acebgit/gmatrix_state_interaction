@@ -464,7 +464,7 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground)
 
-    g_shift = from_ppt_to_ppm(ppms, g_shift)
+    g_shift = from_ppt_to_ppm(g_shift, ppms)
 
     singlet, triplet = count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_1, states_ras_2, list_mapping)
 
@@ -744,7 +744,7 @@ def sos_analysis_and_plot_mixinputs(file_msnull, file_ms_notnull, states_selecte
         states_ras = nstates[0:i]
 
         g_shift = gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option)
-        g_shift = from_ppt_to_ppm(ppms, g_shift)
+        g_shift = from_ppt_to_ppm(g_shift, ppms)
 
         # if order_symmetry == 1:
         #     presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),
