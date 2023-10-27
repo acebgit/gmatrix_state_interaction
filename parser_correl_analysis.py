@@ -17,6 +17,9 @@ states_ras = [1, 5]  # States to be included when "states_option = 0"
 symmetry_selection = 'A2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
+soc_analysis = 1
+ener_analysis = 0
+orbit_analysis = 0
 
 def soc_and_gvalues_correlation(file, n_states, totalstate, excit_ener, socs, list_sz, ground_sz):
     """"
@@ -161,17 +164,20 @@ eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totals
 selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
 
 # SOC CORRELATION
-# soc_gvalues_matrix, r2 = soc_and_gvalues_correlation(file, nstates, totalstate, excit_energ,
-#                                                      socs, list_sz, sz_ground)
-# print('R-square in three dimmensions: ', np.round(r2[0], 2), np.round(r2[1], 3), np.round(r2[2], 3))
+if soc_analysis == 1:
+    soc_gvalues_matrix, r2 = soc_and_gvalues_correlation(ras_input, states_ras, totalstates, excitation_energies_ras,
+                                                         selected_socs, sz_list, sz_ground)
+    print('R-square in three dimmensions: ', np.round(r2[0], 2), np.round(r2[1], 3), np.round(r2[2], 3))
 
 # ENERGY CORRELATION
-# ener_gvalues_matrix = energy_and_gvalues_correlation(file, nstates, excit_energ, socs,
-#                                                      list_sz, sz_ground)
+if ener_analysis == 1:
+    ener_gvalues_matrix = energy_and_gvalues_correlation(ras_input, states_ras, excitation_energies_ras, selected_socs,
+                                                     sz_list, sz_ground)
 
 # ORBITAL ANGULAR MOMENTUM CORRELATION
-# momentum_gvalues_matrix, r2_momentum = orbitmomentum_and_gvalues_correlation(ras_input, states_ras,
-#                                                                              excitation_energies_ras, selected_socs,
-#                                                                              sz_list, sz_ground)
-# print('R-square in three dimmensions: ', np.round(r2_momentum[0], 2),
-#       np.round(r2_momentum[1], 3), np.round(r2_momentum[2], 3))
+if orbit_analysis == 1:
+    momentum_gvalues_matrix, r2_momentum = orbitmomentum_and_gvalues_correlation(ras_input, states_ras,
+                                                                                 excitation_energies_ras, selected_socs,
+                                                                                 sz_list, sz_ground)
+    print('R-square in three dimmensions: ', np.round(r2_momentum[0], 2),
+      np.round(r2_momentum[1], 3), np.round(r2_momentum[2], 3))
