@@ -2619,7 +2619,7 @@ Angular momentum components
 < B | Lx | A > =    -0.000004425i
 < B | Ly | A > =     0.000000297i
 < B | Lz | A > =     0.000000000i
-  
+
 Norm of one-particle transition density matrix
 ||gamma^AB||_total       =  0.682338
 ||gamma^AB||_symmetrized =  0.498382
