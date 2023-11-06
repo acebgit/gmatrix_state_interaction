@@ -574,7 +574,7 @@ def get_new_active_space_electrons(active_space, alpha, beta):
     return electrons
 
 
-def improved_active_space(file, cut_off, see_soc):
+def improved_active_space(file, states_option, selected_states, cut_off, see_soc):
     """
     Obtain an improved active space of RAS-CI Q-Chem output including orbitals with unpaired electrons in relevant
     hole/particle configurations. Cut_off is the amplitude at which the second-highest amplitude configuration is included.
@@ -582,7 +582,7 @@ def improved_active_space(file, cut_off, see_soc):
     """
     totalstates = get_number_of_states(file)
 
-    states_ras = get_selected_states(file, totalstates, selected_states='None', states_option=1, symmetry_selection='None')
+    states_ras = get_selected_states(file, totalstates, selected_states, states_option, symmetry_selection='None')
 
     elec_alpha, elec_beta = get_alpha_beta(file)
 
