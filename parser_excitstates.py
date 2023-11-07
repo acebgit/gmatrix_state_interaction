@@ -611,7 +611,6 @@ def improved_active_space(file, states_option, selected_states, cut_off, see_soc
             for j in range(0, len(orbitals)):
                 if see_soc == 1:
                     if socc_values[state] >= soc_cutoff:
-                        print(socc_values[state], soc_cutoff)
                         final_active_orbitals.append(int(orbitals[j]))
                 else:
                     final_active_orbitals.append(int(orbitals[j]))
