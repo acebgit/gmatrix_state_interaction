@@ -574,7 +574,7 @@ def get_new_active_space_electrons(active_space, alpha, beta):
     return electrons
 
 
-def improved_active_space(file, states_option, selected_states, cut_off, see_soc, soc_cutoff):
+def improved_active_space(file, states_option, selected_states, cut_off, cut_soc, cut_ang):
     """
     Obtain an improved active space of RAS-CI Q-Chem output including orbitals with unpaired electrons in relevant
     hole/particle configurations. Cut_off is the amplitude at which the second-highest amplitude configuration is included.
@@ -590,6 +590,8 @@ def improved_active_space(file, states_option, selected_states, cut_off, see_soc
 
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
 
+    ang_moment = get_groundst_orbital_momentum(file, totalstates, states_ras)
+
     final_active_orbitals = []
     for i in range(0, len(configuration_orbitals)):
         state = configuration_orbitals[i]['State'] - 1
@@ -599,21 +601,14 @@ def improved_active_space(file, states_option, selected_states, cut_off, see_soc
             final_active_orbitals.append(elec_alpha)
 
         elif type(orbitals) == int: # It is a doublet, add SOMO
-            if see_soc == 1:
-                if socc_values[state] != 0:
+            if abs(socc_values[state]) >= cut_soc and abs(ang_moment[state]) >= cut_ang:
                         final_active_orbitals.append(int(orbitals))
-            else:
-                final_active_orbitals.append(int(orbitals))
 
         elif type(orbitals) == str: # It is higher multiplicities, add all SOMOs
             orbitals = orbitals.split(',')
-
             for j in range(0, len(orbitals)):
-                if see_soc == 1:
-                    if socc_values[state] >= soc_cutoff:
+                if abs(socc_values[state]) >= cut_soc and abs(ang_moment[state]) >= cut_ang:
                         final_active_orbitals.append(int(orbitals[j]))
-                else:
-                    final_active_orbitals.append(int(orbitals[j]))
 
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)

@@ -23,8 +23,8 @@ excited_states_analysis = 1
 cut_offf = 0.7
 
 improve_as = 1
-see_socs = 1
-soc_cutoffs = 0
+soc_cut = 0.01
+angmoment_cut = 0.01
 
 sos_analysis = 0
 gfactor_excited_states = 0
@@ -46,7 +46,7 @@ if excited_states_analysis == 1:
     get_excited_states_analysis(ras_input, state_selection, states_ras, cut_offf, plots=0, save_pict=0)
 
 if improve_as == 1:
-    improved_active_space(ras_input, state_selection, states_ras, cut_offf, see_socs, soc_cutoffs)
+    improved_active_space(ras_input, state_selection, states_ras, cut_offf, soc_cut, angmoment_cut)
 
 if g_calculation == 1:
     gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
