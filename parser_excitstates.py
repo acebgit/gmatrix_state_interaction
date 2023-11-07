@@ -503,14 +503,14 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
         configuration = configuration_orbitals[i]["Configuration"]
         state_index = states_ras.index(n_states)
 
-        symmetry = state_symmetries[state_index]
+        symmetry = ordered_state_symmetries[state_index]
 
         hole = np.around(float(hole_contributions[state_index]), 2)
         part = np.around(float(part_contributions[state_index]), 2)
 
         excit_energy = np.round(float(excitation_energies_ras[state_index]), 3)
         orbital = configuration_orbitals[i]["SOMO orbitals"]
-        soc = np.round(float(socc_values[state_index]), 0)
+        soc = np.round(float(socc_values[state_index]), 3)
 
         orbital_ground_state = np.round(float(orbital_momentum[state_index]), 3)
         # mull_spin = np.round(float(mulliken_spin[state_index]), 3)
