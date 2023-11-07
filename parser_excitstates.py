@@ -5,6 +5,7 @@
 __author__ = 'Antonio Cebreiro-Gallardo'
 
 import numpy as np
+import pandas as pd
 
 from parser_plots import get_bar_chart
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
@@ -486,8 +487,6 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
 
     hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates, states_ras)
 
-    # mulliken_charge, mulliken_spin = get_mulliken_spin(file, totalstates, states_ras)
-
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
 
     orbital_momentum = get_groundst_orbital_momentum(file, totalstates, states_ras)
@@ -497,12 +496,14 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
     excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
                                          'ΔE (eV)', 'Unpaired orb.', 'SOCC',
                                          'Máx Lk', 'S^2']]
+    # excited_states_list = []
+    # index_list = []
 
     for i in range(0, len(configuration_orbitals)):
         n_states = configuration_orbitals[i]["State"]
         configuration = configuration_orbitals[i]["Configuration"]
-        state_index = states_ras.index(n_states)
 
+        state_index = states_ras.index(n_states)
         symmetry = ordered_state_symmetries[state_index]
 
         hole = np.around(float(hole_contributions[state_index]), 2)
@@ -513,11 +514,22 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
         soc = np.round(float(socc_values[state_index]), 3)
 
         orbital_ground_state = np.round(float(orbital_momentum[state_index]), 3)
-        # mull_spin = np.round(float(mulliken_spin[state_index]), 3)
         s2 = s2_list[state_index]
+
+        # excited_states_dict = {'State': n_states, 'Configuration': configuration,
+        #                        'Symmetry': symmetry, 'Hole': hole,
+        #                        'Particle': part, 'ΔE (eV)': excit_energy,
+        #                        'SOMOs': orbital, 'SOCC': soc,
+        #                        'Máx Lk': orbital_ground_state, 'S^2': s2}
+        # excited_states_list.append(excited_states_dict)
+        # index_list.append(n_states)
 
         excited_states_presentation_list.append([n_states, configuration, symmetry, hole, part, excit_energy, orbital,
                                                  soc, orbital_ground_state, s2])
+
+    # data = pd.DataFrame(excited_states_list, index = index_list)
+    # print(data.head())
+
 
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
 
