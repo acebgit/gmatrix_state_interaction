@@ -574,7 +574,7 @@ def get_new_active_space_electrons(active_space, alpha, beta):
     return electrons
 
 
-def improved_active_space(file, states_option, selected_states, cut_off, see_soc):
+def improved_active_space(file, states_option, selected_states, cut_off, see_soc, soc_cutoff):
     """
     Obtain an improved active space of RAS-CI Q-Chem output including orbitals with unpaired electrons in relevant
     hole/particle configurations. Cut_off is the amplitude at which the second-highest amplitude configuration is included.
@@ -592,29 +592,29 @@ def improved_active_space(file, states_option, selected_states, cut_off, see_soc
 
     final_active_orbitals = []
     for i in range(0, len(configuration_orbitals)):
-        conf_orbital = configuration_orbitals[i]['SOMO orbitals']
+        state = configuration_orbitals[i]['State'] - 1
+        orbitals = configuration_orbitals[i]['SOMO orbitals']
 
-        if conf_orbital == '-':  # In case it is a singlet and there is no SOMO, add HOMO
+        if orbitals == '-':  # It is a singlet, there is no SOMO so add HOMO
             final_active_orbitals.append(elec_alpha)
 
-        elif type(conf_orbital) == int:
+        elif type(orbitals) == int: # It is a doublet, add SOMO
             if see_soc == 1:
-                state = configuration_orbitals[i]['State'] - 1
                 if socc_values[state] != 0:
-                        final_active_orbitals.append(int(conf_orbital))
+                        final_active_orbitals.append(int(orbitals))
             else:
-                final_active_orbitals.append(int(conf_orbital))
+                final_active_orbitals.append(int(orbitals))
 
-        elif type(conf_orbital) == str:
-            conf_orbital = conf_orbital.split(',')
+        elif type(orbitals) == str: # It is higher multiplicities, add all SOMOs
+            orbitals = orbitals.split(',')
 
-            for i in range(0, len(conf_orbital)):
+            for j in range(0, len(orbitals)):
                 if see_soc == 1:
-                    state = configuration_orbitals[i]['State'] - 1
-                    if socc_values[state] != 0:
-                            final_active_orbitals.append(int(conf_orbital[i]))
+                    if socc_values[state] >= soc_cutoff:
+                        print(socc_values[state], soc_cutoff)
+                        final_active_orbitals.append(int(orbitals[j]))
                 else:
-                    final_active_orbitals.append(int(conf_orbital[i]))
+                    final_active_orbitals.append(int(orbitals[j]))
 
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
