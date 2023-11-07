@@ -14,7 +14,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-david_molecules/anthracene_4_4_triplets.out'
+david_molecules/anthracene_14_12_triplets.out'
 
 g_calculation = 0
 ppm = 1
