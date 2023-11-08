@@ -14,23 +14,22 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-david_molecules/anthracene_14_12_triplets.out'
+triplets_molecules/fluorenone_8_8_30_states_triplets.out'
 
-g_calculation = 0
-ppm = 1
+g_calculation = 1
+ppm = 0
 
 excited_states_analysis = 1
-cut_offf = 0.7
+improve_as = 0
+config_cut = 0.8
+soc_cut = 0
+angmoment_cut = 0
 
-improve_as = 1
-soc_cut = 0.01
-angmoment_cut = 0.01
-
-sos_analysis = 0
+sos_analysis = 1
 gfactor_excited_states = 0
 
-state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1,2]  # States to be included when "states_option = 0"
+state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+states_ras = [1, 8, 16, 24, 25]  # States to be included when "states_option = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'A2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
@@ -43,10 +42,11 @@ if write_ras_input == 1:
 
 #      G-VALUE CALCULATION
 if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, state_selection, states_ras, cut_offf, plots=0, save_pict=0)
+    get_excited_states_analysis(ras_input, state_selection, states_ras, config_cut,
+                                soc_cut, angmoment_cut, plots=0, save_pict=0)
 
 if improve_as == 1:
-    improved_active_space(ras_input, state_selection, states_ras, cut_offf, soc_cut, angmoment_cut)
+    improved_active_space(ras_input, state_selection, states_ras, config_cut, soc_cut, angmoment_cut)
 
 if g_calculation == 1:
     gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
@@ -75,7 +75,8 @@ if gfactor_excited_states == 1:
 #         totalstates = get_number_of_states(qchem_file)
 #         states_msnull = get_selected_states(qchem_file, totalstates, states_msnull, states_option, symmetry_selection)
 #         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(qchem_file, totalstates, states_msnull)
-#         selected_socs, list_sz, sz_ground = get_spin_orbit_couplings(qchem_file, totalstates, states_msnull, soc_options)
+#         selected_socs, list_sz, sz_ground = get_spin_orbit_couplings
+#         (qchem_file, totalstates, states_msnull, soc_options)
 #         g_shift = from_energies_soc_to_g_values(qchem_file, states_msnull,
 #                                                 totalstates, excitation_energies_ras,
 #                                                 selected_socs, list_sz, sz_ground)

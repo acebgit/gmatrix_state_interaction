@@ -5,7 +5,6 @@
 __author__ = 'Antonio Cebreiro-Gallardo'
 
 import numpy as np
-import pandas as pd
 
 from parser_plots import get_bar_chart
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
@@ -465,7 +464,8 @@ def get_configurations_unpaired_orbitals(ras_input, cutoff, states_selected):
     return orbit_list_selected, initial_active_orbitals_list
 
 
-def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plots, save_pict):
+def get_excited_states_analysis(file, state_selections, states_ras, cut_off, cut_soc,
+                                cut_ang, plots, save_pict):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
     of the 1st configuration that need to have the other configurations to be shown in each state.
@@ -524,13 +524,13 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, plo
         # excited_states_list.append(excited_states_dict)
         # index_list.append(n_states)
 
-        excited_states_presentation_list.append([n_states, configuration, symmetry, hole, part, excit_energy, orbital,
-                                                 soc, orbital_ground_state, s2])
+        if abs(orbital_ground_state) >= cut_ang and abs(soc) >= cut_soc:
+            excited_states_presentation_list.append([n_states, configuration, symmetry,
+                                                     hole, part, excit_energy, orbital, soc,
+                                                     orbital_ground_state, s2])
 
     # data = pd.DataFrame(excited_states_list, index = index_list)
     # print(data.head())
-
-
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
 
     print("------------------------")
@@ -579,7 +579,7 @@ def get_new_active_space_electrons(active_space, alpha, beta):
     for i in range(0, len(active_space)):
         if active_space[i] <= beta:
             electrons += 2
-        elif active_space[i] > beta and active_space[i] <= alpha:
+        elif (active_space[i] > beta) and (active_space[i] <= alpha):
             electrons += 1
         elif active_space[i] > alpha:
             pass
@@ -588,9 +588,12 @@ def get_new_active_space_electrons(active_space, alpha, beta):
 
 def improved_active_space(file, states_option, selected_states, cut_off, cut_soc, cut_ang):
     """
-    Obtain an improved active space of RAS-CI Q-Chem output including orbitals with unpaired electrons in relevant
-    hole/particle configurations. Cut_off is the amplitude at which the second-highest amplitude configuration is included.
-    :param file, cut_off, see_soc
+    Obtain an improved active space of RAS-CI Q-Chem output including orbitals
+    with unpaired electrons in relevant hole/particle configurations.
+    Cut_off is the amplitude at which the second-highest amplitude
+    configuration is included.
+    :param: file
+    :param: states_option, selected_states, cut_off, cut_soc, cut_ang
     """
     totalstates = get_number_of_states(file)
 
@@ -612,15 +615,15 @@ def improved_active_space(file, states_option, selected_states, cut_off, cut_soc
         if orbitals == '-':  # It is a singlet, there is no SOMO so add HOMO
             final_active_orbitals.append(elec_alpha)
 
-        elif type(orbitals) == int: # It is a doublet, add SOMO
+        elif type(orbitals) == int:  # It is a doublet, add SOMO
             if abs(socc_values[state]) >= cut_soc and abs(ang_moment[state]) >= cut_ang:
-                        final_active_orbitals.append(int(orbitals))
+                final_active_orbitals.append(int(orbitals))
 
-        elif type(orbitals) == str: # It is higher multiplicities, add all SOMOs
+        elif type(orbitals) == str:  # It is higher multiplicities, add all SOMOs
             orbitals = orbitals.split(',')
             for j in range(0, len(orbitals)):
                 if abs(socc_values[state]) >= cut_soc and abs(ang_moment[state]) >= cut_ang:
-                        final_active_orbitals.append(int(orbitals[j]))
+                    final_active_orbitals.append(int(orbitals[j]))
 
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
