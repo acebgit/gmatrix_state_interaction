@@ -796,6 +796,11 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
 
     g_shift = from_ppt_to_ppm(g_shift, ppm)
 
+    # CHANGE FROM Q-CHEM ORIENTATION TO STANDARD NUCLEAR ORIENTATION
+    # a = g_shift[0]
+    # g_shift[0] = g_shift[1]
+    # g_shift[1] = a
+
     print_g_calculation(ras_input, totalstates, states_option, states_ras, g_shift, symmetry_selection)
 
 

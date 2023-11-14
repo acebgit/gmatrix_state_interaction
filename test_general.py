@@ -14,7 +14,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/fluorenone_8_8_30_states_triplets.out'
+triplets_molecules/naphthalene_10_9_30_states_triplets.out'
 
 g_calculation = 1
 ppm = 0
@@ -25,13 +25,13 @@ config_cut = 0.8
 soc_cut = 0
 angmoment_cut = 0
 
-sos_analysis = 1
+sos_analysis = 0
 gfactor_excited_states = 0
 
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1, 8, 16, 24, 25]  # States to be included when "states_option = 0"
+state_selection = 2  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+states_ras = [1, 7, 9, 16, 25, 27]  # States to be included when "states_option = 0"
 # [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-symmetry_selection = 'A2'  # Symmetry selected states_selected
+symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 # OUTPUT
@@ -42,7 +42,7 @@ if write_ras_input == 1:
 
 #      G-VALUE CALCULATION
 if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, state_selection, states_ras, config_cut,
+    get_excited_states_analysis(ras_input, state_selection, states_ras, symmetry_selection, config_cut,
                                 soc_cut, angmoment_cut, plots=0, save_pict=0)
 
 if improve_as == 1:
@@ -52,7 +52,7 @@ if g_calculation == 1:
     gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
 
 if sos_analysis == 1:
-    sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, order_symmetry=0, save_option=0)
+    sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, order_symmetry=1, save_option=0)
 
 if gfactor_excited_states == 1:
     gfactor_all_states(ras_input, states_ras, ppm)

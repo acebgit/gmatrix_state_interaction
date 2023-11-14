@@ -464,7 +464,7 @@ def get_configurations_unpaired_orbitals(ras_input, cutoff, states_selected):
     return orbit_list_selected, initial_active_orbitals_list
 
 
-def get_excited_states_analysis(file, state_selections, states_ras, cut_off, cut_soc,
+def get_excited_states_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_soc,
                                 cut_ang, plots, save_pict):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
@@ -478,7 +478,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, cut
 
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
 
-    states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selection='None')
+    states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selected)
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
     excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
@@ -504,7 +504,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, cut_off, cut
         configuration = configuration_orbitals[i]["Configuration"]
 
         state_index = states_ras.index(n_states)
-        symmetry = ordered_state_symmetries[state_index]
+        symmetry = ordered_state_symmetries[n_states-1]
 
         hole = np.around(float(hole_contributions[state_index]), 2)
         part = np.around(float(part_contributions[state_index]), 2)
