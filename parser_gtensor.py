@@ -632,7 +632,7 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     """
     g-shift with orbital and spin angular momentum matrices.
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
-    :return: g_shifts
+    :return: g_shift
     """
     def j_matrix_formation(spin, orbital, list_sz, sz_ground):
         """
@@ -713,6 +713,19 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     g_shifts = np.zeros(3, dtype=complex)
     for i in range(0, 3):
         g_shifts[i] = (sqrt(upper_g_matrix_diagonal[i, i]) - lande_factor) * 1000
+
+    def from_qchem_to_sto(g_shift):
+        """
+        Change orientation  from Q-Chem to Standard Nuclear Orientation
+        :param g_shift:
+        :return:
+        """
+        a = g_shift[0]
+        g_shift[0] = g_shift[1]
+        g_shift[1] = a
+        return g_shift
+    g_shifts = from_qchem_to_sto(g_shifts)
+
     return g_shifts
 
 
