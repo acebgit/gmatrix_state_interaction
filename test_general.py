@@ -14,13 +14,13 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/nf_12_9_enerproc_allmultip_diisgdm_30states.out'
+david_molecules/phen_deriv_1_8_8_allmultip.out'
 
 g_calculation = 1
-ppm = 0
+ppm = 1
 
 excited_states_analysis = 1
-improve_as = 0
+improve_as = 1
 config_cut = 1
 soc_cut = 0
 angmoment_cut = 0
@@ -28,9 +28,9 @@ angmoment_cut = 0
 sos_analysis = 0
 gfactor_excited_states = 0
 
-state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1, 2, 3, 4, 9, 13, 14, 15, 16, 18, 19, 20, 23, 24]  # States to be included when "states_option = 0"
-# [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+states_ras = [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
+# [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]  # States to be included when "states_option = 0"
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 

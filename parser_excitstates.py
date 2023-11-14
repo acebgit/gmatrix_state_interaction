@@ -546,6 +546,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         doublets = []
         triplets = []
         quartets = []
+        quintets = []
         for ii in range(0, len(states)):
             if s2_lists[ii] == 0:
                 singlets.append(ii+1)
@@ -555,10 +556,13 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                 triplets.append(ii+1)
             elif s2_lists[ii] == 3.75:
                 quartets.append(ii+1)
+            elif s2_lists[ii] == 6:
+                quintets.append(ii + 1)
         print(len(singlets), 'Singlet states: ', singlets)
         print(len(doublets), 'Doublet states: ', doublets)
         print(len(triplets), 'Triplet states: ', triplets)
         print(len(quartets), 'Quartet states: ', quartets)
+        print(len(quintets), 'Quintet states: ', quintets)
     count_singlet_triplets(states_ras, s2_list)
 
     if plots == 1:
