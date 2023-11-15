@@ -559,10 +559,11 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
 
         if cut_gvalue != 0:
             g_xx = np.round(gxx_list[state_index], 3)
-            g_xx_diff = abs(gxx_list[state_index] - gxx_list[state_index-1])
             g_yy = np.round(gyy_list[state_index], 3)
-            g_yy_diff = abs(gyy_list[state_index] - gyy_list[state_index-1])
             g_zz = np.round(gzz_list[state_index], 3)
+
+            g_xx_diff = abs(gxx_list[state_index] - gxx_list[state_index-1])
+            g_yy_diff = abs(gyy_list[state_index] - gyy_list[state_index-1])
             g_zz_diff = abs(gzz_list[state_index] - gzz_list[state_index-1])
 
             if g_xx_diff >= cut_gvalue or g_yy_diff >= cut_gvalue or g_zz_diff >= cut_gvalue:
@@ -665,92 +666,3 @@ def improved_active_space(file, states_option, selected_states, cut_off, cut_soc
     electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
     print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
           final_active_orbitals)
-
-
-def transitions_analysis(file, states_ras, state_selections, symmetry_selected, ppms, cut_config, cut_gvalue):
-    """"
-    Calculate the g-shifts in the sum-over-states_selected expansion using
-    from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
-    :param: file_ms_notnull
-    :return: no returned value, it prints the plot
-    """
-    file_string = file
-
-    totalstates = get_number_of_states(file)
-
-    state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
-
-    states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selected)
-
-    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-    excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
-
-    s2_list = s2_from_file(file, states_ras)
-
-    hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates, states_ras)
-
-    socc_values = get_groundst_socc_values(file, totalstates, states_ras)
-
-    orbital_momentum = get_groundst_orbital_momentum(file, totalstates, states_ras)
-
-    configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_config)
-
-    gxx_list = []
-    gyy_list = []
-    gzz_list = []
-
-    for i in range(1, len(states_ras)+1):
-        states_sos = states_ras[0:i]
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
-
-        g_shift = from_energies_soc_to_g_values(file, states_sos,
-                                                totalstates, excitation_energies_ras,
-                                                selected_socs, sz_list, ground_sz, ppms)
-        gxx_list.append(g_shift[0].real)
-        gyy_list.append(g_shift[1].real)
-        gzz_list.append(g_shift[2].real)
-
-    excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
-                                         'ΔE (eV)', 'Unpaired orb.', 'SOCC',
-                                         'Máx Lk', 'S^2', 'gxx', 'gyy', 'gzz']]
-
-    for i in range(0, len(configuration_orbitals)):
-        n_states = configuration_orbitals[i]["State"]
-        configuration = configuration_orbitals[i]["Configuration"]
-
-        state_index = states_ras.index(n_states)
-        symmetry = ordered_state_symmetries[n_states - 1]
-
-        hole = np.around(float(hole_contributions[state_index]), 2)
-        part = np.around(float(part_contributions[state_index]), 2)
-
-        excit_energy = np.round(float(excitation_energies_ras[state_index]), 3)
-        orbital = configuration_orbitals[i]["SOMO orbitals"]
-        soc = np.round(float(socc_values[state_index]), 3)
-
-        orbital_ground_state = np.round(float(orbital_momentum[state_index]), 3)
-        s2 = s2_list[state_index]
-
-        g_xx = np.round(gxx_list[state_index], 3)
-        g_xx_diff = abs(gxx_list[state_index] - gxx_list[state_index-1])
-        g_yy = np.round(gyy_list[state_index], 3)
-        g_yy_diff = abs(gyy_list[state_index] - gyy_list[state_index-1])
-        g_zz = np.round(gzz_list[state_index], 3)
-        g_zz_diff = abs(gzz_list[state_index] - gzz_list[state_index-1])
-
-        if g_xx_diff >= cut_gvalue or g_yy_diff >= cut_gvalue or g_zz_diff >= cut_gvalue:
-            excited_states_presentation_list.append([n_states, configuration, symmetry,
-                                                     hole, part, excit_energy, orbital, soc,
-                                                     orbital_ground_state, s2, g_xx, g_yy, g_zz])
-    excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
-
-    print("------------------------")
-    print(" EXCITED STATES ANALYSIS")
-    print("------------------------")
-    print('Most important settings for each state (amplitude_cutoff:', cut_config, ') :')
-    print('\n'.join(''.join('{:^15}'.format(item) for item in row)
-                    for row in excited_states_presentation_matrix[:, :]))
-    count_singlet_triplets(states_ras, s2_list)
-    print(" ")
-

@@ -12,7 +12,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/benzophenone_14_11_triplets.out'
+triplets_molecules/o2_11_9_triplets.out'
 
 g_calculation = 1
 ppm = 0
@@ -20,10 +20,10 @@ ppm = 0
 excitanalysis = 1
 improve_as = 0
 
-excitanalysis_gvalue_cut = 0.1
-excitanalysis_config_cut = 1
-excitanalysis_soc_cut = 0
-excitanalysis_angmoment_cut = 0
+excitanalysis_gvalue_cut = 10**(-10)
+excitanalysis_config_cut = 0.9
+excitanalysis_soc_cut = 0.01
+excitanalysis_angmoment_cut = 0.01
 
 sos_analysis = 0
 
@@ -47,9 +47,6 @@ soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 
 if g_calculation == 1:
     gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
-#
-# if transitions == 1:
-#     transitions_analysis(ras_input, states_ras, state_selection, symmetry_selection, ppm, excitanalysis_config_cut, excitanalysis_gvalue_cut)
 
 if excitanalysis == 1:
     get_excited_states_analysis(ras_input, state_selection, states_ras, symmetry_selection, excitanalysis_config_cut,
