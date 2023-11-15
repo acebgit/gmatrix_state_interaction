@@ -151,22 +151,19 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
     """
     totalstates = get_number_of_states(file)
     presentation_list = []
-
     nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
 
     for i in range(1, len(nstates)+1):
         states_ras = nstates[0:i]
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-        soc_options = 0
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_options)
+        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_option=0)
 
         g_shift = from_energies_soc_to_g_values(file, states_ras,
                                                 totalstates, excitation_energies_ras,
-                                                selected_socs, sz_list, ground_sz)
-
-        g_shift = from_ppt_to_ppm(g_shift, ppms)
+                                                selected_socs, sz_list, ground_sz, ppms)
 
         state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
+
         if order_symmetry == 1:
             presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),
                                   np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
@@ -174,12 +171,6 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
             presentation_list.append([i, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
                                   np.round(g_shift.real[2], 3)])
     presentation_matrix = np.array(presentation_list, dtype=object)
-
-    # To presents deviation from previous g-values instead of the total g-values:
-    presentation_matrix_deviation = np.array(presentation_list, dtype=object)
-    for ndim in [1, 2, 3]:
-        for i in range(1, len(presentation_matrix)):
-            presentation_matrix_deviation[i, ndim] = (presentation_matrix[i, ndim])
     # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     print("--------------------------------")
@@ -190,7 +181,7 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
     y_title = r'$\Delta g, ppm$'
     main_title = 'sos_analysis'
 
-    plot_g_tensor_vs_states(file, presentation_matrix_deviation, x_title, y_title,
+    plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title,
                             main_title, save_option)
 
 
@@ -217,9 +208,7 @@ def gfactor_all_states(file, nstates, ppms):
 
         g_shift = from_energies_soc_to_g_values(file, states_ras,
                                                 totalstates, excitation_energies_ras,
-                                                selected_socs, sz_list, ground_sz)
-
-        g_shift = from_ppt_to_ppm(g_shift, ppms)
+                                                selected_socs, sz_list, ground_sz, ppms)
 
         presentation_list.append([nstates[0], np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
                                   np.round(g_shift.real[2], 3)])

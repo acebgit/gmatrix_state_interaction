@@ -8,8 +8,7 @@ import matplotlib.pyplot as plt
 
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
     get_spin_orbit_couplings, get_spin_matrices, get_orbital_matrices, hermitian_test, \
-    get_hamiltonian_construction, diagonalization, angular_matrices_obtention, g_factor_calculation, \
-    from_ppt_to_ppm
+    get_hamiltonian_construction, diagonalization, angular_matrices_obtention, g_factor_calculation
 from parser_excitstates import s2_from_file, get_hole_part_contributions, get_groundst_socc_values, \
     get_groundst_orbital_momentum, get_bar_chart
 
@@ -462,9 +461,7 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
 
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
-                                   sz_list, sz_ground)
-
-    g_shift = from_ppt_to_ppm(g_shift, ppms)
+                                   sz_list, sz_ground, ppms)
 
     singlet, triplet = count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_1, states_ras_2, list_mapping)
 
@@ -743,8 +740,7 @@ def sos_analysis_and_plot_mixinputs(file_msnull, file_ms_notnull, states_selecte
     for i in range(1, len(nstates)+1):
         states_ras = nstates[0:i]
 
-        g_shift = gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option)
-        g_shift = from_ppt_to_ppm(g_shift, ppms)
+        g_shift = gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option, ppms)
 
         # if order_symmetry == 1:
         #     presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),

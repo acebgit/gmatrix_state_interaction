@@ -628,7 +628,7 @@ def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
     return angular_matrix
 
 
-def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz):
+def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=None):
     """
     g-shift with orbital and spin angular momentum matrices.
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
@@ -675,6 +675,18 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         g_value = np.trace(a) / np.trace(b)
         return g_value
 
+    def from_ppt_to_ppm(gvalues, ppm=None):
+        """
+        Pass from ppt to ppm the gvalues.
+        :param: ppm, gvalues
+        :return: gvalues
+        """
+        if ppm == 1:
+            gvalues[:] = gvalues[:] * 1000
+        else:
+            pass
+        return gvalues
+
     j_matrix = j_matrix_formation(s_matrix, l_matrix, sz_list, ground_sz)
 
     # PROJECTION TECHNIQUE TO OBTAIN THE TRIANGULAR G-MATRIX:
@@ -714,6 +726,8 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     for i in range(0, 3):
         g_shifts[i] = (sqrt(upper_g_matrix_diagonal[i, i]) - lande_factor) * 1000
 
+    g_shifts = from_ppt_to_ppm(g_shifts, ppms)
+
     def from_qchem_to_sto(g_shift):
         """
         Change orientation  from Q-Chem to Standard Nuclear Orientation
@@ -730,7 +744,7 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
 
 
 def from_energies_soc_to_g_values(file, states_ras, totalstates,
-                                  excitation_energies_ras, soc_ras, sz_list, ground_sz):
+                                  excitation_energies_ras, soc_ras, sz_list, ground_sz, ppm):
     """"
     Obtention of the g-values from the eigenenergies and the SOCs.
     :param:file_ms_notnull, states_msnull, states_option, excitation_energies_ras, soc_ras, list_sz, ground_sz
@@ -749,7 +763,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
 
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
-                                   sz_list, ground_sz)
+                                   sz_list, ground_sz, ppm)
 
     return g_shift
 
@@ -805,9 +819,7 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
 
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
-                                   sz_list, sz_ground)
-
-    g_shift = from_ppt_to_ppm(g_shift, ppm)
+                                   sz_list, sz_ground, ppm)
 
     # CHANGE FROM Q-CHEM ORIENTATION TO STANDARD NUCLEAR ORIENTATION
     # a = g_shift[0]
@@ -828,16 +840,3 @@ def from_gvalue_to_shift(lista):
         value = (lista[i] - lande_factor) * 10**6
         g_shift.append(value)
     print(np.round(g_shift, 3))
-
-
-def from_ppt_to_ppm(gvalues, ppm):
-    """
-    Pass from ppt to ppm the gvalues.
-    :param: ppm, gvalues
-    :return: gvalues
-    """
-    if ppm == 1:
-        gvalues[:] = gvalues[:] * 1000
-    else:
-        pass
-    return gvalues

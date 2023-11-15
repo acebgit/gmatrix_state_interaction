@@ -3,53 +3,60 @@
 #####################################
 __author__ = 'Antonio Cebreiro-Gallardo'
 
-import sys
+# import sys
 from parser_gtensor import gfactor_presentation
 from parser_excitstates import get_excited_states_analysis, improved_active_space
 from parser_plots import sos_analysis_and_plot, gfactor_all_states
 
-# from_gvalue_to_shift([2.00292, 2.00323, 2.00246])
-# exit()
 #####################################
 #            INPUT VALUES
 #####################################
 ras_input = '\
-david_molecules/phen_deriv_1_8_8_allmultip.out'
+triplets_molecules/benzophenone_14_11_triplets.out'
 
 g_calculation = 1
-ppm = 1
+ppm = 0
 
-excited_states_analysis = 1
-improve_as = 1
-config_cut = 1
-soc_cut = 0
-angmoment_cut = 0
+excitanalysis = 1
+improve_as = 0
+
+excitanalysis_gvalue_cut = 0.1
+excitanalysis_config_cut = 1
+excitanalysis_soc_cut = 0
+excitanalysis_angmoment_cut = 0
 
 sos_analysis = 0
+
 gfactor_excited_states = 0
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1, 2, 3, 4, 10, 11, 12, 13, 14, 15]
-# [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]  # States to be included when "states_option = 0"
+states_ras = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
+# [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
 
-# OUTPUT
-write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file
-output_ras_input = ras_input + '-gvalues.txt'
-if write_ras_input == 1:
-    sys.stdout = open(output_ras_input, "w")
+# # OUTPUT
+# write_ras_input = 0  # 0: write results directly; 1: write in output qchem_file
+# output_ras_input = ras_input + '-gvalues.txt'
+# if write_ras_input == 1:
+#     sys.stdout = open(output_ras_input, "w")
 
-#      G-VALUE CALCULATION
-if excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, state_selection, states_ras, symmetry_selection, config_cut,
-                                soc_cut, angmoment_cut, plots=0, save_pict=0)
-
-if improve_as == 1:
-    improved_active_space(ras_input, state_selection, states_ras, config_cut, soc_cut, angmoment_cut)
+###########################################
+#      G-VALUE AND OTHER FUNCTIONS
+###########################################
 
 if g_calculation == 1:
     gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
+#
+# if transitions == 1:
+#     transitions_analysis(ras_input, states_ras, state_selection, symmetry_selection, ppm, excitanalysis_config_cut, excitanalysis_gvalue_cut)
+
+if excitanalysis == 1:
+    get_excited_states_analysis(ras_input, state_selection, states_ras, symmetry_selection, excitanalysis_config_cut,
+                                excitanalysis_soc_cut, excitanalysis_angmoment_cut, excitanalysis_gvalue_cut, ppm, plots=0, save_pict=0)
+
+if improve_as == 1:
+    improved_active_space(ras_input, state_selection, states_ras, excitanalysis_config_cut, excitanalysis_soc_cut, excitanalysis_angmoment_cut)
 
 if sos_analysis == 1:
     sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, order_symmetry=1, save_option=0)
