@@ -12,12 +12,12 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/o2_11_9_triplets.out'
+david_molecules/phen_deriv_1_4_4_50states_triplets.out'
 
 g_calculation = 1
-ppm = 0
+ppm = 1
 
-excitanalysis = 1
+excitanalysis = 0
 improve_as = 0
 
 excitanalysis_gvalue_cut = 10**(-10)
