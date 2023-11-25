@@ -112,7 +112,7 @@ def get_eigenenergies(file, totalstates, selected_states):
     :param: file, totalstates, selected_states
     :return: eigenenergies, excitation_energies
     """
-    word_search = ' RAS-CI total energy for state  '
+    word_search = 'RAS-CI total energy for state'
     element_energy = []
     elements_excitenergy = []
 

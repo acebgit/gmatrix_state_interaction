@@ -178,7 +178,11 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
     print("--------------------------------")
     file = file[:-4]
     x_title = 'Electronic State'
-    y_title = r'$\Delta g, ppm$'
+
+    y_title = r'$\Delta g, ppt$'
+    if ppms == 1:
+        y_title = r'$\Delta g, ppm$'
+
     main_title = 'sos_analysis'
 
     plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title,

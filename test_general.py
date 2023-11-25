@@ -3,7 +3,6 @@
 #####################################
 __author__ = 'Antonio Cebreiro-Gallardo'
 
-# import sys
 from parser_gtensor import gfactor_presentation
 from parser_excitstates import get_excited_states_analysis, improved_active_space
 from parser_plots import sos_analysis_and_plot, gfactor_all_states
@@ -12,15 +11,15 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states
 #            INPUT VALUES
 #####################################
 ras_input = '\
-david_molecules/phen_deriv_1_4_4_50states_triplets.out'
+triplets_molecules/quinoline_4_4_triplets_50states.out'
 
-g_calculation = 1
-ppm = 1
+g_calculation = 0
+ppm = 0
 
-excitanalysis = 0
-improve_as = 0
+excitanalysis = 1
+improve_as = 1
 
-excitanalysis_gvalue_cut = 10**(-10)
+excitanalysis_gvalue_cut = 0 # 10**(-10)
 excitanalysis_config_cut = 0.9
 excitanalysis_soc_cut = 0.01
 excitanalysis_angmoment_cut = 0.01
@@ -30,7 +29,7 @@ sos_analysis = 0
 gfactor_excited_states = 0
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
+states_ras = [1, 2, 3, 4, 10, 12, 13, 15, 17, 18, 24, 28, 30, 34, 35, 37, 38, 40, 41, 44, 48, 50, 51, 54, 55, 57, 59, 63, 64, 66, 73, 78, 79, 82, 86, 97, 98]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 # [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
