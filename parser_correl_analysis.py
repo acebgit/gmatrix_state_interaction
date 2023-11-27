@@ -147,7 +147,7 @@ def orbitmomentum_and_gvalues_correlation(file, nstates, excit_energ, socs, list
 
     presentation_matrix = np.array(presentation_tuple, dtype=object)
     plot_g_tensor_vs_states(file, presentation_matrix, x_title='Orbital Angular Momentum', y_title='g-values (ppt)',
-                            main_title='g-factor evolution with orbital angular momentum', save_options=0)
+                            main_title='g-factor evolution with orbitals angular momentum', save_options=0)
 
     # R-squares obtention
     r_square = []

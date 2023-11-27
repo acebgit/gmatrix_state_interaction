@@ -205,7 +205,7 @@ def get_maximum_amplitude_orbitals(eom_input, eom_type):
 
     def get_summary_significant_orbitals(transition_orbital, next_lines, datas, orbitals):
         """
-         Used in "get_significant_orbitals". It takes the orbital number from
+         Used in "get_significant_orbitals". It takes the orbitals number from
          "Summary of significant orbitals" section, that has the symmetry of those irreps
          in "Transitions between orbitals"
          :param: max_amplitude_transition_line, transition_orbital, next_line, data, orbitals

@@ -282,7 +282,7 @@ def get_orbital_matrices(file_ras, totalstates, n_states):
             element = line[19:32]
             elements.append(element.split())
     # ----------------------------------------------------------------------------------
-    # put orbital angular momentum in the array
+    # put orbitals angular momentum in the array
     angular_selection_list = []
 
     for ket in n_states:  # | A >

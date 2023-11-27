@@ -98,18 +98,18 @@ if bar_plots == 1:
                                                                        doublet_socs,
                                                                        sz_values)
 
-    # Printing excitation energies versus orbital symmetries:
+    # Printing excitation energies versus orbitals symmetries:
     state_symmetries, ordered_state_symmetries = get_symmetry_states(ras_input, totalstates)
 
     get_bar_chart(ras_input, ordered_state_symmetries, excitation_energies_ras * 27.211399, 'State', 'Energy (eV)',
                   'Excitation energies')
 
-    # Printing socc versus orbital symmetries:
+    # Printing socc versus orbitals symmetries:
     socc_values = get_socc_values(ras_input, totalstates)
     get_bar_chart(ras_input, ordered_state_symmetries, socc_values / 8065.540107, 'State', 'Energy (eV)',
                   'Mean-field spin-orbit coupling constants')
 
-    # Printing orbital angular momentum versus orbital symmetries:
+    # Printing orbitals angular momentum versus orbitals symmetries:
     orbital_momentum = get_ground_state_orbital_momentum(ras_input, totalstates)
     get_bar_chart(ras_input, ordered_state_symmetries, orbital_momentum, 'State', 'Orbital angular momentum', '')
 

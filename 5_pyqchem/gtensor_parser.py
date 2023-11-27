@@ -467,7 +467,7 @@ def get_spin_matrices(file, selected_states):
 
 def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     """
-    Get orbital angular momentum matrix with dimensions ['bra' x 'ket' x 3] (x,y,z), with spin order (-Ms , +Ms) in the
+    Get orbitals angular momentum matrix with dimensions ['bra' x 'ket' x 3] (x,y,z), with spin order (-Ms , +Ms) in the
     order of "selected_state".
     :param: file, totalstates, selected_states, sz_list
     :return: all_multip_lk
@@ -558,15 +558,15 @@ def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
 
 def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz):
     """
-    g-shift with orbital and spin angular momentum matrices.
+    g-shift with orbitals and spin angular momentum matrices.
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
     :return: g_shifts
     """
     def j_matrix_formation(spin, orbital, list_sz, sz_ground):
         """
-        Get the total angular momentum matrix from the orbital and spin angular momentums. Then, expand it to the
+        Get the total angular momentum matrix from the orbitals and spin angular momentums. Then, expand it to the
         multiplicity of the ground state multiplicity "sz_ground".
-        :param: spin, orbital, list_sz, sz_ground
+        :param: spin, orbitals, list_sz, sz_ground
         :return: j_matr
         """
         j_big_matrix = lande_factor * spin + orbital

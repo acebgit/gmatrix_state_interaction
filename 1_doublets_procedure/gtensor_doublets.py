@@ -623,7 +623,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
 
 def angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angular_matrix):
     """
-    Spin or orbital angular matrix calculation using:
+    Spin or orbitals angular matrix calculation using:
     1) coeff_bra, coeff_ket: coefficients of the lineal combination of non-relativistic states_selected,
     that come from Kramer doublet states_selected eigenvectors
     2) angular_value: angular momentum between states_selected. Depending on the column of the final matrix,

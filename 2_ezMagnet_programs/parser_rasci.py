@@ -1011,7 +1011,7 @@ def get_energies(outpuut, nstates, selected_state):
 
 def get_orbital_angmoment(outpuut, nstates, selected_state):
     """
-    Obtain a dictionary with orbital angular momentum between ground state and all the rest, written as strings.
+    Obtain a dictionary with orbitals angular momentum between ground state and all the rest, written as strings.
     :param outpuut:
     :param nstates:
     :param selected_state:

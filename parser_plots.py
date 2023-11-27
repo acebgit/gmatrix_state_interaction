@@ -154,11 +154,13 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
     nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
 
     for i in range(1, len(nstates)+1):
-        states_ras = nstates[0:i]
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_option=0)
+        states_sos = nstates[0:i]
+        print('Calculating....    states', states_sos)
 
-        g_shift = from_energies_soc_to_g_values(file, states_ras,
+        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
+        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
+
+        g_shift = from_energies_soc_to_g_values(file, states_sos,
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz, ppms)
 

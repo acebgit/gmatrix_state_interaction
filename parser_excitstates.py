@@ -5,6 +5,7 @@
 __author__ = 'Antonio Cebreiro-Gallardo'
 
 import numpy as np
+import pandas as pd
 
 from parser_plots import get_bar_chart
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
@@ -145,14 +146,14 @@ def get_groundst_socc_values(file, totalstates, states_selected):
 
 def get_groundst_orbital_momentum(file, totalstates, states_selected):
     """
-    Obtaining the orbital angular momentum between the ground state and all excited states_selected.
+    Obtaining the orbitals angular momentum between the ground state and all excited states_selected.
     :param: file_ms_notnull, states_option
     :return: orbital_momentum
     """
     with open(file, encoding="utf8") as f:
         data = f.readlines()
 
-    # Search all orbital angular momentums
+    # Search all orbitals angular momentums
     word_search = ['< B | Lx | A >', '< B | Ly | A >', '< B | Lz | A >']
     all_orbit = []
     for line in data:
@@ -177,27 +178,30 @@ def get_groundst_orbital_momentum(file, totalstates, states_selected):
         ground_state_orbit.append(all_orbit[i])
 
     # Take momentums between the considered ground state and the selected states.
-    # Select the orbital angular momentum that is higher, to be shown
-    orbital_list = []
+    all_moment = []
+    max_moment = []
     nstate = 0
     for i in range(0, len(ground_state_orbit), 3):
-        max_momentum = []
-
+        # Select the direction of momentum that is higher in each state
         x_orb = abs(float(ground_state_orbit[i]))
         y_orb = abs(float(ground_state_orbit[i+1]))
         z_orb = abs(float(ground_state_orbit[i+2]))
 
-        max_momentum.append(x_orb)
-        max_momentum.append(y_orb)
-        max_momentum.append(z_orb)
-
-        index_max_momentum = max_momentum.index(max(max_momentum))
-        orbital_list.append(float(ground_state_orbit[nstate * 3 + index_max_momentum]))
+        comparison = [x_orb, y_orb, z_orb]
+        index_max_momentum = comparison.index(max(comparison))
+        max_moment.append(float(ground_state_orbit[nstate * 3 + index_max_momentum]))
         nstate += 1
 
-    orbital_list = take_selected_states_values(orbital_list, states_selected)
-    final_momentum = np.array(orbital_list, dtype=float)
-    return final_momentum
+        # Select all the orbital angular momentums
+        all_moment.append([float(ground_state_orbit[i]), float(ground_state_orbit[i+1]),
+                           float(ground_state_orbit[i+2])])
+
+    lista = take_selected_states_values(max_moment, states_selected)
+    max_moment_array = np.array(lista, dtype=float)
+    lista = take_selected_states_values(all_moment, states_selected)
+    all_moment_array = np.array(lista, dtype=float)
+
+    return max_moment_array, all_moment_array
 
 
 def get_ras_spaces(qchem_file):
@@ -291,7 +295,7 @@ def get_highest_amplitudes(file, amplitude_cutoff):
         orbitals_information = []
 
         while line.startswith(" |"):  # All lines with the configurations start with " |"
-            line = line.replace('|       |', '-1')  # "-1" to identify where there is no hole-part orbital
+            line = line.replace('|       |', '-1')  # "-1" to identify where there is no hole-part orbitals
             line = line.replace('|', '')
 
             element = line.split()[-1]
@@ -392,14 +396,14 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
 
     orbital_list = []
 
-    # If orbital is in hole
+    # If orbitals is in hole
     if configuration_data[0] != '-1':
         ras_orbital = int(configuration_data[0])
         new_orbital = from_ras_to_scf_order(homo_orbital, initial_active_orbitals, ras_orbital)
         new_orbital = int(new_orbital)
         orbital_list.append(new_orbital)
 
-    # If orbital is in active space
+    # If orbitals is in active space
     alpha_config = str(configuration_data[1])
     beta_config = str(configuration_data[2])
 
@@ -409,7 +413,7 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
             new_orbital = int(new_orbital)
             orbital_list.append(new_orbital)
 
-    # If orbital is in particle
+    # If orbitals is in particle
     if configuration_data[3] != '-1':
         ras_orbital = int(configuration_data[3])
         new_orbital = from_ras_to_scf_order(homo_orbital, initial_active_orbitals, ras_orbital)
@@ -486,6 +490,21 @@ def count_singlet_triplets(states, s2_lists):
         print(len(quartets), 'Quartet states: ', quartets)
         print(len(quintets), 'Quintet states: ', quintets)
 
+def add_orbitals_active_space(orbitals, active_space):
+    """
+    Return the orbitals to be added to the active space list
+    :param orbitals:
+    :param active_space:
+    :return: active space
+    """
+    if type(orbitals) == int:  # It is a doublet, add SOMO
+        active_space.append(int(orbitals))
+
+    elif type(orbitals) == str:  # It is higher multiplicities, add all SOMOs
+        orbitals = orbitals.split(',')
+        for j in range(0, len(orbitals)):
+            active_space.append(int(orbitals[j]))
+    return active_space
 
 def get_excited_states_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_soc,
                                 cut_ang, cut_gvalue, ppms, plots, save_pict):
@@ -495,6 +514,73 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     :param: file_ms_notnull, cutoff
     :return: excited_states_presentation_matrix
     """
+    def compare_gvalues_and_estimation(excited_states_presentation_matrix):
+        """
+        Print a list with 3 columns: state, g-shift and the relation L*SOCC/(E**2)
+        :param excited_states_presentation_matrix
+        :return:
+        """
+        largest_gvalues = []
+
+        if cut_gvalue != 0:
+            for i in range(2, len(excited_states_presentation_matrix)):
+                # Take largest g-shift and put it in a list with each state
+                gxx = abs(excited_states_presentation_matrix[i,10] - excited_states_presentation_matrix[i-1,10])
+                gyy = abs(excited_states_presentation_matrix[i,11] - excited_states_presentation_matrix[i-1,11])
+                gzz = abs(excited_states_presentation_matrix[i,12] - excited_states_presentation_matrix[i-1,12])
+                compare_list = [gxx, gyy, gzz]
+                compare_list.sort(reverse=True)
+
+                # Take largest relation and put it in a list with each state
+                ener_compare = excited_states_presentation_matrix[i,5]
+                socc_compare = excited_states_presentation_matrix[i,7]
+                orbit_compare = excited_states_presentation_matrix[i,8]
+                relation = abs(orbit_compare * socc_compare / ener_compare**2)
+
+                largest_gvalues.append([i, compare_list[0], relation])
+
+            df = pd.DataFrame(largest_gvalues, columns=['State', 'g-shift', 'L*SOCC/E**2'])
+            order_states_gvalues = df.sort_values('g-shift')
+            print(order_states_gvalues)
+
+    def gshift_calculation_loop(states_ras, file, totalstates, ppms):
+        """
+        Calculate the g-values in all the selected states.
+        :return:
+        """
+        for i in range(1, len(states_ras) + 1):
+            states_sos = states_ras[0:i]
+            print('Calculating....    states', states_sos)
+            eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
+            selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
+
+            g_shift = from_energies_soc_to_g_values(file, states_sos,
+                                                    totalstates, excitation_energies_ras,
+                                                    selected_socs, sz_list, ground_sz, ppms)
+            gxx_list.append(g_shift[0].real)
+            gyy_list.append(g_shift[1].real)
+            gzz_list.append(g_shift[2].real)
+        return gxx_list, gyy_list, gzz_list
+
+    def gshift_estimation_loop(nstates, orbit_moments, soccs, energies):
+        """
+        Calculate the g-values in all the selected states.
+        :return:
+        """
+        g_xx = [0]
+        g_yy = [0]
+        g_zz = [0]
+
+        for i in range(1, len(nstates)):
+            element_xx = -4 * orbit_moments[i, 0] * soccs[i] / energies[i]
+            element_yy = -4 * orbit_moments[i, 1] * soccs[i] / energies[i]
+            element_zz = -4 * orbit_moments[i, 2] * soccs[i] / energies[i]
+
+            g_xx.append(element_xx)
+            g_yy.append(element_yy)
+            g_zz.append(element_zz)
+        return g_xx, g_yy, g_zz
+
     file_string = file
 
     totalstates = get_number_of_states(file)
@@ -512,7 +598,9 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
 
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
 
-    orbital_momentum = get_groundst_orbital_momentum(file, totalstates, states_ras)
+    orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, states_ras)
+
+    elec_alpha, elec_beta = get_alpha_beta(file)
 
     configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
 
@@ -524,59 +612,60 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         gyy_list = []
         gzz_list = []
 
-        for i in range(1, len(states_ras)+1):
-            states_sos = states_ras[0:i]
-            eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
-            selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
+        # gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
+        gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values, excitation_energies_ras)
 
-            g_shift = from_energies_soc_to_g_values(file, states_sos,
-                                                    totalstates, excitation_energies_ras,
-                                                    selected_socs, sz_list, ground_sz, ppms)
-            gxx_list.append(g_shift[0].real)
-            gyy_list.append(g_shift[1].real)
-            gzz_list.append(g_shift[2].real)
     else:
         excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
                                          'ΔE (eV)', 'Unpaired orb.', 'SOCC',
                                          'Máx Lk', 'S^2']]
 
+    final_active_orbitals = []
     for i in range(0, len(configuration_orbitals)):
-        n_states = configuration_orbitals[i]["State"]
+        state = configuration_orbitals[i]["State"]
         configuration = configuration_orbitals[i]["Configuration"]
 
-        state_index = states_ras.index(n_states)
-        symmetry = ordered_state_symmetries[n_states-1]
-
+        state_index = states_ras.index(state)
+        symmetry = ordered_state_symmetries[state-1]
         hole = np.around(float(hole_contributions[state_index]), 2)
         part = np.around(float(part_contributions[state_index]), 2)
-
         excit_energy = np.round(float(excitation_energies_ras[state_index]), 3)
-        orbital = configuration_orbitals[i]["SOMO orbitals"]
         soc = np.round(float(socc_values[state_index]), 3)
-
-        orbital_ground_state = np.round(float(orbital_momentum[state_index]), 3)
+        orbital_ground_state = np.round(float(orbitmoment_max[state_index]), 3)
         s2 = s2_list[state_index]
 
+        orbital = configuration_orbitals[i]["SOMO orbitals"]
+        if orbital == '-':  # It is a singlet, there is no SOMO so add HOMO
+            final_active_orbitals.append(elec_alpha)
+
         if cut_gvalue != 0:
-            g_xx = np.round(gxx_list[state_index], 3)
-            g_yy = np.round(gyy_list[state_index], 3)
-            g_zz = np.round(gzz_list[state_index], 3)
+            g_xx = np.round(gxx_list[state_index], 10)
+            g_yy = np.round(gyy_list[state_index], 10)
+            g_zz = np.round(gzz_list[state_index], 10)
 
             g_xx_diff = abs(gxx_list[state_index] - gxx_list[state_index-1])
             g_yy_diff = abs(gyy_list[state_index] - gyy_list[state_index-1])
             g_zz_diff = abs(gzz_list[state_index] - gzz_list[state_index-1])
 
             if g_xx_diff >= cut_gvalue or g_yy_diff >= cut_gvalue or g_zz_diff >= cut_gvalue:
-                excited_states_presentation_list.append([n_states, configuration, symmetry,
+                excited_states_presentation_list.append([state, configuration, symmetry,
                                                          hole, part, excit_energy, orbital, soc,
                                                          orbital_ground_state, s2, g_xx, g_yy, g_zz])
+                final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals)
+
         else:
             if abs(orbital_ground_state) >= cut_ang and abs(soc) >= cut_soc:
-                excited_states_presentation_list.append([n_states, configuration, symmetry,
+                excited_states_presentation_list.append([state, configuration, symmetry,
                                                      hole, part, excit_energy, orbital, soc,
                                                      orbital_ground_state, s2])
+                final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals)
 
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
+    # compare_gvalues_and_estimation(excited_states_presentation_matrix)
+
+    orbital_set = set(final_active_orbitals)
+    final_active_orbitals = list(orbital_set)
+    final_active_orbitals.sort()
 
     print("------------------------")
     print(" EXCITED STATES ANALYSIS")
@@ -587,12 +676,42 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     count_singlet_triplets(states_ras, s2_list)
     print(" ")
 
+    print("------------------------")
+    print(" IMPROVED ACTIVE SPACE ")
+    print("------------------------")
+
+    electrons = get_new_active_space_electrons(initial_active_orbitals, elec_alpha, elec_beta)
+    print('Initial active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(initial_active_orbitals),
+          '] ;',
+          initial_active_orbitals)
+
+    electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
+    print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
+          final_active_orbitals)
+
     if plots == 1:
-        get_bar_chart(file_string[:-4], states_ras, excitation_energies_ras, 'Electronic State',
+        states_plot = excited_states_presentation_matrix[1:, 0]
+        ener_plot = excited_states_presentation_matrix[1:, 5]
+        orbit_plot = excited_states_presentation_matrix[1:, 8]
+        soc_plot = excited_states_presentation_matrix[1:, 7]
+
+        if cut_gvalue != 0:
+            g_plot = []
+            for i in range(1, len(excited_states_presentation_matrix)):
+                xx_g = excited_states_presentation_matrix[i, 10]
+                yy_g = excited_states_presentation_matrix[i, 11]
+                zz_g = excited_states_presentation_matrix[i, 12]
+                g_comparison = [abs(xx_g), abs(yy_g), abs(zz_g)]
+                g_comparison.sort(reverse=True)
+                g_plot.append(g_comparison[0])
+            get_bar_chart(file_string[:-4], states_plot, g_plot, 'Electronic State',
+                      r'$\mathregular{\Delta g_{xx}}$', 'All variables analysis', save_pict)
+
+        get_bar_chart(file_string[:-4], states_plot, ener_plot, 'Electronic State',
                       'Excitation energy (eV)', 'energ_analysis', save_pict)
-        get_bar_chart(file_string[:-4], states_ras, orbital_momentum, 'Electronic State',
+        get_bar_chart(file_string[:-4], states_plot, orbit_plot, 'Electronic State',
                       'Orbital angular momentum', 'orbitmoment_analysis', save_pict)
-        get_bar_chart(file_string[:-4], states_ras, socc_values, 'Electronic State',
+        get_bar_chart(file_string[:-4], states_plot, soc_plot, 'Electronic State',
                       'SOCC (cm-1)', 'socc_analysis', save_pict)
 
 
@@ -631,7 +750,7 @@ def improved_active_space(file, states_option, selected_states, cut_off, cut_soc
 
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
 
-    ang_moment = get_groundst_orbital_momentum(file, totalstates, states_ras)
+    orbitmoment_max, orbitmoment_all= get_groundst_orbital_momentum(file, totalstates, states_ras)
 
     final_active_orbitals = []
     for i in range(0, len(configuration_orbitals)):
@@ -642,13 +761,13 @@ def improved_active_space(file, states_option, selected_states, cut_off, cut_soc
             final_active_orbitals.append(elec_alpha)
 
         elif type(orbitals) == int:  # It is a doublet, add SOMO
-            if abs(socc_values[state]) >= cut_soc and abs(ang_moment[state]) >= cut_ang:
+            if abs(socc_values[state]) >= cut_soc and abs(orbitmoment_max[state]) >= cut_ang:
                 final_active_orbitals.append(int(orbitals))
 
         elif type(orbitals) == str:  # It is higher multiplicities, add all SOMOs
             orbitals = orbitals.split(',')
             for j in range(0, len(orbitals)):
-                if abs(socc_values[state]) >= cut_soc and abs(ang_moment[state]) >= cut_ang:
+                if abs(socc_values[state]) >= cut_soc and abs(orbitmoment_max[state]) >= cut_ang:
                     final_active_orbitals.append(int(orbitals[j]))
 
     orbital_set = set(final_active_orbitals)
