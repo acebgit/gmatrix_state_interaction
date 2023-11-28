@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 # from matplotlib.ticker import MaxNLocator, MultipleLocator
 
 from parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, \
-    get_spin_orbit_couplings, from_energies_soc_to_g_values, get_symmetry_states, take_selected_states_values
-from parser_excitstates import get_groundst_socc_values, get_groundst_orbital_momentum
+    get_spin_orbit_couplings, from_energies_soc_to_g_values, get_symmetry_states
+from parser_excitstates import get_groundst_socc_values, get_groundst_orbital_momentum, \
+    gshift_estimation_loop, gshift_calculation_loop
 
 
 def save_picture(save_options, file, main_title):
@@ -120,7 +121,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     save_picture(save_options, file, main_title)
 
 
-def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, save_option):
+def sos_analysis_and_plot(file, nstates, selected_state, ppms, estimation, order_symmetry, save_option):
     """"
     Calculate the g-shifts in the sum-over-states_selected expansion using
     from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
@@ -128,43 +129,59 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
     :return: no returned value, it prints the plot
     """
     totalstates = get_number_of_states(file)
-    presentation_list = []
     nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
+    state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
 
-    for i in range(1, len(nstates)+1):
-        states_sos = nstates[0:i]
-        print('Calculating....    states', states_sos)
+    presentation_list = []
 
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
+    if estimation == 1:
 
-        g_shift = from_energies_soc_to_g_values(file, states_sos,
-                                                totalstates, excitation_energies_ras,
-                                                selected_socs, sz_list, ground_sz, ppms)
+        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
+        excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
+        socc_values = get_groundst_socc_values(file, totalstates, nstates)
+        orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
 
-        state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
+        # From_qchem_to_sto
+        gyy_list, gxx_list, gzz_list = gshift_estimation_loop(nstates, orbitmoment_all, socc_values,
+                                                              excitation_energies_ras)
 
         if order_symmetry == 1:
-            presentation_list.append([ordered_state_symmetries[i-1], np.round(g_shift.real[0], 3),
-                                  np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
+            for i in range(0, len(ordered_state_symmetries)):
+                presentation_list.append([ordered_state_symmetries[i], np.round(gxx_list[i], 3),
+                                  np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
         else:
-            presentation_list.append([i, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
-                                  np.round(g_shift.real[2], 3)])
+            for i in range(0, len(ordered_state_symmetries)):
+                presentation_list.append([i, np.round(gxx_list[i][0], 3), np.round(gxx_list[i], 3),
+                                  np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
+
+    else:
+
+        for i in range(0, len(nstates)):
+            states_sos = nstates[0:i+1]
+            print('Calculating....', states_sos)
+            eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
+            selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
+            g_shift = from_energies_soc_to_g_values(file, states_sos,
+                                                    totalstates, excitation_energies_ras,
+                                                    selected_socs, sz_list, ground_sz, ppms)
+
+            if order_symmetry == 1:
+                presentation_list.append([ordered_state_symmetries[i], np.round(g_shift.real[0], 3),
+                                      np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
+            else:
+                presentation_list.append([i+1, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
+                                      np.round(g_shift.real[2], 3)])
     presentation_matrix = np.array(presentation_list, dtype=object)
-    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
 
     print("--------------------------------")
     print(" SUM-OVER-STATE ANALYSIS")
     print("--------------------------------")
     file = file[:-4]
     x_title = 'Electronic State'
-
     y_title = r'$\Delta g, ppt$'
     if ppms == 1:
         y_title = r'$\Delta g, ppm$'
-
     main_title = 'sos_analysis'
-
     plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title,
                             main_title, save_option)
 
@@ -296,27 +313,20 @@ def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
 
     # 1) Make the estimation of the g-shift separately for each state
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
-    excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
+    excitation_energies_ras = [(i - excitation_energies_ras[0])*27.211399 for i in excitation_energies_ras]
     soccs = get_groundst_socc_values(file, totalstates, nstates)
     orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
 
-    estim_gshift = [[0, 0, 0]]  # g-shift in ground state
-    for i in range(1, len(nstates)):  # X and Y exchanged because geometry referecn
-        element_xx = orbitmoment_all[i, 1] * soccs[i] / excitation_energies_ras[i]**2
-        element_yy = orbitmoment_all[i, 0] * soccs[i] / excitation_energies_ras[i]**2
-        element_zz = orbitmoment_all[i, 2] * soccs[i] / excitation_energies_ras[i]**2
-        estim_gshift.append([element_xx, element_yy, element_zz])
+    gxx_e, gyy_e, gzz_e = gshift_estimation_loop(nstates, orbitmoment_all, soccs, excitation_energies_ras)
+    estim_gshift = []
+    for i in range(0, len(gxx_e)):
+        estim_gshift.append([gxx_e[i], gyy_e[i], gzz_e[i]])
 
     # 2) Make the calculation of the g-shift separately for each state
-    calc_gshift = [[0,0,0]]  # g-shift in ground state
-    for i in range(1, len(nstates)):
-        states_sos = [nstates[0], nstates[i]]
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
-        gshift = from_energies_soc_to_g_values(file, states_sos,
-                                                totalstates, excitation_energies_ras,
-                                                selected_socs, sz_list, ground_sz, ppm=0)
-        calc_gshift.append([gshift.real[0], gshift.real[1], gshift.real[2]])
+    gxx, gyy, gzz = gshift_calculation_loop(nstates, file, totalstates, ppms=0)
+    calc_gshift = []
+    for i in range(0, len(gxx)):
+        calc_gshift.append([gxx[i], gyy[i], gzz[i]])
 
     # 3) Make the comparison
     # https://pythonforundergradengineers.com/unicode-characters-in-python.html

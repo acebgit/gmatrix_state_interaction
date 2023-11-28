@@ -5,12 +5,11 @@
 __author__ = 'Antonio Cebreiro-Gallardo'
 
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
+from scipy import constants
 
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
     take_selected_states_values, get_spin_orbit_couplings, from_energies_soc_to_g_values
-
 
 def s2_from_file(qchem_file, states_selected):
     """
@@ -621,54 +620,20 @@ def get_bar_chart(file, x_list, y_list, x_title, y_title, main_title, save_pict)
     save_picture(save_pict, file, main_title)
 
 
-def get_excited_states_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_soc,
-                                cut_ang, cut_gvalue, ppms, plots, save_pict):
-    """
-    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
-    of the 1st configuration that need to have the other configurations to be shown in each state.
-    :param: file_ms_notnull, cutoff
-    :return: excited_states_presentation_matrix
-    """
-    def compare_gvalues_and_estimation(excited_states_presentation_matrix):
-        """
-        Print a list with 3 columns: state, g-shift and the relation L*SOCC/(E**2)
-        :param excited_states_presentation_matrix
-        :return:
-        """
-        largest_gvalues = []
-
-        if cut_gvalue != 0:
-            for i in range(2, len(excited_states_presentation_matrix)):
-                # Take largest g-shift and put it in a list with each state
-                gxx = abs(excited_states_presentation_matrix[i,10] - excited_states_presentation_matrix[i-1,10])
-                gyy = abs(excited_states_presentation_matrix[i,11] - excited_states_presentation_matrix[i-1,11])
-                gzz = abs(excited_states_presentation_matrix[i,12] - excited_states_presentation_matrix[i-1,12])
-                compare_list = [gxx, gyy, gzz]
-                compare_list.sort(reverse=True)
-
-                # Take largest relation and put it in a list with each state
-                ener_compare = excited_states_presentation_matrix[i,5]
-                socc_compare = excited_states_presentation_matrix[i,7]
-                orbit_compare = excited_states_presentation_matrix[i,8]
-                relation = abs(orbit_compare * socc_compare / ener_compare**2)
-
-                largest_gvalues.append([i, compare_list[0], relation])
-
-            df = pd.DataFrame(largest_gvalues, columns=['State', 'g-shift', 'L*SOCC/E**2'])
-            order_states_gvalues = df.sort_values('g-shift')
-            print(order_states_gvalues)
-
-    def gshift_calculation_loop(states_ras, file, totalstates, ppms):
+def gshift_calculation_loop(states_ras, file, totalstates, ppms):
         """
         Calculate the g-values in all the selected states.
         :return:
         """
-        for i in range(1, len(states_ras) + 1):
-            states_sos = states_ras[0:i]
-            print('Calculating....    states', states_sos)
+        gxx_list = []
+        gyy_list = []
+        gzz_list = []
+
+        for i in range(0, len(states_ras)):
+            states_sos = [states_ras[0], states_ras[i]]  # Ground state and another excited state
+            print('Calculating....', states_sos)
             eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
             selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
-
             g_shift = from_energies_soc_to_g_values(file, states_sos,
                                                     totalstates, excitation_energies_ras,
                                                     selected_socs, sz_list, ground_sz, ppms)
@@ -677,24 +642,64 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
             gzz_list.append(g_shift[2].real)
         return gxx_list, gyy_list, gzz_list
 
-    def gshift_estimation_loop(nstates, orbit_moments, soccs, energies):
+
+def gshift_estimation_loop(nstates, orbit_moments, soccs, energies):
         """
         Calculate the g-values in all the selected states.
         :return:
         """
+        # SOCC from cm-1 to au
+        from_cm_to_eV = 100 / constants.physical_constants['electron volt-inverse meter relationship'][0]
+        soccs = soccs * from_cm_to_eV
+
         g_xx = [0]
         g_yy = [0]
         g_zz = [0]
 
         for i in range(1, len(nstates)):
-            element_xx = -4 * orbit_moments[i, 0] * soccs[i] / energies[i]
-            element_yy = -4 * orbit_moments[i, 1] * soccs[i] / energies[i]
-            element_zz = -4 * orbit_moments[i, 2] * soccs[i] / energies[i]
+            element_xx = (-4 * orbit_moments[i, 0] * soccs[i] / energies[i]) * 1000000
+            element_yy = (-4 * orbit_moments[i, 1] * soccs[i] / energies[i]) * 1000000
+            element_zz = (-4 * orbit_moments[i, 2] * soccs[i] / energies[i]) * 1000000
 
             g_xx.append(element_xx)
             g_yy.append(element_yy)
             g_zz.append(element_zz)
+
         return g_xx, g_yy, g_zz
+
+
+def get_excited_states_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_soc,
+                                cut_ang, cut_gvalue, ppms, estimation, plots, save_pict):
+    """
+    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
+    of the 1st configuration that need to have the other configurations to be shown in each state.
+    :param: file_ms_notnull, cutoff
+    :return: excit_matrix
+    """
+    def excited_states_plots(excit_matrix, save_pict):
+        states_plot = excit_matrix[1:, 0]
+        ener_plot = excit_matrix[1:, 5]
+        orbit_plot = excit_matrix[1:, 8]
+        soc_plot = excit_matrix[1:, 7]
+
+        if cut_gvalue != 0:
+            g_plot = []
+            for i in range(1, len(excit_matrix)):
+                xx_g = excit_matrix[i, 10]
+                yy_g = excit_matrix[i, 11]
+                zz_g = excit_matrix[i, 12]
+                g_comparison = [abs(xx_g), abs(yy_g), abs(zz_g)]
+                g_comparison.sort(reverse=True)
+                g_plot.append(g_comparison[0])
+            get_bar_chart(file_string[:-4], states_plot, g_plot, 'Electronic State',
+                          r'$\mathregular{\Delta g_{xx}}$', 'All variables analysis', save_pict)
+
+        get_bar_chart(file_string[:-4], states_plot, ener_plot, 'Electronic State',
+                      'Excitation energy (eV)', 'energ_analysis', save_pict)
+        get_bar_chart(file_string[:-4], states_plot, orbit_plot, 'Electronic State',
+                      'Orbital angular momentum', 'orbitmoment_analysis', save_pict)
+        get_bar_chart(file_string[:-4], states_plot, soc_plot, 'Electronic State',
+                      'SOCC (cm-1)', 'socc_analysis', save_pict)
 
     file_string = file
 
@@ -703,7 +708,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
     states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selected)
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-    excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
+    excitation_energies_ras = [(i - excitation_energies_ras[0])*27.211399 for i in excitation_energies_ras]
     s2_list = s2_from_file(file, states_ras)
     hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates, states_ras)
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
@@ -712,21 +717,23 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
 
     # Forming different list depending on if g-shift is calculated or not
+    gxx_list = []
+    gyy_list = []
+    gzz_list = []
+
     if cut_gvalue != 0:
         excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
                                              'ΔE (eV)', 'Unpaired orb.', 'SOCC',
                                              'Máx Lk', 'S^2', 'gxx', 'gyy', 'gzz']]
-        gxx_list = []
-        gyy_list = []
-        gzz_list = []
-
-        # gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
-        gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values, excitation_energies_ras)
+        if estimation == 1:
+            gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values,
+                                                                  excitation_energies_ras)
+        else:
+            gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
 
     else:
         excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
-                                         'ΔE (eV)', 'Unpaired orb.', 'SOCC',
-                                         'Máx Lk', 'S^2']]
+                                         'ΔE (eV)', 'Unpaired orb.', 'SOCC', 'Máx Lk', 'S^2']]
 
     # For the list with the data for all the configurations
     final_active_orbitals = []
@@ -738,7 +745,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         symmetry = ordered_state_symmetries[state-1]
         hole = np.around(float(hole_contributions[state_index]), 2)
         part = np.around(float(part_contributions[state_index]), 2)
-        excit_energy = np.round(float(excitation_energies_ras[state_index]), 3)
+        excit_energy = np.round(float(excitation_energies_ras_eV[state_index]), 3)
         soc = np.round(float(socc_values[state_index]), 3)
         orbital_ground_state = np.round(float(orbitmoment_max[state_index]), 3)
         s2 = s2_list[state_index]
@@ -748,16 +755,11 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
             final_active_orbitals.append(elec_alpha)
 
         if cut_gvalue != 0:
-            # g_xx_diff = abs(gxx_list[state_index] - gxx_list[state_index-1])
-            # g_yy_diff = abs(gyy_list[state_index] - gyy_list[state_index-1])
-            # g_zz_diff = abs(gzz_list[state_index] - gzz_list[state_index-1])
+            g_xx = np.round(gxx_list[state_index], 6)
+            g_yy = np.round(gyy_list[state_index], 6)
+            g_zz = np.round(gzz_list[state_index], 6)
 
-            g_xx = np.round(gxx_list[state_index], 3)
-            g_yy = np.round(gyy_list[state_index], 3)
-            g_zz = np.round(gzz_list[state_index], 3)
-
-            # if g_xx_diff >= cut_gvalue or g_yy_diff >= cut_gvalue or g_zz_diff >= cut_gvalue:
-            if g_xx >= cut_gvalue or g_yy >= cut_gvalue or g_zz >= cut_gvalue:
+            if abs(g_xx) >= cut_gvalue or abs(g_yy) >= cut_gvalue or abs(g_zz) >= cut_gvalue:
                 excited_states_presentation_list.append([state, configuration, symmetry,
                                                          hole, part, excit_energy, orbital, soc,
                                                          orbital_ground_state, s2, g_xx, g_yy, g_zz])
@@ -771,8 +773,6 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                 final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals)
 
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
-    compare_gvalues_and_estimation(excited_states_presentation_matrix)
-
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
     final_active_orbitals.sort()
@@ -800,26 +800,4 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
           final_active_orbitals)
 
     if plots == 1:
-        states_plot = excited_states_presentation_matrix[1:, 0]
-        ener_plot = excited_states_presentation_matrix[1:, 5]
-        orbit_plot = excited_states_presentation_matrix[1:, 8]
-        soc_plot = excited_states_presentation_matrix[1:, 7]
-
-        if cut_gvalue != 0:
-            g_plot = []
-            for i in range(1, len(excited_states_presentation_matrix)):
-                xx_g = excited_states_presentation_matrix[i, 10]
-                yy_g = excited_states_presentation_matrix[i, 11]
-                zz_g = excited_states_presentation_matrix[i, 12]
-                g_comparison = [abs(xx_g), abs(yy_g), abs(zz_g)]
-                g_comparison.sort(reverse=True)
-                g_plot.append(g_comparison[0])
-            get_bar_chart(file_string[:-4], states_plot, g_plot, 'Electronic State',
-                      r'$\mathregular{\Delta g_{xx}}$', 'All variables analysis', save_pict)
-
-        get_bar_chart(file_string[:-4], states_plot, ener_plot, 'Electronic State',
-                      'Excitation energy (eV)', 'energ_analysis', save_pict)
-        get_bar_chart(file_string[:-4], states_plot, orbit_plot, 'Electronic State',
-                      'Orbital angular momentum', 'orbitmoment_analysis', save_pict)
-        get_bar_chart(file_string[:-4], states_plot, soc_plot, 'Electronic State',
-                      'SOCC (cm-1)', 'socc_analysis', save_pict)
+        excited_states_plots(excited_states_presentation_matrix, save_pict)
