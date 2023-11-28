@@ -6,8 +6,8 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
-from parser_plots import get_bar_chart
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
     take_selected_states_values, get_spin_orbit_couplings, from_energies_soc_to_g_values
 
@@ -506,6 +506,121 @@ def add_orbitals_active_space(orbitals, active_space):
             active_space.append(int(orbitals[j]))
     return active_space
 
+
+def get_new_active_space_electrons(active_space, alpha, beta):
+    """
+    Electrons in the new active space considering if they are occupied
+    or unoccupied observing the HOMO position
+     """
+    electrons = 0
+    for i in range(0, len(active_space)):
+        if active_space[i] <= beta:
+            electrons += 2
+        elif (active_space[i] > beta) and (active_space[i] <= alpha):
+            electrons += 1
+        elif active_space[i] > alpha:
+            pass
+    return electrons
+
+
+def improved_active_space(file, states_option, selected_states, cut_off, cut_soc, cut_ang):
+    """
+    Obtain an improved active space of RAS-CI Q-Chem output including orbitals
+    with unpaired electrons in relevant hole/particle configurations.
+    Cut_off is the amplitude at which the second-highest amplitude
+    configuration is included.
+    :param: file
+    :param: states_option, selected_states, cut_off, cut_soc, cut_ang
+    """
+    totalstates = get_number_of_states(file)
+
+    states_ras = get_selected_states(file, totalstates, selected_states, states_option, symmetry_selection='None')
+
+    elec_alpha, elec_beta = get_alpha_beta(file)
+
+    configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
+
+    socc_values = get_groundst_socc_values(file, totalstates, states_ras)
+
+    orbitmoment_max, orbitmoment_all= get_groundst_orbital_momentum(file, totalstates, states_ras)
+
+    final_active_orbitals = []
+    for i in range(0, len(configuration_orbitals)):
+        state = configuration_orbitals[i]['State'] - 1
+        orbitals = configuration_orbitals[i]['SOMO orbitals']
+
+        if orbitals == '-':  # It is a singlet, there is no SOMO so add HOMO
+            final_active_orbitals.append(elec_alpha)
+
+        elif type(orbitals) == int:  # It is a doublet, add SOMO
+            if abs(socc_values[state]) >= cut_soc and abs(orbitmoment_max[state]) >= cut_ang:
+                final_active_orbitals.append(int(orbitals))
+
+        elif type(orbitals) == str:  # It is higher multiplicities, add all SOMOs
+            orbitals = orbitals.split(',')
+            for j in range(0, len(orbitals)):
+                if abs(socc_values[state]) >= cut_soc and abs(orbitmoment_max[state]) >= cut_ang:
+                    final_active_orbitals.append(int(orbitals[j]))
+
+    orbital_set = set(final_active_orbitals)
+    final_active_orbitals = list(orbital_set)
+    final_active_orbitals.sort()
+
+    print("------------------------")
+    print(" IMPROVED ACTIVE SPACE ")
+    print("------------------------")
+
+    electrons = get_new_active_space_electrons(initial_active_orbitals, elec_alpha, elec_beta)
+    print('Initial active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(initial_active_orbitals), '] ;',
+          initial_active_orbitals)
+
+    electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
+    print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
+          final_active_orbitals)
+
+
+def save_picture(save_options, file, main_title):
+    """
+    Function that shows the plot (save_options=0) or save it (save_options=1).
+    :param save_options, file, main_title.
+    :return: plot (saved or shown)
+    """
+    if save_options == 1:
+        plt.plot()
+        figure_name = file + '_' + main_title + '.png'
+        plt.savefig(figure_name)
+        plt.close()
+    else:
+        plt.plot()
+        plt.show()
+
+
+def get_bar_chart(file, x_list, y_list, x_title, y_title, main_title, save_pict):
+    """
+    Print Bar plots: y_list vs x_list.
+    :param:
+    :return:
+    """
+    # "matplotlib" help: https://aprendeconalf.es/docencia/python/manual/matplotlib/
+    # https://chartio.com/resources/tutorials/how-to-save-a-plot-to-a-file-using-matplotlib/
+    # https://pythonspot.com/matplotlib-bar-chart/
+    fuente = 'serif'  # "Sans"
+    medium_size = 16
+    big_size = 20
+
+    y_pos = (list(x_list))
+    plt.bar(x_list, y_list, align='center', width=0.5, color='r', edgecolor="black")
+    plt.xticks(y_pos)
+
+    plt.title(main_title, fontsize=big_size, fontname=fuente)
+    plt.xlabel(x_title, fontsize=medium_size, fontfamily=fuente)
+    plt.ylabel(y_title, fontsize=medium_size, fontfamily=fuente)
+    # plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+    plt.grid(True)
+
+    save_picture(save_pict, file, main_title)
+
+
 def get_excited_states_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_soc,
                                 cut_ang, cut_gvalue, ppms, plots, save_pict):
     """
@@ -583,27 +698,20 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
 
     file_string = file
 
+    # Taking all the data from all the states
     totalstates = get_number_of_states(file)
-
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
-
     states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selected)
-
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
     excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
-
     s2_list = s2_from_file(file, states_ras)
-
     hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates, states_ras)
-
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
-
     orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, states_ras)
-
     elec_alpha, elec_beta = get_alpha_beta(file)
-
     configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
 
+    # Forming different list depending on if g-shift is calculated or not
     if cut_gvalue != 0:
         excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
                                              'ΔE (eV)', 'Unpaired orb.', 'SOCC',
@@ -620,12 +728,13 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                                          'ΔE (eV)', 'Unpaired orb.', 'SOCC',
                                          'Máx Lk', 'S^2']]
 
+    # For the list with the data for all the configurations
     final_active_orbitals = []
     for i in range(0, len(configuration_orbitals)):
         state = configuration_orbitals[i]["State"]
         configuration = configuration_orbitals[i]["Configuration"]
-
         state_index = states_ras.index(state)
+
         symmetry = ordered_state_symmetries[state-1]
         hole = np.around(float(hole_contributions[state_index]), 2)
         part = np.around(float(part_contributions[state_index]), 2)
@@ -639,15 +748,16 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
             final_active_orbitals.append(elec_alpha)
 
         if cut_gvalue != 0:
-            g_xx = np.round(gxx_list[state_index], 10)
-            g_yy = np.round(gyy_list[state_index], 10)
-            g_zz = np.round(gzz_list[state_index], 10)
+            # g_xx_diff = abs(gxx_list[state_index] - gxx_list[state_index-1])
+            # g_yy_diff = abs(gyy_list[state_index] - gyy_list[state_index-1])
+            # g_zz_diff = abs(gzz_list[state_index] - gzz_list[state_index-1])
 
-            g_xx_diff = abs(gxx_list[state_index] - gxx_list[state_index-1])
-            g_yy_diff = abs(gyy_list[state_index] - gyy_list[state_index-1])
-            g_zz_diff = abs(gzz_list[state_index] - gzz_list[state_index-1])
+            g_xx = np.round(gxx_list[state_index], 3)
+            g_yy = np.round(gyy_list[state_index], 3)
+            g_zz = np.round(gzz_list[state_index], 3)
 
-            if g_xx_diff >= cut_gvalue or g_yy_diff >= cut_gvalue or g_zz_diff >= cut_gvalue:
+            # if g_xx_diff >= cut_gvalue or g_yy_diff >= cut_gvalue or g_zz_diff >= cut_gvalue:
+            if g_xx >= cut_gvalue or g_yy >= cut_gvalue or g_zz >= cut_gvalue:
                 excited_states_presentation_list.append([state, configuration, symmetry,
                                                          hole, part, excit_energy, orbital, soc,
                                                          orbital_ground_state, s2, g_xx, g_yy, g_zz])
@@ -661,7 +771,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                 final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals)
 
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
-    # compare_gvalues_and_estimation(excited_states_presentation_matrix)
+    compare_gvalues_and_estimation(excited_states_presentation_matrix)
 
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
@@ -713,75 +823,3 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                       'Orbital angular momentum', 'orbitmoment_analysis', save_pict)
         get_bar_chart(file_string[:-4], states_plot, soc_plot, 'Electronic State',
                       'SOCC (cm-1)', 'socc_analysis', save_pict)
-
-
-def get_new_active_space_electrons(active_space, alpha, beta):
-    """
-    Electrons in the new active space considering if they are occupied
-    or unoccupied observing the HOMO position
-     """
-    electrons = 0
-    for i in range(0, len(active_space)):
-        if active_space[i] <= beta:
-            electrons += 2
-        elif (active_space[i] > beta) and (active_space[i] <= alpha):
-            electrons += 1
-        elif active_space[i] > alpha:
-            pass
-    return electrons
-
-
-def improved_active_space(file, states_option, selected_states, cut_off, cut_soc, cut_ang):
-    """
-    Obtain an improved active space of RAS-CI Q-Chem output including orbitals
-    with unpaired electrons in relevant hole/particle configurations.
-    Cut_off is the amplitude at which the second-highest amplitude
-    configuration is included.
-    :param: file
-    :param: states_option, selected_states, cut_off, cut_soc, cut_ang
-    """
-    totalstates = get_number_of_states(file)
-
-    states_ras = get_selected_states(file, totalstates, selected_states, states_option, symmetry_selection='None')
-
-    elec_alpha, elec_beta = get_alpha_beta(file)
-
-    configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
-
-    socc_values = get_groundst_socc_values(file, totalstates, states_ras)
-
-    orbitmoment_max, orbitmoment_all= get_groundst_orbital_momentum(file, totalstates, states_ras)
-
-    final_active_orbitals = []
-    for i in range(0, len(configuration_orbitals)):
-        state = configuration_orbitals[i]['State'] - 1
-        orbitals = configuration_orbitals[i]['SOMO orbitals']
-
-        if orbitals == '-':  # It is a singlet, there is no SOMO so add HOMO
-            final_active_orbitals.append(elec_alpha)
-
-        elif type(orbitals) == int:  # It is a doublet, add SOMO
-            if abs(socc_values[state]) >= cut_soc and abs(orbitmoment_max[state]) >= cut_ang:
-                final_active_orbitals.append(int(orbitals))
-
-        elif type(orbitals) == str:  # It is higher multiplicities, add all SOMOs
-            orbitals = orbitals.split(',')
-            for j in range(0, len(orbitals)):
-                if abs(socc_values[state]) >= cut_soc and abs(orbitmoment_max[state]) >= cut_ang:
-                    final_active_orbitals.append(int(orbitals[j]))
-
-    orbital_set = set(final_active_orbitals)
-    final_active_orbitals = list(orbital_set)
-    final_active_orbitals.sort()
-
-    print("------------------------")
-    print(" IMPROVED ACTIVE SPACE ")
-    print("------------------------")
-
-    electrons = get_new_active_space_electrons(initial_active_orbitals, elec_alpha, elec_beta)
-    print('Initial active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(initial_active_orbitals), '] ;',
-          initial_active_orbitals)
-
-    electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
-    print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
-          final_active_orbitals)

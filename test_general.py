@@ -5,27 +5,29 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 
 from parser_gtensor import gfactor_presentation
 from parser_excitstates import get_excited_states_analysis
-from parser_plots import sos_analysis_and_plot, gfactor_all_states
+from parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcalculation_gestimation
 
 #####################################
 #            INPUT VALUES
 #####################################
 ras_input = '\
-david_molecules/anthracene_4_4_100states_triplets.out'
-
+david_molecules/anthracene_14_12_triplets.out'
+#--------------------------------------------------------
 g_calculation = 0
 ppm = 0
-
-excitanalysis = 1
+#--------------------------------------------------------
+excitanalysis = 0
 excitanalysis_gvalue_cut = 0.001
 excitanalysis_config_cut = 0.9
 excitanalysis_soc_cut = 0.01
 excitanalysis_angmoment_cut = 0.01
-
+#--------------------------------------------------------
 sos_analysis = 0
-
+#--------------------------------------------------------
 gfactor_excited_states = 0
-
+#--------------------------------------------------------
+gestimation_comparison = 1
+#--------------------------------------------------------
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 states_ras = [1, 2, 3, 4, 10, 12, 13, 15, 17, 18, 24, 28, 30, 34, 35, 37, 38, 40, 41, 44, 48, 50, 51, 54, 55, 57, 59, 63, 64, 66, 73, 78, 79, 82, 86, 97, 98]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
@@ -47,6 +49,9 @@ if sos_analysis == 1:
 
 if gfactor_excited_states == 1:
     gfactor_all_states(ras_input, states_ras, ppm)
+
+if gestimation_comparison == 1:
+    compare_gcalculation_gestimation(ras_input, states_ras, state_selection, plotting=0)
 
 ###########################################
 #      ACTING IN SEVERAL MOLECULES
