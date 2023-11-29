@@ -634,7 +634,7 @@ def gshift_calculation_loop(states_ras, file, totalstates, ppms):
 
     for i in range(0, len(states_ras)):
         states_sos = [states_ras[0], states_ras[i]]  # Ground state and another excited state
-        print('Calculating....', states_sos)
+        # print('Calculating....', states_sos)
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
         selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
         g_shift = from_energies_soc_to_g_values(file, states_sos,
@@ -729,6 +729,10 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     gyy_list = []
     gzz_list = []
 
+    cut_gxx = 0
+    cut_gyy = 0
+    cut_gzz = 0
+
     excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole',
                                          'Part', 'ΔE (eV)', 'Unpaired orb.', 'SOCC', 'Máx Lk', 'S^2']]
     if cut_gvalue != 0:
@@ -741,9 +745,10 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         else:
             gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
 
-        cut_gxx = cut_gvalue * max(gxx_list, key=abs)
-        cut_gyy = cut_gvalue * max(gyy_list, key=abs)
-        cut_gzz = cut_gvalue * max(gzz_list, key=abs)
+        cut_gxx = cut_gvalue * abs(max(gxx_list, key=abs))
+        cut_gyy = cut_gvalue * abs(max(gyy_list, key=abs))
+        cut_gzz = cut_gvalue * abs(max(gzz_list, key=abs))
+        # [print(i) for i in gxx_list]
 
     # For the list with the data for all the configurations
     final_active_orbitals = []
@@ -765,14 +770,15 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
             final_active_orbitals.append(elec_alpha)
 
         if cut_gvalue != 0:
-            g_xx = np.round(gxx_list[state_index], 6)
-            g_yy = np.round(gyy_list[state_index], 6)
-            g_zz = np.round(gzz_list[state_index], 6)
+            g_xx = gxx_list[state_index]
+            g_yy = gyy_list[state_index]
+            g_zz = gzz_list[state_index]
 
             if abs(g_xx) >= cut_gxx or abs(g_yy) >= cut_gyy or abs(g_zz) >= cut_gzz:
                 excited_states_presentation_list.append([state, configuration, symmetry,
                                                          hole, part, excit_energy, orbital, soc,
-                                                         orbital_ground_state, s2, g_xx, g_yy, g_zz])
+                                                         orbital_ground_state, s2, np.round(g_xx, 3),
+                                                         np.round(g_yy, 3), np.round(g_zz, 3)])
                 final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals)
 
         else:
@@ -790,7 +796,8 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     print("------------------------")
     print(" EXCITED STATES ANALYSIS")
     print("------------------------")
-    print('Most important settings for each state (amplitude_cutoff:', cut_off, ') :')
+    print('Configurations cut-off:', cut_off)
+    print('g-shift cut-off:', np.round(cut_gxx, 3), np.round(cut_gyy, 3), np.round(cut_gzz, 3))
     print('\n'.join(''.join('{:^15}'.format(item) for item in row)
                     for row in excited_states_presentation_matrix[:, :]))
     count_singlet_triplets(states_ras, s2_list)

@@ -789,8 +789,8 @@ def print_g_calculation(file, totalstates, selected_states,
     print(" RAS-CI RESULTS")
     print("------------------------")
     print('g-factor (x y z dimensions):')
-    print(np.round(upper_g_tensor_results_ras.real[0], 3), np.round(upper_g_tensor_results_ras.real[1], 3),
-          np.round(upper_g_tensor_results_ras.real[2], 3))
+    print(np.round(upper_g_tensor_results_ras[0].real, 3), np.round(upper_g_tensor_results_ras[1].real, 3),
+          np.round(upper_g_tensor_results_ras[2].real, 3))
     print('')
 
 
@@ -822,11 +822,6 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
 
     g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground, ppm)
-
-    # CHANGE FROM Q-CHEM ORIENTATION TO STANDARD NUCLEAR ORIENTATION
-    # a = g_shift[0]
-    # g_shift[0] = g_shift[1]
-    # g_shift[1] = a
 
     print_g_calculation(ras_input, totalstates, states_option, states_ras, g_shift, symmetry_selection)
 

@@ -156,7 +156,7 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, estimation, order
 
         for i in range(0, len(nstates)):
             states_sos = nstates[0:i+1]
-            print('Calculating....', states_sos)
+            # print('Calculating....', states_sos)
             eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
             selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
             g_shift = from_energies_soc_to_g_values(file, states_sos,
@@ -164,11 +164,11 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, estimation, order
                                                     selected_socs, sz_list, ground_sz, ppms)
 
             if order_symmetry == 1:
-                presentation_list.append([ordered_state_symmetries[i], np.round(g_shift.real[0], 3),
-                                          np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
+                presentation_list.append([ordered_state_symmetries[i], np.round(g_shift[0].real, 3),
+                                          np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
             else:
-                presentation_list.append([i+1, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
-                                          np.round(g_shift.real[2], 3)])
+                presentation_list.append([i+1, np.round(g_shift[0].real, 3),
+                                          np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
     presentation_matrix = np.array(presentation_list, dtype=object)
 
     print("--------------------------------")
@@ -208,8 +208,8 @@ def gfactor_all_states(file, nstates, ppms):
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz, ppms)
 
-        presentation_list.append([nstates[0], np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
-                                  np.round(g_shift.real[2], 3)])
+        presentation_list.append([nstates[0], np.round(g_shift[0].real, 3), np.round(g_shift[1].real, 3),
+                                  np.round(g_shift[2].real, 3)])
 
     presentation_matrix = np.array(presentation_list, dtype=object)
     print("-----------------------------------------------")
