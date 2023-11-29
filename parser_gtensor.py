@@ -640,6 +640,19 @@ def from_qchem_to_sto(g_shift):
         return g_shift
 
 
+def from_ppt_to_ppm(gvalues, ppm=None):
+        """
+        Pass from ppt to ppm the gvalues.
+        :param: ppm, gvalues
+        :return: gvalues
+        """
+        if ppm == 1:
+            gvalues = [i * 1000 for i in gvalues]
+        else:
+            pass
+        return gvalues
+
+
 def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=None):
     """
     g-shift with orbitals and spin angular momentum matrices.
@@ -686,18 +699,6 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         b = np.matmul(spin_matr, spin_matr)
         g_value = np.trace(a) / np.trace(b)
         return g_value
-
-    def from_ppt_to_ppm(gvalues, ppm=None):
-        """
-        Pass from ppt to ppm the gvalues.
-        :param: ppm, gvalues
-        :return: gvalues
-        """
-        if ppm == 1:
-            gvalues[:] = gvalues[:] * 1000
-        else:
-            pass
-        return gvalues
 
     j_matrix = j_matrix_formation(s_matrix, l_matrix, sz_list, ground_sz)
 

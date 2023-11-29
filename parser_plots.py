@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 # from matplotlib.ticker import MaxNLocator, MultipleLocator
 
 from parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, \
-    get_spin_orbit_couplings, from_energies_soc_to_g_values, get_symmetry_states
+    get_spin_orbit_couplings, from_energies_soc_to_g_values, get_symmetry_states, from_ppt_to_ppm
 from parser_excitstates import get_groundst_socc_values, get_groundst_orbital_momentum, \
     gshift_estimation_loop, gshift_calculation_loop
 
 
-def save_picture(save_options, file, main_title):
+def save_picture(save_options, filee, title_main):
     """
     Function that shows the plot (save_options=0) or save it (save_options=1).
     :param save_options, file, main_title.
@@ -19,7 +19,7 @@ def save_picture(save_options, file, main_title):
     """
     if save_options == 1:
         plt.plot()
-        figure_name = file + '_' + main_title + '.png'
+        figure_name = filee + '_' + title_main + '.png'
         plt.savefig(figure_name)
         plt.close()
     else:
@@ -63,10 +63,10 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     # LINES:
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
             label=r'$\mathregular{\Delta g_{xx}}$', linewidth=line_width)
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b',
-             label=r'$\mathregular{\Delta g_{yy}}$', linewidth=line_width)
+    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b', 
+            label=r'$\mathregular{\Delta g_{yy}}$', linewidth=line_width)
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k',
-             label=r'$\mathregular{\Delta g_{zz}}$', linewidth=line_width)
+            label=r'$\mathregular{\Delta g_{zz}}$', linewidth=line_width)
 
     # MARKERS: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
     ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'ro', markersize=marker_size)
@@ -140,19 +140,17 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, estimation, order
         excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
         socc_values = get_groundst_socc_values(file, totalstates, nstates)
         orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
-
-        # From_qchem_to_sto
-        gyy_list, gxx_list, gzz_list = gshift_estimation_loop(nstates, orbitmoment_all, socc_values,
-                                                              excitation_energies_ras)
+        gxx_list, gyy_list, gzz_list = gshift_estimation_loop(nstates, orbitmoment_all, socc_values,
+                                                              excitation_energies_ras, ppms)
 
         if order_symmetry == 1:
             for i in range(0, len(ordered_state_symmetries)):
                 presentation_list.append([ordered_state_symmetries[i], np.round(gxx_list[i], 3),
-                                  np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
+                                          np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
         else:
             for i in range(0, len(ordered_state_symmetries)):
                 presentation_list.append([i, np.round(gxx_list[i][0], 3), np.round(gxx_list[i], 3),
-                                  np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
+                                          np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
 
     else:
 
@@ -167,10 +165,10 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, estimation, order
 
             if order_symmetry == 1:
                 presentation_list.append([ordered_state_symmetries[i], np.round(g_shift.real[0], 3),
-                                      np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
+                                          np.round(g_shift.real[1], 3), np.round(g_shift.real[2], 3)])
             else:
                 presentation_list.append([i+1, np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
-                                      np.round(g_shift.real[2], 3)])
+                                          np.round(g_shift.real[2], 3)])
     presentation_matrix = np.array(presentation_list, dtype=object)
 
     print("--------------------------------")
@@ -192,16 +190,15 @@ def gfactor_all_states(file, nstates, ppms):
     :param: file_ms_notnull, states_msnull, states_option, symmetry_selection, soc_options
     :return: g-shifts
     """
-    def swapPositions(list, pos1, pos2):
-        list[pos1], list[pos2] = list[pos2], list[pos1]
-        return list
+    def swap_positions(lista, pos1, pos2):
+        lista[pos1], lista[pos2] = lista[pos2], lista[pos1]
+        return lista
 
     totalstates = get_number_of_states(file)
-    presentation_list = []
-    presentation_list.append(['Ground state', 'gxx', 'gyy', 'gzz'])
+    presentation_list = ['Ground state', 'gxx', 'gyy', 'gzz']
 
     for i in range(0, len(nstates)):
-        states_ras = swapPositions(nstates, 0, i)
+        states_ras = swap_positions(nstates, 0, i)
 
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
 
@@ -225,7 +222,7 @@ def gfactor_all_states(file, nstates, ppms):
                             y_title=r'$\Delta g, ppm$', main_title=file, save_options=0)
 
 
-def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
+def compare_gcalculation_gestimation(file, nstates, selected_state, ppms, plotting):
     """
     Make the comparison betweem g-shift calculated with the SOS procedure and the estimation equation
     (equation 11 or article J. Phys.Chem.A2023, 127, 8459−8472).
@@ -235,7 +232,17 @@ def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
     :param plotting:
     :return:
     """
-    def plot_g_tensor_comparison(file, presentation_matrix, x_title, y_title, main_title, save_options):
+    def plot_g_tensor_comparison(filee, present_matrix, title_x, title_y, title_main, save_options):
+        """
+        Plotting results. 
+        :param filee: 
+        :param present_matrix: 
+        :param title_x: 
+        :param title_y: 
+        :param title_main: 
+        :param save_options: 
+        :return: 
+        """
         fig, ax = plt.subplots()
 
         # MAIN FEATURES:
@@ -248,34 +255,34 @@ def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
         marker_size = 10
 
         # LINES:
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
+        ax.plot(present_matrix[:, 0], present_matrix[:, 1], 'r',
                 label=r'Calc. $\mathregular{\Delta g_{xx}}$', linewidth=line_width)
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b',
+        ax.plot(present_matrix[:, 0], present_matrix[:, 2], 'b',
                 label=r'Calc. $\mathregular{\Delta g_{yy}}$', linewidth=line_width)
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k',
+        ax.plot(present_matrix[:, 0], present_matrix[:, 3], 'k',
                 label=r'Calc. $\mathregular{\Delta g_{zz}}$', linewidth=line_width)
 
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 4], 'r--',
+        ax.plot(present_matrix[:, 0], present_matrix[:, 4], 'r--',
                 label=r'Estim. $\mathregular{\Delta g_{xx}}$', linewidth=line_width)
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 5], 'b--',
+        ax.plot(present_matrix[:, 0], present_matrix[:, 5], 'b--',
                 label=r'Estim. $\mathregular{\Delta g_{yy}}$', linewidth=line_width)
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 6], 'k--',
+        ax.plot(present_matrix[:, 0], present_matrix[:, 6], 'k--',
                 label=r'Estim. $\mathregular{\Delta g_{zz}}$', linewidth=line_width)
 
         # MARKERS: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
         # https://matplotlib.org/stable/api/_as_gen/matplotlib.markers.MarkerStyle.html
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r^', markersize=marker_size,
+        ax.plot(present_matrix[:, 0], present_matrix[:, 1], 'r^', markersize=marker_size,
                 markerfacecolor=None, markeredgewidth=1.5, fillstyle='none')
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b^', markersize=marker_size,
+        ax.plot(present_matrix[:, 0], present_matrix[:, 2], 'b^', markersize=marker_size,
                 markerfacecolor=None, markeredgewidth=1.5, fillstyle='none')
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k^', markersize=marker_size,
+        ax.plot(present_matrix[:, 0], present_matrix[:, 3], 'k^', markersize=marker_size,
                 markerfacecolor=None, markeredgewidth=1.5, fillstyle='none')
 
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 4], 'rs', markersize=marker_size,
+        ax.plot(present_matrix[:, 0], present_matrix[:, 4], 'rs', markersize=marker_size,
                 markerfacecolor=None, markeredgewidth=1.5, fillstyle='none')
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 5], 'bs', markersize=marker_size,
+        ax.plot(present_matrix[:, 0], present_matrix[:, 5], 'bs', markersize=marker_size,
                 markerfacecolor=None, markeredgewidth=1.5, fillstyle='none')
-        ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 6], 'ks', markersize=marker_size,
+        ax.plot(present_matrix[:, 0], present_matrix[:, 6], 'ks', markersize=marker_size,
                 markerfacecolor=None, markeredgewidth=1.5, fillstyle='none')
 
         # CHANGING THE FONTSIZE OF TICKS
@@ -285,13 +292,13 @@ def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
 
         # LABELS:
         # labelpad: change the space between axis umbers and labels
-        plt.xlabel(x_title, fontsize=bigger_size, fontfamily=fuente, labelpad=15,
+        plt.xlabel(title_x, fontsize=bigger_size, fontfamily=fuente, labelpad=15,
                    weight=weight_selected)
-        plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic',
+        plt.ylabel(title_y, fontsize=bigger_size, fontfamily=fuente, style='italic',
                    weight=weight_selected, labelpad=15)
 
         # TITLE:
-        plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
+        plt.title(title_main, fontsize=bigger_size, fontfamily=fuente, y=1.05)
 
         # LEGEND
         legend = plt.legend(fontsize=small_size, fancybox=True, framealpha=0.5,
@@ -305,7 +312,7 @@ def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
         ax.spines["left"].set_linewidth(line_width)
         ax.spines["right"].set_linewidth(line_width)
 
-        save_picture(save_options, file, main_title)
+        save_picture(save_options, filee, title_main)
 
     totalstates = get_number_of_states(file)
     nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
@@ -317,16 +324,16 @@ def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
     soccs = get_groundst_socc_values(file, totalstates, nstates)
     orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
 
-    gxx_e, gyy_e, gzz_e = gshift_estimation_loop(nstates, orbitmoment_all, soccs, excitation_energies_ras)
+    estim_gxx, estim_gyy, estim_gzz = gshift_estimation_loop(nstates, orbitmoment_all, soccs, excitation_energies_ras, ppms)
     estim_gshift = []
-    for i in range(0, len(gxx_e)):
-        estim_gshift.append([gxx_e[i], gyy_e[i], gzz_e[i]])
+    for i in range(0, len(estim_gxx)):
+        estim_gshift.append([estim_gxx[i], estim_gyy[i], estim_gzz[i]])
 
     # 2) Make the calculation of the g-shift separately for each state
-    gxx, gyy, gzz = gshift_calculation_loop(nstates, file, totalstates, ppms=0)
+    calc_gxx, calc_gyy, calc_gzz = gshift_calculation_loop(nstates, file, totalstates, ppms=0)
     calc_gshift = []
-    for i in range(0, len(gxx)):
-        calc_gshift.append([gxx[i], gyy[i], gzz[i]])
+    for i in range(0, len(calc_gxx)):
+        calc_gshift.append([calc_gxx[i], calc_gyy[i], calc_gzz[i]])
 
     # 3) Make the comparison
     # https://pythonforundergradengineers.com/unicode-characters-in-python.html
@@ -345,13 +352,8 @@ def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
     pd.set_option('display.width', 400)
     pd.set_option('display.max_columns', 10)
     df = pd.DataFrame(presentation_list, index=ordered_state_symmetries,
-                      columns=['Calc. \u0394gxx',
-                          'Calc. \u0394gyy',
-                          'Calc. \u0394gzz',
-                          'Estim. \u0394gxx',
-                          'Estim. \u0394gyy',
-                          'Estim. \u0394gzz',
-                          ])
+                      columns=['Calc. \u0394gxx', 'Calc. \u0394gyy', 'Calc. \u0394gzz',
+                               'Estim. \u0394gxx', 'Estim. \u0394gyy', 'Estim. \u0394gzz'])
     print(df)
 
     if plotting == 1:
@@ -370,5 +372,5 @@ def compare_gcalculation_gestimation(file, nstates, selected_state, plotting):
 
         presentation_matrix = np.array(presentation_list, dtype=object)
         presentation_matrix_2 = np.delete(presentation_matrix, 0, 0)
-        plot_g_tensor_comparison(file_string, presentation_matrix_2, x_title, y_title,
-                                main_title, save_options=0)
+        plot_g_tensor_comparison(file_string, presentation_matrix_2, x_title,
+                                 y_title, main_title, save_options=0)
