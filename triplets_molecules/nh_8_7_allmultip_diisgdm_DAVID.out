@@ -124,7 +124,7 @@ $rem
 ! RAS_ELEC_ALPHA     5       !spin-α electrons in RAS2 
 ! RAS_ELEC_BETA      3      !spin-β electrons in RAS2
   RAS_ACT            7       !number of orbitals in RAS2 
-! RAS_ACT_ORB   [1, 2, 3, 4, 5, 6, 7]  !user-selected RAS2 orbitals
+ RAS_ACT_ORB   [1, 2, 3, 4, 5, 6, 7]  !user-selected RAS2 orbitals
   RAS_OCC            0       !number of orbitals in RAS1
   N_FROZEN_CORE      0     !Number of frozen core orbitals
   N_FROZEN_VIRTUAL   0      !Number of frozen virtual orbitals

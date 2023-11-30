@@ -11,10 +11,10 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcal
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/naphthalene_6_10_triplets.out'
+david_molecules/hexacene_4_4_100states_triplets.out'
 # --------------------------------------------------------
-g_calculation = 1
-ppm = 0
+g_calculation = 0
+ppm = 1
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 states_ras = [1, 2, 3]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
@@ -22,9 +22,9 @@ soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 #  [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
 #  --------------------------------------------------------
 excitanalysis = 1
-gestimation = 0
-excitanalysis_gvalue_cut = 0.0001
-excitanalysis_config_cut = 0.3
+gestimation = 1
+excitanalysis_gvalue_cut = 0.25
+excitanalysis_config_cut = 0.8
 excitanalysis_soc_cut = 0
 excitanalysis_angmoment_cut = 0
 #  --------------------------------------------------------

@@ -11,7 +11,7 @@ from parser_gtensor import get_number_of_states, get_selected_states, get_eigene
     get_orbital_matrices, angular_matrices_obtention, g_factor_calculation
 from parser_plots import plot_g_tensor_vs_states
 
-ras_input = 'triplets_molecules/o2_11_9_triplets.out'  # str(sys.argv[1])
+ras_input = 'triplets_molecules/o2_8_6_triplets.out'  # str(sys.argv[1])
 state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 states_ras = [1, 5]  # States to be included when "states_option = 0"
 symmetry_selection = 'A2'  # Symmetry selected states_selected

@@ -485,24 +485,29 @@ def count_singlet_triplets(states, s2_lists):
             quartets.append(ii+1)
         elif s2_lists[ii] == 6:
             quintets.append(ii + 1)
-    print(len(singlets), 'Singlet states: ', singlets)
-    print(len(doublets), 'Doublet states: ', doublets)
-    print(len(triplets), 'Triplet states: ', triplets)
-    print(len(quartets), 'Quartet states: ', quartets)
-    print(len(quintets), 'Quintet states: ', quintets)
+    print()
+    print('States multiplicity: ')
+    print('-', len(singlets), 'Singlet states: ', singlets)
+    print('-', len(doublets), 'Doublet states: ', doublets)
+    print('-', len(triplets), 'Triplet states: ', triplets)
+    print('-', len(quartets), 'Quartet states: ', quartets)
+    print('-', len(quintets), 'Quintet states: ', quintets)
 
 
-def add_orbitals_active_space(orbitals, active_space):
+def add_orbitals_active_space(orbitals, active_space, alpha_elec):
     """
     Return the orbitals to be added to the active space list
     :param orbitals:
     :param active_space:
     :return: active space
     """
+    if orbitals == '-':  # It is a singlet, there is no SOMO so add HOMO
+        active_space.append(alpha_elec)
+
     if type(orbitals) == int:  # It is a doublet, add SOMO
         active_space.append(int(orbitals))
 
-    elif type(orbitals) == str:  # It is higher multiplicities, add all SOMOs
+    elif type(orbitals) == str and orbitals != '-':  # It is higher multiplicities, add all SOMOs
         orbitals = orbitals.split(',')
         for j in range(0, len(orbitals)):
             active_space.append(int(orbitals[j]))
@@ -766,8 +771,6 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         s2 = s2_list[state_index]
 
         orbital = configuration_orbitals[i]["SOMO orbitals"]
-        if orbital == '-':  # It is a singlet, there is no SOMO so add HOMO
-            final_active_orbitals.append(elec_alpha)
 
         if cut_gvalue != 0:
             g_xx = gxx_list[state_index]
@@ -779,14 +782,14 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                                                          hole, part, excit_energy, orbital, soc,
                                                          orbital_ground_state, s2, np.round(g_xx, 3),
                                                          np.round(g_yy, 3), np.round(g_zz, 3)])
-                final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals)
+                final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
 
         else:
             if abs(orbital_ground_state) >= cut_ang and abs(soc) >= cut_soc:
                 excited_states_presentation_list.append([state, configuration, symmetry,
                                                          hole, part, excit_energy, orbital, soc,
                                                          orbital_ground_state, s2])
-                final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals)
+                final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
 
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
     orbital_set = set(final_active_orbitals)
