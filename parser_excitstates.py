@@ -7,6 +7,7 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import constants
+import pandas as pd
 
 from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
     take_selected_states_values, get_spin_orbit_couplings, from_energies_soc_to_g_values, from_ppt_to_ppm
@@ -277,16 +278,15 @@ def get_alpha_beta(qchem_file):
 def get_highest_amplitudes(file, amplitude_cutoff):
     """
     Get:
-    - index_max_amplitudes: list of the indexes of the configurations with relevant amplitudes (higher than a cut-off)
+    - index_max_amplitudes: list of the indexes of the configurations with relevant all_amplitudes (higher than a cut-off)
     - configurations_orbitals: "| HOLE  | ALPHA | BETA  | PART" information of the configurations
     with an amplitude higher than a cutoff
     :param: file_ms_notnull
     :return: index_max_amplitudes, configurations_orbitals
     """
-
     def get_configurations_information(line):
         """
-        From highest to lowest amplitudes, get a list with the amplitudes ('amplitude') and
+        From highest to lowest all_amplitudes, get a list with the all_amplitudes ('amplitude') and
         the orbitals ('orbitals_information') of all the configurations.
         :param: line
         :return: amplitude, orbitals_information
@@ -299,14 +299,14 @@ def get_highest_amplitudes(file, amplitude_cutoff):
             line = line.replace('|', '')
 
             element = line.split()[-1]
-            elements_amplitude.append(element)  # Take the amplitudes value
+            elements_amplitude.append(element)  # Take the all_amplitudes value
 
             element = line.split()[0:4]
             orbitals_information.append(element)  # Take the "HOLE  | ALPHA | BETA  | PART" sections
 
             line = next(file)  # Go to next line
 
-        # Order the configurations (amplitudes and orbitals) from highest to lowest amplitudes
+        # Order the configurations (all_amplitudes and orbitals) from highest to lowest all_amplitudes
         amplitude = np.array(elements_amplitude, dtype=float)
         amplitude = abs(amplitude)
 
@@ -322,34 +322,37 @@ def get_highest_amplitudes(file, amplitude_cutoff):
                     orbitals_information[ii] = change_list
         return amplitude, orbitals_information
 
-    def other_important_orbitals(amplitude, amplitude_cut_off):
+    def take_relevant_orbitals(amplitude, amplitude_cut_off):
         """
         Get indexes of configurations that have the amplitude higher than a cut-off times the
         amplitude of the first configuration (that is the one with the highest amplitude).
         :param: amplitude, amplitude_cutoff
         :return: indexes
         """
+        indexes_list = ['0']
+        amplitude_list = [amplitude[0]]
         cut_off = amplitude_cut_off * amplitude[0]
 
-        indexes_list = ['0']
-        for k in range(1, len(amplitude)):  # Value in 0 is ignored since amplitudes are sorted
+        for k in range(1, len(amplitude)):  # Value in 0 is ignored since all_amplitudes are sorted
             if amplitude[k] > cut_off:
                 # If amplitude is higher than cut-off percentage of first configuration, include it
                 indexes_list.append(k)
+                amplitude_list.append(amplitude[k])
             else:
                 break
 
         indexes = np.array(indexes_list, dtype=int)
-        return indexes
+        amplitude = np.array(amplitude_list, dtype=float)
+        return amplitude, indexes
 
     next_line = 0
     for i in range(0, 2):  # Go to the line of the first configuration
         next_line = next(file)
         i += 1
 
-    amplitudes, configurations_orbitals = get_configurations_information(next_line)
-    index_max_amplitudes = other_important_orbitals(amplitudes, amplitude_cutoff)
-    return index_max_amplitudes, configurations_orbitals
+    all_amplitudes, configurations_orbitals = get_configurations_information(next_line)
+    max_amplitudes, index_max_amplitudes = take_relevant_orbitals(all_amplitudes, amplitude_cutoff)
+    return max_amplitudes, index_max_amplitudes, configurations_orbitals
 
 
 def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
@@ -441,13 +444,14 @@ def get_configurations_unpaired_orbitals(ras_input, states_selected, cutoff):
 
     word_search = ' | HOLE  | '
     orbit_list = []
+    amplitude_list = []
     n_state = 0
 
     with open(ras_input, encoding="utf-8") as ras_input:
         for line in ras_input:
             if word_search in line:  # Go to configurations line
 
-                index_relevant_amplit, state_orbitals = get_highest_amplitudes(ras_input, cutoff)
+                relevant_amplitudes, index_relevant_amplit, state_orbitals = get_highest_amplitudes(ras_input, cutoff)
                 n_configuration = 0
 
                 # Include all those configurations with relevant amplitudes in the final list
@@ -456,16 +460,25 @@ def get_configurations_unpaired_orbitals(ras_input, states_selected, cutoff):
                     orbit_dict = {'State': n_state+1, 'Configuration': n_configuration+1, 'SOMO orbitals': new_orbitals}
                     orbit_list.append(orbit_dict)
 
+                    amplitude_dict = {'State': n_state+1, 'Configuration': n_configuration+1, 'amplitude': relevant_amplitudes[i]}
+                    amplitude_list.append(amplitude_dict)
+
                     n_configuration += 1
                 n_state += 1
 
+    # Take the selected states configurations
     orbit_list_selected = []
+    amplitude_list_selected = []
+
     for state in states_selected:
         for i in range(0, len(orbit_list)):
             if orbit_list[i]["State"] == state:
+
                 orbit_list_selected.append(orbit_list[i])
+                amplitude_list_selected.append(amplitude_list[i])
     initial_active_orbitals_list = list(initial_active_orbitals)
-    return orbit_list_selected, initial_active_orbitals_list
+
+    return amplitude_list_selected, orbit_list_selected, initial_active_orbitals_list
 
 
 def count_singlet_triplets(states, s2_lists):
@@ -545,7 +558,7 @@ def improved_active_space(file, states_option, selected_states, cut_off, cut_soc
 
     elec_alpha, elec_beta = get_alpha_beta(file)
 
-    configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
+    configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
 
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
 
@@ -727,7 +740,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
     orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, states_ras)
     elec_alpha, elec_beta = get_alpha_beta(file)
-    configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
+    configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
 
     # Forming different list depending on if g-shift is calculated or not
     gxx_list = []
@@ -739,10 +752,10 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     cut_gzz = 0
 
     excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole',
-                                         'Part', 'ΔE (eV)', 'Unpaired orb.', 'SOCC', 'Máx Lk', 'S^2']]
+                                         'Part', 'Unpaired orb.', 'Amplitude', 'ΔE (eV)', 'SOCC', 'Máx Lk', 'S^2']]
     if cut_gvalue != 0:
         excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
-                                             'ΔE (eV)', 'Unpaired orb.', 'SOCC',
+                                             'Unpaired orb.', 'Amplitude', 'ΔE (eV)', 'SOCC',
                                              'Máx Lk', 'S^2', 'gxx', 'gyy', 'gzz']]
         if estimation == 1:
             gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values,
@@ -771,6 +784,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         s2 = s2_list[state_index]
 
         orbital = configuration_orbitals[i]["SOMO orbitals"]
+        amplitude = np.round(configuration_amplitudes[i]["amplitude"], 2)
 
         if cut_gvalue != 0:
             g_xx = gxx_list[state_index]
@@ -779,7 +793,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
 
             if abs(g_xx) >= cut_gxx or abs(g_yy) >= cut_gyy or abs(g_zz) >= cut_gzz:
                 excited_states_presentation_list.append([state, configuration, symmetry,
-                                                         hole, part, excit_energy, orbital, soc,
+                                                         hole, part, orbital, amplitude, excit_energy, soc,
                                                          orbital_ground_state, s2, np.round(g_xx, 3),
                                                          np.round(g_yy, 3), np.round(g_zz, 3)])
                 final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
@@ -787,11 +801,18 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         else:
             if abs(orbital_ground_state) >= cut_ang and abs(soc) >= cut_soc:
                 excited_states_presentation_list.append([state, configuration, symmetry,
-                                                         hole, part, excit_energy, orbital, soc,
+                                                         hole, part, orbital, amplitude, excit_energy, soc,
                                                          orbital_ground_state, s2])
                 final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
 
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
+
+    # df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
+    #                   columns=['state', 'config', 'sym', 'hole', 'part',
+    #                                          'unpairedorb', 'amplitude', 'e', 'socc',
+    #                                          'lk', 's2', 'gxx', 'gyy', 'gzz'])
+    # print(df)
+
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
     final_active_orbitals.sort()
