@@ -11,7 +11,7 @@ from parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcal
 #            INPUT VALUES
 #####################################
 ras_input = '\
-triplets_molecules/benzophenone_14_8_triplets.out'
+triplets_molecules/naphthalene_10_9_30_states_triplets.out'
 # --------------------------------------------------------
 g_calculation = 0
 ppm = 0
@@ -23,8 +23,8 @@ soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 #  --------------------------------------------------------
 excitanalysis = 1
 gestimation = 0
-excitanalysis_gvalue_cut = 0.8
-excitanalysis_config_cut = 0.5
+excitanalysis_gvalue_cut = 0.9
+excitanalysis_config_cut = 0.25
 excitanalysis_soc_cut = 0
 excitanalysis_angmoment_cut = 0
 #  --------------------------------------------------------
