@@ -751,12 +751,14 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     cut_gyy = 0
     cut_gzz = 0
 
-    excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole',
-                                         'Part', 'Unpaired orb.', 'Amplitude', 'ΔE (eV)', 'SOCC', 'Máx Lk', 'S^2']]
+    # excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole',
+    #                                      'Part', 'Unpaired orb.', 'Amplitude', 'ΔE (eV)', 'SOCC', 'Máx Lk', 'S^2']]
+    excited_states_presentation_list = []
+
     if cut_gvalue != 0:
-        excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
-                                             'Unpaired orb.', 'Amplitude', 'ΔE (eV)', 'SOCC',
-                                             'Máx Lk', 'S^2', 'gxx', 'gyy', 'gzz']]
+        # excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
+        #                                      'Unpaired orb.', 'Amplitude', 'ΔE (eV)', 'SOCC',
+        #                                      'Máx Lk', 'S^2', 'gxx', 'gyy', 'gzz']]
         if estimation == 1:
             gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values,
                                                                   excitation_energies_ras, ppms)
@@ -769,6 +771,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         # [print(i) for i in gxx_list]
 
     # For the list with the data for all the configurations
+    states_list = []
     final_active_orbitals = []
     for i in range(0, len(configuration_orbitals)):
         state = configuration_orbitals[i]["State"]
@@ -797,6 +800,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                                                          orbital_ground_state, s2, np.round(g_xx, 3),
                                                          np.round(g_yy, 3), np.round(g_zz, 3)])
                 final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
+                states_list.append(state)
 
         else:
             if abs(orbital_ground_state) >= cut_ang and abs(soc) >= cut_soc:
@@ -807,11 +811,12 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
 
     excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
 
-    # df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
-    #                   columns=['state', 'config', 'sym', 'hole', 'part',
-    #                                          'unpairedorb', 'amplitude', 'e', 'socc',
-    #                                          'lk', 's2', 'gxx', 'gyy', 'gzz'])
-    # print(df)
+    df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
+                      columns=['state', 'config', 'sym', 'hole', 'part',
+                                             'unpairedorb', 'amplitude', 'e', 'socc',
+                                             'lk', 's2', 'gxx', 'gyy', 'gzz'])
+    print(df)
+    exit()
 
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
