@@ -3,10 +3,12 @@
 #####################################
 __author__ = 'Antonio Cebreiro-Gallardo'
 
-from parser_gtensor import gfactor_presentation
+from parser_gtensor import gfactor_presentation, from_gvalue_to_shift
 from parser_excitstates import get_excited_states_analysis
 from parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcalculation_gestimation
 
+# from_gvalue_to_shift([1.9692187, 1.9862375, 1.9977903])
+# exit()
 #####################################
 #            INPUT VALUES
 #####################################

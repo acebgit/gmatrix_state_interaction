@@ -834,6 +834,6 @@ def from_gvalue_to_shift(lista):
     """
     g_shift = []
     for i in range(0, len(lista)):
-        value = (lista[i] - lande_factor) * 10**6
+        value = (lista[i] - lande_factor) * 10**3
         g_shift.append(value)
     print(np.round(g_shift, 3))

@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 
 archivo = '../tddft_outs/benzophenone_singlet_tddft.out'
-cutoff_amp = 0.3
-cutoff_soccs = 0
+cutoff_amp = 0.5
+cutoff_soccs = 20
 selected_multip = 2
 
 
