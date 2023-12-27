@@ -827,7 +827,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     print("------------------------")
     print('Configurations cut-off:', cut_off)
     print('g-shift cut-off:', np.round(cut_gxx, 3), np.round(cut_gyy, 3), np.round(cut_gzz, 3))
-    print('\n'.join(''.join('{:^15}'.format(item) for item in row)
+    print('\n'.join(''.join('{:^10}'.format(item) for item in row)
                     for row in excited_states_presentation_matrix[:, :]))
     count_singlet_triplets(states_ras, s2_list)
     print(" ")
