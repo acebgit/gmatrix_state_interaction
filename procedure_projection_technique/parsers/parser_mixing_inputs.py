@@ -6,7 +6,7 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 import numpy as np
 import matplotlib.pyplot as plt
 
-from parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
+from procedure_projection_technique.parsers.parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
     get_spin_orbit_couplings, get_spin_matrices, get_orbital_matrices, hermitian_test, \
     get_hamiltonian_construction, diagonalization, angular_matrices_obtention, g_factor_calculation
 from parser_excitstates import s2_from_file, get_hole_part_contributions, get_groundst_socc_values, \

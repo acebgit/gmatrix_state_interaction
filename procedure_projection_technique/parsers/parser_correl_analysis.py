@@ -6,7 +6,7 @@ AND THE G-TENSOR VALUES
 import numpy as np
 from scipy import stats
 
-from parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, get_spin_orbit_couplings, \
+from procedure_projection_technique.parsers.parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, get_spin_orbit_couplings, \
     from_energies_soc_to_g_values, get_hamiltonian_construction, diagonalization, get_spin_matrices, \
     get_orbital_matrices, angular_matrices_obtention, g_factor_calculation
 from parser_plots import plot_g_tensor_vs_states
