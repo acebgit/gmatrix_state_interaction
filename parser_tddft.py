@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-archivo = '../tddft_outs/benzophenone_singlet_tddft.out'
+archivo = 'tddft_outs/anthracene_singlet_tddft.out'
 cutoff_amp = 0.5
 cutoff_soccs = 20
 selected_multip = 2
