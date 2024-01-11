@@ -1032,7 +1032,7 @@ def get_orbital_angmoment(outpuut, nstates, selected_state):
 def get_spin_momentum(outpuut, nstates):
     """
     get s2 of each state from Q-Chem otuput
-    :param: outpuut
+    :param: filee
     :param: states_option
     :return: s2
     """
@@ -1057,8 +1057,8 @@ def output_json(outpuut):
         json.dump(output_dict, ff, separators=(',', ':'), sort_keys=True, indent=4, cls=MyEncoder)
 
 
-# def output_xml(outpuut, dictionary):
-#     xmloutfile_name = outpuut + ".xml"
+# def output_xml(filee, dictionary):
+#     xmloutfile_name = filee + ".xml"
 #     xml = dicttoxml(dictionary)
 #     with open(xmloutfile_name, 'w') as ff:
 #         ff.write(str(xml))

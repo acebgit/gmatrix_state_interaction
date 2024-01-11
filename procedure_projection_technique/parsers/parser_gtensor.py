@@ -286,7 +286,7 @@ def hermitian_test(matrix, sz_list):
                 raise ValueError("Matrix is not Hermitian: see the elements shown above (SOCs in cm-1)")
 
 
-def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coupling, sz_values):
+def get_hamiltonian_construction(eigenenergies, spin_orbit_coupling, sz_values):
     """
     Construct Hamiltonian matrix with dimensions 'bra' x 'ket', with spin order (-Ms , +Ms) in the order of
     "selected_states".
@@ -294,11 +294,11 @@ def get_hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coup
     :param: selected_states, eigenenergies, spin_orbit_coupling, sz_values
     :return: hamiltonian
     """
-    hamiltonian = np.zeros((len(selected_states) * len(sz_values),
-                            len(selected_states) * len(sz_values)), dtype=complex)
+    hamiltonian = np.zeros((len(eigenenergies) * len(sz_values),
+                            len(eigenenergies) * len(sz_values)), dtype=complex)
 
-    for i in range(0, len(selected_states) * len(sz_values)):
-        for j in range(0, len(selected_states) * len(sz_values)):
+    for i in range(0, len(eigenenergies) * len(sz_values)):
+        for j in range(0, len(eigenenergies) * len(sz_values)):
             if i == j:
                 hamiltonian[i, i] = eigenenergies[i // len(sz_values)]
             else:
@@ -752,7 +752,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
     :param:file_ms_notnull, states_msnull, states_option, excitation_energies_ras, soc_ras, list_sz, ground_sz
     :return: g_shift
     """
-    hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, soc_ras, sz_list)
+    hamiltonian_ras = get_hamiltonian_construction(excitation_energies_ras, soc_ras, sz_list)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
 
@@ -807,8 +807,10 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
     selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
+    print(selected_socs)
+    exit()
 
-    hamiltonian_ras = get_hamiltonian_construction(states_ras, excitation_energies_ras, selected_socs, sz_list)
+    hamiltonian_ras = get_hamiltonian_construction(excitation_energies_ras, selected_socs, sz_list)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
 

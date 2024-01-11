@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from procedure_projection_technique.parsers.parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, \
     get_spin_orbit_couplings, from_energies_soc_to_g_values, get_symmetry_states
-from parser_excitstates import get_groundst_socc_values, get_groundst_orbital_momentum, \
+from procedure_projection_technique.parsers.parser_excitstates import get_groundst_socc_values, get_groundst_orbital_momentum, \
     gshift_estimation_loop, gshift_calculation_loop
 
 

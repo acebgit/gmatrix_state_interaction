@@ -109,7 +109,7 @@ def orbitmomentum_and_gvalues_correlation(file, nstates, excit_energ, socs, list
     :param: qchem_file, states_msnull, states_option, excit_energ, doublet_socs,SOCC_values
     :return: soc_gvalues_matrix, r_square of fit
     """
-    hamiltonian_ras = get_hamiltonian_construction(nstates, excit_energ, socs, list_sz)
+    hamiltonian_ras = get_hamiltonian_construction(excit_energ, socs, list_sz)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
 

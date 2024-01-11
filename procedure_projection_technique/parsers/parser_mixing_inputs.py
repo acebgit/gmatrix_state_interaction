@@ -443,7 +443,7 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
 
     socs = socs_mix(states_ras_1, states_ras_2 , selected_socs_1, selected_socs_2, list_mapping, sz_list, totalstates)
 
-    hamiltonian = get_hamiltonian_construction(list(range(0, totalstates)), eigenenergy, socs, sz_list)
+    hamiltonian = get_hamiltonian_construction(eigenenergy, socs, sz_list)
     # print('Hamiltonian:')
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
     #                 for row in np.round((hamiltonian[:,:]),5)* 219474.63068]))  # * 219474.63068
@@ -609,7 +609,7 @@ def gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option
 
     socs = socs_mix(selected_socs_1, selected_socs_2, list_mapping, sz_list_1, totalstates)
 
-    hamiltonian = get_hamiltonian_construction(states_ras, eigenenergy, socs, sz_list_1)
+    hamiltonian = get_hamiltonian_construction(eigenenergy, socs, sz_list_1)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
