@@ -505,6 +505,8 @@ def get_spin_matrices(file, selected_states):
 
     # Take s2 of all states and each of the selected states.
     s2_all_states, s2_selected_dicts = get_all_s2(file, selected_states)
+    print(s2_all_states)
+    print(s2_selected_dicts)
 
     # Take maximum multiplicity, which determines the dimension of the spin matrix (max_mult x max_mult x 3).
     max_multip = int(2 * s2_to_s(max(s2_all_states)) + 1)
@@ -525,6 +527,10 @@ def get_spin_matrices(file, selected_states):
 
     # Take Standard Spin Matrix from Spin Matrix
     standard_spin_matrix = get_standard_spin_matrix(s2_selected_dicts, max_multip, spin_matrix)
+
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #                 for row in np.round((spin_matrix[:,:,0]))]))
+    # exit()
 
     return spin_matrix, standard_spin_matrix
 
@@ -592,6 +598,9 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     all_lk = get_all_momentum(data, totalstates)
     selected_lk = get_selected_states_momentum(selected_states, all_lk)
     all_multip_lk = get_all_multip_momentum(selected_lk, sz_list)
+    print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                    for row in np.round((all_multip_lk[:,:,0]))]))
+    exit()
     return all_multip_lk
 
 
@@ -807,8 +816,6 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
 
     selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
-    print(selected_socs)
-    exit()
 
     hamiltonian_ras = get_hamiltonian_construction(excitation_energies_ras, selected_socs, sz_list)
 

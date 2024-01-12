@@ -13,11 +13,11 @@ from procedure_projection_technique.parsers.parser_plots import sos_analysis_and
 #            INPUT VALUES
 #####################################
 ras_input = '../\
-molecules/triplets_molecules/benzophenone_10_7_triplets.out'
+generalization_projection_technique/test/ncl_12_9_triplets_diisgdm.out'
 # --------------------------------------------------------
 g_calculation = 1
 ppm = 0
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 states_ras = [1, 2, 3]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix

@@ -2,11 +2,11 @@ import json
 from procedure_projection_technique.parsers.parser_gtensor import *
 
 state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-initial_states = [1, 2, 3, 4, 20]
+initial_states = [1, 2, 3, 10]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0
 
-file = '../test/benzophenone_10_7_triplets.out'  # str(sys.argv[1])
+file = '../test/ncl_12_9_triplets_diisgdm.out'  # str(sys.argv[1])
 
 with open(file, encoding="utf8") as f:
     output = f.read()
@@ -77,10 +77,10 @@ def get_socs(outpuut, all_pairstate, selected_pairstate):
         pair_socs = data[(1, i)]['total_soc_mat']
 
         soc_list = []
-        for j in range(0, len(pair_socs)):
+        for row in range(0, len(pair_socs)):
             row_soc = []
-            for k in range(0, len(pair_socs)):
-                row_soc.append(str(pair_socs[j][k]))
+            for col in range(0, len(pair_socs[0])):
+                row_soc.append(str(pair_socs[row][col]))
             soc_list.append(row_soc)
         all_socs.update({all_pairstate[i - 1]: soc_list})
 
