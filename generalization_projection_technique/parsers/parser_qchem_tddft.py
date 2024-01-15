@@ -1,20 +1,87 @@
 import json
-from procedure_projection_technique.parsers.parser_gtensor import *
+# from procedure_projection_technique.parsers.parser_gtensor import *
 
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1, 2, 3]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0
 
-file = '../test/qchem_rasci.out'  # str(sys.argv[1])
-
-with open(file, encoding="utf8") as f:
-    output = f.read()
-output = parser_rasci(output)
+file = '../test/qchem_tddft.out'  # str(sys.argv[1])
 
 #################################
 # FUNCTIONS AND CLASSES    ######
 #################################
+
+
+def get_number_of_states(filee):
+    """
+    Obtain the total number of states selected in TD-DFT.
+    :param: file
+    :return: nstates
+    """
+    nstate = 0
+    with open(filee, encoding="utf8") as f:
+        for line in f:
+            if 'Excited state' in line:
+                nstate += 1
+    return nstate
+
+
+def get_selected_states(nstates, selected_states, states_option):
+    """
+    Depending on "states_option" it returns states: 0) in "state_ras" 1) all states selected
+    :param: file, nstates, selected_states, states_option, symmetry_selection
+    :return: selected_states
+    """
+    if states_option == 0:
+        for i in selected_states:
+            if i <= 0 or i > nstates:
+                raise ValueError("The number of states selected selected must be among the total number of states "
+                                 "selected calculated in QChem. "
+                                 "Select a different number of states selected")
+
+    elif states_option == 1:
+        selected_states = list(range(1, nstates + 1))
+    return selected_states
+
+
+def get_energies_spins(filee, selected_state):
+    """
+    Obtain a dictionary with energies and excitation energies of the selected states.
+    :param filee:
+    :return:
+    """
+    with open(filee, encoding="utf8") as f:
+        for line in f:
+            if '<S^2> =  ' in line:
+                ground_state_spin = line.split()[-1]
+            if ' Total energy in the final basis set' in line:
+                ground_state_total_energy = line.split()[-1]
+
+    state = 0
+    all_states_energies = {}
+    all_states_spins = {}
+    with open(filee, encoding="utf8") as f:
+        for line in f:
+            if 'Excited state' in line:
+                state += 1
+
+                # Take excitation energies (eV) and total energies (au)
+                excitation_energy_ev = float(line.split()[-1])
+                next_line = next(f)
+                state_total_energy = float(next_line.split()[-2])
+                all_states_energies.update({state: [state_total_energy, excitation_energy_ev]})
+
+                # Take each state spin
+                next_line = next(f)
+                all_states_spins.update({state: next_line.split()[-1]})
+
+    selected_states_energies = {0: [ground_state_total_energy, 0.0000]}
+    selected_states_spins = {0: ground_state_spin}
+    for i in selected_state:
+        selected_states_energies.update({i: all_states_energies[i]})
+        selected_states_spins.update({i: all_states_spins[i]})
+    return selected_states_energies, selected_states_spins
 
 
 def get_energies(outpuut, all_states, selected_state):
@@ -125,28 +192,15 @@ def output_json(outpuut):
 totalstates = get_number_of_states(file)
 
 # Take the selected initial_states
-selected_states = get_selected_states(file, totalstates, initial_states, state_selection, symmetry_selection)
+selected_states = get_selected_states(totalstates, initial_states, state_selection)
 
-# Take initial_states symmetry
-all_symmetry, all_states_symmetry = get_symmetry_states(file, totalstates)
+# 1) Take energies and spins of the selected states
+# WARNING! TDDFT states by default are going to have spin contamination.
+energylist_dict, spin_dict = get_energies_spins(file, selected_states)
 
-# Take the selected initial_states by symmetry
-selected_states_symmetry = [all_states_symmetry[nstate - 1] for nstate in selected_states]
-
-# 1) Take energies of the selected states
-energylist_dict = get_energies(output, all_states_symmetry, selected_states_symmetry)
-
-# 2) Take spin of the selected states
-spin_dict = get_spin_momentum(file, all_states_symmetry, selected_states_symmetry)
-
-# 3) Take SOCs of the selected states
-ground_state = selected_states[0]-1
-all_pairstates = [all_states_symmetry[ground_state] + "_" + state_sym for state_sym in all_states_symmetry]
-
-selected_pairstates = [all_states_symmetry[ground_state] + "_" + state_sym for state_sym in selected_states_symmetry
-                       if state_sym != all_states_symmetry[ground_state]]
-
-soclist_dict = get_socs(output, all_pairstates, selected_pairstates)
+# 2) Take SOCs of the selected states
+soclist_dict = get_socs(file)
+exit()
 
 # 4) Take orbital angular momentum of the selected states
 orbitalmomentlist_dict = get_orbital_angmoment(output, all_pairstates, selected_pairstates)
