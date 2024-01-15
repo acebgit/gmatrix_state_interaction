@@ -7,6 +7,7 @@ import numpy as np
 from numpy import linalg, sqrt
 from pyqchem.parsers.parser_rasci import parser_rasci
 from scipy import constants
+
 lande_factor = 2.002319304363
 
 
@@ -146,6 +147,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     :param: file, totalstates, selected_states, soc_option.
     :return: selected_socs, sz_max_allstates, sz_ground_state.
     """
+
     def select_soc_search(soc_options):
         soc_searchs = 'total_soc_mat'
         if soc_options == 1:
@@ -163,6 +165,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
         :param: qchem_file, states_selected
         :return: all_multip, all_sz, ground_sz
         """
+
         def from_s2_to_sz_list(s2):
             # Obtain s values
             s = 0.5 * (-1 + np.sqrt(1 + 4 * s2))
@@ -257,7 +260,7 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     all_multiplicities, sz_max_allstates, sz_ground_state = get_states_sz(output, selected_states)
     all_socs = get_all_socs(data, totalstates, all_multiplicities, sz_max_allstates, soc_search)
     selected_socs = get_selected_states_socs(selected_states, sz_max_allstates, all_socs)
-    selected_socs = selected_socs / (constants.physical_constants['hartree-inverse meter relationship'][0]/100)
+    selected_socs = selected_socs / (constants.physical_constants['hartree-inverse meter relationship'][0] / 100)
 
     # print('SOC:')
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
@@ -349,6 +352,7 @@ def get_spin_matrices(file, selected_states):
     :param: file, selected_state.
     :return: spin_matr, standard_spin_mat.
     """
+
     def get_all_s2(file_qchem, n_states):
         """
         Get i) list with s2 of all states ii) list with s2 all of selected states
@@ -370,7 +374,7 @@ def get_spin_matrices(file, selected_states):
         # Make a list of dictionaries with s2 of selected states
         s2_selected_list = []
         for i in n_states:
-            s2_selected_dict = {'st': i, 's2': s2_all_list[i-1]}
+            s2_selected_dict = {'st': i, 's2': s2_all_list[i - 1]}
             s2_selected_list.append(s2_selected_dict)
 
         if s2_selected_list[0]['s2'] == 0:
@@ -505,8 +509,6 @@ def get_spin_matrices(file, selected_states):
 
     # Take s2 of all states and each of the selected states.
     s2_all_states, s2_selected_dicts = get_all_s2(file, selected_states)
-    print(s2_all_states)
-    print(s2_selected_dicts)
 
     # Take maximum multiplicity, which determines the dimension of the spin matrix (max_mult x max_mult x 3).
     max_multip = int(2 * s2_to_s(max(s2_all_states)) + 1)
@@ -542,6 +544,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     :param: file, totalstates, selected_states, sz_list
     :return: all_multip_lk
     """
+
     def get_all_momentum(line, n_states):
         """
         Get Lk between all the states selected in x,y,z dimensions. | A > in columns, < B | in rows.
@@ -570,7 +573,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
         for k in range(0, 3):
             for i, all_i in enumerate(n_states):
                 for j, all_j in enumerate(n_states):
-                    selected_momentum[i][j][k] = all_momentum[all_i-1][all_j-1][k]
+                    selected_momentum[i][j][k] = all_momentum[all_i - 1][all_j - 1][k]
         return selected_momentum
 
     def get_all_multip_momentum(all_momentums, all_sz):
@@ -598,9 +601,6 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     all_lk = get_all_momentum(data, totalstates)
     selected_lk = get_selected_states_momentum(selected_states, all_lk)
     all_multip_lk = get_all_multip_momentum(selected_lk, sz_list)
-    print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-                    for row in np.round((all_multip_lk[:,:,0]))]))
-    exit()
     return all_multip_lk
 
 
@@ -638,28 +638,28 @@ def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
 
 
 def from_qchem_to_sto(g_shift):
-        """
+    """
         Change orientation  from Q-Chem to Standard Nuclear Orientation
         :param g_shift:
         :return:
         """
-        a = g_shift[0]
-        g_shift[0] = g_shift[1]
-        g_shift[1] = a
-        return g_shift
+    a = g_shift[0]
+    g_shift[0] = g_shift[1]
+    g_shift[1] = a
+    return g_shift
 
 
 def from_ppt_to_ppm(gvalues, ppm=None):
-        """
+    """
         Pass from ppt to ppm the gvalues.
         :param: ppm, gvalues
         :return: gvalues
         """
-        if ppm == 1:
-            gvalues = [i * 1000 for i in gvalues]
-        else:
-            pass
-        return gvalues
+    if ppm == 1:
+        gvalues = [i * 1000 for i in gvalues]
+    else:
+        pass
+    return gvalues
 
 
 def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=None):
@@ -668,6 +668,7 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
     :return: g_shift
     """
+
     def j_matrix_formation(spin, orbital, list_sz, sz_ground):
         """
         Get the total angular momentum matrix from the orbitals and spin angular momentums. Then, expand it to the
@@ -781,7 +782,6 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
 def print_g_calculation(file, totalstates, selected_states,
                         states_ras, upper_g_tensor_results_ras, symmetry_selection):
-
     print("--------------------------------------")
     print("     INPUT SECTION")
     print("--------------------------------------")
@@ -843,6 +843,6 @@ def from_gvalue_to_shift(lista):
     """
     g_shift = []
     for i in range(0, len(lista)):
-        value = (lista[i] - lande_factor) * 10**3
+        value = (lista[i] - lande_factor) * 10 ** 3
         g_shift.append(value)
     print(np.round(g_shift, 3))
