@@ -1,5 +1,5 @@
 import json
-# from procedure_projection_technique.parsers.parser_gtensor import *
+import numpy as np
 
 state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1, 2, 3]
@@ -57,6 +57,7 @@ def get_energies_spins(filee, selected_state):
                 ground_state_spin = line.split()[-1]
             if ' Total energy in the final basis set' in line:
                 ground_state_total_energy = line.split()[-1]
+                break
 
     state = 0
     all_states_energies = {}
@@ -84,76 +85,53 @@ def get_energies_spins(filee, selected_state):
     return selected_states_energies, selected_states_spins
 
 
-def get_energies(outpuut, all_states, selected_state):
+def s2_to_s(s2):
     """
-    Obtain a dictionary with energies and excitation energies of the selected states:
-    :param outpuut:
-    :param all_states:
-    :param selected_state:
-    :return: selected_states_energies
+    get total spin (s) from s^2
+    :param: s2_all
+    :return: total spin (s)
     """
-    data = outpuut['excited_states']
-    all_states_energies = {}
-    for i in range(0, len(all_states)):
-        lista = [data[i]['total_energy'], data[i]['excitation_energy']]
-        all_states_energies.update({all_states[i]: lista})
-
-    selected_states_energies = {}
-    for i in selected_state:
-        selected_states_energies.update({i: all_states_energies[i]})
-    return selected_states_energies
+    return 0.5 * (-1 + np.sqrt(1 + 4 * s2))
 
 
-def get_spin_momentum(outpuut, all_state, selected_state):
-    """
-    Get s2 of each state from Q-Chem output.
-    :param outpuut:
-    :param all_state:
-    :param selected_state:
-    :return:
-    """
-    search = ['  <S^2>      : ']
-    s2_all_states = []
-    with open(outpuut, encoding="utf8") as outpuut:
-        for line in outpuut:
-            if any(ii in line for ii in search):
-                line = line.split()
-                s2_all_states.append(line[2])
+def get_socs(filee, selected_state):
+    def search_word_line(archivo, linee, text):
+        linee = next(file)
+        while text not in linee:
+            linee = next(archivo)
+        return linee
 
-    all_spin = {}
-    for i in range(0, len(all_state)):
-        all_spin.update({all_state[i]: s2_all_states[i]})
-
-    selected_spin = {}
-    for i in selected_state:
-        selected_spin.update({i: all_spin[i]})
-    return selected_spin
-
-
-def get_socs(outpuut, all_pairstate, selected_pairstate):
-    """
-    Obtain a dictionary with SOCs between ground state and all the rest, written as strings.
-    :param outpuut:
-    :param all_pairstate:
-    :param selected_pairstate:
-    :return:
-    """
-    data = outpuut['interstate_properties']
     all_socs = {}
-    for i in range(2, len(all_pairstate) + 1):
-        pair_socs = data[(1, i)]['total_soc_mat']
+    with open(filee, encoding="utf8") as file:
+        for line in file:
+            if 'State A: Root 0' in line:
+                line = next(file)
+                state_b = line.split()[-1]
 
-        soc_list = []
-        for row in range(0, len(pair_socs)):
-            row_soc = []
-            for col in range(0, len(pair_socs[0])):
-                row_soc.append(str(pair_socs[row][col]))
-            soc_list.append(row_soc)
-        all_socs.update({all_pairstate[i - 1]: soc_list})
+                line = search_word_line(file, line, 'Mean-field SO (cm-1)')
+                line = search_word_line(file, line, 'Actual matrix elements')
+                line = next(file)
+                line = next(file)
+
+                socs = []
+                while ' <Sz=' in line:
+                    line = line.replace(',', '|')
+                    line = line.replace('(', '|')
+                    line = line.replace('\n', '')
+                    line = line.replace(')', 'j')
+                    line = line.split('|')
+                    for i in range(2, len(line), 2):
+                        socs.append([line[i], line[i+1]])
+                    line = next(file)
+                interstate = "0_" + state_b
+                all_socs.update({interstate: socs})
 
     selected_socs = {}
-    for i in selected_pairstate:
-        selected_socs.update({i: all_socs[i]})
+    for state_b in selected_state:
+        interstate = "0_" + str(state_b)
+        selected_socs.update({interstate: all_socs[interstate]})
+    print(selected_socs)
+    exit()
     return selected_socs
 
 
@@ -199,7 +177,7 @@ selected_states = get_selected_states(totalstates, initial_states, state_selecti
 energylist_dict, spin_dict = get_energies_spins(file, selected_states)
 
 # 2) Take SOCs of the selected states
-soclist_dict = get_socs(file)
+soclist_dict = get_socs(file, selected_states)
 exit()
 
 # 4) Take orbital angular momentum of the selected states
