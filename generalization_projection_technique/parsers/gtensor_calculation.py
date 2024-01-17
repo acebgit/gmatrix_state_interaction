@@ -4,7 +4,7 @@ from scipy import constants
 from procedure_projection_technique.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
     angular_matrices_obtention, g_factor_calculation
 
-file = '../../generalization_projection_technique/test/ncl_12_9_triplets_diisgdm.out.json'
+file = '../../generalization_projection_technique/test/qchem_tddft.out.json'
 ppm = 0
 
 
@@ -28,7 +28,7 @@ def extract_data_from_json(filee):
 
     spin_list = []
     for i in input_dict['spin_dict']:
-        spin_list.append(int(float(input_dict['spin_dict'][i])))
+        spin_list.append(float(input_dict['spin_dict'][i]))
 
     soc_list = []
     for i in input_dict['soclist_dict']:
@@ -60,13 +60,12 @@ def get_input_data(spin_state):
     """
     nstate = len(spin_state)
 
-    max_multip = int(s2_to_s(max(spin_state)))
-    max_multip_szlist = list(range(-max_multip, max_multip + 1))
+    max_multip = float(s2_to_s(max(spin_state)))
+    max_multip_szlist = list(np.arange(-max_multip, max_multip + 1, 1))
 
-    s_ground = int(s2_to_s(spin_state[0]))
-    grst_szlist = list(range(-s_ground, s_ground + 1))
-
-    return nstate, max_multip_szlist, grst_szlist
+    s_ground = float(s2_to_s(spin_state[0]))
+    ground_state_szlist = list(np.arange(-s_ground, s_ground + 1))
+    return nstate, max_multip_szlist, ground_state_szlist
 
 
 def from_soclist_socmatrix(soc_list, maxsz_list):

@@ -45,18 +45,58 @@ def get_selected_states(nstates, selected_states, states_option):
     return selected_states
 
 
-def get_energies_spins(filee, selected_state):
+def s2_to_s(s2):
+    """
+    get total spin (s) from s^2
+    :param: s2_all
+    :return: total spin (s)
+    """
+    return 0.5 * (-1 + np.sqrt(1 + 4 * s2))
+
+
+def s_to_s2(s):
+    """
+    get s^2 from total spin (s)
+    :param: s2_all
+    :return: total spin (s)
+    """
+    return ( (2*s + 1)**2 - 1 ) / 4
+
+def get_energies_realspins(filee, selected_state):
     """
     Obtain a dictionary with energies and excitation energies of the selected states.
     :param filee:
     :return:
     """
+    # def approximate_spins(selected_states_spin):
+    #     odd_multip = [i for i in range(1,20,2)]
+    #     even_multip = [i for i in range(2,20,2)]
+    #
+    #     print(selected_states_spin)
+    #
+    #     selected_states_multip = [2*s2_to_s(float(selected_states_spin[i]))+1 for i in selected_states_spin]
+    #     minimum_multiplicity = float(min(selected_states_multip))
+    #     s2_values = [s_to_s2(i/4-1) for i in np.arange(minimum_multiplicity,20,2)]
+    #     print(selected_states_multip)
+    #     print(odd_multip, even_multip)
+    #     exit()
+    #
+    #     for i in range(0, len(selected_states_spin)):
+    #         diff_list = []
+    #         for s2 in s2_values:
+    #             diff = abs(float(selected_states_spin[i]) - s2)
+    #             diff_list.append(diff)
+    #
+    #         min_index = diff_list.index(min(diff_list))
+    #         selected_states_spin.update({i: str(s2_values[min_index])})
+    #     return selected_states_spin
+
     with open(filee, encoding="utf8") as f:
         for line in f:
             if '<S^2> =  ' in line:
                 ground_state_spin = line.split()[-1]
             if ' Total energy in the final basis set' in line:
-                ground_state_total_energy = line.split()[-1]
+                ground_state_total_energy = float(line.split()[-1])
                 break
 
     state = 0
@@ -85,16 +125,7 @@ def get_energies_spins(filee, selected_state):
     return selected_states_energies, selected_states_spins
 
 
-def s2_to_s(s2):
-    """
-    get total spin (s) from s^2
-    :param: s2_all
-    :return: total spin (s)
-    """
-    return 0.5 * (-1 + np.sqrt(1 + 4 * s2))
-
-
-def get_socs(filee, selected_state):
+def get_socs_approxspins(filee, selected_state):
     def search_word_line(archivo, linee, text):
         linee = next(file)
         while text not in linee:
@@ -102,57 +133,74 @@ def get_socs(filee, selected_state):
         return linee
 
     all_socs = {}
+    all_states_spins = {}
     with open(filee, encoding="utf8") as file:
         for line in file:
             if 'State A: Root 0' in line:
+                state_a = int(line.split()[-1])
                 line = next(file)
-                state_b = line.split()[-1]
+                state_b = int(line.split()[-1])
+                interstate = "0_" + str(state_b)
+
+                line = search_word_line(file, line, 'Ket state')
+                state_a_spin = line.split()[-4]
+                line = search_word_line(file, line, 'Bra state')
+                state_b_spin = line.split()[-4]
+                all_states_spins.update({state_a: state_a_spin})
+                all_states_spins.update({state_b: state_b_spin})
 
                 line = search_word_line(file, line, 'Mean-field SO (cm-1)')
                 line = search_word_line(file, line, 'Actual matrix elements')
                 line = next(file)
                 line = next(file)
 
-                socs = []
+                socs_interstate = []
                 while ' <Sz=' in line:
                     line = line.replace(',', '|')
                     line = line.replace('(', '|')
                     line = line.replace('\n', '')
-                    line = line.replace(')', 'j')
+                    line = line.replace(')', '')
                     line = line.split('|')
+
+                    socs_sz = []
                     for i in range(2, len(line), 2):
-                        socs.append([line[i], line[i+1]])
+                        numero = complex(float(line[i]), float(line[i+1]))
+                        socs_sz.append(str(numero))
+                    socs_interstate.append(socs_sz)
                     line = next(file)
-                interstate = "0_" + state_b
-                all_socs.update({interstate: socs})
+                all_socs.update({interstate: socs_interstate})
 
     selected_socs = {}
+    selected_states_spins = {0: all_states_spins[0]}
     for state_b in selected_state:
         interstate = "0_" + str(state_b)
         selected_socs.update({interstate: all_socs[interstate]})
-    print(selected_socs)
-    exit()
-    return selected_socs
+        selected_states_spins.update({state_b: all_states_spins[state_b]})
+    return selected_socs, selected_states_spins
 
 
-def get_orbital_angmoment(outpuut, all_pairstate, selected_pairstate):
+def get_orbital_angmoment(filee, selected_state):
     """
     Obtain a dictionary with orbitals angular momentum between ground state and all the rest, written as strings.
-    :param outpuut:
-    :param all_pairstate:
-    :param selected_pairstate:
-    :return:
     """
-    data = outpuut['interstate_properties']
     all_momentums = {}
-    for i in range(2, len(all_pairstate) + 1):
-        pair_moment = data[(1, i)]['angular_momentum']
-        pair_strings = [str(pair_moment[0]), str(pair_moment[1]), str(pair_moment[2])]
-        all_momentums.update({all_pairstate[i - 1]: pair_strings})
+    with open(filee, encoding="utf8") as file:
+        for line in file:
+            if 'Transition Angular Moments Between Ground and Excited States' in line:
+                for i in range(0, 4): line = next(file)
+
+                while '----------------------------------' not in line:
+                    interstate = line.split()[0] + "_" + line.split()[1]
+                    x = line.split()[2] + "j"
+                    y = line.split()[3] + "j"
+                    z = line.split()[4] + "j"
+                    all_momentums.update({interstate: [x, y, z]})
+                    line = next(file)
 
     selected_momentums = {}
-    for i in selected_pairstate:
-        selected_momentums.update({i: all_momentums[i]})
+    for state_b in selected_state:
+        interstate = "0_" + str(state_b)
+        selected_momentums.update({interstate: all_momentums[interstate]})
     return selected_momentums
 
 
@@ -174,19 +222,18 @@ selected_states = get_selected_states(totalstates, initial_states, state_selecti
 
 # 1) Take energies and spins of the selected states
 # WARNING! TDDFT states by default are going to have spin contamination.
-energylist_dict, spin_dict = get_energies_spins(file, selected_states)
+energylist_dict, real_spin_dict = get_energies_realspins(file, selected_states)
 
 # 2) Take SOCs of the selected states
-soclist_dict = get_socs(file, selected_states)
-exit()
+soclist_dict, approx_spin_dict = get_socs_approxspins(file, selected_states)
 
 # 4) Take orbital angular momentum of the selected states
-orbitalmomentlist_dict = get_orbital_angmoment(output, all_pairstates, selected_pairstates)
+orbitalmomentlist_dict = get_orbital_angmoment(file, selected_states)
 
 output_dict = {
     "selected_energy_dict": energylist_dict,
     "soclist_dict": soclist_dict,
-    "spin_dict": spin_dict,
+    "spin_dict": approx_spin_dict,
     "orbitalmomentlist_dict": orbitalmomentlist_dict,
 }
 

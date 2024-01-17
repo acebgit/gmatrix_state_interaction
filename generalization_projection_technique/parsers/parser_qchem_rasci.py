@@ -2,7 +2,7 @@ import json
 from pyqchem.parsers.parser_rasci import parser_rasci
 from procedure_projection_technique.parsers.parser_gtensor import get_number_of_states, get_selected_states, get_symmetry_states
 
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 initial_states = [1, 2, 3]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0
@@ -84,8 +84,6 @@ def get_socs(outpuut, all_pairstate, selected_pairstate):
                 row_soc.append(str(pair_socs[row][col]))
             soc_list.append(row_soc)
         all_socs.update({all_pairstate[i - 1]: soc_list})
-    print(all_socs)
-    exit()
 
     selected_socs = {}
     for i in selected_pairstate:
