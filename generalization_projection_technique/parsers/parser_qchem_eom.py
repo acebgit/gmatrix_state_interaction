@@ -6,25 +6,108 @@ initial_states = [1, 2, 3]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0
 
-file = '../test/qchem_tddft.out'  # str(sys.argv[1])
+file = '../test/qchem_eomcc.out'  # str(sys.argv[1])
 
 #################################
 # FUNCTIONS AND CLASSES    ######
 #################################
 
+def get_all_data(filee):
+    def search_word_line(archivo, linee, text):
+        linee = next(file)
+        while text not in linee:
+            linee = next(archivo)
+        return linee
 
-def get_number_of_states(filee):
+    all_socs = {}
+    all_states_spins = {}
+    all_states_energies = {}
+    all_momentums = {}
+
+    with open(filee, encoding="utf8") as file:
+        for line in file:
+            if 'State A' in line:
+                # 1) Take state symmetries
+                state_a = line.split()[-1]
+                line = next(file)
+                state_b = line.split()[-1]
+                interstate = state_a + "_" + state_b
+
+                # 2) Take state excitation energies
+                line = search_word_line(file, line, 'Energy GAP')
+                all_states_energies.update({state_b: line.split()[-2]})
+
+                # 3) Take state orbital angular momentums
+                line = search_word_line(file, line, 'Transition angular momentum')
+                line = next(file)
+                line = line.replace(',', '')
+                line = line.replace(')', '')
+                line = line.replace('i', 'j')
+                all_momentums.update({interstate: [line.split()[2], line.split()[4], line.split()[6]]})
+
+                # 4) Take state's spin
+                line = search_word_line(file, line, 'Ket state')
+                state_a_spin = line.split()[-4]
+                line = search_word_line(file, line, 'Bra state')
+                state_b_spin = line.split()[-4]
+                all_states_spins.update({state_a: state_a_spin})
+                all_states_spins.update({state_b: state_b_spin})
+
+                # 5) Take SOCs
+                line = search_word_line(file, line, 'Mean-field SO (cm-1)')
+                line = search_word_line(file, line, 'Actual matrix elements')
+                line = next(file)
+                line = next(file)
+
+                socs_interstate = []
+                while ' <Sz=' in line:
+                    line = line.replace(',', '|')
+                    line = line.replace('(', '|')
+                    line = line.replace('\n', '')
+                    line = line.replace(')', '')
+                    line = line.split('|')
+
+                    socs_sz = []
+                    for i in range(2, len(line), 2):
+                        numero = complex(float(line[i]), float(line[i+1]))
+                        socs_sz.append(str(numero))
+                    socs_interstate.append(socs_sz)
+                    line = next(file)
+                all_socs.update({interstate: socs_interstate})
+    print(all_momentums)
+    exit()
+
+    selected_socs = {}
+    selected_states_spins = {0: all_states_spins[0]}
+    for state_b in selected_state:
+        interstate = "0_" + str(state_b)
+        selected_socs.update({interstate: all_socs[interstate]})
+        selected_states_spins.update({state_b: all_states_spins[state_b]})
+    return selected_socs, selected_states_spins
+
+
+def get_nstates_energies(filee):
     """
     Obtain the total number of states selected in TD-DFT.
     :param: file
     :return: nstates
     """
-    nstate = 0
+    transitions = []
+    all_transitions_energies = {}
+
     with open(filee, encoding="utf8") as f:
         for line in f:
-            if 'Excited state' in line:
-                nstate += 1
-    return nstate
+            if 'EOMIP transition' in line:
+                transition = line.split()[-1]
+                transitions.append(transition)
+
+                line = next(f)
+                all_transitions_energies.update({transition: line.split()[3]})
+
+    energy_list = [float(i) for i in all_transitions_energies.values()]
+    excitation_energy = [np.round(i - min(energy_list), 5) for i in energy_list]
+    print(excitation_energy)
+    exit()
 
 
 def get_selected_states(nstates, selected_states, states_option):
@@ -61,6 +144,7 @@ def s_to_s2(s):
     :return: total spin (s)
     """
     return ( (2*s + 1)**2 - 1 ) / 4
+
 
 def get_energies_realspins(filee, selected_state):
     """
@@ -125,60 +209,6 @@ def get_energies_realspins(filee, selected_state):
     return selected_states_energies, selected_states_spins
 
 
-def get_socs_approxspins(filee, selected_state):
-    def search_word_line(archivo, linee, text):
-        linee = next(file)
-        while text not in linee:
-            linee = next(archivo)
-        return linee
-
-    all_socs = {}
-    all_states_spins = {}
-    with open(filee, encoding="utf8") as file:
-        for line in file:
-            if 'State A: Root 0' in line:
-                state_a = int(line.split()[-1])
-                line = next(file)
-                state_b = int(line.split()[-1])
-                interstate = "0_" + str(state_b)
-
-                line = search_word_line(file, line, 'Ket state')
-                state_a_spin = line.split()[-4]
-                line = search_word_line(file, line, 'Bra state')
-                state_b_spin = line.split()[-4]
-                all_states_spins.update({state_a: state_a_spin})
-                all_states_spins.update({state_b: state_b_spin})
-
-                line = search_word_line(file, line, 'Mean-field SO (cm-1)')
-                line = search_word_line(file, line, 'Actual matrix elements')
-                line = next(file)
-                line = next(file)
-
-                socs_interstate = []
-                while ' <Sz=' in line:
-                    line = line.replace(',', '|')
-                    line = line.replace('(', '|')
-                    line = line.replace('\n', '')
-                    line = line.replace(')', '')
-                    line = line.split('|')
-
-                    socs_sz = []
-                    for i in range(2, len(line), 2):
-                        numero = complex(float(line[i]), float(line[i+1]))
-                        socs_sz.append(str(numero))
-                    socs_interstate.append(socs_sz)
-                    line = next(file)
-                all_socs.update({interstate: socs_interstate})
-
-    selected_socs = {}
-    selected_states_spins = {0: all_states_spins[0]}
-    for state_b in selected_state:
-        interstate = "0_" + str(state_b)
-        selected_socs.update({interstate: all_socs[interstate]})
-        selected_states_spins.update({state_b: all_states_spins[state_b]})
-    return selected_socs, selected_states_spins
-
-
 def get_orbital_angmoment(filee, selected_state):
     """
     Obtain a dictionary with orbitals angular momentum between ground state and all the rest, written as strings.
@@ -214,8 +244,11 @@ def output_json(outpuut):
 # BEGINNING OF PROGRAM     ######
 #################################
 
+# 2) Take SOCs of the selected states
+soclist_dict, approx_spin_dict = get_all_data(file)
+
 # Take number of initial_states
-totalstates = get_number_of_states(file)
+totalstates = get_nstates_energies(file)
 
 # Take the selected initial_states
 selected_states = get_selected_states(totalstates, initial_states, state_selection)
@@ -224,8 +257,6 @@ selected_states = get_selected_states(totalstates, initial_states, state_selecti
 # WARNING! TDDFT states by default are going to have spin contamination.
 energylist_dict, real_spin_dict = get_energies_realspins(file, selected_states)
 
-# 2) Take SOCs of the selected states
-soclist_dict, approx_spin_dict = get_socs_approxspins(file, selected_states)
 
 # 4) Take orbital angular momentum of the selected states
 orbitalmomentlist_dict = get_orbital_angmoment(file, selected_states)

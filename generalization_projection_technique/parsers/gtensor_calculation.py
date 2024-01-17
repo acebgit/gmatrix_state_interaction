@@ -304,9 +304,6 @@ def get_orbital_matrices(states_momentum, maxsz_list):
 
 
 def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras):
-    print("--------------------------------------")
-    print("     INPUT SECTION")
-    print("--------------------------------------")
     print("File selected: ", filee)
     print("Number of states: ", totalstates)
     print('g-factor (x y z dimensions):')
