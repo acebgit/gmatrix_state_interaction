@@ -1,11 +1,11 @@
 import json
-import numpy as np
+import sys
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1,2]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
-file = '../test/qchem_eomcc.out'  # str(sys.argv[1])
+file = '../test/qchem_eomcc.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######

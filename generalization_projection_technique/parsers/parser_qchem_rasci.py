@@ -1,6 +1,7 @@
 import json
 from pyqchem.parsers.parser_rasci import parser_rasci
-from procedure_projection_technique.parsers.parser_gtensor import get_number_of_states, get_selected_states, get_symmetry_states
+from procedure_projection_technique.parsers.parser_gtensor import get_number_of_states, get_selected_states, \
+    get_symmetry_states
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 initial_states = [1, 2, 3]
@@ -8,13 +9,12 @@ symmetry_selection = 'B1u'  # Symmetry selected states_selected
 
 file = '../test/qchem_rasci.out'  # str(sys.argv[1])
 
-with open(file, encoding="utf8") as f:
-    output = f.read()
-output = parser_rasci(output)
-
 #################################
 # FUNCTIONS AND CLASSES    ######
 #################################
+with open(file, encoding="utf8") as f:
+    output = f.read()
+output = parser_rasci(output)
 
 
 def get_energies(outpuut, all_states, selected_state):
