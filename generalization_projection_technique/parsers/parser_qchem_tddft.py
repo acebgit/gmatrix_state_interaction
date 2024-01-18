@@ -3,8 +3,6 @@ import numpy as np
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1, 2, 3]
-symmetry_selection = 'B1u'  # Symmetry selected states_selected
-soc_options = 0
 
 file = '../test/qchem_tddft.out'  # str(sys.argv[1])
 

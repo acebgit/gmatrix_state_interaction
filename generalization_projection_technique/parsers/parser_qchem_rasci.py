@@ -5,7 +5,6 @@ from procedure_projection_technique.parsers.parser_gtensor import get_number_of_
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 initial_states = [1, 2, 3]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
-soc_options = 0
 
 file = '../test/qchem_rasci.out'  # str(sys.argv[1])
 
