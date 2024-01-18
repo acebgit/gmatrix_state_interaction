@@ -68,29 +68,6 @@ def get_energies_realspins(filee, selected_state):
     :param filee:
     :return:
     """
-    # def approximate_spins(selected_states_spin):
-    #     odd_multip = [i for i in range(1,20,2)]
-    #     even_multip = [i for i in range(2,20,2)]
-    #
-    #     print(selected_states_spin)
-    #
-    #     selected_states_multip = [2*s2_to_s(float(selected_states_spin[i]))+1 for i in selected_states_spin]
-    #     minimum_multiplicity = float(min(selected_states_multip))
-    #     s2_values = [s_to_s2(i/4-1) for i in np.arange(minimum_multiplicity,20,2)]
-    #     print(selected_states_multip)
-    #     print(odd_multip, even_multip)
-    #     exit()
-    #
-    #     for i in range(0, len(selected_states_spin)):
-    #         diff_list = []
-    #         for s2 in s2_values:
-    #             diff = abs(float(selected_states_spin[i]) - s2)
-    #             diff_list.append(diff)
-    #
-    #         min_index = diff_list.index(min(diff_list))
-    #         selected_states_spin.update({i: str(s2_values[min_index])})
-    #     return selected_states_spin
-
     with open(filee, encoding="utf8") as f:
         for line in f:
             if '<S^2> =  ' in line:
