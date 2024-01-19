@@ -1,8 +1,7 @@
 import json
-import sys
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
-initial_states = [1,2]
+initial_states = [1, 2]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
 file = '../test/qchem_eomcc.out'
@@ -11,9 +10,19 @@ file = '../test/qchem_eomcc.out'
 # FUNCTIONS AND CLASSES    ######
 #################################
 
+
 def get_interstate_properties(filee):
-    def search_word_line(archivo, linee, text):
-        linee = next(file)
+    """
+    Take interstate properties between ground state and all states:
+    i) Excitation energy
+    ii) Orbital angular momentums
+    iii) Spins of the states
+    iv) Spin-orbit couplings
+    :param filee:
+    :return: all_states_excitenergies, all_momentums, all_states_spins, all_socs
+    """
+    def search_word_line(archivo, text):
+        linee = next(f)
         while text not in linee:
             linee = next(archivo)
         return linee
@@ -23,44 +32,43 @@ def get_interstate_properties(filee):
     all_states_excitenergies = {}
     all_momentums = {}
 
-    with open(filee, encoding="utf8") as file:
-        for line in file:
+    with open(filee, encoding="utf8") as f:
+        for line in f:
             if 'State A' in line:
                 # 1) Take state symmetries
                 state_a = line.split()[-1]
-                line = next(file)
+                line = next(f)
                 state_b = line.split()[-1]
                 interstate = state_a + "_" + state_b
 
                 # 2) Take state excitation energies
-                line = search_word_line(file, line, 'Energy GAP')
+                line = search_word_line(f, 'Energy GAP')
                 all_states_excitenergies.update({state_a: '0.00000'})
                 all_states_excitenergies.update({state_b: line.split()[-2]})
 
                 # 3) Take state orbital angular momentums
-                line = search_word_line(file, line, 'Transition angular momentum')
-                line = next(file)
+                line = search_word_line(f, 'Transition angular momentum')
+                line = next(f)
                 line = line.replace(',', '')
                 line = line.replace(')', '')
                 line = line.replace('i', 'j')
                 all_momentums.update({interstate: [line.split()[2], line.split()[4], line.split()[6]]})
 
                 # 4) Take state's spin
-                line = search_word_line(file, line, 'Ket state')
+                line = search_word_line(f, 'Ket state')
                 state_a_spin = line.split()[-4]
-                line = search_word_line(file, line, 'Bra state')
+                line = search_word_line(f, 'Bra state')
                 state_b_spin = line.split()[-4]
                 all_states_spins.update({state_a: state_a_spin})
                 all_states_spins.update({state_b: state_b_spin})
 
                 # 5) Take SOCs
-                line = search_word_line(file, line, 'Clebsh-Gordan coefficient')
+                line = search_word_line(f, 'Clebsh-Gordan coefficient')
                 clebshgordan_coeff = float(line.split()[-1])
                 if clebshgordan_coeff != 0:
-                    line = search_word_line(file, line, 'Mean-field SO (cm-1)')
-                    line = search_word_line(file, line, 'Actual matrix elements')
-                    line = next(file)
-                    line = next(file)
+                    line = search_word_line(f, 'Mean-field SO (cm-1)')
+                    line = search_word_line(f, 'Actual matrix elements')
+                    line = search_word_line(f, '<Sz=')
 
                     socs_interstate = []
                     while ' <Sz=' in line:
@@ -75,7 +83,7 @@ def get_interstate_properties(filee):
                             numero = complex(float(line[i]), float(line[i+1]))
                             socs_sz.append(str(numero))
                         socs_interstate.append(socs_sz)
-                        line = next(file)
+                        line = next(f)
                     all_socs.update({interstate: socs_interstate})
 
                 elif clebshgordan_coeff == 0:
@@ -83,11 +91,16 @@ def get_interstate_properties(filee):
     return all_states_excitenergies, all_momentums, all_states_spins, all_socs
 
 
-def get_selectedstates_and_totalenergies(filee, states_option, init_states, symmetry_selection):
+def get_selectedstates_and_totalenergies(filee, states_option, init_states, sym_selection):
     """
-    Depending on "states_option" it returns states: 0) in "state_ras" 1) all states selected
-    :param: file, nstates, selected_states, states_option, symmetry_selection
-    :return: selected_states
+    Depending on "states_option" it returns states:
+    0) initial states
+    1) All states in qchem output
+    :param filee:
+    :param states_option:
+    :param init_states:
+    :param sym_selection:
+    :return: select_states, total_energies
     """
     nstates = 0
     all_states = []
@@ -100,43 +113,50 @@ def get_selectedstates_and_totalenergies(filee, states_option, init_states, symm
                 all_states.append(state)
                 line = next(f)
                 total_energies.update({state: line.split()[3]})
-                nstates+=1
+                nstates += 1
 
             if 'State A' in line:
                 ground_state = line.split()[-1]
                 break
 
-    selected_states = []
-
+    select_states = []
     if states_option == 0:
         for i in init_states:
-            if i > 0 and i <= nstates:
+            if 0 < i <= nstates:
                 check_state = str(i) + "/"
                 for state in all_states:
                     if check_state in state:
-                        selected_states.append(state)
+                        select_states.append(state)
             else:
                 raise ValueError("The number of states selected selected must be among the total number of states "
                                  "selected calculated in QChem. "
                                  "Select a different number of states selected")
 
     elif states_option == 1:
-        selected_states = all_states
+        select_states = all_states
 
     elif states_option == 2:
         for state in all_states:
-            if symmetry_selection in state:
-                selected_states.append(state)
-        if selected_states == []:
+            if sym_selection in state:
+                select_states.append(state)
+        if select_states:
             raise ValueError("There is not this symmetry. Change the symmetry selection.")
 
-    if ground_state in selected_states:
-        selected_states.remove(ground_state)
-    selected_states.insert(0, ground_state)
-    return selected_states, total_energies
+    if ground_state in select_states:
+        select_states.remove(ground_state)
+    select_states.insert(0, ground_state)
+    return select_states, total_energies
 
 
 def get_selected_energies_spins(select_states, all_totalenergies, all_excitenergies, all_spins):
+    """
+    Get selected states energies and spins.
+    :param select_states:
+    :param all_totalenergies:
+    :param all_excitenergies:
+    :param all_spins:
+    :return: selected_states_energies, selected_states_spins
+    """
     selected_states_energies = {}
     selected_states_spins = {}
     for i in select_states:
@@ -146,6 +166,13 @@ def get_selected_energies_spins(select_states, all_totalenergies, all_excitenerg
 
 
 def get_selected_socs_orbitmoments(select_states, all_socs, all_momentums):
+    """
+    Get selected states orbital angular momentums.
+    :param select_states:
+    :param all_socs:
+    :param all_momentums:
+    :return: selected_socs, selected_momentums
+    """
     ground_state = select_states[0]
     select_states.remove(ground_state)
 
@@ -167,16 +194,20 @@ def output_json(outpuut):
 # BEGINNING OF PROGRAM     ######
 #################################
 
+
 # Take all the data
 allstates_excit_energies, allstates_momentums, allstates_spins, allstates_socs = get_interstate_properties(file)
 
 # Take the selected initial_states
-selected_states, allstates_energies = get_selectedstates_and_totalenergies(file, state_selection, initial_states, symmetry_selection)
+selected_states, allstates_energies = get_selectedstates_and_totalenergies(file, state_selection, initial_states,
+                                                                           symmetry_selection)
 
 # Take properties of the selected states
-energylist_dict, approx_spin_dict = get_selected_energies_spins(selected_states, allstates_energies, allstates_excit_energies, allstates_spins)
+energylist_dict, approx_spin_dict = get_selected_energies_spins(selected_states, allstates_energies,
+                                                                allstates_excit_energies, allstates_spins)
 
-soclist_dict, orbitalmomentlist_dict = get_selected_socs_orbitmoments(selected_states, allstates_socs, allstates_momentums)
+soclist_dict, orbitalmomentlist_dict = get_selected_socs_orbitmoments(selected_states, allstates_socs,
+                                                                      allstates_momentums)
 
 output_dict = {
     "selected_energy_dict": energylist_dict,

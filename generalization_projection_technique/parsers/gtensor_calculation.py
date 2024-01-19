@@ -4,7 +4,7 @@ from scipy import constants
 from procedure_projection_technique.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
     angular_matrices_obtention, g_factor_calculation
 
-file = '../../generalization_projection_technique/test/qchem_tddft.out.json'
+file = '../../molecules/tddft_outs/anthracene_opt_tddft_tripletref_allmultip.out.json'
 ppm = 0
 
 
@@ -63,8 +63,12 @@ def get_input_data(spin_state):
     max_multip = float(s2_to_s(max(spin_state)))
     max_multip_szlist = list(np.arange(-max_multip, max_multip + 1, 1))
 
-    s_ground = float(s2_to_s(spin_state[0]))
+    s_ground = int(float(s2_to_s(spin_state[0])))
+    if s_ground == 0:
+        raise ValueError("Warning! It is not allowed the calculation of the g-tensor in a singlet ground state. "
+                         "Ground state corresponds to the first of the included states selected.")
     ground_state_szlist = list(np.arange(-s_ground, s_ground + 1))
+
     return nstate, max_multip_szlist, ground_state_szlist
 
 
