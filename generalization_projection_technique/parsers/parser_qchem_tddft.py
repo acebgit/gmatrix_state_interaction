@@ -1,11 +1,12 @@
 import json
 import numpy as np
 
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
-initial_states = [1, 2, 4, 5]
-selected_multiplicity = 3
+state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected
+initial_states = [0, 1, 2, 3, 4, 5] # 0 is the ground state
+ground_state = 'D1'
+selected_multiplicity = 2
 
-file = '../../molecules/tddft_outs/anthracene_opt_tddft_tripletref_allmultip.out'  # str(sys.argv[1])
+file = '../../generalization_projection_technique/test/qchem_tddft_doublets.out'  # str(sys.argv[1])
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -27,7 +28,7 @@ def get_number_of_states(filee):
     return nstate
 
 
-def get_selected_states(nstates, states_selected, multiplicity_selected, states_option):
+def get_selected_states(nstates, states_selected, multiplicity_selected, states_option, ground_statee):
     """
     Depending on "states_option" it returns:
     0) "states_selected", ordered by multiplicity (S1, S2... T1, T2...)
@@ -41,7 +42,9 @@ def get_selected_states(nstates, states_selected, multiplicity_selected, states_
     states_with_multip = []
     if states_option == 0:
         for i in states_selected:
-            if 0 < i <= nstates:
+            if i == 0:
+                states_with_multip.append('0')
+            elif i <= nstates:
                 states_with_multip.append(multiplicity_selected[0] + str(i))
             else:
                 raise ValueError("The number of states selected selected must be among the total number of states "
@@ -50,6 +53,12 @@ def get_selected_states(nstates, states_selected, multiplicity_selected, states_
 
     elif states_option == 1:
         states_with_multip = [(multiplicity_selected[0] + str(i)) for i in range(1, nstates + 1)]
+
+    if ground_statee not in states_with_multip:
+        raise ValueError("Ground state is not in selected states. Include it to continue the calculation.")
+    else:
+        states_with_multip.remove(ground_statee)
+        states_with_multip.insert(0, ground_statee)
     return states_with_multip
 
 
@@ -71,7 +80,7 @@ def s_to_s2(s):
     return ((2*s + 1)**2 - 1) / 4
 
 
-def get_socs_approxspins(filee, selected_state, multiplicity_diction):
+def get_spins(filee, selected_state, multiplicity_diction):
     """
     Obtain three dictionaries:
     i) SOCs of the selected states
@@ -80,8 +89,17 @@ def get_socs_approxspins(filee, selected_state, multiplicity_diction):
     :param filee
     :param selected_state
     :param multiplicity_diction
-    :return: selected_socs, selected_states_spins, reals2_approxs2_dictionary
+    :return: selected_states_spins, reals2_approxs2_dic
     """
+    def take_states(ff, linne):
+        if 'State A: Ground state' in linne:
+            state_a = str('0')
+        else:
+            state_a = str(linne.split()[-1])
+        linne = next(ff)
+        state_b = str(linne.split()[-1])
+        return state_a, state_b
+
     def search_word_line(archivo, text):
         """
         Search a text and goes to that line.
@@ -94,38 +112,78 @@ def get_socs_approxspins(filee, selected_state, multiplicity_diction):
             linee = next(archivo)
         return linee
 
-    def take_spins(ff, all_states_spin, multiplicity_dictionary, multiplicity_count, reals2_approxs2_dictionary):
+    def change_state_name(state_spin, multip_dictionary, multip_count):
+        state_multip = multip_dictionary[int(2 * s2_to_s(float(state_spin)) + 1)]
+        multip_count[state_multip] += 1
+        state = state_multip[0] + str(multip_count[state_multip])
+        return state
+
+    all_states_spins = {}
+    reals2_approxs2_dic = {}
+    multiplicity_count = {'Singlet': 0, 'Doublet': 0, 'Triplet': 0, 'Quartet': 0, 'Quintet': 0, 'Sextet': 0, 'Heptet': 0}
+
+    with open(filee, encoding="utf8") as f:
+        for line in f:
+            if 'State A: Ground state' in line or 'State A: Root 0' in line:
+                bra_state, ket_state = take_states(f, line)
+
+                linne = search_word_line(f, 'Ket state')
+                state_a_spin = linne.split()[-4]
+                linne = search_word_line(f, 'Bra state')
+                state_b_spin = linne.split()[-4]
+
+                ket_state = change_state_name(state_b_spin, multiplicity_diction, multiplicity_count)
+                all_states_spins.update({bra_state: state_a_spin})
+                all_states_spins.update({ket_state: state_b_spin})
+
+                state_b_real_spin = linne.split()[5]
+                reals2_approxs2_dic.update({np.round(float(state_b_real_spin), 4): np.round(float(state_b_spin), 4)})
+
+    all_states_named = list(all_states_spins.keys())
+
+    selected_states_spins = {}
+    for i in selected_state:
+        if i in list(all_states_spins.keys()):
+            selected_states_spins.update({i: all_states_spins[i]})
+
+    if len(selected_states_spins) <= 1:
+        raise ValueError("Multiplicity or initial states have not been well selected. ")
+    return selected_states_spins, reals2_approxs2_dic, all_states_named
+
+
+def get_socs(filee, selected_state, ground_state, all_states_named):
+    """
+    Obtain three dictionaries:
+    i) SOCs of the selected states
+    ii) Approximate spins of the selected states (i.e. s2=0.7625 -> s2=0.75).
+    iii) Each state real spin and its approximated value
+    :param filee
+    :param selected_state
+    :param multiplicity_diction
+    :return: selected_socs, selected_states_spins, reals2_approxs2_dictionary
+    """
+    def take_states(ff, linne):
+        if 'State A: Ground state' in linne:
+            state_a = str('0')
+        else:
+            state_a = str(linne.split()[-1])
+        linne = next(f)
+        state_b = str(linne.split()[-1])
+        return state_a, state_b
+
+    def search_word_line(archivo, text):
         """
-        Gives:
-        i) Dictionary with spin of all the states
-        ii) Interstate string: GS_S1
-        iii) Each state real spin and its approximated value
-        :param ff:
-        :param all_states_spin:
-        :param multiplicity_dictionary:
-        :param multiplicity_count:
-        :param reals2_approxs2_dictionary:
-        :return: all_states_spin, inter_state, reals2_approxs2_dic
+        Search a text and goes to that line.
+        :param archivo
+        :param text
+        :return: linee
         """
-        linne = search_word_line(ff, 'Ket state')
-        state_a_spin = linne.split()[-4]
-        state_a = 'GS'  # Always the ground state
+        linee = next(f)
+        while text not in linee:
+            linee = next(archivo)
+        return linee
 
-        linne = search_word_line(ff, 'Bra state')
-        state_b_spin = linne.split()[-4]
-        state_b_multip = multiplicity_dictionary[int(2 * s2_to_s(float(state_b_spin)) + 1)]
-        multip_count[state_b_multip] += 1
-        state_b = state_b_multip[0] + str(multiplicity_count[state_b_multip])
-
-        state_b_real_spin = linne.split()[5]
-        reals2_approxs2_dictionary.update({np.round(float(state_b_real_spin), 4): np.round(float(state_b_spin), 4)})
-
-        all_states_spin.update({state_a: state_a_spin})
-        all_states_spin.update({state_b: state_b_spin})
-        inter_state = state_a + "_" + state_b
-        return all_states_spin, inter_state, reals2_approxs2_dictionary
-
-    def take_socs(ff, all_soc):
+    def take_socs(ff, all_soc, interstate_string):
         """
         Gives i) Dictionary with socs between all states, ii) string "socs_interstates" to be used
         in the next loop in case SOC=0.
@@ -151,7 +209,7 @@ def get_socs_approxspins(filee, selected_state, multiplicity_diction):
                 socs_sz.append(str(numero))
             socs_interstates.append(socs_sz)
             linee = next(ff)
-        all_soc.update({interstate: socs_interstates})
+        all_soc.update({interstate_string: socs_interstates})
         return all_soc, socs_interstates
 
     all_socs = {}
@@ -161,32 +219,34 @@ def get_socs_approxspins(filee, selected_state, multiplicity_diction):
 
     with open(filee, encoding="utf8") as f:
         for line in f:
-            if 'State A: Root 0' in line or 'State A: Ground state' in line:
-                all_states_spins, interstate, reals2_approxs2_dic = take_spins(f, all_states_spins,
-                                                                               multiplicity_diction, multip_count,
-                                                                               reals2_approxs2_dic)
+            if 'State A:' in line:
+                bra_state, ket_state = take_states(f, line)
+                bra_state = all_states_named[int(bra_state)]
+                ket_state = all_states_named[int(ket_state)]
+
+                interstate = bra_state + "_" + ket_state
 
                 line = search_word_line(f, 'Clebsh-Gordan coefficient')
                 clebshgordan_coeff = float(line.split()[-1])
                 if clebshgordan_coeff != 0:
-                    all_socs, socs_interstate = take_socs(f, all_socs)
+                    all_socs, socs_interstate = take_socs(f, all_socs, interstate)
                 elif clebshgordan_coeff == 0:
                     # In case no SOC can be calculated, SOCs = 0
                     all_socs.update({interstate: [['0j'] * len(socs_interstate)]})
 
     selected_socs = {}
-    selected_states_spins = {'GS': all_states_spins['GS']}
-    for ket_state in selected_state:
-        interstate = "GS_" + ket_state
+    for i in selected_state:
+        if i != ground_state:
+            if all_states_named.index(i) < all_states_named.index(ground_state):
+                inter_states = i + "_" + ground_state
+            if all_states_named.index(i) > all_states_named.index(ground_state):
+                inter_states = ground_state + "_" + i
 
-        if ket_state in list(all_states_spins.keys()):
-            selected_states_spins.update({ket_state: all_states_spins[ket_state]})
-            selected_socs.update({interstate: all_socs[interstate]})
+            selected_socs.update({inter_states: all_socs[inter_states]})
 
     if selected_socs == {}:
-        raise ValueError("Selected states or selected multiplicity have not been well selected.")
-
-    return selected_socs, selected_states_spins, reals2_approxs2_dic
+        raise ValueError("SOC dictionary is empty. Selected states or selected multiplicity have not been well selected.")
+    return selected_socs
 
 
 def get_energies(filee, selected_state, multiplicity_diction, reals2_approxs2):
@@ -313,12 +373,15 @@ totalstates = get_number_of_states(file)
 
 # Take the selected initial_states
 selected_states = get_selected_states(totalstates, initial_states, multiplicity_dict[selected_multiplicity],
-                                      state_selection)
+                                      state_selection, ground_state)
 
 # Take SOCs of the selected states
 # This is done first since in interstate properties is where the approximate spin is defined
 # WARNING! TDDFT states by default are going to have spin contamination.
-soclist_dict, approx_spin_dict, reals2_approxs2_dict = get_socs_approxspins(file, selected_states, multiplicity_dict)
+
+approx_spin_dict, reals2_approxs2_dict, all_states_named = get_spins(file, selected_states, multiplicity_dict)
+
+soclist_dict = get_socs(file, selected_states, ground_state, all_states_named)
 
 # Take energies of the selected states
 energylist_dict, all_state_list = get_energies(file, selected_states, multiplicity_dict, reals2_approxs2_dict)
