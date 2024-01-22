@@ -1,11 +1,11 @@
 import json
 
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
-initial_states = [1, 2]
+state_selection = 1  # 0: use selected states ; 1: use all states_selected
+initial_states = [1, 2, 3, 4, 5]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
 file = '../../\
-molecules/eomccsd_outs/anthracene_opt_singlet_eomccsd_sto3g.out'
+molecules/eomccsd_outs/anthracene_singlet_eomsf_sto3g.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -103,13 +103,14 @@ def get_selectedstates_and_totalenergies(filee, states_option, init_states, sym_
     :param sym_selection:
     :return: select_states, total_energies
     """
+    search = ['EOMIP transition ', 'EOMSF transition ', 'EOMEE transition ', 'EOMEA transition ']
     nstates = 0
     all_states = []
     total_energies = {}
 
     with open(filee, encoding="utf8") as f:
         for line in f:
-            if 'EOMIP transition' in line:
+            if any(a in line for a in search):
                 state = line.split()[-1]
                 all_states.append(state)
                 line = next(f)

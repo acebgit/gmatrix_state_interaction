@@ -5,7 +5,7 @@ from procedure_projection_technique.parsers.parser_gtensor import get_hamiltonia
     angular_matrices_obtention, g_factor_calculation
 
 file = '../../\
-molecules/eomccsd_outs/anthracene_opt_singlet_eomccsd_sto3g.out'
+molecules/eomccsd_outs/anthracene_singlet_eomsf_sto3g.out.json'
 ppm = 0
 
 
