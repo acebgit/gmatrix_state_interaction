@@ -4,7 +4,8 @@ from scipy import constants
 from procedure_projection_technique.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
     angular_matrices_obtention, g_factor_calculation
 
-file = '../../generalization_projection_technique/test/qchem_tddft_singlets.out.json'
+file = '../../\
+molecules/eomccsd_outs/anthracene_opt_singlet_eomccsd_sto3g.out'
 ppm = 0
 
 

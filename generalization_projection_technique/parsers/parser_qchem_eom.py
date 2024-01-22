@@ -4,7 +4,8 @@ state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1, 2]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
-file = '../test/qchem_eomcc.out'
+file = '../../\
+molecules/eomccsd_outs/anthracene_opt_singlet_eomccsd_sto3g.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######

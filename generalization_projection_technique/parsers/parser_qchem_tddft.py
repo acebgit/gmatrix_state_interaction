@@ -2,11 +2,12 @@ import json
 import numpy as np
 
 state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected
-initial_states = [0, 1, 2, 3, 4, 5] # 0 is the ground state
+initial_states = [1, 2, 3, 4, 5] # 0 is the ground state
 ground_state = 'T1'
 selected_multiplicity = 3
 
-file = '../../generalization_projection_technique/test/qchem_tddft_singlets.out'  # str(sys.argv[1])
+file = '../../\
+molecules/tddft_outs/anthracene_opt_tddft_singletref_allmultip.out'  # str(sys.argv[1])
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -41,40 +42,6 @@ def get_number_of_states(filee):
     return nstate
 
 
-def get_selected_states(nstates, states_selected, multiplicity_selected, states_option, ground_statee):
-    """
-    Depending on "states_option" it returns:
-    0) "states_selected", ordered by multiplicity (S1, S2... T1, T2...)
-    1) all states selected, ordered by multiplicity (S1, S2... T1, T2...)
-    :param nstates:
-    :param states_selected:
-    :param multiplicity_selected:
-    :param states_option:
-    :return: states_with_multip
-    """
-    states_with_multip = []
-    if states_option == 0:
-        for i in states_selected:
-            if i == 0:
-                states_with_multip.append('0')
-            elif i <= nstates:
-                states_with_multip.append(multiplicity_selected[0] + str(i))
-            else:
-                raise ValueError("The number of states selected selected must be among the total number of states "
-                                 "selected calculated in QChem. "
-                                 "Select a different number of states selected")
-
-    elif states_option == 1:
-        states_with_multip = [(multiplicity_selected[0] + str(i)) for i in range(1, nstates + 1)]
-
-    if ground_statee not in states_with_multip:
-        raise ValueError("Ground state is not in selected states. Include it to continue the calculation.")
-    else:
-        states_with_multip.remove(ground_statee)
-        states_with_multip.insert(0, ground_statee)
-    return states_with_multip
-
-
 def s2_to_s(s2):
     """
     get total spin (s) from s^2
@@ -93,18 +60,7 @@ def s_to_s2(s):
     return ((2*s + 1)**2 - 1) / 4
 
 
-def get_spins(filee, selected_state, multiplicity_diction):
-    """
-    Obtain three dictionaries:
-    i) SOCs of the selected states
-    ii) Approximate spins of the selected states (i.e. s2=0.7625 -> s2=0.75).
-    iii) Each state real spin and its approximated value
-    :param filee
-    :param selected_state
-    :param multiplicity_diction
-    :return: selected_states_spins, reals2_approxs2_dic
-    """
-    def take_states(ff, linne):
+def take_states(ff, linne):
         if 'State A: Ground state' in linne:
             state_a = str('0')
         else:
@@ -113,15 +69,64 @@ def get_spins(filee, selected_state, multiplicity_diction):
         state_b = str(linne.split()[-1])
         return state_a, state_b
 
+
+def get_spins(filee, initial_selected_state, states_option, ground_statee, multiplicity_diction, selected_multiplicity):
+    """
+    Obtain three dictionaries:
+    i) SOCs of the selected states
+    ii) Approximate spins of the selected states (i.e. s2=0.7625 -> s2=0.75).
+    iii) Each state real spin and its approximated value
+    :param filee
+    :param initial_selected_state
+    :param multiplicity_diction
+    :return: selected_states_spins, reals2_approxs2_dic
+    """
     def change_state_name(state_spin, multip_dictionary, multip_count):
         state_multip = multip_dictionary[int(2 * s2_to_s(float(state_spin)) + 1)]
         multip_count[state_multip] += 1
         state = state_multip[0] + str(multip_count[state_multip])
         return state
 
+    def get_selected_states(option, initial_states, ground_statee, all_states, multiplicity_selected, multiplicity_dict):
+        """
+        Depending on "states_option" it returns:
+        0) "initial_states", ordered by multiplicity (S1, S2... T1, T2...)
+        1) all states selected, ordered by multiplicity (S1, S2... T1, T2...)
+        :param nstates:
+        :param initial_states:
+        :param multiplicity_selected:
+        :param option:
+        :return: final_states
+        """
+        final_states = []
+        if option == 0:
+            for i in initial_states:
+                if i == 0:
+                    final_states.append('0')
+                else:
+                    named_state = multiplicity_dict[multiplicity_selected][0] + str(i)
+                    if named_state in all_states:
+                        final_states.append(named_state)
+                    else:
+                        raise ValueError("The number of states selected selected must be among the total number of states "
+                                     "selected calculated in QChem. Select a different number of states selected")
+
+        elif option == 1:
+            for i in all_states:
+                if i == '0':
+                    final_states.append('0')
+                elif i[0] == multiplicity_dict[multiplicity_selected][0]:
+                    final_states.append(i)
+
+        if ground_statee not in final_states:
+            raise ValueError("Ground state is not in selected states. Include it to continue the calculation.")
+        else:
+            final_states.remove(ground_statee)
+            final_states.insert(0, ground_statee)
+        return final_states
+
     all_states_spins = {}
     multiplicity_count = {'Singlet': 0, 'Doublet': 0, 'Triplet': 0, 'Quartet': 0, 'Quintet': 0, 'Sextet': 0, 'Heptet': 0}
-
     with open(filee, encoding="utf8") as f:
         for line in f:
             if 'State A: Ground state' in line or 'State A: Root 0' in line:
@@ -136,16 +141,18 @@ def get_spins(filee, selected_state, multiplicity_diction):
                 all_states_spins.update({bra_state: state_a_spin})
                 all_states_spins.update({ket_state: state_b_spin})
 
-    all_states_named = list(all_states_spins.keys())
+    all_states = list(all_states_spins.keys())
+    selected_states = get_selected_states(states_option, initial_selected_state, ground_statee, all_states,
+                                          selected_multiplicity, multiplicity_diction)
 
     selected_states_spins = {}
-    for i in selected_state:
+    for i in selected_states:
         if i in list(all_states_spins.keys()):
             selected_states_spins.update({i: all_states_spins[i]})
 
     if len(selected_states_spins) <= 1:
         raise ValueError("Multiplicity or initial states have not been well selected. ")
-    return selected_states_spins, all_states_named
+    return selected_states_spins, all_states, selected_states
 
 
 def get_socs(filee, selected_state, ground_state, all_states_named):
@@ -159,15 +166,6 @@ def get_socs(filee, selected_state, ground_state, all_states_named):
     :param multiplicity_diction
     :return: selected_socs, selected_states_spins, reals2_approxs2_dictionary
     """
-    def take_states(ff, linne):
-        if 'State A: Ground state' in linne:
-            state_a = str('0')
-        else:
-            state_a = str(linne.split()[-1])
-        linne = next(ff)
-        state_b = str(linne.split()[-1])
-        return state_a, state_b
-
     def take_socs(ff, all_soc, interstate_string):
         """
         Gives i) Dictionary with socs between all states, ii) string "socs_interstates" to be used
@@ -224,7 +222,6 @@ def get_socs(filee, selected_state, ground_state, all_states_named):
                 inter_states = i + "_" + ground_state
             if all_states_named.index(i) > all_states_named.index(ground_state):
                 inter_states = ground_state + "_" + i
-
             selected_socs.update({inter_states: all_socs[inter_states]})
 
     if selected_socs == {}:
@@ -334,20 +331,17 @@ def output_json(outpuut):
 # Take number of initial_states
 totalstates = get_number_of_states(file)
 
-# Take the selected initial_states
-selected_states = get_selected_states(totalstates, initial_states, multiplicity_dict[selected_multiplicity],
-                                      state_selection, ground_state)
-
 # Take SOCs of the selected states
 # This is done first since in interstate properties is where the approximate spin is defined
 # WARNING! TDDFT states by default are going to have spin contamination.
 
-approx_spin_dict, all_states_named = get_spins(file, selected_states, multiplicity_dict)
+approx_spin_dict, all_states, selected_states = get_spins(file, initial_states, state_selection, ground_state, multiplicity_dict,
+                                         selected_multiplicity)
 
-soclist_dict = get_socs(file, selected_states, ground_state, all_states_named)
+soclist_dict = get_socs(file, selected_states, ground_state, all_states)
 
 # Take energies of the selected states
-energylist_dict, all_states_energy_ordered = get_energies(file, selected_states, ground_state, all_states_named)
+energylist_dict, all_states_energy_ordered = get_energies(file, selected_states, ground_state, all_states)
 
 # Take orbital angular momentum of the selected states
 orbitalmomentlist_dict = get_orbital_angmoment(file, selected_states, ground_state, all_states_energy_ordered)
