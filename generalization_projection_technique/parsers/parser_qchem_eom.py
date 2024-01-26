@@ -5,7 +5,7 @@ initial_states = [1, 2, 3, 4, 5]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
 file = '../../\
-molecules/eomccsd_outs/anthracene_singlet_eomsf_sto3g.out'
+molecules/eomccsd_outs/benzophenone_singlet_eomsf_sto3g.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######

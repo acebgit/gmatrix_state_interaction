@@ -13,7 +13,7 @@ from procedure_projection_technique.parsers.parser_plots import sos_analysis_and
 #            INPUT VALUES
 #####################################
 ras_input = '../\
-molecules/triplets_molecules/benzophenone_10_9_triplets_30states.out'
+molecules/triplets_molecules/benzophenone_4_4_triplets_50states.out'
 # --------------------------------------------------------
 g_calculation = 0
 ppm = 0

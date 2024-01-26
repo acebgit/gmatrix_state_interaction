@@ -5,7 +5,8 @@ from procedure_projection_technique.parsers.parser_gtensor import get_hamiltonia
     angular_matrices_obtention, g_factor_calculation
 
 file = '../../\
-molecules/tddft_outs/anthracene_opt_tddft_tripletref_allmultip.out.json'
+molecules/tddft_outs/anthracene_opt_tddft_tripletref_allmultip.out'
+file = file + ".json"
 ppm = 1
 
 
