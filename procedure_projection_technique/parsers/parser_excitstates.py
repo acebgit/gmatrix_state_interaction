@@ -808,15 +808,23 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                                                          hole, part, orbital, amplitude, excit_energy, soc,
                                                          orbital_ground_state, s2])
                 final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
+                states_list.append(state)
 
-    excited_states_presentation_matrix = np.array(excited_states_presentation_list, dtype=object)
+    excited_states_presentation_matrix = np.array(excited_states_presentation_list)
+    # print(excited_states_presentation_matrix)
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #                 for row in (excited_states_presentation_matrix[:,:])]))
 
-    df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
-                      columns=['state', 'config', 'sym', 'hole', 'part',
-                                             'unpairedorb', 'amplitude', 'e', 'socc',
-                                             'lk', 's2', 'gxx', 'gyy', 'gzz'])
-    print(df)
-    exit()
+    if cut_gvalue != 0:
+        df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
+                          columns=['state', 'config', 'sym', 'hole', 'part',
+                                                 'unpairedorb', 'amplitude', 'e', 'socc',
+                                                 'lk', 's2', 'gxx', 'gyy', 'gzz'])
+    else:
+        df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
+                          columns=['state', 'config', 'sym', 'hole', 'part',
+                                   'unpairedorb', 'amplitude', 'e', 'socc',
+                                   'lk', 's2'])
 
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
@@ -827,8 +835,9 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     print("------------------------")
     print('Configurations cut-off:', cut_off)
     print('g-shift cut-off:', np.round(cut_gxx, 3), np.round(cut_gyy, 3), np.round(cut_gzz, 3))
-    print('\n'.join(''.join('{:^10}'.format(item) for item in row)
-                    for row in excited_states_presentation_matrix[:, :]))
+    # print('\n'.join(''.join('{:^10}'.format(item) for item in row)
+    #                 for row in excited_states_presentation_matrix[:, :]))
+    print(df)
     count_singlet_triplets(states_ras, s2_list)
     print(" ")
 

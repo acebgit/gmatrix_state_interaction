@@ -5,8 +5,8 @@ from procedure_projection_technique.parsers.parser_gtensor import get_hamiltonia
     angular_matrices_obtention, g_factor_calculation
 
 file = '../../\
-molecules/eomccsd_outs/anthracene_singlet_eomsf_sto3g.out.json'
-ppm = 0
+molecules/tddft_outs/anthracene_opt_tddft_tripletref_allmultip.out.json'
+ppm = 1
 
 
 def extract_data_from_json(filee):

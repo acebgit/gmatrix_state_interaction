@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-archivo = 'tddft_outs/anthracene_singlet_tddft.out'
+archivo = '\
+molecules/tddft_outs/anthracene_opt_tddft_tripletref_allmultip.out.json'
 cutoff_amp = 0.5
 cutoff_soccs = 20
 selected_multip = 2
@@ -184,5 +185,3 @@ pd.set_option('display.max_rows', None)
 df = pd.DataFrame(presentation_matrix, index=state_list,
                   columns=['Transition', 'Amp.', 'E (eV)', 'SOCC', 'TMx', 'TMy', 'TMz'])
 print(df)
-# print('\n'.join(''.join('{:^15}'.format(item) for item in row)
-#                 for row in presentation_matrix[:, :]))
