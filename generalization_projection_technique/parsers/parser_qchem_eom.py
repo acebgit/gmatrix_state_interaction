@@ -1,95 +1,19 @@
 import json
+import sys
+from generalization_projection_technique.parsers.parser_eom import get_interstate_properties
 
 state_selection = 1  # 0: use selected states ; 1: use all states_selected
 initial_states = [1, 2, 3, 4, 5]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
 file = '../../\
-molecules/eomccsd_outs/benzophenone_singlet_eomsf_sto3g.out'
+molecules/eomccsd_outs/\
+benzophenone_eomsf_sto3g_1_2_50st.out'
+# file = str(sys.argv[1])
 
 #################################
 # FUNCTIONS AND CLASSES    ######
 #################################
-
-
-def get_interstate_properties(filee):
-    """
-    Take interstate properties between ground state and all states:
-    i) Excitation energy
-    ii) Orbital angular momentums
-    iii) Spins of the states
-    iv) Spin-orbit couplings
-    :param filee:
-    :return: all_states_excitenergies, all_momentums, all_states_spins, all_socs
-    """
-    def search_word_line(archivo, text):
-        linee = next(f)
-        while text not in linee:
-            linee = next(archivo)
-        return linee
-
-    all_socs = {}
-    all_states_spins = {}
-    all_states_excitenergies = {}
-    all_momentums = {}
-
-    with open(filee, encoding="utf8") as f:
-        for line in f:
-            if 'State A' in line:
-                # 1) Take state symmetries
-                state_a = line.split()[-1]
-                line = next(f)
-                state_b = line.split()[-1]
-                interstate = state_a + "_" + state_b
-
-                # 2) Take state excitation energies
-                line = search_word_line(f, 'Energy GAP')
-                all_states_excitenergies.update({state_a: '0.00000'})
-                all_states_excitenergies.update({state_b: line.split()[-2]})
-
-                # 3) Take state orbital angular momentums
-                line = search_word_line(f, 'Transition angular momentum')
-                line = next(f)
-                line = line.replace(',', '')
-                line = line.replace(')', '')
-                line = line.replace('i', 'j')
-                all_momentums.update({interstate: [line.split()[2], line.split()[4], line.split()[6]]})
-
-                # 4) Take state's spin
-                line = search_word_line(f, 'Ket state')
-                state_a_spin = line.split()[-4]
-                line = search_word_line(f, 'Bra state')
-                state_b_spin = line.split()[-4]
-                all_states_spins.update({state_a: state_a_spin})
-                all_states_spins.update({state_b: state_b_spin})
-
-                # 5) Take SOCs
-                line = search_word_line(f, 'Clebsh-Gordan coefficient')
-                clebshgordan_coeff = float(line.split()[-1])
-                if clebshgordan_coeff != 0:
-                    line = search_word_line(f, 'Mean-field SO (cm-1)')
-                    line = search_word_line(f, 'Actual matrix elements')
-                    line = search_word_line(f, '<Sz=')
-
-                    socs_interstate = []
-                    while ' <Sz=' in line:
-                        line = line.replace(',', '|')
-                        line = line.replace('(', '|')
-                        line = line.replace('\n', '')
-                        line = line.replace(')', '')
-                        line = line.split('|')
-
-                        socs_sz = []
-                        for i in range(2, len(line), 2):
-                            numero = complex(float(line[i]), float(line[i+1]))
-                            socs_sz.append(str(numero))
-                        socs_interstate.append(socs_sz)
-                        line = next(f)
-                    all_socs.update({interstate: socs_interstate})
-
-                elif clebshgordan_coeff == 0:
-                    all_socs.update({interstate: [['0j'] * len(socs_interstate)]})
-    return all_states_excitenergies, all_momentums, all_states_spins, all_socs
 
 
 def get_selectedstates_and_totalenergies(filee, states_option, init_states, sym_selection):
@@ -195,7 +119,6 @@ def output_json(outpuut):
 #################################
 # BEGINNING OF PROGRAM     ######
 #################################
-
 
 # Take all the data
 allstates_excit_energies, allstates_momentums, allstates_spins, allstates_socs = get_interstate_properties(file)

@@ -1,8 +1,87 @@
 import numpy as np
+import pandas as pd
+
 from generalization_projection_technique.parsers.parser_qchem_tddft import search_word_line
 
 file = '../../\
-molecules/eomccsd_outs/a2_mncn5no_2-_eomip_def2-TZVP.in.out'
+molecules/eomccsd_outs/\
+benzophenone_eomee_sto3g.out'
+transition_cutoff = 0.8
+ref_state = '1/A'
+
+
+def get_interstate_properties(filee):
+    """
+    Take interstate properties between ground state and all states:
+    i) Excitation energy
+    ii) Orbital angular momentums
+    iii) Spins of the states
+    iv) Spin-orbit couplings
+    :param filee:
+    :return: all_states_excitenergies, all_momentums, all_states_spins, all_socs
+    """
+    all_socs = {}
+    all_states_spins = {}
+    all_states_excitenergies = {}
+    all_momentums = {}
+
+    with open(filee, encoding="utf8") as f:
+        for line in f:
+            if 'State A' in line:
+                # 1) Take state symmetries
+                state_a = line.split()[-1]
+                line = next(f)
+                state_b = line.split()[-1]
+                interstate = state_a + "_" + state_b
+
+                # 2) Take state excitation energies
+                line = search_word_line(f, 'Energy GAP')
+                all_states_excitenergies.update({state_a: '0.00000'})
+                all_states_excitenergies.update({state_b: line.split()[-2]})
+
+                # 3) Take state orbital angular momentums
+                line = search_word_line(f, 'Transition angular momentum')
+                line = next(f)
+                line = line.replace(',', '')
+                line = line.replace(')', '')
+                line = line.replace('i', 'j')
+                all_momentums.update({interstate: [line.split()[2], line.split()[4], line.split()[6]]})
+
+                # 4) Take state's spin
+                line = search_word_line(f, 'Ket state')
+                state_a_spin = line.split()[-4]
+                line = search_word_line(f, 'Bra state')
+                state_b_spin = line.split()[-4]
+                all_states_spins.update({state_a: state_a_spin})
+                all_states_spins.update({state_b: state_b_spin})
+
+                # 5) Take SOCs
+                line = search_word_line(f, 'Clebsh-Gordan coefficient')
+                clebshgordan_coeff = float(line.split()[-1])
+                if clebshgordan_coeff != 0:
+                    line = search_word_line(f, 'Mean-field SO (cm-1)')
+                    line = search_word_line(f, 'Actual matrix elements')
+                    line = search_word_line(f, '<Sz=')
+
+                    socs_interstate = []
+                    while ' <Sz=' in line:
+                        line = line.replace(',', '|')
+                        line = line.replace('(', '|')
+                        line = line.replace('\n', '')
+                        line = line.replace(')', '')
+                        line = line.split('|')
+
+                        socs_sz = []
+                        for i in range(2, len(line), 2):
+                            numero = complex(float(line[i]), float(line[i+1]))
+                            socs_sz.append(str(numero))
+                        socs_interstate.append(socs_sz)
+                        line = next(f)
+                    all_socs.update({interstate: socs_interstate})
+
+                elif clebshgordan_coeff == 0:
+                    all_socs.update({interstate: [['0j'] * len(socs_interstate)]})
+    return all_states_excitenergies, all_momentums, all_states_spins, all_socs
 
 
 def get_eom_type(eom_input):
@@ -58,14 +137,14 @@ def get_scf_energy(eom_input):
     return scf_energy
 
 
-def get_energies(eom_input):
+def get_energies(eom_input, eom_versioon):
     """
     Take the irreducible representations and the transitions in each irrep.,
     as well as their total and excitation energies
     :param: eom_input
     :return:  irreps, energies, excit_energies
     """
-    searches = ['EOMIP transition', 'EOMEA transition', 'EOMSF transition', 'EOMEE transition']
+    searches = [eom_versioon + " transition"]
     all_states = []
     energies = {}
 
@@ -111,7 +190,7 @@ def get_eom_socc_values(eom_input, optimized_state_index):
     return socc_list
 
 
-def get_maximum_amplitude_orbitals(eom_input, eom_type):
+def get_maximum_amplitude_orbitals(eom_input, eom_versioon, cut_off):
     """
      Gives orbitals related with maximum amplitudes transitions
      :param: eom_input
@@ -123,13 +202,13 @@ def get_maximum_amplitude_orbitals(eom_input, eom_type):
             if lista == ['infty']:
                 orbitals.append('infty')
             else:
-                orbitals = [lista[i] + lista[i + 1] for i in range(1, len(lista), 3)]
+                orbitals = [lista[i] + lista[i + 1] for i in range(0, len(lista), 3)]
             return orbitals
 
         all_transitions = []
         while '->' in linee:
-            amplitude = (float(linee.split()[0].replace('-', '')))
-            orbitals_1 = take_symmetry(linee.split('->')[0].split())
+            amplitude = float(linee.split()[0].replace('-', ''))
+            orbitals_1 = take_symmetry(linee.split('->')[0].split()[1:])
             orbitals_2 = take_symmetry(linee.split('->')[1].split())
             all_transitions.append({'amplitude': amplitude, 'initial orbital': orbitals_1, 'final orbital': orbitals_2})
             linee = next(data)
@@ -155,21 +234,24 @@ def get_maximum_amplitude_orbitals(eom_input, eom_type):
     def from_symmetry_to_number(transitions, mapping, nstate):
         final_list = []
         for i in transitions:
-            if i['initial orbital'][0] ==
+            init_orb = 0
+            final_orb = 0
             for map in mapping:
                 if i['initial orbital'][0] == map['symmetry']:
                     init_orb = map['number']
                 elif i['final orbital'][0] == map['symmetry']:
                     final_orb = map['number']
+            if init_orb == 0:
+                init_orb = 'infty'
+            if final_orb == 0:
+                final_orb = 'infty'
             final_list.append(
                 {'transition': nstate, 'subtransition': transitions.index(i) + 1, 'orbitals': init_orb+'->'+final_orb})
         return final_list
 
-    searches = ['EOMIP transition', 'EOMEA transition', 'EOMSF transition', 'EOMEE transition']
-    significant_orbitals = []
-    cut_off = 0.4
-
+    searches = [eom_versioon + " transition"]
     norbitals_transition = []
+
     with open(eom_input) as data:
         for line in data:
             if any(i in line for i in searches):
@@ -177,32 +259,18 @@ def get_maximum_amplitude_orbitals(eom_input, eom_type):
                 line = search_word_line(data, 'Transitions between orbitals')
                 line = next(data)
                 symmetry_transitions = get_all_transitions(line)
+
                 selected_transitions = [i for i in symmetry_transitions if i['amplitude'] >= cut_off]
-                print(selected_transitions)
-                exit()
+                if selected_transitions == []:
+                    max_amplitude = max([i['amplitude'] for i in symmetry_transitions])
+                    selected_transitions = [i for i in symmetry_transitions if i['amplitude'] >= max_amplitude]
 
                 line = search_word_line(data, 'Summary of significant orbitals')
                 mapping_symmetry_norbital = mapping_symmetry_number(line)
 
                 transitions = from_symmetry_to_number(selected_transitions, mapping_symmetry_norbital, state)
                 norbitals_transition.append(transitions)
-    print(norbitals_transition[-1])
-    exit()
     return norbitals_transition
-
-
-def prepare_presentation_list(eom_version):
-    presentation_list = []
-
-    if eom_version == 'eomIP':
-        presentation_list.append(['Symmetry', 'Transition', 'Energy (au)',
-                                  'Excitation energy (eV)', 'SOCC (cm-1)',
-                                  'Occ. 1', 'Occ. 2', 'Virtual 1'])
-    elif eom_version == 'eomEA':
-        presentation_list.append(['Symmetry', 'Transition', 'Energy (au)',
-                                  'Excitation energy (eV)', 'SOCC (cm-1)', 'Occ. 1',
-                                  'Virtual 1', 'Virtual 2'])
-    return presentation_list
 
 
 def second_smallest_number(numbers):
@@ -256,36 +324,35 @@ def eom_results(eom_presentation_list, irreps, total_energies, excitation_energi
     return eom_presentation_list, selected_excitation_energies_eom, selected_eom_soc_constants
 
 
-def get_eom_transitions_analysis(eom_input):
-    """"
-    Obtain transitions analysis in Equation of motion output from Q-Chem.
-    :param: eom_input
-    :return: eom_presentation_list
-    """
-    eom_version = get_eom_type(eom_input)
+# orbital_sym = get_orbital_symmetries(file)
 
-    scf_reference_energy = get_scf_energy(eom_input)
+eom_version = get_eom_type(file)
 
-    states, all_energies = get_energies(eom_input)
+scf_reference_energy = get_scf_energy(file)
 
-    # eom_socc = get_eom_socc_values(eom_input)
+states, total_energies = get_energies(file, eom_version)
 
-    orbitals = get_maximum_amplitude_orbitals(eom_input, eom_version)
+# allstates_excit_energies, allstates_momentums, allstates_spins, allstates_socs = get_interstate_properties(file)
 
-    eom_presentation_list = prepare_presentation_list(eom_version)
+# eom_socc = get_eom_socc_values(eom_input)
 
-    eom_presentation_list, selected_excitation_energies_eom, selected_eom_soc_constants = eom_results(
-        eom_presentation_list, irreps, total_energies_eom, all_excitation_energies_eom, eom_socc, orbitals)
+orbitals_in_transitions = get_maximum_amplitude_orbitals(file, eom_version, transition_cutoff)
 
-    print("")
-    print("------------------------")
-    print("    eom-CC ANALYSIS ")
-    print("------------------------")
-    print("SCF   reference energy: ", scf_reference_energy)
+presentation_list = []
+row_list = []
+for transition in list(total_energies.keys()):
+    for trans in orbitals_in_transitions:
+        if trans[0]['transition'] == transition:
+            ener_excit = np.round(total_energies[transition][1] - total_energies[ref_state][1], 4)
+            for subtrans in trans:
+                presentation_list.append([total_energies[transition][0], ener_excit, subtrans['orbitals']])
+                row_list.append(transition)
+df = pd.DataFrame(np.array(presentation_list), index=row_list, columns=['Total energ', 'Excit. ener.', 'transition'])
 
-    print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in eom_presentation_list]))
-
-
-orbital_sym = get_orbital_symmetries(file)
-
-get_eom_transitions_analysis(file)
+print("")
+print("------------------------")
+print("    eom-CC ANALYSIS ")
+print("------------------------")
+print("SCF   reference energy: ", scf_reference_energy)
+print()
+print(df.to_string())

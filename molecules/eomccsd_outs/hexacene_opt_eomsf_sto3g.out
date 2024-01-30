@@ -1,0 +1,3542 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 6.0 (devel), Q-Chem, Inc., Pleasanton, CA (2022)
+
+ E. Epifanovsky,  A. T. B. Gilbert,  Xintian Feng,  Joonho Lee,  Yuezhi Mao,  
+ N. Mardirossian,  P. Pokhilko,  A. White,  M. Wormit,  M. P. Coons,  
+ A. L. Dempwolff,  Zhengting Gan,  D. Hait,  P. R. Horn,  L. D. Jacobson,  
+ I. Kaliman,  J. Kussmann,  A. W. Lange,  Ka Un Lao,  D. S. Levine,  Jie Liu,  
+ S. C. McKenzie,  A. F. Morrison,  K. Nanda,  F. Plasser,  D. R. Rehn,  
+ M. L. Vidal,  Zhi-Qiang You,  Ying Zhu,  B. Alam,  B. Albrecht,  
+ A. Aldossary,  E. Alguire,  J. H. Andersen,  V. Athavale,  D. Barton,  
+ K. Begam,  A. Behn,  N. Bellonzi,  Y. A. Bernard,  E. J. Berquist,  
+ H. Burton,  A. Carreras,  K. Carter-Fenk,  Romit Chakraborty,  
+ Chandrima Chakravarty,  Junhan Chen,  A. D. Chien,  K. D. Closser,  
+ V. Cofer-Shabica,  L. Cunha,  S. Dasgupta,  Jia Deng,  M. de Wergifosse,  
+ M. Diedenhofen,  Hainam Do,  S. Ehlert,  Po-Tung Fang,  S. Fatehi,  
+ Qingguo Feng,  T. Friedhoff,  B. Ganoe,  J. Gayvert,  Qinghui Ge,  
+ G. Gidofalvi,  M. Goldey,  J. Gomes,  C. Gonzalez-Espinoza,  S. Gulania,  
+ A. Gunina,  J. A. Gyamfi,  M. W. D. Hanson-Heine,  P. H. P. Harbach,  
+ A. W. Hauser,  M. F. Herbst,  M. Hernandez Vera,  M. Hodecker,  
+ Z. C. Holden,  S. Houck,  Xunkun Huang,  Kerwin Hui,  B. C. Huynh,  
+ K. Ikeda,  M. Ivanov,  Hyunjun Ji,  Zuxin Jin,  Hanjie Jiang,  B. Kaduk,  
+ S. Kaehler,  R. Kang,  K. Khistyaev,  Jaehoon Kim,  Yongbin Kim,  
+ P. Klunzinger,  Z. Koczor-Benda,  Joong Hoon Koh,  D. Kosenkov,  
+ Saikiran Kotaru,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  K. Kue,  
+ A. Kunitsa,  T. Kus,  A. Landau,  K. V. Lawler,  D. Lefrancois,  S. Lehtola,  
+ Rain Li,  Shaozhi Li,  Yi-Pei Li,  Jiashu Liang,  M. Liebenthal,  
+ Hung-Hsuan Lin,  You-Sheng Lin,  Fenglai Liu,  Kuan-Yu Liu,  
+ M. Loipersberger,  A. Luenser,  C. Malbon,  A. Manjanath,  P. Manohar,  
+ E. Mansoor,  S. F. Manzer,  Shan-Ping Mao,  A. V. Marenich,  T. Markovich,  
+ S. Mason,  F. Matz,  S. A. Maurer,  P. F. McLaughlin,  M. F. S. J. Menger,  
+ J.-M. Mewes,  S. A. Mewes,  P. Morgante,  Mohammad Mostafanejad,  
+ J. W. Mullinax,  K. J. Oosterbaan,  G. Paran,  V. Parravicini,  
+ Alexander C. Paul,  Suranjan K. Paul,  F. Pavosevic,  Zheng Pei,  S. Prager,  
+ E. I. Proynov,  E. Ramos,  B. Rana,  A. E. Rask,  A. Rettig,  R. M. Richard,  
+ F. Rob,  E. Rossomme,  T. Scheele,  M. Scheurer,  M. Schneider,  
+ P. E. Schneider,  N. Sergueev,  S. M. Sharada,  Hengyuan Shen,  
+ W. Skomorowski,  D. W. Small,  C. J. Stein,  Yingli Su,  Yu-Chuan Su,  
+ E. J. Sundstrom,  Zhen Tao,  J. Thirman,  Hung-Yi Tsai,  T. Tsuchimochi,  
+ N. M. Tubman,  C. Utku,  S. P. Veccham,  O. Vydrov,  J. Wenzel,  
+ Jonathan Wong,  J. Witte,  A. Yamada,  Chou-Hsun Yang,  Kun Yao,  
+ S. Yeganeh,  S. R. Yost,  A. Zech,  F. Zeller,  Igor Ying Zhang,  
+ Xing Zhang,  Yu Zhang,  D. Zuev,  A. Aspuru-Guzik,  A. T. Bell,  
+ N. A. Besley,  K. B. Bravaya,  B. R. Brooks,  D. Casanova,  Jeng-Da Chai,  
+ Hsing-Ta Chen,  S. Coriani,  C. J. Cramer,  A. E. DePrince, III,  
+ R. A. DiStasio Jr.,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  
+ W. A. Goddard III,  S. Grimme,  S. Hammes-Schiffer,  T. Head-Gordon,  
+ W. J. Hehre,  Chao-Ping Hsu,  T.-C. Jagau,  Yousung Jung,  A. Klamt,  
+ Jing Kong,  D. S. Lambrecht,  Xiangyuan Li,  WanZhen Liang,  N. J. Mayhall,  
+ C. W. McCurdy,  J. B. Neaton,  T. Neudecker,  C. Ochsenfeld,  
+ J. A. Parkhill,  R. Peverati,  V. A. Rassolov,  Haisheng Ren,  Yihan Shao,  
+ L. V. Slipchenko,  R. P. Steele,  J. E. Subotnik,  A. J. W. Thom,  
+ A. Tkatchenko,  D. G. Truhlar,  T. Van Voorhis,  Fan Wang,  
+ T. A. Wesolowski,  K. B. Whaley,  H. L. Woodcock III,  P. M. Zimmerman,  
+ S. Faraji,  P. M. W. Gill,  M. Head-Gordon,  J. M. Herbert,  A. I. Krylov
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  R. Baer,  J. Baker,  G. J. O. Beran,  
+ K. Brandhorst,  S. T. Brown,  E. F. C. Byrd,  Arup K. Chakraborty,  
+ G. K. L. Chan,  Chun-Min Chang,  Yunqing Chen,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  R. G. Edgar,  J. Fosso-Tande,  
+ L. Fusti-Molnar,  D. Ghosh,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  
+ J. Gonthier,  M. S. Gordon,  S. R. Gwaltney,  G. Hawkins,  J. E. Herr,  
+ A. Heyden,  S. Hirata,  E. G. Hohenstein,  G. Kedziora,  F. J. Keil,  
+ C. Kelley,  Jihan Kim,  R. A. King,  R. Z. Khaliullin,  P. P. Korambath,  
+ W. Kurlancheek,  A. Laurent,  A. M. Lee,  M. S. Lee,  S. V. Levchenko,  
+ Ching Yeh Lin,  D. Liotard,  E. Livshits,  R. C. Lochan,  I. Lotan,  
+ L. A. Martinez-Martinez,  P. E. Maslen,  N. Nair,  D. P. O'Neill,  
+ D. Neuhauser,  E. Neuscamman,  C. M. Oana,  R. Olivares-Amaya,  R. Olson,  
+ T. M. Perrine,  B. Peters,  P. A. Pieniazek,  A. Prociuk,  Y. M. Rhee,  
+ J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  H. F. Schaefer III,  
+ M. W. Schmidt,  N. E. Schultz,  S. Sharma,  N. Shenvi,  C. D. Sherrill,  
+ A. C. Simmonett,  A. Sodt,  T. Stein,  D. Stuck,  K. S. Thanthiriwatte,  
+ V. Vanovschi,  L. Vogt,  Tao Wang,  A. Warshel,  M. A. Watson,  
+ C. F. Williams,  Q. Wu,  X. Xu,  Jun Yang,  W. Zhang,  Yan Zhao
+
+   Please cite Q-Chem as follows:
+  "Software for the frontiers of quantum chemistry:
+   An overview of developments in the Q-Chem 5 package"
+   J. Chem. Phys. 155, 084801 (2021)
+   https://doi.org/10.1063/5.0055522 (open access)
+
+ Q-Chem 6.0.1 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Sat Jan 27 12:54:22 2024  
+
+ Host: atlas-270
+0
+
+     Scratch files written to ./qchem329708//
+ Processing $rem in /scratch/abel/SOFTWARE/qchem/config/preferences:
+ Processing $rem in /dipc/acebg/.qchemrc:
+ Core orbitals will be frozen
+
+ Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ RAS-SF CALCULATION
+$end
+
+$molecule
+ READ hexacene_opt_singlet.molecule
+$end
+
+$rem
+!**CALCULATION TYPE***     
+JOBTYPE            sp    
+BASIS               STO-3G
+
+!***SCF REFERENCE***
+!SKIP_SCFMAN        FALSE
+UNRESTRICTED       FALSE
+!SCF_GUESS          core
+!SCF_GUESS_MIX      FALSE
+!SCF_GUESS_ALWAYS   FALSE
+MAX_SCF_CYCLES     500
+!SCF_CONVERGENCE    10
+SCF_ALGORITHM     DIIS_GDM !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
+
+!SYMMETRY           TRUE   !use of symmetry for calculating integrals
+!SYM_IGNORE         FALSE  !turn off using symmetry
+!SYM_TOL            5      !tolerance for determining point group
+!USE_ABELIAN_SUBGROUP      !define to use abelian group
+
+!THRESH             14
+!SCF_FINAL_PRINT     1 !0,1,2,3
+
+!****CCSD****
+CORRELATION        CCSD
+!CC_CONVERGENCE     6
+!CC_MAX_ITER        200
+CC_PRINT	   2
+!CHOLESKY_TOL       3 !Toler. decomposition 2e integrals
+CC_REF_PROP  	   1 !one-particle CCSD properties calculation
+!CC_REF_PROP_TE	   0 !two-particle CCSD properties calculation
+!CC_FNO_THRESH
+!CC_BACKEND	   XM !Used to specify the computational back-end of CCMAN2.
+
+!****EOM****
+METHOD             EOM-MP2
+SF_STATES	   [20]
+CC_STATE_TO_OPT    [1,1]
+CC_EOM_PROP        1
+CC_EOM_PROP_TE	   1
+CC_TRANS_PROP      1
+CALC_SOC           TRUE   !calculate SOC for EOM-CC, RAS-CI, ADC, TDDFT/TDA and TDDFT
+
+!****MEMORY****
+MEM_TOTAL          90000 !Default 2000 MB
+MEM_STATIC         1000  !Default 64 MB
+CC_MEMORY          72000
+
+!**Molecular Properties and Analysis **                                                                                          
+!POP_MULLIKEN       TRUE   !Run Mulliken population analysis
+!LOWDIN_POPULATION  TRUE   !Run Löwdin population analysis
+GUI                0       !Checkpoints generation
+!STATE_ANALYSIS     TRUE
+
+!**Wave function analysis**
+!PLOTS = 0     ! Note: This can be omitted, default is 0
+!NTO_PAIRS = 2 ! Note: This can be omitted, default is 2
+!GUI 0
+!MOLDEN_FORMAT      TRUE
+!PRINT_ORBITALS     15
+$end
+
+!$plots
+!   grid_points 100 100 100
+!   grid_range  (-10,10) (-10,10) (-10,10)
+!$end
+
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      C       0.0000004700    -0.7312200647    -0.0069497109
+    2      C      -1.2186787480    -1.4030825792    -0.0066069358
+    3      H      -1.2212546325    -2.4876283294    -0.0072503193
+    4      C       1.2186840215    -1.4030767046    -0.0074313704
+    5      H       1.2212635962    -2.4876213126    -0.0091261990
+    6      C       2.4671029708    -0.7222274503    -0.0048121613
+    7      C       3.6725774198    -1.3957516673    -0.0037165327
+    8      H       3.6754845178    -2.4807710068    -0.0056741591
+    9      C       4.9068443600    -0.7117695565     0.0002921087
+   10      C       6.1449031779    -1.3953582338     0.0020169995
+   11      H       6.1405318015    -2.4793015455     0.0000015378
+   12      C       7.3269301430    -0.7055362657     0.0063055787
+   13      H       8.2677170623    -1.2403231136     0.0076921580
+   14      C       7.3269510517     0.7054310900     0.0090371636
+   15      H       8.2677525797     1.2401831476     0.0124496180
+   16      C       6.1449430321     1.3953028421     0.0073926779
+   17      H       6.1405984876     2.4792461702     0.0094567533
+   18      C       4.9068592809     0.7117628137     0.0030269017
+   19      C       3.6726044276     1.3957847829     0.0013933759
+   20      H       3.6755256409     2.4808040750     0.0033562662
+   21      C       2.4671085735     0.7222903088    -0.0024162909
+   22      C      -2.4671023028    -0.7222358877    -0.0044765522
+   23      C      -3.6725686946    -1.3957606719    -0.0003413165
+   24      H      -3.6754687904    -2.4807807326     0.0011778320
+   25      C      -4.9068388744    -0.7117761612     0.0024175181
+   26      C      -6.1448839298    -1.3953567782     0.0091438764
+   27      H      -6.1405010208    -2.4792963656     0.0126130480
+   28      C      -7.3269135731    -0.7055307503     0.0116853769
+   29      H      -8.2676875207    -1.2403113438     0.0174316084
+   30      C      -7.3269529312     0.7054313749     0.0069715044
+   31      H      -8.2677588321     1.2401843692     0.0085254469
+   32      C      -6.1449574969     1.3952957516     0.0006552356
+   33      H      -6.1406245110     2.4792353342    -0.0028775486
+   34      C      -4.9068672417     0.7117538379    -0.0011352738
+   35      C      -3.6726190821     1.3957754583    -0.0052397396
+   36      H      -3.6755484138     2.4807946149    -0.0072644506
+   37      C      -2.4671154095     0.7222824421    -0.0058632643
+   38      C      -1.2187009787     1.4031507549    -0.0067128645
+   39      H      -1.2212861997     2.4876976284    -0.0070264204
+   40      C      -0.0000024973     0.7312986690    -0.0059533960
+   41      C       1.2186902763     1.4031539897    -0.0038141893
+   42      H       1.2212715642     2.4877003430    -0.0026974861
+ ----------------------------------------------------------------
+ Molecular Point Group                 C1    NOp =  1
+ Largest Abelian Subgroup              C1    NOp =  1
+ Nuclear Repulsion Energy =        1905.51717172 hartrees
+ There are       86 alpha and       86 beta electrons
+ Requested basis set is STO-3G
+ There are 68 shells and 146 basis functions
+ Total memory of 90000 MB is distributed as follows: 
+   MEM_STATIC is set to 1000 MB
+   QALLOC/CCMAN JOB total memory use is  89000 MB
+ Warning: actual memory use might exceed 90000 MB
+
+ Total QAlloc Memory Limit  90000 MB
+ Mega-Array Size       978 MB
+ MEM_STATIC part      1000 MB
+
+ A cutoff of  1.0D-14 yielded   1408 shell pairs
+ There are      7597 function pairs
+ Smallest overlap matrix eigenvalue = 1.69E-01
+
+ Scale SEOQF with 1.000000e-02/1.000000e-01/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =     0.0000000323 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 172.000000 electrons
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Hartree-Fock
+ A restricted SCF calculation will be
+ performed using DIIS, GDM
+ SCF converges when RMS gradient is below 1.0e-08
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1    -984.4170937173      1.00e-01  
+    2    -981.6119896831      5.92e-03  Done DIIS. Switching to GDM
+ ---------------------------------------
+  Cycle       Energy        RMS Gradient
+ ---------------------------------------
+    1    -981.6119896831      5.37e-02   Descent step
+    2    -981.7613265238      2.04e-02   Normal BFGS step
+    3    -981.7762832464      8.18e-03   Normal BFGS step
+    4    -981.7768980648      3.31e-03   Normal BFGS step
+    5    -981.7769865987      1.74e-03   Normal BFGS step
+    6    -981.7770163473      4.78e-04   Normal BFGS step
+    7    -981.7770187260      2.37e-04   Normal BFGS step
+    8    -981.7770190014      6.18e-05   Normal BFGS step
+    9    -981.7770190416      2.05e-05   Normal BFGS step
+   10    -981.7770190449      3.40e-06   Normal BFGS step
+   11    -981.7770190451      1.23e-06   Normal BFGS step
+   12    -981.7770190451      2.81e-07   Normal BFGS step
+   13    -981.7770190451      6.79e-08   Normal BFGS step
+   14    -981.7770190451      1.90e-08   Normal BFGS step
+   15    -981.7770190451      1.25e-08   Normal BFGS step
+   16    -981.7770190451      5.74e-09  Convergence criterion met
+ ---------------------------------------
+ SCF time:   CPU 11.21s  wall 12.00s 
+ SCF   energy in the final basis set =     -981.7770190451
+ Total energy in the final basis set =     -981.7770190451
+ mp2 is not implemented in computing transition properties!
+
+
+ ------------------------------------------------------------------------------
+
+   CCMAN2: suite of methods based on coupled cluster
+           and equation of motion theories.
+
+   Components:
+   * libvmm-1.3-trunk
+     by Evgeny Epifanovsky, Ilya Kaliman.
+   * libtensor-2.5-trunk
+     by Evgeny Epifanovsky, Michael Wormit, Dmitry Zuev, Sam Manzer, 
+        Ilya Kaliman.
+   * libcc-2.5-trunk
+     by Evgeny Epifanovsky, Arik Landau, Tomasz Kus, Kirill Khistyaev, 
+        Dmitry Zuev, Prashant Manohar, Xintian Feng, Anna Krylov, 
+        Matthew Goldey, Alec White, Thomas Jagau, Kaushik Nanda, 
+        Anastasia Gunina, Alexander Kunitsa, Joonho Lee.
+
+   CCMAN original authors:
+   Anna I. Krylov, C. David Sherrill, Steven R. Gwaltney,
+   Edward F. C. Byrd (2000)
+   Sergey V. Levchenko, Lyudmila V. Slipchenko, Tao Wang,
+   Ana-Maria C. Cristian (2003)
+   Piotr A. Pieniazek, C. Melania Oana, Evgeny Epifanovsky (2007)
+   Prashant Manohar (2009)
+
+ ------------------------------------------------------------------------------
+
+
+ Allocating and initializing 72000MB of RAM...
+ Calculation will run on 1 core.
+
+ 
+ Alpha MOs, Restricted
+ -- Occupied --                  
+-11.040 -11.040 -11.040 -11.040 -11.040 -11.040 -11.040 -11.040
+  1 A     2 A     3 A     4 A     5 A     6 A     7 A     8 A                  
+-11.040 -11.040 -11.031 -11.031 -11.031 -11.031 -11.029 -11.029
+  9 A    10 A    11 A    12 A    13 A    14 A    15 A    16 A                  
+-11.029 -11.029 -11.027 -11.027 -11.027 -11.027 -11.026 -11.026
+ 17 A    18 A    19 A    20 A    21 A    22 A    23 A    24 A                  
+-11.026 -11.026  -1.134  -1.124  -1.101  -1.071  -1.034  -1.014
+ 25 A    26 A    27 A    28 A    29 A    30 A    31 A    32 A                  
+ -1.000  -0.983  -0.978  -0.948  -0.943  -0.914  -0.862  -0.860
+ 33 A    34 A    35 A    36 A    37 A    38 A    39 A    40 A                  
+ -0.800  -0.786  -0.768  -0.763  -0.752  -0.746  -0.740  -0.674
+ 41 A    42 A    43 A    44 A    45 A    46 A    47 A    48 A                  
+ -0.661  -0.647  -0.631  -0.616  -0.612  -0.578  -0.577  -0.574
+ 49 A    50 A    51 A    52 A    53 A    54 A    55 A    56 A                  
+ -0.572  -0.560  -0.534  -0.527  -0.526  -0.525  -0.521  -0.518
+ 57 A    58 A    59 A    60 A    61 A    62 A    63 A    64 A                  
+ -0.513  -0.496  -0.491  -0.484  -0.477  -0.463  -0.451  -0.431
+ 65 A    66 A    67 A    68 A    69 A    70 A    71 A    72 A                  
+ -0.426  -0.418  -0.409  -0.403  -0.398  -0.373  -0.364  -0.348
+ 73 A    74 A    75 A    76 A    77 A    78 A    79 A    80 A                  
+ -0.313  -0.293  -0.263  -0.243  -0.204  -0.120
+ 81 A    82 A    83 A    84 A    85 A    86 A                                  
+ -- Virtual --                   
+  0.089   0.179   0.225   0.246   0.282   0.305   0.349   0.371
+ 87 A    88 A    89 A    90 A    91 A    92 A    93 A    94 A                  
+  0.381   0.446   0.513   0.559   0.565   0.587   0.593   0.595
+ 95 A    96 A    97 A    98 A    99 A   100 A   101 A   102 A                  
+  0.598   0.635   0.636   0.643   0.652   0.660   0.672   0.673
+103 A   104 A   105 A   106 A   107 A   108 A   109 A   110 A                  
+  0.683   0.702   0.714   0.718   0.718   0.726   0.727   0.742
+111 A   112 A   113 A   114 A   115 A   116 A   117 A   118 A                  
+  0.749   0.755   0.781   0.784   0.807   0.807   0.848   0.849
+119 A   120 A   121 A   122 A   123 A   124 A   125 A   126 A                  
+  0.863   0.878   0.903   0.910   0.914   0.941   0.968   0.978
+127 A   128 A   129 A   130 A   131 A   132 A   133 A   134 A                  
+  0.988   0.994   1.013   1.015   1.042   1.066   1.102   1.128
+135 A   136 A   137 A   138 A   139 A   140 A   141 A   142 A                  
+  1.170   1.179   1.194   1.207
+143 A   144 A   145 A   146 A                                                  
+ 
+ Beta MOs, Restricted
+ -- Occupied --                  
+-11.040 -11.040 -11.040 -11.040 -11.040 -11.040 -11.040 -11.040
+  1 A     2 A     3 A     4 A     5 A     6 A     7 A     8 A                  
+-11.040 -11.040 -11.031 -11.031 -11.031 -11.031 -11.029 -11.029
+  9 A    10 A    11 A    12 A    13 A    14 A    15 A    16 A                  
+-11.029 -11.029 -11.027 -11.027 -11.027 -11.027 -11.026 -11.026
+ 17 A    18 A    19 A    20 A    21 A    22 A    23 A    24 A                  
+-11.026 -11.026  -1.134  -1.124  -1.101  -1.071  -1.034  -1.014
+ 25 A    26 A    27 A    28 A    29 A    30 A    31 A    32 A                  
+ -1.000  -0.983  -0.978  -0.948  -0.943  -0.914  -0.862  -0.860
+ 33 A    34 A    35 A    36 A    37 A    38 A    39 A    40 A                  
+ -0.800  -0.786  -0.768  -0.763  -0.752  -0.746  -0.740  -0.674
+ 41 A    42 A    43 A    44 A    45 A    46 A    47 A    48 A                  
+ -0.661  -0.647  -0.631  -0.616  -0.612  -0.578  -0.577  -0.574
+ 49 A    50 A    51 A    52 A    53 A    54 A    55 A    56 A                  
+ -0.572  -0.560  -0.534  -0.527  -0.526  -0.525  -0.521  -0.518
+ 57 A    58 A    59 A    60 A    61 A    62 A    63 A    64 A                  
+ -0.513  -0.496  -0.491  -0.484  -0.477  -0.463  -0.451  -0.431
+ 65 A    66 A    67 A    68 A    69 A    70 A    71 A    72 A                  
+ -0.426  -0.418  -0.409  -0.403  -0.398  -0.373  -0.364  -0.348
+ 73 A    74 A    75 A    76 A    77 A    78 A    79 A    80 A                  
+ -0.313  -0.293  -0.263  -0.243  -0.204  -0.120
+ 81 A    82 A    83 A    84 A    85 A    86 A                                  
+ -- Virtual --                   
+  0.089   0.179   0.225   0.246   0.282   0.305   0.349   0.371
+ 87 A    88 A    89 A    90 A    91 A    92 A    93 A    94 A                  
+  0.381   0.446   0.513   0.559   0.565   0.587   0.593   0.595
+ 95 A    96 A    97 A    98 A    99 A   100 A   101 A   102 A                  
+  0.598   0.635   0.636   0.643   0.652   0.660   0.672   0.673
+103 A   104 A   105 A   106 A   107 A   108 A   109 A   110 A                  
+  0.683   0.702   0.714   0.718   0.718   0.726   0.727   0.742
+111 A   112 A   113 A   114 A   115 A   116 A   117 A   118 A                  
+  0.749   0.755   0.781   0.784   0.807   0.807   0.848   0.849
+119 A   120 A   121 A   122 A   123 A   124 A   125 A   126 A                  
+  0.863   0.878   0.903   0.910   0.914   0.941   0.968   0.978
+127 A   128 A   129 A   130 A   131 A   132 A   133 A   134 A                  
+  0.988   0.994   1.013   1.015   1.042   1.066   1.102   1.128
+135 A   136 A   137 A   138 A   139 A   140 A   141 A   142 A                  
+  1.170   1.179   1.194   1.207
+143 A   144 A   145 A   146 A                                                  
+
+ Occupation and symmetry of molecular orbitals
+
+ Point group: C1 (1 irreducible representation).
+
+                           A     All 
+ -------------------------------------
+ All molecular orbitals:
+  - Alpha                  146   146 
+  - Beta                   146   146 
+ -------------------------------------
+ Alpha orbitals:
+  - Frozen occupied        26    26  
+  - Active occupied        60    60  
+  - Active virtual         60    60  
+  - Frozen virtual         0     0   
+ -------------------------------------
+ Beta orbitals:
+  - Frozen occupied        26    26  
+  - Active occupied        60    60  
+  - Active virtual         60    60  
+  - Frozen virtual         0     0   
+ -------------------------------------
+
+ Import integrals:   CPU 0.00 s  wall 0.00 s
+
+ Import integrals:   CPU 10.47 s  wall 10.64 s
+
+ Computing CCSD intermediates for later calculations in double precision
+ Finished.
+
+ MP2 amplitudes:   CPU 54.72 s  wall 54.87 s
+
+        Solving for EOMSF-CCSD A transitions.
+
+Running a double precision version
+       EOMSF-CCSD/MP2 right amplitudes will be solved using Davidson.
+        Amplitudes will be solved using standard  algorithm.
+     Hard-coded thresholds: 
+     LinDepThresh=1.00e-15  NormThresh=1.00e-06  ReorthogonThresh=1.00e-02
+
+      Roots     MaxVec    MaxIter   Precond   Conv      Shift    
+      20        120       60        1         1.00e-05  0.00e+00  
+ ------------------------------------------------------------------------------
+      Iter ConvRoots NVecs ResNorm^2 Current eigenvalues (eV)
+ ------------------------------------------------------------------------------
+      0    0      40    1.50e-01   3.6618   5.4394   6.5457   7.3324   7.9643   8.2707   8.4662   8.6127   8.6410   9.2752   9.6661   9.8474   9.8787   10.4858   10.6766   10.9346   10.9354   11.1595   11.1654   11.4003   
+      1    0      60    1.60e-02   0.8178   2.4765   3.6070   4.5332   4.6078   5.0748   5.2035   5.3085   5.4911   6.1506   6.2520   6.4133   6.4449   6.5843   7.1635   7.3185   7.3272   7.4146   7.5510   7.7311   
+      2    0      80    4.33e-03   0.2792   1.8515   2.9282   3.8412   3.9290   4.5379   4.5750   4.6633   4.9044   5.2119   5.3887   5.6069   5.7724   6.0316   6.2715   6.4203   6.4377   6.7280   6.9546   7.3138   
+      3    0      100   1.19e-03   0.2398   1.7872   2.8460   3.7373   3.7996   4.3662   4.5032   4.5426   4.8491   4.8856   5.2178   5.4097   5.7196   5.9591   6.0700   6.1358   6.2215   6.6738   6.8315   7.2533   
+      4    0      120   4.34e-04   0.2355   1.7784   2.8325   3.7123   3.7523   4.3058   4.4526   4.5388   4.7573   4.8836   5.1550   5.3445   5.7121   5.9042   5.9981   6.0534   6.1435   6.6591   6.8091   7.2260   
+      5    2      40    1.32e-04   0.2343*  1.7756   2.8286   3.7063   3.7271   4.2804   4.4351   4.5360   4.7332   4.8821*  5.1262   5.3296   5.7079   5.8689   5.9706   6.0326   6.1102   6.6496   6.7986   7.2019   
+      6    6      58    1.72e-04   0.2342*  1.7746*  2.8270*  3.7031   3.7090   4.2674   4.4286   4.5349*  4.7270   4.8818*  5.1080   5.3255   5.7063*  5.8531   5.9592   6.0294   6.0888   6.6414   6.7958   7.1579   
+      7    7      72    4.12e-04   0.2342*  1.7745*  2.8270*  3.7032*  3.7088   4.2648   4.4277   4.5349*  4.7260   4.8817*  5.1017   5.3241   5.7062*  5.8408   5.9516   6.0267   6.0763   6.6393   6.7962   6.8452   
+      8    10     85    6.39e-04   0.2342*  1.7745*  2.8269*  3.7028   3.7029*  4.2606   4.4259*  4.5349*  4.7238*  4.8816*  5.0936   5.3231*  5.7062*  5.8105   5.9462   6.0224   6.0630   6.4728   6.6213   6.6925   
+      9    14     95    3.64e-04   0.2342*  1.7745*  2.8269*  3.7029*  3.7043*  4.2614*  4.4259*  4.5349*  4.7238*  4.8816*  5.0934*  5.3229*  5.7062*  5.7977   5.9445*  6.0197   6.0630   6.3509   6.3648   6.6025   
+      10   15     101   1.16e-04   0.2341*  1.7745*  2.8269*  3.7029*  3.7042*  4.2613*  4.4259*  4.5349*  4.7238*  4.8817*  5.0935*  5.3229*  5.7061*  5.7579   5.9450*  6.0120   6.0600*  6.1674   6.3449   6.6035   
+      11   15     106   3.36e-05   0.2341*  1.7745*  2.8269*  3.7029*  3.7043*  4.2613*  4.4259*  4.5349*  4.7238*  4.8816*  5.0935*  5.3229*  5.7061*  5.7484   5.9446*  6.0088   6.0600*  6.1259   6.3318   6.5952   
+      12   15     111   1.85e-05   0.2341*  1.7745*  2.8269*  3.7028*  3.7042*  4.2612*  4.4259*  4.5349*  4.7238*  4.8816*  5.0935*  5.3229*  5.7061*  5.7454   5.9446*  6.0066   6.0600*  6.1161   6.3281   6.5943   
+      13   16     116   1.08e-05   0.2341*  1.7745*  2.8269*  3.7028*  3.7042*  4.2612*  4.4259*  4.5349*  4.7238*  4.8816*  5.0935*  5.3229*  5.7061*  5.7434   5.9446*  6.0064   6.0600*  6.1097   6.3225   6.5942*  
+      14   17     120   7.71e-06   0.2341*  1.7745*  2.8269*  3.7028*  3.7041*  4.2611*  4.4259*  4.5349*  4.7238*  4.8816*  5.0935*  5.3229*  5.7061*  5.7428   5.9446*  6.0054*  6.0600*  6.1063   6.3202   6.5942*  
+      15   20     23    4.67e-06   0.2341*  1.7745*  2.8269*  3.7028*  3.7041*  4.2611*  4.4259*  4.5349*  4.7238*  4.8816*  5.0935*  5.3229*  5.7061*  5.7426*  5.9446*  6.0053*  6.0600*  6.1052*  6.3198*  6.5942*  
+
+     Davidson procedure converged
+
+ EOMSF transition 1/A
+ Total energy = -983.30351912 a.u.  Excitation energy = 0.2341 eV.
+ R1^2 = 0.9135  R2^2 = 0.0865  Res^2 = 3.55e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.8869       86 (A) A                  ->    87 (A) B                   
+  0.2014       85 (A) A                  ->    88 (A) B                   
+  0.1186       86 (A) A                  ->    90 (A) B                   
+ -0.1185       83 (A) A                  ->    90 (A) B                   
+ -0.1176       83 (A) A                  ->    87 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               83      Occ  Alpha      83 (A)     -0.2630
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               90      Vir  Beta       90 (A)      0.2459
+
+
+ EOMSF transition 2/A
+ Total energy = -983.24691005 a.u.  Excitation energy = 1.7745 eV.
+ R1^2 = 0.9122  R2^2 = 0.0878  Res^2 = 1.82e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.6301       85 (A) A                  ->    87 (A) B                   
+ -0.6009       86 (A) A                  ->    88 (A) B                   
+ -0.1532       83 (A) A                  ->    88 (A) B                   
+ -0.1444       81 (A) A                  ->    87 (A) B                   
+  0.1404       85 (A) A                  ->    90 (A) B                   
+ -0.1351       86 (A) A                  ->    92 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               81      Occ  Alpha      81 (A)     -0.3128
+               83      Occ  Alpha      83 (A)     -0.2630
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               90      Vir  Beta       90 (A)      0.2459
+               92      Vir  Beta       92 (A)      0.3055
+
+
+ EOMSF transition 3/A
+ Total energy = -983.20823613 a.u.  Excitation energy = 2.8269 eV.
+ R1^2 = 0.9153  R2^2 = 0.0847  Res^2 = 3.92e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.5277       83 (A) A                  ->    87 (A) B                   
+ -0.4980       85 (A) A                  ->    88 (A) B                   
+  0.4709       86 (A) A                  ->    90 (A) B                   
+  0.1476       80 (A) A                  ->    87 (A) B                   
+  0.1454       83 (A) A                  ->    90 (A) B                   
+ -0.1305       86 (A) A                  ->    93 (A) B                   
+  0.1095       81 (A) A                  ->    88 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               80      Occ  Alpha      80 (A)     -0.3483
+               81      Occ  Alpha      81 (A)     -0.3128
+               83      Occ  Alpha      83 (A)     -0.2630
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               90      Vir  Beta       90 (A)      0.2459
+               93      Vir  Beta       93 (A)      0.3489
+
+
+ EOMSF transition 4/A
+ Total energy = -983.17604479 a.u.  Excitation energy = 3.7028 eV.
+ R1^2 = 0.9185  R2^2 = 0.0815  Res^2 = 1.65e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.4815       81 (A) A                  ->    87 (A) B                   
+ -0.4195       83 (A) A                  ->    88 (A) B                   
+  0.4004       86 (A) A                  ->    92 (A) B                   
+  0.3974       85 (A) A                  ->    90 (A) B                   
+  0.1902       78 (A) A                  ->    87 (A) B                   
+ -0.1590       86 (A) A                  ->    95 (A) B                   
+  0.1282       78 (A) A                  ->    90 (A) B                   
+  0.1157       80 (A) A                  ->    92 (A) B                   
+  0.1128       83 (A) A                  ->    95 (A) B                   
+ -0.1122       81 (A) A                  ->    93 (A) B                   
+ -0.1051       81 (A) A                  ->    90 (A) B                   
+  0.1013       83 (A) A                  ->    92 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               78      Occ  Alpha      78 (A)     -0.3729
+               80      Occ  Alpha      80 (A)     -0.3483
+               81      Occ  Alpha      81 (A)     -0.3128
+               83      Occ  Alpha      83 (A)     -0.2630
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               90      Vir  Beta       90 (A)      0.2459
+               92      Vir  Beta       92 (A)      0.3055
+               93      Vir  Beta       93 (A)      0.3489
+               95      Vir  Beta       95 (A)      0.3807
+
+
+ EOMSF transition 5/A
+ Total energy = -983.17599644 a.u.  Excitation energy = 3.7041 eV.
+ R1^2 = 0.7863  R2^2 = 0.2137  Res^2 = 1.50e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.6467       84 (A) A                  ->    87 (A) B                   
+  0.5338       86 (A) A                  ->    89 (A) B                   
+  0.1863       82 (A) A                  ->    88 (A) B                   
+  0.1597       85 (A) A                  ->    91 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               82      Occ  Alpha      82 (A)     -0.2932
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               91      Vir  Beta       91 (A)      0.2825
+
+
+ EOMSF transition 6/A
+ Total energy = -983.15552786 a.u.  Excitation energy = 4.2611 eV.
+ R1^2 = 0.8311  R2^2 = 0.1689  Res^2 = 1.30e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.5644       82 (A) A                  ->    87 (A) B                   
+  0.4546       86 (A) A                  ->    91 (A) B                   
+  0.3430       84 (A) A                  ->    88 (A) B                   
+  0.3055       85 (A) A                  ->    89 (A) B                   
+ -0.1486       79 (A) A                  ->    88 (A) B                   
+ -0.1238       85 (A) A                  ->    94 (A) B                   
+ -0.1007       82 (A) A                  ->    90 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               79      Occ  Alpha      79 (A)     -0.3640
+               82      Occ  Alpha      82 (A)     -0.2932
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               94      Vir  Beta       94 (A)      0.3706
+
+
+ EOMSF transition 7/A
+ Total energy = -983.14947376 a.u.  Excitation energy = 4.4259 eV.
+ R1^2 = 0.9203  R2^2 = 0.0797  Res^2 = 5.46e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.4761       80 (A) A                  ->    87 (A) B                   
+ -0.3753       86 (A) A                  ->    93 (A) B                   
+ -0.3691       81 (A) A                  ->    88 (A) B                   
+ -0.3385       83 (A) A                  ->    90 (A) B                   
+ -0.3334       85 (A) A                  ->    92 (A) B                   
+  0.2096       78 (A) A                  ->    88 (A) B                   
+ -0.1710       85 (A) A                  ->    95 (A) B                   
+ -0.1660       80 (A) A                  ->    90 (A) B                   
+ -0.1538       83 (A) A                  ->    93 (A) B                   
+  0.1417       81 (A) A                  ->    92 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               78      Occ  Alpha      78 (A)     -0.3729
+               80      Occ  Alpha      80 (A)     -0.3483
+               81      Occ  Alpha      81 (A)     -0.3128
+               83      Occ  Alpha      83 (A)     -0.2630
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               90      Vir  Beta       90 (A)      0.2459
+               92      Vir  Beta       92 (A)      0.3055
+               93      Vir  Beta       93 (A)      0.3489
+               95      Vir  Beta       95 (A)      0.3807
+
+
+ EOMSF transition 8/A
+ Total energy = -983.14546676 a.u.  Excitation energy = 4.5349 eV.
+ R1^2 = 0.8778  R2^2 = 0.1222  Res^2 = 3.90e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.6570       86 (A) A                  ->    88 (A) B                   
+  0.6249       85 (A) A                  ->    87 (A) B                   
+  0.1358       83 (A) A                  ->    88 (A) B                   
+  0.1300       85 (A) A                  ->    90 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               83      Occ  Alpha      83 (A)     -0.2630
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               90      Vir  Beta       90 (A)      0.2459
+
+
+ EOMSF transition 9/A
+ Total energy = -983.13852529 a.u.  Excitation energy = 4.7238 eV.
+ R1^2 = 0.9169  R2^2 = 0.0831  Res^2 = 7.49e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.5492       78 (A) A                  ->    87 (A) B                   
+  0.4147       86 (A) A                  ->    95 (A) B                   
+ -0.3671       80 (A) A                  ->    88 (A) B                   
+  0.3151       85 (A) A                  ->    93 (A) B                   
+ -0.3041       81 (A) A                  ->    90 (A) B                   
+  0.2879       83 (A) A                  ->    92 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               78      Occ  Alpha      78 (A)     -0.3729
+               80      Occ  Alpha      80 (A)     -0.3483
+               81      Occ  Alpha      81 (A)     -0.3128
+               83      Occ  Alpha      83 (A)     -0.2630
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               90      Vir  Beta       90 (A)      0.2459
+               92      Vir  Beta       92 (A)      0.3055
+               93      Vir  Beta       93 (A)      0.3489
+               95      Vir  Beta       95 (A)      0.3807
+
+
+ EOMSF transition 10/A
+ Total energy = -983.13272461 a.u.  Excitation energy = 4.8816 eV.
+ R1^2 = 0.9137  R2^2 = 0.0863  Res^2 = 5.72e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.6914       86 (A) A                  ->    89 (A) B                   
+ -0.6094       84 (A) A                  ->    87 (A) B                   
+  0.1651       85 (A) A                  ->    91 (A) B                   
+ -0.1191       79 (A) A                  ->    87 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               79      Occ  Alpha      79 (A)     -0.3640
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               89      Vir  Beta       89 (A)      0.2249
+               91      Vir  Beta       91 (A)      0.2825
+
+
+ EOMSF transition 11/A
+ Total energy = -983.12493716 a.u.  Excitation energy = 5.0935 eV.
+ R1^2 = 0.8190  R2^2 = 0.1810  Res^2 = 6.24e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.4421       79 (A) A                  ->    87 (A) B                   
+  0.3713       82 (A) A                  ->    88 (A) B                   
+ -0.3422       86 (A) A                  ->    94 (A) B                   
+  0.3033       85 (A) A                  ->    91 (A) B                   
+ -0.2816       84 (A) A                  ->    90 (A) B                   
+  0.2765       83 (A) A                  ->    89 (A) B                   
+ -0.1306       74 (A) A                  ->    88 (A) B                   
+ -0.1188       86 (A) A                  ->    89 (A) B                   
+  0.1102       79 (A) A                  ->    90 (A) B                   
+ -0.1041       85 (A) A                  ->    96 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               74      Occ  Alpha      74 (A)     -0.4184
+               79      Occ  Alpha      79 (A)     -0.3640
+               82      Occ  Alpha      82 (A)     -0.2932
+               83      Occ  Alpha      83 (A)     -0.2630
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               94      Vir  Beta       94 (A)      0.3706
+               96      Vir  Beta       96 (A)      0.4462
+
+
+ EOMSF transition 12/A
+ Total energy = -983.11650644 a.u.  Excitation energy = 5.3229 eV.
+ R1^2 = 0.8755  R2^2 = 0.1245  Res^2 = 3.02e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.5117       84 (A) A                  ->    89 (A) B                   
+ -0.3948       85 (A) A                  ->    88 (A) B                   
+  0.3236       83 (A) A                  ->    87 (A) B                   
+  0.2856       86 (A) A                  ->    87 (A) B                   
+ -0.2433       82 (A) A                  ->    91 (A) B                   
+  0.1750       83 (A) A                  ->    90 (A) B                   
+ -0.1698       81 (A) A                  ->    88 (A) B                   
+ -0.1565       86 (A) A                  ->    90 (A) B                   
+ -0.1282       85 (A) A                  ->    92 (A) B                   
+  0.1280       78 (A) A                  ->    95 (A) B                   
+ -0.1230       79 (A) A                  ->    94 (A) B                   
+ -0.1221       81 (A) A                  ->    92 (A) B                   
+  0.1067       80 (A) A                  ->    93 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               78      Occ  Alpha      78 (A)     -0.3729
+               79      Occ  Alpha      79 (A)     -0.3640
+               80      Occ  Alpha      80 (A)     -0.3483
+               81      Occ  Alpha      81 (A)     -0.3128
+               82      Occ  Alpha      82 (A)     -0.2932
+               83      Occ  Alpha      83 (A)     -0.2630
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               92      Vir  Beta       92 (A)      0.3055
+               93      Vir  Beta       93 (A)      0.3489
+               94      Vir  Beta       94 (A)      0.3706
+               95      Vir  Beta       95 (A)      0.3807
+
+
+ EOMSF transition 13/A
+ Total energy = -983.10242460 a.u.  Excitation energy = 5.7061 eV.
+ R1^2 = 0.8737  R2^2 = 0.1263  Res^2 = 6.39e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.6641       86 (A) A                  ->    90 (A) B                   
+  0.5903       83 (A) A                  ->    87 (A) B                   
+  0.1336       84 (A) A                  ->    89 (A) B                   
+  0.1168       85 (A) A                  ->    92 (A) B                   
+ -0.1146       86 (A) A                  ->    93 (A) B                   
+ -0.1088       80 (A) A                  ->    87 (A) B                   
+ -0.1054       81 (A) A                  ->    88 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               80      Occ  Alpha      80 (A)     -0.3483
+               81      Occ  Alpha      81 (A)     -0.3128
+               83      Occ  Alpha      83 (A)     -0.2630
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               92      Vir  Beta       92 (A)      0.3055
+               93      Vir  Beta       93 (A)      0.3489
+
+
+ EOMSF transition 14/A
+ Total energy = -983.10108607 a.u.  Excitation energy = 5.7426 eV.
+ R1^2 = 0.8595  R2^2 = 0.1405  Res^2 = 2.63e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.3776       82 (A) A                  ->    87 (A) B                   
+ -0.3568       85 (A) A                  ->    89 (A) B                   
+  0.3366       74 (A) A                  ->    87 (A) B                   
+ -0.3287       83 (A) A                  ->    91 (A) B                   
+  0.3128       82 (A) A                  ->    90 (A) B                   
+ -0.2113       84 (A) A                  ->    88 (A) B                   
+  0.2085       86 (A) A                  ->    96 (A) B                   
+  0.1495       84 (A) A                  ->    92 (A) B                   
+  0.1396       81 (A) A                  ->    89 (A) B                   
+ -0.1369       81 (A) A                  ->    94 (A) B                   
+ -0.1308       70 (A) A                  ->    88 (A) B                   
+ -0.1283       79 (A) A                  ->    92 (A) B                   
+  0.1099       79 (A) A                  ->    88 (A) B                   
+  0.1034       85 (A) A                  ->    94 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               70      Occ  Alpha      70 (A)     -0.4627
+               74      Occ  Alpha      74 (A)     -0.4184
+               79      Occ  Alpha      79 (A)     -0.3640
+               81      Occ  Alpha      81 (A)     -0.3128
+               82      Occ  Alpha      82 (A)     -0.2932
+               83      Occ  Alpha      83 (A)     -0.2630
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               92      Vir  Beta       92 (A)      0.3055
+               94      Vir  Beta       94 (A)      0.3706
+               96      Vir  Beta       96 (A)      0.4462
+
+
+ EOMSF transition 15/A
+ Total energy = -983.09366144 a.u.  Excitation energy = 5.9446 eV.
+ R1^2 = 0.8603  R2^2 = 0.1397  Res^2 = 1.99e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.5132       82 (A) A                  ->    89 (A) B                   
+ -0.4860       84 (A) A                  ->    91 (A) B                   
+ -0.2544       81 (A) A                  ->    87 (A) B                   
+  0.1883       85 (A) A                  ->    87 (A) B                   
+  0.1703       86 (A) A                  ->    88 (A) B                   
+  0.1460       80 (A) A                  ->    88 (A) B                   
+  0.1435       85 (A) A                  ->    90 (A) B                   
+ -0.1430       83 (A) A                  ->    88 (A) B                   
+  0.1386       79 (A) A                  ->    91 (A) B                   
+ -0.1353       86 (A) A                  ->    92 (A) B                   
+  0.1231       82 (A) A                  ->    94 (A) B                   
+ -0.1101       85 (A) A                  ->    93 (A) B                   
+  0.1048       78 (A) A                  ->    93 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               78      Occ  Alpha      78 (A)     -0.3729
+               79      Occ  Alpha      79 (A)     -0.3640
+               80      Occ  Alpha      80 (A)     -0.3483
+               81      Occ  Alpha      81 (A)     -0.3128
+               82      Occ  Alpha      82 (A)     -0.2932
+               83      Occ  Alpha      83 (A)     -0.2630
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               92      Vir  Beta       92 (A)      0.3055
+               93      Vir  Beta       93 (A)      0.3489
+               94      Vir  Beta       94 (A)      0.3706
+
+
+ EOMSF transition 16/A
+ Total energy = -983.09142899 a.u.  Excitation energy = 6.0053 eV.
+ R1^2 = 0.8921  R2^2 = 0.1079  Res^2 = 1.83e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.5476       86 (A) A                  ->    91 (A) B                   
+  0.4364       82 (A) A                  ->    87 (A) B                   
+ -0.4258       85 (A) A                  ->    89 (A) B                   
+  0.3482       84 (A) A                  ->    88 (A) B                   
+ -0.1626       82 (A) A                  ->    90 (A) B                   
+ -0.1462       86 (A) A                  ->    96 (A) B                   
+ -0.1254       81 (A) A                  ->    89 (A) B                   
+ -0.1211       79 (A) A                  ->    88 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               79      Occ  Alpha      79 (A)     -0.3640
+               81      Occ  Alpha      81 (A)     -0.3128
+               82      Occ  Alpha      82 (A)     -0.2932
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               96      Vir  Beta       96 (A)      0.4462
+
+
+ EOMSF transition 17/A
+ Total energy = -983.08941941 a.u.  Excitation energy = 6.0600 eV.
+ R1^2 = 0.8344  R2^2 = 0.1656  Res^2 = 9.33e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+ -0.5700       84 (A) A                  ->    89 (A) B                   
+  0.4751       85 (A) A                  ->    88 (A) B                   
+ -0.3415       82 (A) A                  ->    91 (A) B                   
+  0.2011       86 (A) A                  ->    90 (A) B                   
+ -0.1320       86 (A) A                  ->    87 (A) B                   
+ -0.1156       83 (A) A                  ->    90 (A) B                   
+  0.1087       85 (A) A                  ->    92 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               82      Occ  Alpha      82 (A)     -0.2932
+               83      Occ  Alpha      83 (A)     -0.2630
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               92      Vir  Beta       92 (A)      0.3055
+
+
+ EOMSF transition 18/A
+ Total energy = -983.08775979 a.u.  Excitation energy = 6.1052 eV.
+ R1^2 = 0.8525  R2^2 = 0.1475  Res^2 = 9.65e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.5071       84 (A) A                  ->    88 (A) B                   
+  0.3504       79 (A) A                  ->    88 (A) B                   
+  0.2943       85 (A) A                  ->    94 (A) B                   
+  0.2620       85 (A) A                  ->    89 (A) B                   
+ -0.2580       86 (A) A                  ->    91 (A) B                   
+  0.2141       84 (A) A                  ->    92 (A) B                   
+  0.2031       81 (A) A                  ->    89 (A) B                   
+  0.1800       74 (A) A                  ->    87 (A) B                   
+ -0.1609       74 (A) A                  ->    90 (A) B                   
+  0.1401       83 (A) A                  ->    96 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               74      Occ  Alpha      74 (A)     -0.4184
+               79      Occ  Alpha      79 (A)     -0.3640
+               81      Occ  Alpha      81 (A)     -0.3128
+               83      Occ  Alpha      83 (A)     -0.2630
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               92      Vir  Beta       92 (A)      0.3055
+               94      Vir  Beta       94 (A)      0.3706
+               96      Vir  Beta       96 (A)      0.4462
+
+
+ EOMSF transition 19/A
+ Total energy = -983.07987424 a.u.  Excitation energy = 6.3198 eV.
+ R1^2 = 0.3630  R2^2 = 0.6370  Res^2 = 8.37e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.3741       85 (A) A      86 (A) A    ->    87 (A) A      87 (A) B     
+ -0.3741       86 (A) A      85 (A) A    ->    87 (A) A      87 (A) B     
+ -0.3741       85 (A) A      86 (A) A    ->    87 (A) B      87 (A) A     
+  0.3741       86 (A) A      85 (A) A    ->    87 (A) B      87 (A) A     
+ -0.3607       86 (A) A      86 (A) B    ->    87 (A) B      88 (A) B     
+  0.3607       86 (A) A      86 (A) B    ->    88 (A) B      87 (A) B     
+  0.3607       86 (A) B      86 (A) A    ->    87 (A) B      88 (A) B     
+ -0.3607       86 (A) B      86 (A) A    ->    88 (A) B      87 (A) B     
+  0.1349       85 (A) A      85 (A) B    ->    87 (A) B      88 (A) B     
+ -0.1349       85 (A) A      85 (A) B    ->    88 (A) B      87 (A) B     
+ -0.1349       85 (A) B      85 (A) A    ->    87 (A) B      88 (A) B     
+  0.1349       85 (A) B      85 (A) A    ->    88 (A) B      87 (A) B     
+ -0.1333       85 (A) A      86 (A) A    ->    88 (A) A      88 (A) B     
+  0.1333       86 (A) A      85 (A) A    ->    88 (A) A      88 (A) B     
+  0.1333       85 (A) A      86 (A) A    ->    88 (A) B      88 (A) A     
+ -0.1333       86 (A) A      85 (A) A    ->    88 (A) B      88 (A) A     
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               85      Occ  Beta       85 (A)     -0.2044
+               86      Occ  Beta       86 (A)     -0.1204
+               87      Vir  Alpha      87 (A)      0.0895
+               88      Vir  Alpha      88 (A)      0.1786
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+
+
+ EOMSF transition 20/A
+ Total energy = -983.06978733 a.u.  Excitation energy = 6.5942 eV.
+ R1^2 = 0.8407  R2^2 = 0.1593  Res^2 = 7.62e-06
+ Conv-d = yes
+
+ Amplitude    Transitions between orbitals
+  0.5198       81 (A) A                  ->    87 (A) B                   
+ -0.3730       85 (A) A                  ->    90 (A) B                   
+ -0.2828       82 (A) A                  ->    89 (A) B                   
+ -0.2653       84 (A) A                  ->    91 (A) B                   
+ -0.2472       86 (A) A                  ->    92 (A) B                   
+  0.2347       83 (A) A                  ->    88 (A) B                   
+ -0.2007       80 (A) A                  ->    88 (A) B                   
+  0.1728       78 (A) A                  ->    87 (A) B                   
+ -0.1427       85 (A) A                  ->    87 (A) B                   
+  0.1347       78 (A) A                  ->    90 (A) B                   
+  0.1129       79 (A) A                  ->    91 (A) B                   
+
+              Summary of significant orbitals:
+
+               Number  Type             Irrep      Energy
+               78      Occ  Alpha      78 (A)     -0.3729
+               79      Occ  Alpha      79 (A)     -0.3640
+               80      Occ  Alpha      80 (A)     -0.3483
+               81      Occ  Alpha      81 (A)     -0.3128
+               82      Occ  Alpha      82 (A)     -0.2932
+               83      Occ  Alpha      83 (A)     -0.2630
+               84      Occ  Alpha      84 (A)     -0.2434
+               85      Occ  Alpha      85 (A)     -0.2044
+               86      Occ  Alpha      86 (A)     -0.1204
+               87      Vir  Beta       87 (A)      0.0895
+               88      Vir  Beta       88 (A)      0.1786
+               89      Vir  Beta       89 (A)      0.2249
+               90      Vir  Beta       90 (A)      0.2459
+               91      Vir  Beta       91 (A)      0.2825
+               92      Vir  Beta       92 (A)      0.3055
+
+
+Running a double precision version
+      EOM-CCSD/MP2 left amplitudes will be solved using Davidson.
+        Amplitudes will be solved using MOM  algorithm.
+     Hard-coded thresholds: 
+     LinDepThresh=1.00e-15  NormThresh=1.00e-06  ReorthogonThresh=1.00e-02
+
+      Roots     MaxVec    MaxIter   Precond   Conv      Shift    
+      20        120       60        1         1.00e-05  0.00e+00  
+ ------------------------------------------------------------------------------
+      Iter ConvRoots NVecs ResNorm^2 Current eigenvalues (eV)
+ ------------------------------------------------------------------------------
+      0    0      20    2.30e-03   0.2341   1.7745   2.8269   3.7028   3.7041   4.2611   4.4259   4.5349   4.7238   4.8816   5.0935   5.3229   5.7061   5.7426   5.9446   6.0053   6.0600   6.1052   6.3198   6.5942   
+      1    0      40    2.32e-04   0.2340   1.7747   2.8271   3.7028   3.7040   4.2610   4.4261   4.5356   4.7242   4.8817   5.0932   5.3233   5.7069   5.7425   5.9442   6.0052   6.0601   6.1050   6.3197   6.5936   
+      2    0      60    3.53e-05   0.2339   1.7746   2.8271   3.7027   3.7039   4.2610   4.4259   4.5356   4.7240   4.8820   5.0931   5.3231   5.7068   5.7424   5.9442   6.0051   6.0602   6.1049   6.3193   6.5934   
+      3    15     80    8.10e-06   0.2339*  1.7745*  2.8269*  3.7026*  3.7039*  4.2610*  4.4258*  4.5354*  4.7239*  4.8822   5.0930*  5.3231*  5.7065*  5.7424*  5.9441   6.0051   6.0599   6.1048*  6.3190   6.5933*  
+      4    19     85    5.94e-06   0.2339*  1.7745*  2.8269*  3.7026*  3.7039*  4.2609*  4.4258*  4.5354*  4.7239*  4.8822*  5.0930*  5.3231*  5.7065*  5.7424*  5.9441*  6.0050*  6.0598*  6.1048*  6.3187   6.5933*  
+      5    20     86    5.55e-06   0.2339*  1.7745*  2.8269*  3.7026*  3.7039*  4.2609*  4.4258*  4.5354*  4.7239*  4.8822*  5.0930*  5.3231*  5.7065*  5.7424*  5.9441*  6.0050*  6.0598*  6.1048*  6.3184*  6.5933*  
+
+     Davidson procedure converged
+
+ EOMSF-CCSD transition 1/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 2/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 3/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 4/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 5/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 6/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 7/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 8/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 9/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 10/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 11/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 12/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 13/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 14/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 15/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 16/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 17/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 18/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 19/A
+S^2 calculation will be performed in  double precision
+ EOMSF-CCSD transition 20/A
+S^2 calculation will be performed in  double precision
+ Excited state properties for  EOMSF-CCSD transition 1/A
+ Dipole moment (a.u.): 0.001218 (X 0.000000, Y 0.000001, Z 0.001218)
+ R-squared (a.u.): 14674.156094 (XX 13530.606159, YY 1037.309545, ZZ 106.240390)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000004i, Y 0.000006i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+ Density matrix was written to a file for further analysis.
+
+ Excited state properties for  EOMSF-CCSD transition 2/A
+ Dipole moment (a.u.): 0.001303 (X -0.000002, Y -0.000015, Z 0.001303)
+ R-squared (a.u.): 14673.806120 (XX 13530.286676, YY 1037.323133, ZZ 106.196311)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000001i, Y 0.000008i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 3/A
+ Dipole moment (a.u.): 0.001433 (X -0.000002, Y -0.000021, Z 0.001432)
+ R-squared (a.u.): 14673.075234 (XX 13529.560762, YY 1037.358971, ZZ 106.155501)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000000i, Y 0.000006i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 4/A
+ Dipole moment (a.u.): 0.001432 (X -0.000001, Y 0.000001, Z 0.001432)
+ R-squared (a.u.): 14673.161316 (XX 13529.646896, YY 1037.395396, ZZ 106.119024)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000000i, Y 0.000000i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 5/A
+ Dipole moment (a.u.): 0.001726 (X -0.000002, Y -0.000056, Z 0.001725)
+ R-squared (a.u.): 14671.755106 (XX 13527.697245, YY 1037.922201, ZZ 106.135660)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000000i, Y 0.000011i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 6/A
+ Dipole moment (a.u.): 0.002044 (X 0.000001, Y -0.000022, Z 0.002044)
+ R-squared (a.u.): 14669.489083 (XX 13525.456012, YY 1037.924423, ZZ 106.108649)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000000i, Y 0.000007i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 7/A
+ Dipole moment (a.u.): 0.001626 (X -0.000006, Y -0.000024, Z 0.001626)
+ R-squared (a.u.): 14672.336287 (XX 13528.820482, YY 1037.425444, ZZ 106.090361)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000000i, Y 0.000012i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 8/A
+ Dipole moment (a.u.): 0.001073 (X -0.000002, Y -0.000033, Z 0.001073)
+ R-squared (a.u.): 14675.324922 (XX 13531.816019, YY 1037.298211, ZZ 106.210693)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000001i, Y 0.000010i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 9/A
+ Dipole moment (a.u.): 0.001290 (X 0.000002, Y -0.000023, Z 0.001289)
+ R-squared (a.u.): 14674.717840 (XX 13531.200017, YY 1037.437876, ZZ 106.079947)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000001i, Y 0.000007i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 10/A
+ Dipole moment (a.u.): 0.000786 (X -0.000002, Y -0.000020, Z 0.000785)
+ R-squared (a.u.): 14677.399110 (XX 13533.984839, YY 1037.246552, ZZ 106.167719)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X -0.000001i, Y 0.000007i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 11/A
+ Dipole moment (a.u.): 0.001978 (X 0.000000, Y -0.000025, Z 0.001978)
+ R-squared (a.u.): 14669.582992 (XX 13525.671755, YY 1037.842639, ZZ 106.068598)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X -0.000002i, Y -0.000004i, Z 0.000001i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 12/A
+ Dipole moment (a.u.): 0.002318 (X 0.000000, Y -0.000033, Z 0.002318)
+ R-squared (a.u.): 14667.849766 (XX 13524.103252, YY 1037.640535, ZZ 106.105979)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000003i, Y -0.000003i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 13/A
+ Dipole moment (a.u.): 0.000336 (X 0.000001, Y -0.000022, Z 0.000336)
+ R-squared (a.u.): 14680.295395 (XX 13536.857312, YY 1037.269480, ZZ 106.168603)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X -0.000004i, Y 0.000016i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 14/A
+ Dipole moment (a.u.): 0.002408 (X -0.000002, Y -0.000021, Z 0.002408)
+ R-squared (a.u.): 14667.660322 (XX 13523.740433, YY 1037.857643, ZZ 106.062246)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000002i, Y 0.000011i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 15/A
+ Dipole moment (a.u.): 0.002049 (X -0.000005, Y -0.000038, Z 0.002049)
+ R-squared (a.u.): 14669.475695 (XX 13525.701340, YY 1037.720611, ZZ 106.053743)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000002i, Y -0.000006i, Z 0.000007i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 16/A
+ Dipole moment (a.u.): 0.001109 (X 0.000003, Y 0.000005, Z 0.001109)
+ R-squared (a.u.): 14674.767502 (XX 13531.349980, YY 1037.292350, ZZ 106.125172)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X -0.000002i, Y -0.000010i, Z -0.000008i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 17/A
+ Dipole moment (a.u.): 0.001070 (X 0.000001, Y -0.000038, Z 0.001069)
+ R-squared (a.u.): 14675.715301 (XX 13532.052773, YY 1037.577107, ZZ 106.085421)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000000i, Y 0.000011i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 18/A
+ Dipole moment (a.u.): 0.000243 (X -0.000004, Y -0.000053, Z 0.000237)
+ R-squared (a.u.): 14681.585871 (XX 13537.604042, YY 1037.918362, ZZ 106.063466)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X -0.000003i, Y 0.000017i, Z 0.000001i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 19/A
+ Dipole moment (a.u.): 0.001498 (X -0.000003, Y 0.000000, Z 0.001498)
+ R-squared (a.u.): 14672.708224 (XX 13529.235420, YY 1037.410287, ZZ 106.062517)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000000i, Y -0.000001i, Z 0.000001i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ Excited state properties for  EOMSF-CCSD transition 20/A
+ Dipole moment (a.u.): 0.003191 (X 0.000000, Y -0.000019, Z 0.003191)
+ R-squared (a.u.): 14662.123801 (XX 13518.375974, YY 1037.646931, ZZ 106.100897)
+ Gauge origin (a.u.): (0.000000, 0.000000, 0.000000)
+ Angular momentum (a.u.) against gauge origin: 
+ (X 0.000002i, Y -0.000036i, Z 0.000000i)
+ Traces of the OPDMs: Tr(AA) 85.000000, Tr(BB) 87.000000
+ <S^2> = 2.000000
+
+ EOMSF-MP2 calculation:   CPU 11876.40 s  wall 11900.73 s
+
+
+ Start computing the transition properties
+
+ ------------------------------------------------------------------------------
+ The new SOC module will be executed 
+ Authors: Pavel Pokhilko and Evgeny Epifanovsky 
+ SOC 1e and mf integrals are evaluating by libqints...
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 2/A
+ Energy GAP = 0.056609 a.u. = 1.540412 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.056063 (X 0.056063, Y 0.000001, Z 0.000028)
+   B->A: 0.058701 (X 0.058701, Y 0.000001, Z 0.000028)
+ Oscillator strength (a.u.): 0.000124
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000138i, Y 0.000117i, Z -0.000005i)
+   B->A:  (X -0.000138i, Y -0.000168i, Z 0.000005i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.845826;   B->A: 0.842440
+   ||gamma^AB||*||gamma^BA||: 0.712557
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.002931,0.001653)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000030)
+ <S|| Hso(L+) ||S'> = (-0.002931,-0.001653)
+ SOCC = 0.004759
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000021)(-0.002073,-0.001169)(-0.000000,-0.000000)
+ <Sz=0.00|(0.002073,-0.001169)(0.000000,0.000000)(-0.002073,-0.001169)
+ <Sz=1.00|(-0.000000,0.000000)(0.002073,-0.001169)(0.000000,-0.000021)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.002071,0.000738)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000003)
+ <S|| Hso(L+) ||S'> = (-0.002071,-0.000738)
+ SOCC = 0.003110
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000002)(-0.001465,-0.000522)(-0.000000,-0.000000)
+ <Sz=0.00|(0.001465,-0.000522)(0.000000,0.000000)(-0.001465,-0.000522)
+ <Sz=1.00|(-0.000000,0.000000)(0.001465,-0.000522)(0.000000,0.000002)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.002071,0.000738)
+ <S|| Hso(L+) ||S'> = (-0.002071,-0.000738)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.002925,-0.001738)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000031)
+ <S|| Hso(L+) ||S'> = (0.002925,0.001738)
+ SOCC = 0.004812
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000022)(0.002068,0.001229)(0.000000,0.000000)
+ <Sz=0.00|(-0.002068,0.001229)(-0.000000,-0.000000)(0.002068,0.001229)
+ <Sz=1.00|(0.000000,-0.000000)(-0.002068,0.001229)(-0.000000,0.000022)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.002078,-0.000781)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000003)
+ <S|| Hso(L+) ||S'> = (0.002078,0.000781)
+ SOCC = 0.003140
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000002)(0.001470,0.000552)(0.000000,0.000000)
+ <Sz=0.00|(-0.001470,0.000552)(-0.000000,-0.000000)(0.001470,0.000552)
+ <Sz=1.00|(0.000000,-0.000000)(-0.001470,0.000552)(-0.000000,-0.000002)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.002078,-0.000781)
+ <S|| Hso(L+) ||S'> = (0.002078,0.000781)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.004785
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000021)(-0.002071,-0.001199)(-0.000000,-0.000000)
+ <Sz=0.00|(0.002071,-0.001199)(0.000000,0.000000)(-0.002071,-0.001199)
+ <Sz=1.00|(0.000000,-0.000000)(0.002071,-0.001199)(0.000000,-0.000021)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.003125
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000002)(-0.001467,-0.000537)(-0.000000,-0.000000)
+ <Sz=0.00|(0.001467,-0.000537)(-0.000000,0.000000)(-0.001467,-0.000537)
+ <Sz=1.00|(0.000000,-0.000000)(0.001467,-0.000537)(-0.000000,0.000002)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 3/A
+ Energy GAP = 0.095283 a.u. = 2.592784 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.000215 (X 0.000001, Y 0.000004, Z -0.000215)
+   B->A: 0.000209 (X 0.000001, Y 0.000004, Z -0.000208)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000075i, Y 0.000036i, Z 0.000001i)
+   B->A:  (X -0.000074i, Y -0.000045i, Z 0.000000i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.699976;   B->A: 0.692285
+   ||gamma^AB||*||gamma^BA||: 0.484583
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001136,0.000932)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000003)
+ <S|| Hso(L+) ||S'> = (-0.001136,-0.000932)
+ SOCC = 0.002079
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000002)(-0.000804,-0.000659)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000804,-0.000659)(0.000000,0.000000)(-0.000804,-0.000659)
+ <Sz=1.00|(-0.000000,0.000000)(0.000804,-0.000659)(0.000000,-0.000002)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000682,0.000413)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000002)
+ <S|| Hso(L+) ||S'> = (-0.000682,-0.000413)
+ SOCC = 0.001127
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000002)(-0.000482,-0.000292)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000482,-0.000292)(0.000000,0.000000)(-0.000482,-0.000292)
+ <Sz=1.00|(-0.000000,0.000000)(0.000482,-0.000292)(0.000000,-0.000002)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000682,0.000413)
+ <S|| Hso(L+) ||S'> = (-0.000682,-0.000413)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.001118,-0.000967)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000002)
+ <S|| Hso(L+) ||S'> = (0.001118,0.000967)
+ SOCC = 0.002091
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000002)(0.000791,0.000684)(0.000000,0.000000)
+ <Sz=0.00|(-0.000791,0.000684)(-0.000000,-0.000000)(0.000791,0.000684)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000791,0.000684)(-0.000000,0.000002)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000672,-0.000429)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000002)
+ <S|| Hso(L+) ||S'> = (0.000672,0.000429)
+ SOCC = 0.001127
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000002)(0.000475,0.000303)(0.000000,0.000000)
+ <Sz=0.00|(-0.000475,0.000303)(-0.000000,-0.000000)(0.000475,0.000303)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000475,0.000303)(-0.000000,0.000002)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000672,-0.000429)
+ <S|| Hso(L+) ||S'> = (0.000672,0.000429)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.002084
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000002)(-0.000797,-0.000671)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000797,-0.000671)(0.000000,0.000000)(-0.000797,-0.000671)
+ <Sz=1.00|(0.000000,-0.000000)(0.000797,-0.000671)(0.000000,-0.000002)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.001127
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000002)(-0.000479,-0.000298)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000479,-0.000298)(0.000000,0.000000)(-0.000479,-0.000298)
+ <Sz=1.00|(0.000000,-0.000000)(0.000479,-0.000298)(0.000000,-0.000002)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 4/A
+ Energy GAP = 0.127474 a.u. = 3.468755 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.014907 (X -0.014907, Y 0.000000, Z -0.000045)
+   B->A: 0.018019 (X -0.018019, Y 0.000000, Z -0.000043)
+ Oscillator strength (a.u.): 0.000023
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X -0.000015i, Y 0.000039i, Z -0.000503i)
+   B->A:  (X 0.000018i, Y 0.000019i, Z 0.001505i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.654162;   B->A: 0.646743
+   ||gamma^AB||*||gamma^BA||: 0.423074
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000866,-0.000045)
+ <S|| Hso(L0) ||S'> = (0.000000,0.008550)
+ <S|| Hso(L+) ||S'> = (0.000866,0.000045)
+ SOCC = 0.008638
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.006046)(0.000613,0.000032)(0.000000,0.000000)
+ <Sz=0.00|(-0.000613,0.000032)(-0.000000,0.000000)(0.000613,0.000032)
+ <Sz=1.00|(0.000000,0.000000)(-0.000613,0.000032)(-0.000000,0.006046)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000507,-0.000024)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000034)
+ <S|| Hso(L+) ||S'> = (0.000507,0.000024)
+ SOCC = 0.000718
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000024)(0.000358,0.000017)(0.000000,0.000000)
+ <Sz=0.00|(-0.000358,0.000017)(-0.000000,-0.000000)(0.000358,0.000017)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000358,0.000017)(-0.000000,-0.000024)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000507,-0.000024)
+ <S|| Hso(L+) ||S'> = (0.000507,0.000024)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000842,0.000114)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.033776)
+ <S|| Hso(L+) ||S'> = (-0.000842,-0.000114)
+ SOCC = 0.033798
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.023883)(-0.000595,-0.000081)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000595,-0.000081)(0.000000,-0.000000)(-0.000595,-0.000081)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000595,-0.000081)(0.000000,-0.023883)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000494,0.000058)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000120)
+ <S|| Hso(L+) ||S'> = (-0.000494,-0.000058)
+ SOCC = 0.000714
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000085)(-0.000350,-0.000041)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000350,-0.000041)(0.000000,0.000000)(-0.000350,-0.000041)
+ <Sz=1.00|(-0.000000,0.000000)(0.000350,-0.000041)(0.000000,0.000085)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000494,0.000058)
+ <S|| Hso(L+) ||S'> = (-0.000494,-0.000058)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.021198
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.014965)(0.000604,0.000056)(0.000000,0.000000)
+ <Sz=0.00|(-0.000604,0.000056)(-0.000000,0.000000)(0.000604,0.000056)
+ <Sz=1.00|(-0.000000,0.000000)(-0.000604,0.000056)(-0.000000,0.014965)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.000714
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000054)(0.000354,0.000029)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000354,0.000029)(-0.000000,-0.000000)(0.000354,0.000029)
+ <Sz=1.00|(-0.000000,0.000000)(-0.000354,0.000029)(-0.000000,-0.000054)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 5/A
+ Energy GAP = 0.127523 a.u. = 3.470070 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.000266 (X -0.000263, Y 0.000000, Z -0.000044)
+   B->A: 0.000071 (X -0.000061, Y 0.000000, Z -0.000037)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X -0.000006i, Y 0.000022i, Z 0.102419i)
+   B->A:  (X 0.000007i, Y -0.000024i, Z -0.074942i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.823309;   B->A: 0.831408
+   ||gamma^AB||*||gamma^BA||: 0.684506
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001010,0.000478)
+ <S|| Hso(L0) ||S'> = (0.000000,-1.726273)
+ <S|| Hso(L+) ||S'> = (-0.001010,-0.000478)
+ SOCC = 1.726274
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,1.220659)(-0.000714,-0.000338)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000714,-0.000338)(0.000000,-0.000000)(-0.000714,-0.000338)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000714,-0.000338)(0.000000,-1.220659)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000329,0.000329)
+ <S|| Hso(L0) ||S'> = (0.000000,0.005893)
+ <S|| Hso(L+) ||S'> = (-0.000329,-0.000329)
+ SOCC = 0.005930
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.004167)(-0.000232,-0.000233)(-0.000000,0.000000)
+ <Sz=0.00|(0.000232,-0.000233)(0.000000,0.000000)(-0.000232,-0.000233)
+ <Sz=1.00|(-0.000000,0.000000)(0.000232,-0.000233)(0.000000,0.004167)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000329,0.000329)
+ <S|| Hso(L+) ||S'> = (-0.000329,-0.000329)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000958,-0.000460)
+ <S|| Hso(L0) ||S'> = (0.000000,1.845488)
+ <S|| Hso(L+) ||S'> = (0.000958,0.000460)
+ SOCC = 1.845488
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-1.304957)(0.000677,0.000326)(0.000000,0.000000)
+ <Sz=0.00|(-0.000677,0.000326)(-0.000000,0.000000)(0.000677,0.000326)
+ <Sz=1.00|(0.000000,0.000000)(-0.000677,0.000326)(-0.000000,1.304957)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000307,-0.000305)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.007540)
+ <S|| Hso(L+) ||S'> = (0.000307,0.000305)
+ SOCC = 0.007565
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.005332)(0.000217,0.000216)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000217,0.000216)(-0.000000,-0.000000)(0.000217,0.000216)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000217,0.000216)(-0.000000,-0.005332)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000307,-0.000305)
+ <S|| Hso(L+) ||S'> = (0.000307,0.000305)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 1.785881
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,1.262808)(-0.000696,-0.000332)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000696,-0.000332)(0.000000,-0.000000)(-0.000696,-0.000332)
+ <Sz=1.00|(0.000000,-0.000000)(0.000696,-0.000332)(0.000000,-1.262808)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.006747
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.004749)(-0.000225,-0.000224)(-0.000000,0.000000)
+ <Sz=0.00|(0.000225,-0.000224)(0.000000,0.000000)(-0.000225,-0.000224)
+ <Sz=1.00|(0.000000,0.000000)(0.000225,-0.000224)(0.000000,0.004749)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 6/A
+ Energy GAP = 0.147991 a.u. = 4.027049 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.096645 (X -0.000004, Y 0.096645, Z 0.000025)
+   B->A: 0.092352 (X -0.000004, Y 0.092352, Z 0.000025)
+ Oscillator strength (a.u.): 0.000881
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000038i, Y 0.000281i, Z 0.000000i)
+   B->A:  (X -0.000037i, Y -0.000175i, Z 0.000000i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.688863;   B->A: 0.683449
+   ||gamma^AB||*||gamma^BA||: 0.470803
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000116,0.001471)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000001)
+ <S|| Hso(L+) ||S'> = (-0.000116,-0.001471)
+ SOCC = 0.002087
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000001)(-0.000082,-0.001040)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000082,-0.001040)(0.000000,0.000000)(-0.000082,-0.001040)
+ <Sz=1.00|(-0.000000,0.000000)(0.000082,-0.001040)(0.000000,0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000671,0.000242)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000001)
+ <S|| Hso(L+) ||S'> = (-0.000671,-0.000242)
+ SOCC = 0.001008
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000000)(-0.000474,-0.000171)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000474,-0.000171)(0.000000,0.000000)(-0.000474,-0.000171)
+ <Sz=1.00|(-0.000000,0.000000)(0.000474,-0.000171)(0.000000,-0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000671,0.000242)
+ <S|| Hso(L+) ||S'> = (-0.000671,-0.000242)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000104,-0.001612)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000002)
+ <S|| Hso(L+) ||S'> = (-0.000104,0.001612)
+ SOCC = 0.002285
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000001)(-0.000073,0.001140)(-0.000000,0.000000)
+ <Sz=0.00|(0.000073,0.001140)(0.000000,-0.000000)(-0.000073,0.001140)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000073,0.001140)(0.000000,-0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000586,-0.000275)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000586,0.000275)
+ SOCC = 0.000915
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000000)(0.000415,0.000194)(0.000000,0.000000)
+ <Sz=0.00|(-0.000415,0.000194)(-0.000000,-0.000000)(0.000415,0.000194)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000415,0.000194)(-0.000000,0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000586,-0.000275)
+ <S|| Hso(L+) ||S'> = (0.000586,0.000275)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.002180
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000001)(-0.000004,-0.001090)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000004,-0.001090)(0.000000,0.000000)(-0.000004,-0.001090)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000004,-0.001090)(0.000000,0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.000961
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000000)(-0.000444,-0.000183)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000444,-0.000183)(0.000000,0.000000)(-0.000444,-0.000183)
+ <Sz=1.00|(0.000000,-0.000000)(0.000444,-0.000183)(0.000000,-0.000000)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 7/A
+ Energy GAP = 0.154045 a.u. = 4.191790 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.000040 (X 0.000004, Y -0.000001, Z -0.000039)
+   B->A: 0.000042 (X 0.000003, Y -0.000001, Z -0.000042)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000018i, Y -0.000004i, Z 0.000000i)
+   B->A:  (X -0.000020i, Y -0.000013i, Z 0.000001i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.561231;   B->A: 0.554665
+   ||gamma^AB||*||gamma^BA||: 0.311295
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000349,0.000125)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000004)
+ <S|| Hso(L+) ||S'> = (-0.000349,-0.000125)
+ SOCC = 0.000525
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000003)(-0.000247,-0.000089)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000247,-0.000089)(0.000000,0.000000)(-0.000247,-0.000089)
+ <Sz=1.00|(-0.000000,0.000000)(0.000247,-0.000089)(0.000000,-0.000003)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000192,0.000056)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000001)
+ <S|| Hso(L+) ||S'> = (-0.000192,-0.000056)
+ SOCC = 0.000283
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000001)(-0.000136,-0.000039)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000136,-0.000039)(0.000000,0.000000)(-0.000136,-0.000039)
+ <Sz=1.00|(-0.000000,0.000000)(0.000136,-0.000039)(0.000000,-0.000001)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000192,0.000056)
+ <S|| Hso(L+) ||S'> = (-0.000192,-0.000056)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000338,-0.000157)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000004)
+ <S|| Hso(L+) ||S'> = (0.000338,0.000157)
+ SOCC = 0.000528
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000003)(0.000239,0.000111)(0.000000,0.000000)
+ <Sz=0.00|(-0.000239,0.000111)(-0.000000,-0.000000)(0.000239,0.000111)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000239,0.000111)(-0.000000,0.000003)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000186,-0.000070)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000001)
+ <S|| Hso(L+) ||S'> = (0.000186,0.000070)
+ SOCC = 0.000282
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000001)(0.000132,0.000050)(0.000000,0.000000)
+ <Sz=0.00|(-0.000132,0.000050)(-0.000000,-0.000000)(0.000132,0.000050)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000132,0.000050)(-0.000000,0.000001)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000186,-0.000070)
+ <S|| Hso(L+) ||S'> = (0.000186,0.000070)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.000526
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000003)(-0.000243,-0.000100)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000243,-0.000100)(0.000000,0.000000)(-0.000243,-0.000100)
+ <Sz=1.00|(0.000000,-0.000000)(0.000243,-0.000100)(0.000000,-0.000003)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.000282
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000001)(-0.000134,-0.000044)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000134,-0.000044)(0.000000,0.000000)(-0.000134,-0.000044)
+ <Sz=1.00|(0.000000,-0.000000)(0.000134,-0.000044)(0.000000,-0.000001)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 8/A
+ Energy GAP = 0.158052 a.u. = 4.300826 eV
+ Transition dipole moment (a.u.):
+   A->B: 4.247055 (X -4.247055, Y -0.000002, Z -0.000264)
+   B->A: 4.317936 (X -4.317936, Y -0.000002, Z -0.000265)
+ Oscillator strength (a.u.): 1.932297
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X -0.000019i, Y -0.005418i, Z -0.000161i)
+   B->A:  (X 0.000055i, Y 0.006197i, Z 0.000167i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.910407;   B->A: 0.914157
+   ||gamma^AB||*||gamma^BA||: 0.832256
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.012532,-0.013743)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000055)
+ <S|| Hso(L+) ||S'> = (-0.012532,0.013743)
+ SOCC = 0.026302
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000039)(-0.008861,0.009717)(-0.000000,0.000000)
+ <Sz=0.00|(0.008861,0.009717)(0.000000,-0.000000)(-0.008861,0.009717)
+ <Sz=1.00|(-0.000000,-0.000000)(0.008861,0.009717)(0.000000,-0.000039)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.006637,-0.007039)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000014)
+ <S|| Hso(L+) ||S'> = (-0.006637,0.007039)
+ SOCC = 0.013681
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000010)(-0.004693,0.004977)(-0.000000,0.000000)
+ <Sz=0.00|(0.004693,0.004977)(0.000000,-0.000000)(-0.004693,0.004977)
+ <Sz=1.00|(-0.000000,-0.000000)(0.004693,0.004977)(0.000000,0.000010)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.006637,-0.007039)
+ <S|| Hso(L+) ||S'> = (-0.006637,0.007039)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.012627,0.014511)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000043)
+ <S|| Hso(L+) ||S'> = (0.012627,-0.014511)
+ SOCC = 0.027203
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000031)(0.008928,-0.010261)(0.000000,-0.000000)
+ <Sz=0.00|(-0.008928,-0.010261)(-0.000000,0.000000)(0.008928,-0.010261)
+ <Sz=1.00|(0.000000,0.000000)(-0.008928,-0.010261)(-0.000000,0.000031)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.006681,0.007421)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000013)
+ <S|| Hso(L+) ||S'> = (0.006681,-0.007421)
+ SOCC = 0.014122
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000010)(0.004724,-0.005248)(0.000000,-0.000000)
+ <Sz=0.00|(-0.004724,-0.005248)(-0.000000,0.000000)(0.004724,-0.005248)
+ <Sz=1.00|(0.000000,0.000000)(-0.004724,-0.005248)(-0.000000,-0.000010)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.006681,0.007421)
+ <S|| Hso(L+) ||S'> = (0.006681,-0.007421)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.026751
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000035)(-0.008895,0.009989)(-0.000000,0.000000)
+ <Sz=0.00|(0.008895,0.009989)(-0.000000,-0.000000)(-0.008895,0.009989)
+ <Sz=1.00|(0.000000,0.000000)(0.008895,0.009989)(-0.000000,-0.000035)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.013900
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000010)(-0.004708,0.005112)(-0.000000,0.000000)
+ <Sz=0.00|(0.004708,0.005112)(-0.000000,-0.000000)(-0.004708,0.005112)
+ <Sz=1.00|(0.000000,0.000000)(0.004708,0.005112)(-0.000000,0.000010)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 9/A
+ Energy GAP = 0.164994 a.u. = 4.489713 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.054551 (X 0.054551, Y 0.000000, Z 0.000007)
+   B->A: 0.049118 (X 0.049118, Y 0.000000, Z 0.000007)
+ Oscillator strength (a.u.): 0.000295
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X -0.000008i, Y 0.000074i, Z -0.000088i)
+   B->A:  (X 0.000007i, Y -0.000072i, Z 0.000021i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.662481;   B->A: 0.656753
+   ||gamma^AB||*||gamma^BA||: 0.435086
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000264,0.000133)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000110)
+ <S|| Hso(L+) ||S'> = (0.000264,-0.000133)
+ SOCC = 0.000432
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000078)(0.000187,-0.000094)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000187,-0.000094)(-0.000000,0.000000)(0.000187,-0.000094)
+ <Sz=1.00|(0.000000,0.000000)(-0.000187,-0.000094)(-0.000000,-0.000078)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000131,0.000080)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000008)
+ <S|| Hso(L+) ||S'> = (0.000131,-0.000080)
+ SOCC = 0.000217
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000006)(0.000093,-0.000057)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000093,-0.000057)(-0.000000,0.000000)(0.000093,-0.000057)
+ <Sz=1.00|(0.000000,0.000000)(-0.000093,-0.000057)(-0.000000,0.000006)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000131,0.000080)
+ <S|| Hso(L+) ||S'> = (0.000131,-0.000080)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000257,-0.000122)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000032)
+ <S|| Hso(L+) ||S'> = (-0.000257,0.000122)
+ SOCC = 0.000404
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000023)(-0.000182,0.000086)(-0.000000,0.000000)
+ <Sz=0.00|(0.000182,0.000086)(0.000000,-0.000000)(-0.000182,0.000086)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000182,0.000086)(0.000000,0.000023)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000127,-0.000074)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000002)
+ <S|| Hso(L+) ||S'> = (-0.000127,0.000074)
+ SOCC = 0.000208
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000002)(-0.000090,0.000052)(-0.000000,0.000000)
+ <Sz=0.00|(0.000090,0.000052)(0.000000,-0.000000)(-0.000090,0.000052)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000090,0.000052)(0.000000,-0.000002)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000127,-0.000074)
+ <S|| Hso(L+) ||S'> = (-0.000127,0.000074)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.000416
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000050)(0.000184,-0.000090)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000184,-0.000090)(-0.000000,0.000000)(0.000184,-0.000090)
+ <Sz=1.00|(-0.000000,-0.000000)(-0.000184,-0.000090)(-0.000000,-0.000050)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.000212
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000004)(0.000091,-0.000054)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000091,-0.000054)(-0.000000,0.000000)(0.000091,-0.000054)
+ <Sz=1.00|(-0.000000,-0.000000)(-0.000091,-0.000054)(-0.000000,0.000004)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 10/A
+ Energy GAP = 0.170795 a.u. = 4.647558 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.000840 (X 0.000288, Y 0.000000, Z 0.000789)
+   B->A: 0.000725 (X 0.000273, Y 0.000000, Z 0.000672)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000128i, Y 0.000420i, Z -2.125227i)
+   B->A:  (X -0.000134i, Y -0.000476i, Z 1.982985i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.859818;   B->A: 0.868782
+   ||gamma^AB||*||gamma^BA||: 0.746994
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000518,0.000329)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.288041)
+ <S|| Hso(L+) ||S'> = (-0.000518,-0.000329)
+ SOCC = 0.288042
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.203676)(-0.000366,-0.000233)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000366,-0.000233)(0.000000,-0.000000)(-0.000366,-0.000233)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000366,-0.000233)(0.000000,-0.203676)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000206,0.000192)
+ <S|| Hso(L0) ||S'> = (0.000000,0.245463)
+ <S|| Hso(L+) ||S'> = (-0.000206,-0.000192)
+ SOCC = 0.245463
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.173569)(-0.000146,-0.000136)(-0.000000,0.000000)
+ <Sz=0.00|(0.000146,-0.000136)(0.000000,0.000000)(-0.000146,-0.000136)
+ <Sz=1.00|(-0.000000,0.000000)(0.000146,-0.000136)(0.000000,0.173569)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000206,0.000192)
+ <S|| Hso(L+) ||S'> = (-0.000206,-0.000192)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000588,-0.000321)
+ <S|| Hso(L0) ||S'> = (0.000000,0.288821)
+ <S|| Hso(L+) ||S'> = (0.000588,0.000321)
+ SOCC = 0.288823
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.204228)(0.000415,0.000227)(0.000000,0.000000)
+ <Sz=0.00|(-0.000415,0.000227)(-0.000000,0.000000)(0.000415,0.000227)
+ <Sz=1.00|(0.000000,0.000000)(-0.000415,0.000227)(-0.000000,0.204228)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000247,-0.000185)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.235446)
+ <S|| Hso(L+) ||S'> = (0.000247,0.000185)
+ SOCC = 0.235447
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.166486)(0.000174,0.000131)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000174,0.000131)(-0.000000,-0.000000)(0.000174,0.000131)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000174,0.000131)(-0.000000,-0.166486)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000247,-0.000185)
+ <S|| Hso(L+) ||S'> = (0.000247,0.000185)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.288433
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.203952)(-0.000391,-0.000230)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000391,-0.000230)(-0.000000,-0.000000)(-0.000391,-0.000230)
+ <Sz=1.00|(0.000000,-0.000000)(0.000391,-0.000230)(-0.000000,-0.203952)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.240455
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.170027)(-0.000160,-0.000133)(-0.000000,0.000000)
+ <Sz=0.00|(0.000160,-0.000133)(-0.000000,0.000000)(-0.000160,-0.000133)
+ <Sz=1.00|(0.000000,0.000000)(0.000160,-0.000133)(-0.000000,0.170027)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 11/A
+ Energy GAP = 0.178582 a.u. = 4.859465 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.000239 (X 0.000015, Y 0.000000, Z -0.000239)
+   B->A: 0.000214 (X 0.000013, Y 0.000000, Z -0.000214)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X -0.000007i, Y 0.000034i, Z 0.237442i)
+   B->A:  (X 0.000007i, Y -0.000015i, Z -0.177249i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.583762;   B->A: 0.568070
+   ||gamma^AB||*||gamma^BA||: 0.331618
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000034,-0.000208)
+ <S|| Hso(L0) ||S'> = (0.000000,0.527152)
+ <S|| Hso(L+) ||S'> = (-0.000034,0.000208)
+ SOCC = 0.527152
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.372753)(-0.000024,0.000147)(-0.000000,0.000000)
+ <Sz=0.00|(0.000024,0.000147)(0.000000,0.000000)(-0.000024,0.000147)
+ <Sz=1.00|(-0.000000,0.000000)(0.000024,0.000147)(0.000000,0.372753)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000236,-0.000185)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.026957)
+ <S|| Hso(L+) ||S'> = (-0.000236,0.000185)
+ SOCC = 0.026961
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.019062)(-0.000167,0.000131)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000167,0.000131)(0.000000,-0.000000)(-0.000167,0.000131)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000167,0.000131)(0.000000,-0.019062)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000236,-0.000185)
+ <S|| Hso(L+) ||S'> = (-0.000236,0.000185)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000008,0.000143)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.546765)
+ <S|| Hso(L+) ||S'> = (0.000008,-0.000143)
+ SOCC = 0.546765
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.386621)(0.000005,-0.000101)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000005,-0.000101)(-0.000000,-0.000000)(0.000005,-0.000101)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000005,-0.000101)(-0.000000,-0.386621)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000212,0.000142)
+ <S|| Hso(L0) ||S'> = (0.000000,0.025201)
+ <S|| Hso(L+) ||S'> = (0.000212,-0.000142)
+ SOCC = 0.025204
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.017820)(0.000150,-0.000100)(0.000000,0.000000)
+ <Sz=0.00|(-0.000150,-0.000100)(-0.000000,0.000000)(0.000150,-0.000100)
+ <Sz=1.00|(0.000000,0.000000)(-0.000150,-0.000100)(-0.000000,0.017820)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000212,0.000142)
+ <S|| Hso(L+) ||S'> = (0.000212,-0.000142)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.536958
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.379687)(-0.000015,0.000124)(-0.000000,0.000000)
+ <Sz=0.00|(0.000015,0.000124)(0.000000,0.000000)(-0.000015,0.000124)
+ <Sz=1.00|(-0.000000,0.000000)(0.000015,0.000124)(0.000000,0.379687)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.026082
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.018441)(-0.000158,0.000115)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000158,0.000115)(0.000000,-0.000000)(-0.000158,0.000115)
+ <Sz=1.00|(0.000000,-0.000000)(0.000158,0.000115)(0.000000,-0.018441)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 12/A
+ Energy GAP = 0.187013 a.u. = 5.088877 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.000605 (X 0.000000, Y -0.000004, Z 0.000605)
+   B->A: 0.000594 (X 0.000000, Y -0.000006, Z 0.000594)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X -0.000046i, Y -0.000092i, Z -0.000005i)
+   B->A:  (X 0.000053i, Y 0.000091i, Z 0.000005i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.561533;   B->A: 0.548169
+   ||gamma^AB||*||gamma^BA||: 0.307815
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000018,-0.001003)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000025)
+ <S|| Hso(L+) ||S'> = (0.000018,0.001003)
+ SOCC = 0.001419
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000017)(0.000013,0.000709)(0.000000,0.000000)
+ <Sz=0.00|(-0.000013,0.000709)(-0.000000,-0.000000)(0.000013,0.000709)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000013,0.000709)(-0.000000,-0.000017)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000063,-0.000476)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000001)
+ <S|| Hso(L+) ||S'> = (0.000063,0.000476)
+ SOCC = 0.000679
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000000)(0.000045,0.000337)(0.000000,0.000000)
+ <Sz=0.00|(-0.000045,0.000337)(-0.000000,-0.000000)(0.000045,0.000337)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000045,0.000337)(-0.000000,-0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000063,-0.000476)
+ <S|| Hso(L+) ||S'> = (0.000063,0.000476)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000051,0.001101)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000026)
+ <S|| Hso(L+) ||S'> = (-0.000051,-0.001101)
+ SOCC = 0.001559
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000018)(-0.000036,-0.000779)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000036,-0.000779)(0.000000,0.000000)(-0.000036,-0.000779)
+ <Sz=1.00|(-0.000000,0.000000)(0.000036,-0.000779)(0.000000,0.000018)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000085,0.000524)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000001)
+ <S|| Hso(L+) ||S'> = (-0.000085,-0.000524)
+ SOCC = 0.000751
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000000)(-0.000060,-0.000371)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000060,-0.000371)(0.000000,0.000000)(-0.000060,-0.000371)
+ <Sz=1.00|(-0.000000,0.000000)(0.000060,-0.000371)(0.000000,0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000085,0.000524)
+ <S|| Hso(L+) ||S'> = (-0.000085,-0.000524)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.001489
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000018)(0.000024,0.000744)(0.000000,0.000000)
+ <Sz=0.00|(-0.000024,0.000744)(0.000000,-0.000000)(0.000024,0.000744)
+ <Sz=1.00|(-0.000000,0.000000)(-0.000024,0.000744)(0.000000,-0.000018)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.000715
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000000)(0.000052,0.000354)(0.000000,0.000000)
+ <Sz=0.00|(-0.000052,0.000354)(0.000000,-0.000000)(0.000052,0.000354)
+ <Sz=1.00|(-0.000000,0.000000)(-0.000052,0.000354)(0.000000,-0.000000)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 13/A
+ Energy GAP = 0.201095 a.u. = 5.472063 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.004725 (X 0.000000, Y -0.000041, Z 0.004725)
+   B->A: 0.004607 (X 0.000000, Y -0.000038, Z 0.004607)
+ Oscillator strength (a.u.): 0.000003
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X -0.000038i, Y -0.000529i, Z 0.000003i)
+   B->A:  (X 0.000064i, Y 0.000498i, Z -0.000003i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.865230;   B->A: 0.869295
+   ||gamma^AB||*||gamma^BA||: 0.752140
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.004035,-0.006571)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000042)
+ <S|| Hso(L+) ||S'> = (-0.004035,0.006571)
+ SOCC = 0.010905
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000030)(-0.002853,0.004646)(-0.000000,0.000000)
+ <Sz=0.00|(0.002853,0.004646)(0.000000,-0.000000)(-0.002853,0.004646)
+ <Sz=1.00|(-0.000000,-0.000000)(0.002853,0.004646)(0.000000,-0.000030)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.002127,-0.003347)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000025)
+ <S|| Hso(L+) ||S'> = (-0.002127,0.003347)
+ SOCC = 0.005608
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000017)(-0.001504,0.002367)(-0.000000,0.000000)
+ <Sz=0.00|(0.001504,0.002367)(0.000000,-0.000000)(-0.001504,0.002367)
+ <Sz=1.00|(-0.000000,-0.000000)(0.001504,0.002367)(0.000000,-0.000017)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.002127,-0.003347)
+ <S|| Hso(L+) ||S'> = (-0.002127,0.003347)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.004108,0.006926)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000044)
+ <S|| Hso(L+) ||S'> = (0.004108,-0.006926)
+ SOCC = 0.011389
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000031)(0.002905,-0.004898)(0.000000,-0.000000)
+ <Sz=0.00|(-0.002905,-0.004898)(-0.000000,0.000000)(0.002905,-0.004898)
+ <Sz=1.00|(0.000000,0.000000)(-0.002905,-0.004898)(-0.000000,0.000031)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.002163,0.003524)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000026)
+ <S|| Hso(L+) ||S'> = (0.002163,-0.003524)
+ SOCC = 0.005848
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000018)(0.001530,-0.002492)(0.000000,-0.000000)
+ <Sz=0.00|(-0.001530,-0.002492)(-0.000000,0.000000)(0.001530,-0.002492)
+ <Sz=1.00|(0.000000,0.000000)(-0.001530,-0.002492)(-0.000000,0.000018)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.002163,0.003524)
+ <S|| Hso(L+) ||S'> = (0.002163,-0.003524)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.011147
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000030)(-0.002879,0.004772)(-0.000000,0.000000)
+ <Sz=0.00|(0.002879,0.004772)(-0.000000,-0.000000)(-0.002879,0.004772)
+ <Sz=1.00|(0.000000,0.000000)(0.002879,0.004772)(-0.000000,-0.000030)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.005728
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000018)(-0.001517,0.002429)(-0.000000,0.000000)
+ <Sz=0.00|(0.001517,0.002429)(-0.000000,-0.000000)(-0.001517,0.002429)
+ <Sz=1.00|(0.000000,0.000000)(0.001517,0.002429)(-0.000000,-0.000018)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 14/A
+ Energy GAP = 0.202433 a.u. = 5.508487 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.234991 (X 0.000005, Y 0.234991, Z 0.000071)
+   B->A: 0.210791 (X 0.000005, Y 0.210791, Z 0.000073)
+ Oscillator strength (a.u.): 0.006685
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000366i, Y 0.000779i, Z 0.000000i)
+   B->A:  (X -0.000378i, Y -0.000517i, Z 0.000000i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.587790;   B->A: 0.572203
+   ||gamma^AB||*||gamma^BA||: 0.336336
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000753,0.000974)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000002)
+ <S|| Hso(L+) ||S'> = (-0.000753,-0.000974)
+ SOCC = 0.001740
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000001)(-0.000532,-0.000688)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000532,-0.000688)(0.000000,0.000000)(-0.000532,-0.000688)
+ <Sz=1.00|(-0.000000,0.000000)(0.000532,-0.000688)(0.000000,-0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000700,0.000349)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000700,-0.000349)
+ SOCC = 0.001106
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000000)(-0.000495,-0.000247)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000495,-0.000247)(0.000000,0.000000)(-0.000495,-0.000247)
+ <Sz=1.00|(-0.000000,0.000000)(0.000495,-0.000247)(0.000000,-0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000700,0.000349)
+ <S|| Hso(L+) ||S'> = (-0.000700,-0.000349)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000557,-0.001041)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000001)
+ <S|| Hso(L+) ||S'> = (0.000557,0.001041)
+ SOCC = 0.001670
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000001)(0.000394,0.000736)(0.000000,0.000000)
+ <Sz=0.00|(-0.000394,0.000736)(-0.000000,-0.000000)(0.000394,0.000736)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000394,0.000736)(-0.000000,0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000602,-0.000365)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000602,0.000365)
+ SOCC = 0.000995
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000000)(0.000426,0.000258)(0.000000,0.000000)
+ <Sz=0.00|(-0.000426,0.000258)(-0.000000,-0.000000)(0.000426,0.000258)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000426,0.000258)(-0.000000,0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000602,-0.000365)
+ <S|| Hso(L+) ||S'> = (0.000602,0.000365)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.001699
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000001)(-0.000463,-0.000712)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000463,-0.000712)(0.000000,0.000000)(-0.000463,-0.000712)
+ <Sz=1.00|(0.000000,-0.000000)(0.000463,-0.000712)(0.000000,-0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.001050
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000000)(-0.000460,-0.000252)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000460,-0.000252)(0.000000,0.000000)(-0.000460,-0.000252)
+ <Sz=1.00|(0.000000,-0.000000)(0.000460,-0.000252)(0.000000,-0.000000)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 15/A
+ Energy GAP = 0.209858 a.u. = 5.710521 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.013472 (X 0.013472, Y 0.000007, Z 0.000053)
+   B->A: 0.006615 (X 0.006615, Y 0.000009, Z 0.000054)
+ Oscillator strength (a.u.): 0.000012
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X -0.000038i, Y -0.000167i, Z -0.000011i)
+   B->A:  (X 0.000043i, Y 0.000100i, Z 0.000007i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.443177;   B->A: 0.438622
+   ||gamma^AB||*||gamma^BA||: 0.194387
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000272,0.000628)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000039)
+ <S|| Hso(L+) ||S'> = (0.000272,-0.000628)
+ SOCC = 0.000969
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000027)(0.000192,-0.000444)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000192,-0.000444)(-0.000000,0.000000)(0.000192,-0.000444)
+ <Sz=1.00|(0.000000,0.000000)(-0.000192,-0.000444)(-0.000000,-0.000027)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000069,0.000351)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000001)
+ <S|| Hso(L+) ||S'> = (0.000069,-0.000351)
+ SOCC = 0.000506
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000001)(0.000049,-0.000248)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000049,-0.000248)(-0.000000,0.000000)(0.000049,-0.000248)
+ <Sz=1.00|(0.000000,0.000000)(-0.000049,-0.000248)(-0.000000,-0.000001)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000069,0.000351)
+ <S|| Hso(L+) ||S'> = (0.000069,-0.000351)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000339,-0.000510)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000024)
+ <S|| Hso(L+) ||S'> = (-0.000339,0.000510)
+ SOCC = 0.000866
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000017)(-0.000239,0.000361)(-0.000000,0.000000)
+ <Sz=0.00|(0.000239,0.000361)(0.000000,-0.000000)(-0.000239,0.000361)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000239,0.000361)(0.000000,0.000017)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000124,-0.000293)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000124,0.000293)
+ SOCC = 0.000450
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000000)(-0.000088,0.000207)(-0.000000,0.000000)
+ <Sz=0.00|(0.000088,0.000207)(0.000000,-0.000000)(-0.000088,0.000207)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000088,0.000207)(0.000000,0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000124,-0.000293)
+ <S|| Hso(L+) ||S'> = (-0.000124,0.000293)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.000914
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000022)(0.000216,-0.000402)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000216,-0.000402)(0.000000,0.000000)(0.000216,-0.000402)
+ <Sz=1.00|(-0.000000,-0.000000)(-0.000216,-0.000402)(0.000000,-0.000022)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.000476
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000000)(0.000068,-0.000228)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000068,-0.000228)(0.000000,0.000000)(0.000068,-0.000228)
+ <Sz=1.00|(-0.000000,-0.000000)(-0.000068,-0.000228)(0.000000,-0.000000)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 16/A
+ Energy GAP = 0.212090 a.u. = 5.771269 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.765289 (X 0.000010, Y 0.765289, Z 0.000029)
+   B->A: 0.707470 (X 0.000009, Y 0.707470, Z 0.000044)
+ Oscillator strength (a.u.): 0.076553
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.001800i, Y 0.002966i, Z -0.000001i)
+   B->A:  (X -0.001793i, Y -0.002064i, Z 0.000001i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.670718;   B->A: 0.667011
+   ||gamma^AB||*||gamma^BA||: 0.447376
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.002274,0.000813)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000003)
+ <S|| Hso(L+) ||S'> = (0.002274,-0.000813)
+ SOCC = 0.003416
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000002)(0.001608,-0.000575)(0.000000,-0.000000)
+ <Sz=0.00|(-0.001608,-0.000575)(-0.000000,0.000000)(0.001608,-0.000575)
+ <Sz=1.00|(0.000000,0.000000)(-0.001608,-0.000575)(-0.000000,-0.000002)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.001559,0.000844)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000002)
+ <S|| Hso(L+) ||S'> = (0.001559,-0.000844)
+ SOCC = 0.002507
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000001)(0.001102,-0.000597)(0.000000,-0.000000)
+ <Sz=0.00|(-0.001102,-0.000597)(-0.000000,0.000000)(0.001102,-0.000597)
+ <Sz=1.00|(0.000000,0.000000)(-0.001102,-0.000597)(-0.000000,-0.000001)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.001559,0.000844)
+ <S|| Hso(L+) ||S'> = (0.001559,-0.000844)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.002252,-0.000704)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000003)
+ <S|| Hso(L+) ||S'> = (-0.002252,0.000704)
+ SOCC = 0.003337
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000002)(-0.001593,0.000498)(-0.000000,0.000000)
+ <Sz=0.00|(0.001593,0.000498)(0.000000,-0.000000)(-0.001593,0.000498)
+ <Sz=1.00|(-0.000000,-0.000000)(0.001593,0.000498)(0.000000,0.000002)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001547,-0.000785)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000002)
+ <S|| Hso(L+) ||S'> = (-0.001547,0.000785)
+ SOCC = 0.002454
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000001)(-0.001094,0.000555)(-0.000000,0.000000)
+ <Sz=0.00|(0.001094,0.000555)(0.000000,-0.000000)(-0.001094,0.000555)
+ <Sz=1.00|(-0.000000,-0.000000)(0.001094,0.000555)(0.000000,0.000001)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001547,-0.000785)
+ <S|| Hso(L+) ||S'> = (-0.001547,0.000785)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.003376
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000002)(0.001600,-0.000536)(0.000000,-0.000000)
+ <Sz=0.00|(-0.001600,-0.000536)(-0.000000,0.000000)(0.001600,-0.000536)
+ <Sz=1.00|(-0.000000,-0.000000)(-0.001600,-0.000536)(-0.000000,-0.000002)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.002480
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000001)(0.001098,-0.000576)(0.000000,-0.000000)
+ <Sz=0.00|(-0.001098,-0.000576)(-0.000000,0.000000)(0.001098,-0.000576)
+ <Sz=1.00|(-0.000000,-0.000000)(-0.001098,-0.000576)(-0.000000,-0.000001)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 17/A
+ Energy GAP = 0.214100 a.u. = 5.825953 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.000471 (X 0.000000, Y -0.000081, Z 0.000464)
+   B->A: 0.000491 (X 0.000000, Y -0.000086, Z 0.000484)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000024i, Y -0.000048i, Z 0.000002i)
+   B->A:  (X -0.000023i, Y 0.000036i, Z -0.000001i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.376122;   B->A: 0.375830
+   ||gamma^AB||*||gamma^BA||: 0.141358
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000836,-0.000028)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000012)
+ <S|| Hso(L+) ||S'> = (-0.000836,0.000028)
+ SOCC = 0.001184
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000008)(-0.000591,0.000020)(-0.000000,0.000000)
+ <Sz=0.00|(0.000591,0.000020)(0.000000,-0.000000)(-0.000591,0.000020)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000591,0.000020)(0.000000,0.000008)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000510,-0.000039)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000003)
+ <S|| Hso(L+) ||S'> = (-0.000510,0.000039)
+ SOCC = 0.000723
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000002)(-0.000360,0.000028)(-0.000000,0.000000)
+ <Sz=0.00|(0.000360,0.000028)(0.000000,-0.000000)(-0.000360,0.000028)
+ <Sz=1.00|(-0.000000,-0.000000)(0.000360,0.000028)(0.000000,-0.000002)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000510,-0.000039)
+ <S|| Hso(L+) ||S'> = (-0.000510,0.000039)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000908,0.000122)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000011)
+ <S|| Hso(L+) ||S'> = (0.000908,-0.000122)
+ SOCC = 0.001296
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000008)(0.000642,-0.000086)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000642,-0.000086)(-0.000000,0.000000)(0.000642,-0.000086)
+ <Sz=1.00|(0.000000,0.000000)(-0.000642,-0.000086)(-0.000000,-0.000008)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000546,0.000091)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000003)
+ <S|| Hso(L+) ||S'> = (0.000546,-0.000091)
+ SOCC = 0.000783
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000002)(0.000386,-0.000064)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000386,-0.000064)(-0.000000,0.000000)(0.000386,-0.000064)
+ <Sz=1.00|(0.000000,0.000000)(-0.000386,-0.000064)(-0.000000,0.000002)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000546,0.000091)
+ <S|| Hso(L+) ||S'> = (0.000546,-0.000091)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.001238
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000008)(-0.000617,0.000053)(-0.000000,0.000000)
+ <Sz=0.00|(0.000617,0.000053)(-0.000000,-0.000000)(-0.000617,0.000053)
+ <Sz=1.00|(0.000000,0.000000)(0.000617,0.000053)(-0.000000,0.000008)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.000752
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000002)(-0.000373,0.000046)(-0.000000,0.000000)
+ <Sz=0.00|(0.000373,0.000046)(-0.000000,-0.000000)(-0.000373,0.000046)
+ <Sz=1.00|(0.000000,0.000000)(0.000373,0.000046)(-0.000000,-0.000002)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 18/A
+ Energy GAP = 0.215759 a.u. = 5.871113 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.100458 (X 0.000001, Y 0.100458, Z 0.000018)
+   B->A: 0.087918 (X 0.000001, Y 0.087918, Z 0.000022)
+ Oscillator strength (a.u.): 0.001270
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000415i, Y 0.000482i, Z 0.000000i)
+   B->A:  (X -0.000389i, Y -0.000351i, Z 0.000000i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.394601;   B->A: 0.379824
+   ||gamma^AB||*||gamma^BA||: 0.149879
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000946,-0.000603)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000002)
+ <S|| Hso(L+) ||S'> = (0.000946,0.000603)
+ SOCC = 0.001587
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000001)(0.000669,0.000426)(0.000000,0.000000)
+ <Sz=0.00|(-0.000669,0.000426)(-0.000000,-0.000000)(0.000669,0.000426)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000669,0.000426)(-0.000000,0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000854,-0.000078)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000854,0.000078)
+ SOCC = 0.001213
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000000)(0.000604,0.000055)(0.000000,0.000000)
+ <Sz=0.00|(-0.000604,0.000055)(-0.000000,-0.000000)(0.000604,0.000055)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000604,0.000055)(-0.000000,0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000854,-0.000078)
+ <S|| Hso(L+) ||S'> = (0.000854,0.000078)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000821,0.000569)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000001)
+ <S|| Hso(L+) ||S'> = (-0.000821,-0.000569)
+ SOCC = 0.001412
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000001)(-0.000580,-0.000402)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000580,-0.000402)(0.000000,0.000000)(-0.000580,-0.000402)
+ <Sz=1.00|(-0.000000,0.000000)(0.000580,-0.000402)(0.000000,-0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000751,0.000086)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000751,-0.000086)
+ SOCC = 0.001069
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.000000)(-0.000531,-0.000061)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000531,-0.000061)(0.000000,0.000000)(-0.000531,-0.000061)
+ <Sz=1.00|(-0.000000,0.000000)(0.000531,-0.000061)(0.000000,-0.000000)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000751,0.000086)
+ <S|| Hso(L+) ||S'> = (-0.000751,-0.000086)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.001499
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000001)(0.000625,0.000414)(0.000000,0.000000)
+ <Sz=0.00|(-0.000625,0.000414)(-0.000000,-0.000000)(0.000625,0.000414)
+ <Sz=1.00|(-0.000000,0.000000)(-0.000625,0.000414)(-0.000000,0.000001)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.001141
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000000)(0.000568,0.000058)(0.000000,0.000000)
+ <Sz=0.00|(-0.000568,0.000058)(-0.000000,-0.000000)(0.000568,0.000058)
+ <Sz=1.00|(-0.000000,0.000000)(-0.000568,0.000058)(-0.000000,0.000000)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 19/A
+ Energy GAP = 0.223645 a.u. = 6.085690 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.000163 (X 0.000097, Y 0.000001, Z -0.000131)
+   B->A: 0.000142 (X 0.000092, Y 0.000001, Z -0.000108)
+ Oscillator strength (a.u.): 0.000000
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000010i, Y 0.000083i, Z -0.057263i)
+   B->A:  (X -0.000010i, Y -0.000080i, Z 0.090598i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.697686;   B->A: 0.680795
+   ||gamma^AB||*||gamma^BA||: 0.474982
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001984,-0.000191)
+ <S|| Hso(L0) ||S'> = (0.000000,-1.145029)
+ <S|| Hso(L+) ||S'> = (-0.001984,0.000191)
+ SOCC = 1.145033
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,0.809658)(-0.001403,0.000135)(-0.000000,-0.000000)
+ <Sz=0.00|(0.001403,0.000135)(0.000000,-0.000000)(-0.001403,0.000135)
+ <Sz=1.00|(-0.000000,-0.000000)(0.001403,0.000135)(0.000000,-0.809658)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001288,-0.000227)
+ <S|| Hso(L0) ||S'> = (0.000000,0.004545)
+ <S|| Hso(L+) ||S'> = (-0.001288,0.000227)
+ SOCC = 0.004907
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.003214)(-0.000911,0.000160)(-0.000000,0.000000)
+ <Sz=0.00|(0.000911,0.000160)(0.000000,-0.000000)(-0.000911,0.000160)
+ <Sz=1.00|(-0.000000,0.000000)(0.000911,0.000160)(0.000000,0.003214)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001288,-0.000227)
+ <S|| Hso(L+) ||S'> = (-0.001288,0.000227)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.002126,0.000099)
+ <S|| Hso(L0) ||S'> = (0.000000,1.087115)
+ <S|| Hso(L+) ||S'> = (0.002126,-0.000099)
+ SOCC = 1.087119
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.768706)(0.001503,-0.000070)(0.000000,0.000000)
+ <Sz=0.00|(-0.001503,-0.000070)(-0.000000,0.000000)(0.001503,-0.000070)
+ <Sz=1.00|(0.000000,0.000000)(-0.001503,-0.000070)(-0.000000,0.768706)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.001336,0.000148)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.006428)
+ <S|| Hso(L+) ||S'> = (0.001336,-0.000148)
+ SOCC = 0.006703
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.004545)(0.000945,-0.000105)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000945,-0.000105)(-0.000000,-0.000000)(0.000945,-0.000105)
+ <Sz=1.00|(0.000000,-0.000000)(-0.000945,-0.000105)(-0.000000,-0.004545)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.001336,0.000148)
+ <S|| Hso(L+) ||S'> = (0.001336,-0.000148)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 1.116076
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.789182)(-0.001453,0.000103)(-0.000000,-0.000000)
+ <Sz=0.00|(0.001453,0.000103)(-0.000000,-0.000000)(-0.001453,0.000103)
+ <Sz=1.00|(0.000000,-0.000000)(0.001453,0.000103)(-0.000000,-0.789182)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.005798
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.003880)(-0.000928,0.000133)(-0.000000,0.000000)
+ <Sz=0.00|(0.000928,0.000133)(-0.000000,0.000000)(-0.000928,0.000133)
+ <Sz=1.00|(0.000000,0.000000)(0.000928,0.000133)(-0.000000,0.003880)
+ ______________________________________________________________
+
+ ------------------------------------------------------------------------------
+ State A: eomsf_mp2: 1/A
+ State B: eomsf_mp2: 20/A
+ Energy GAP = 0.233732 a.u. = 6.360169 eV
+ Transition dipole moment (a.u.):
+   A->B: 0.165431 (X 0.165431, Y 0.000000, Z -0.000370)
+   B->A: 0.152263 (X 0.152263, Y 0.000000, Z -0.000355)
+ Oscillator strength (a.u.): 0.003925
+ Transition angular momentum against gauge origin (a.u.):
+   A->B:  (X 0.000038i, Y 0.001325i, Z 0.000065i)
+   B->A:  (X -0.000017i, Y -0.000820i, Z -0.000023i)
+ Norm of one-particle transition density matrix:
+   A->B: 0.640191;   B->A: 0.640697
+   ||gamma^AB||*||gamma^BA||: 0.410169
+
+ ______________________________________________________________
+ A(Ket)->B(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.002245,0.000102)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000425)
+ <S|| Hso(L+) ||S'> = (-0.002245,-0.000102)
+ SOCC = 0.003207
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000301)(-0.001588,-0.000072)(-0.000000,0.000000)
+ <Sz=0.00|(0.001588,-0.000072)(0.000000,0.000000)(-0.001588,-0.000072)
+ <Sz=1.00|(-0.000000,0.000000)(0.001588,-0.000072)(0.000000,0.000301)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001326,0.000022)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000015)
+ <S|| Hso(L+) ||S'> = (-0.001326,-0.000022)
+ SOCC = 0.001876
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(0.000000,-0.000011)(-0.000938,-0.000015)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000938,-0.000015)(0.000000,0.000000)(-0.000938,-0.000015)
+ <Sz=1.00|(-0.000000,0.000000)(0.000938,-0.000015)(0.000000,0.000011)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.001326,0.000022)
+ <S|| Hso(L+) ||S'> = (-0.001326,-0.000022)
+ ______________________________________________________________
+ B(Ket)->A(Bra) transition SO matrices
+Full 2e SOC is not implemented withing libqints. 
+I will do mean-field SOC with libqints, which is usually as good as full 2e SOC
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Bra state:  Computed S^2 = 2.000000 will be treated as 2.000000 Sz = -1.000000
+ Clebsh-Gordan coefficient: <1.000,-1.000;1.000,0.000|1.000,-1.000> = -0.707
+ _________________________________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.002360,-0.000015)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000406)
+ <S|| Hso(L+) ||S'> = (0.002360,0.000015)
+ SOCC = 0.003363
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000287)(0.001669,0.000011)(0.000000,-0.000000)
+ <Sz=0.00|(-0.001669,0.000011)(-0.000000,-0.000000)(0.001669,0.000011)
+ <Sz=1.00|(0.000000,-0.000000)(-0.001669,0.000011)(-0.000000,-0.000287)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.001381,0.000020)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000011)
+ <S|| Hso(L+) ||S'> = (0.001381,-0.000020)
+ SOCC = 0.001953
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,0.000008)(0.000976,-0.000014)(0.000000,-0.000000)
+ <Sz=0.00|(-0.000976,-0.000014)(-0.000000,0.000000)(0.000976,-0.000014)
+ <Sz=1.00|(0.000000,0.000000)(-0.000976,-0.000014)(-0.000000,-0.000008)
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.001381,0.000020)
+ <S|| Hso(L+) ||S'> = (0.001381,-0.000020)
+ ______________________________________________________________
+   Arithmetically averaged transition SO matrices
+   (The phases shown, Ket and Bra assingment are from A(Ket)->B(Bra))
+ _________________________________________________
+ One-electron SO (cm-1)
+ SOCC = 0.003284
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000294)(-0.001628,-0.000042)(-0.000000,0.000000)
+ <Sz=0.00|(0.001628,-0.000042)(-0.000000,0.000000)(-0.001628,-0.000042)
+ <Sz=1.00|(0.000000,0.000000)(0.001628,-0.000042)(-0.000000,0.000294)
+ _________________________________________________
+ Mean-field SO (cm-1)
+ SOCC = 0.001914
+ Actual matrix elements:
+       |Sz=-1.00>           |Sz=0.00>           |Sz=1.00>
+ <Sz=-1.00|(-0.000000,-0.000009)(-0.000957,-0.000001)(-0.000000,-0.000000)
+ <Sz=0.00|(0.000957,-0.000001)(-0.000000,0.000000)(-0.000957,-0.000001)
+ <Sz=1.00|(0.000000,0.000000)(0.000957,-0.000001)(-0.000000,0.000009)
+ ______________________________________________________________
+
+
+ All requested transition properties have been computed
+
+ Transition Properties:   CPU 6359.62 s  wall 6424.80 s
+
+ Total ccman2 time:   CPU 18303.15 s  wall 18393.00 s
+
+ 
+ --------------------------------------------------------------
+ 
+                    Orbital Energies (a.u.)
+ --------------------------------------------------------------
+ 
+ Alpha MOs
+ -- Occupied --
+-11.0404 -11.0404 -11.0404 -11.0404 -11.0404 -11.0403 -11.0401 -11.0401
+-11.0400 -11.0400 -11.0307 -11.0307 -11.0306 -11.0306 -11.0294 -11.0294
+-11.0294 -11.0294 -11.0273 -11.0273 -11.0272 -11.0272 -11.0264 -11.0264
+-11.0263 -11.0263  -1.1342  -1.1238  -1.1007  -1.0708  -1.0343  -1.0145
+ -1.0001  -0.9829  -0.9784  -0.9481  -0.9435  -0.9136  -0.8616  -0.8603
+ -0.7996  -0.7859  -0.7675  -0.7628  -0.7524  -0.7460  -0.7403  -0.6738
+ -0.6606  -0.6470  -0.6308  -0.6161  -0.6120  -0.5778  -0.5768  -0.5744
+ -0.5719  -0.5602  -0.5335  -0.5273  -0.5263  -0.5249  -0.5212  -0.5180
+ -0.5127  -0.4958  -0.4908  -0.4843  -0.4769  -0.4627  -0.4515  -0.4306
+ -0.4263  -0.4184  -0.4085  -0.4033  -0.3976  -0.3729  -0.3640  -0.3483
+ -0.3128  -0.2932  -0.2630  -0.2434  -0.2044  -0.1204
+ -- Virtual --
+  0.0895   0.1786   0.2249   0.2459   0.2825   0.3055   0.3489   0.3706
+  0.3807   0.4462   0.5126   0.5587   0.5651   0.5871   0.5930   0.5945
+  0.5981   0.6349   0.6358   0.6430   0.6522   0.6601   0.6718   0.6734
+  0.6830   0.7022   0.7138   0.7177   0.7182   0.7260   0.7275   0.7422
+  0.7488   0.7550   0.7809   0.7835   0.8069   0.8074   0.8483   0.8491
+  0.8630   0.8779   0.9030   0.9101   0.9137   0.9410   0.9675   0.9780
+  0.9884   0.9935   1.0135   1.0153   1.0423   1.0657   1.1024   1.1277
+  1.1701   1.1794   1.1942   1.2073
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)
+  ----------------------------------------
+      1 C                    -0.005890
+      2 C                    -0.053463
+      3 H                     0.059224
+      4 C                    -0.053463
+      5 H                     0.059224
+      6 C                    -0.003886
+      7 C                    -0.058673
+      8 H                     0.059876
+      9 C                    -0.001295
+     10 C                    -0.060762
+     11 H                     0.062102
+     12 C                    -0.063797
+     13 H                     0.063619
+     14 C                    -0.063797
+     15 H                     0.063619
+     16 C                    -0.060762
+     17 H                     0.062101
+     18 C                    -0.001295
+     19 C                    -0.058673
+     20 H                     0.059876
+     21 C                    -0.003885
+     22 C                    -0.003886
+     23 C                    -0.058673
+     24 H                     0.059876
+     25 C                    -0.001295
+     26 C                    -0.060763
+     27 H                     0.062102
+     28 C                    -0.063797
+     29 H                     0.063619
+     30 C                    -0.063797
+     31 H                     0.063619
+     32 C                    -0.060762
+     33 H                     0.062101
+     34 C                    -0.001295
+     35 C                    -0.058673
+     36 H                     0.059876
+     37 C                    -0.003885
+     38 C                    -0.053463
+     39 H                     0.059224
+     40 C                    -0.005886
+     41 C                    -0.053463
+     42 H                     0.059224
+  ----------------------------------------
+  Sum of atomic charges =     0.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                -0.0000
+    Dipole Moment (Debye)
+         X      -0.0000      Y       0.0000      Z       0.0031
+       Tot       0.0031
+    Quadrupole Moments (Debye-Ang)
+        XX    -128.5344     XY      -0.0001     YY    -127.7300
+        XZ      -0.0065     YZ      -0.0009     ZZ    -142.8674
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0008    XXY      -0.0002    XYY       0.0001
+       YYY      -0.0001    XXZ       0.3755    XYZ       0.1401
+       YYZ      -0.0010    XZZ      -0.0004    YZZ      -0.0001
+       ZZZ      -0.0057
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX  -16881.8133   XXXY      -0.0078   XXYY   -3035.9091
+      XYYY      -0.0005   YYYY   -1251.1458   XXXZ      -0.6290
+      XXYZ      -0.2086   XYYZ      -0.0015   YYYZ       0.0021
+      XXZZ   -3170.1953   XYZZ       0.0015   YYZZ    -257.4383
+      XZZZ       0.0017   YZZZ      -0.0000   ZZZZ    -116.0235
+ -----------------------------------------------------------------
+ Total job time:  18424.02s(wall), 18332.13s(cpu) 
+ Sat Jan 27 18:01:26 2024
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+
