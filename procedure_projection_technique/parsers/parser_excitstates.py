@@ -412,6 +412,8 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
 
     for active_orbital_index in range(0, len(alpha_config)):
         if alpha_config[active_orbital_index] != beta_config[active_orbital_index]:
+            print(initial_active_orbitals)
+            exit()
             new_orbital = initial_active_orbitals[active_orbital_index]
             new_orbital = int(new_orbital)
             orbital_list.append(new_orbital)

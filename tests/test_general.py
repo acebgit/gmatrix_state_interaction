@@ -12,8 +12,8 @@ from procedure_projection_technique.parsers.parser_plots import sos_analysis_and
 #####################################
 #            INPUT VALUES
 #####################################
-ras_input = '../\
-molecules/david_molecules/anthracene_4_4_50states_triplets.out'
+ras_input = '../molecules/\
+triangulenes/triplet_3Tm_ccpVTZ_8_8/triplet_3Tm_ccpVTZ_8_8.out'
 # --------------------------------------------------------
 g_calculation = 1
 ppm = 1
