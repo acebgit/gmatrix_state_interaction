@@ -3,9 +3,9 @@
 #####################################
 __author__ = 'Antonio Cebreiro-Gallardo'
 
-from procedure_projection_technique.parsers.parser_gtensor import gfactor_presentation
-from procedure_projection_technique.parsers.parser_excitstates import get_excited_states_analysis
-from procedure_projection_technique.parsers.parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcalculation_gestimation
+from projectmethod.parsers.parser_gtensor import gfactor_presentation
+from projectmethod.parsers.parser_excitstates import get_excited_states_analysis
+from projectmethod.parsers.parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcalculation_gestimation
 
 # from_gvalue_to_shift([1.9692187, 1.9862375, 1.9977903])
 # exit()

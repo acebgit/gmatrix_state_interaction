@@ -1,7 +1,7 @@
 #####################################
 #          MODULES SELECTION
 #####################################
-from procedure_projection_technique.parsers.parser_mixing_inputs import gfactor_presentation_mixinputs, sos_analysis_and_plot_mixinputs, \
+from projectmethod.parsers.parser_mixing_inputs import gfactor_presentation_mixinputs, sos_analysis_and_plot_mixinputs, \
     excited_states_analysis_mixinputs
 
 #####################################
