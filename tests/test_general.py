@@ -12,33 +12,38 @@ from projectmethod.parsers.parser_plots import sos_analysis_and_plot, gfactor_al
 #####################################
 #            INPUT VALUES
 #####################################
-ras_input = '../molecules/\
+ras_input = 'molecules/\
 triangulenes/triplet_3Tm_ccpVTZ_8_8/triplet_3Tm_ccpVTZ_8_8.out'
-# --------------------------------------------------------
-g_calculation = 1
-ppm = 1
+
+######## G-TENSOR CALCULATION ########
+g_calculation = 0
+ppm = 1 # 0: ppt; 1: ppm
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 states_ras = [1, 2, 3, 4, 5]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 #  [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
-#  --------------------------------------------------------
+
+######## EXCITED STATES ANALYSIS ########
 excitanalysis = 1
-gestimation = 0
-excitanalysis_gvalue_cut = 0
-excitanalysis_config_cut = 0.9
-excitanalysis_soc_cut = 0
-excitanalysis_angmoment_cut = 0
-#  --------------------------------------------------------
-sos_analysis = 0
+excitanalysis_config_cut = 1 # cut-off for configurations amplitude (% of maximum amplitude)
+excitanalysis_soc_cut = 0 # cut-off for soccs (cm-1)
+excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (cm-1)
+
+######## EXCITED STATES ANALYSIS: G-TENSOR FOR EACH STATE ########
+excitanalysis_gvalue_cut = 0.8 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum amplitude)
+gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
+
+######## SOS PLOTS ########
+sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
+gestimation_comparison = 0 # 1: comparison between g-shift calculated and estimated
+
 #  --------------------------------------------------------
 gfactor_excited_states = 0
-#  --------------------------------------------------------
-gestimation_comparison = 0
 
-###########################################
-#      G-VALUE AND OTHER FUNCTIONS
-###########################################
+########################################
+#      FUNCTIONS CALLED 
+########################################
 if g_calculation == 1:
     gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
 

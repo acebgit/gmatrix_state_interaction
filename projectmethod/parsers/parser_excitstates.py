@@ -5,6 +5,8 @@
 __author__ = 'Antonio Cebreiro-Gallardo'
 
 import numpy as np
+import matplotlib
+matplotlib.use('TkAgg') # To be used in visualcode
 import matplotlib.pyplot as plt
 from scipy import constants
 import pandas as pd
@@ -215,7 +217,7 @@ def get_ras_spaces(qchem_file):
         data = file.readlines()
 
     ras_act = 0
-    word_search = ['RAS_ACT  ']
+    word_search = ['RAS_ACT ']
     for line in data:
         if any(i in line for i in word_search):
             line = line.split()
@@ -412,8 +414,6 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
 
     for active_orbital_index in range(0, len(alpha_config)):
         if alpha_config[active_orbital_index] != beta_config[active_orbital_index]:
-            print(initial_active_orbitals)
-            exit()
             new_orbital = initial_active_orbitals[active_orbital_index]
             new_orbital = int(new_orbital)
             orbital_list.append(new_orbital)
@@ -781,8 +781,8 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         state_index = states_ras.index(state)
 
         symmetry = ordered_state_symmetries[state-1]
-        hole = np.around(float(hole_contributions[state_index]), 2)
-        part = np.around(float(part_contributions[state_index]), 2)
+        hole = np.around(float(hole_contributions[state_index, 0]), 2)
+        part = np.around(float(part_contributions[state_index, 0]), 2)
         excit_energy = np.round(float(excitation_energies_ras[state_index]), 3)
         soc = np.round(float(socc_values[state_index]), 3)
         orbital_ground_state = np.round(float(orbitmoment_max[state_index]), 3)
@@ -817,16 +817,19 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
     #                 for row in (excited_states_presentation_matrix[:,:])]))
 
-    if cut_gvalue != 0:
-        df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
-                          columns=['state', 'config', 'sym', 'hole', 'part',
-                                                 'unpairedorb', 'amplitude', 'e', 'socc',
-                                                 'lk', 's2', 'gxx', 'gyy', 'gzz'])
+    if excited_states_presentation_list: 
+        if cut_gvalue != 0:
+            df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
+                            columns=['state', 'config', 'sym', 'hole', 'part',
+                                                    'unpairedorb', 'amplitude', 'e', 'socc',
+                                                    'lk', 's2', 'gxx', 'gyy', 'gzz'])
+        else:
+            df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
+                            columns=['state', 'config', 'sym', 'hole', 'part',
+                                    'unpairedorb', 'amplitude', 'e', 'socc',
+                                    'lk', 's2'])
     else:
-        df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
-                          columns=['state', 'config', 'sym', 'hole', 'part',
-                                   'unpairedorb', 'amplitude', 'e', 'socc',
-                                   'lk', 's2'])
+        raise ValueError("The list is empty: no excited states with the features selected")
 
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
