@@ -697,7 +697,7 @@ def gshift_estimation_loop(nstates, orbit_moments, soccs, energies, ppm):
 
 
 def get_excited_states_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_soc,
-                                cut_ang, cut_gvalue, ppms, estimation, plots, save_pict):
+                                cut_ang, plots, save_pict):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
     of the 1st configuration that need to have the other configurations to be shown in each state.
@@ -709,18 +709,6 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         ener_plot = excit_matrix[1:, 5]
         orbit_plot = excit_matrix[1:, 8]
         soc_plot = excit_matrix[1:, 7]
-
-        if cut_gvalue != 0:
-            g_plot = []
-            for i in range(1, len(excit_matrix)):
-                xx_g = excit_matrix[i, 10]
-                yy_g = excit_matrix[i, 11]
-                zz_g = excit_matrix[i, 12]
-                g_comparison = [abs(xx_g), abs(yy_g), abs(zz_g)]
-                g_comparison.sort(reverse=True)
-                g_plot.append(g_comparison[0])
-            get_bar_chart(file_string[:-4], states_plot, g_plot, 'Electronic State',
-                          r'$\mathregular{\Delta g_{xx}}$', 'All variables analysis', save_pict)
 
         get_bar_chart(file_string[:-4], states_plot, ener_plot, 'Electronic State',
                       'Excitation energy (eV)', 'energ_analysis', save_pict)
@@ -743,34 +731,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, states_ras)
     elec_alpha, elec_beta = get_alpha_beta(file)
     configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
-
-    # Forming different list depending on if g-shift is calculated or not
-    gxx_list = []
-    gyy_list = []
-    gzz_list = []
-
-    cut_gxx = 0
-    cut_gyy = 0
-    cut_gzz = 0
-
-    # excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole',
-    #                                      'Part', 'Unpaired orb.', 'Amplitude', 'ΔE (eV)', 'SOCC', 'Máx Lk', 'S^2']]
     excited_states_presentation_list = []
-
-    if cut_gvalue != 0:
-        # excited_states_presentation_list = [['State', 'Config.', 'Sym.', 'Hole', 'Part',
-        #                                      'Unpaired orb.', 'Amplitude', 'ΔE (eV)', 'SOCC',
-        #                                      'Máx Lk', 'S^2', 'gxx', 'gyy', 'gzz']]
-        if estimation == 1:
-            gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values,
-                                                                  excitation_energies_ras, ppms)
-        else:
-            gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
-
-        cut_gxx = cut_gvalue * abs(max(gxx_list, key=abs))
-        cut_gyy = cut_gvalue * abs(max(gyy_list, key=abs))
-        cut_gzz = cut_gvalue * abs(max(gzz_list, key=abs))
-        # [print(i) for i in gxx_list]
 
     # For the list with the data for all the configurations
     states_list = []
@@ -791,21 +752,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         orbital = configuration_orbitals[i]["SOMO orbitals"]
         amplitude = np.round(configuration_amplitudes[i]["amplitude"], 2)
 
-        if cut_gvalue != 0:
-            g_xx = gxx_list[state_index]
-            g_yy = gyy_list[state_index]
-            g_zz = gzz_list[state_index]
-
-            if abs(g_xx) >= cut_gxx or abs(g_yy) >= cut_gyy or abs(g_zz) >= cut_gzz:
-                excited_states_presentation_list.append([state, configuration, symmetry,
-                                                         hole, part, orbital, amplitude, excit_energy, soc,
-                                                         orbital_ground_state, s2, np.round(g_xx, 3),
-                                                         np.round(g_yy, 3), np.round(g_zz, 3)])
-                final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
-                states_list.append(state)
-
-        else:
-            if abs(orbital_ground_state) >= cut_ang and abs(soc) >= cut_soc:
+        if abs(orbital_ground_state) >= cut_ang and abs(soc) >= cut_soc:
                 excited_states_presentation_list.append([state, configuration, symmetry,
                                                          hole, part, orbital, amplitude, excit_energy, soc,
                                                          orbital_ground_state, s2])
@@ -818,13 +765,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     #                 for row in (excited_states_presentation_matrix[:,:])]))
 
     if excited_states_presentation_list: 
-        if cut_gvalue != 0:
-            df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
-                            columns=['state', 'config', 'sym', 'hole', 'part',
-                                                    'unpairedorb', 'amplitude', 'e', 'socc',
-                                                    'lk', 's2', 'gxx', 'gyy', 'gzz'])
-        else:
-            df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
+        df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
                             columns=['state', 'config', 'sym', 'hole', 'part',
                                     'unpairedorb', 'amplitude', 'e', 'socc',
                                     'lk', 's2'])
@@ -839,9 +780,6 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     print(" EXCITED STATES ANALYSIS")
     print("------------------------")
     print('Configurations cut-off:', cut_off)
-    print('g-shift cut-off:', np.round(cut_gxx, 3), np.round(cut_gyy, 3), np.round(cut_gzz, 3))
-    # print('\n'.join(''.join('{:^10}'.format(item) for item in row)
-    #                 for row in excited_states_presentation_matrix[:, :]))
     print(df)
     count_singlet_triplets(states_ras, s2_list)
     print(" ")
@@ -861,3 +799,77 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
 
     if plots == 1:
         excited_states_plots(excited_states_presentation_matrix, save_pict)
+
+
+def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_gvalue, ppms, estimation):
+    """
+    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
+    of the 1st configuration that need to have the other configurations to be shown in each state.
+    :param: file_ms_notnull, cutoff
+    :return: excit_matrix
+    """
+    file_string = file
+
+    # Taking all the data from all the states
+    totalstates = get_number_of_states(file)
+    states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selected)
+    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
+    excitation_energies_ras = [(i - excitation_energies_ras[0])*27.211399 for i in excitation_energies_ras]
+    s2_list = s2_from_file(file, states_ras)
+    socc_values = get_groundst_socc_values(file, totalstates, states_ras)
+    orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, states_ras)
+    configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
+
+    # Forming different list depending on if g-shift is calculated or not
+    gxx_list = []
+    gyy_list = []
+    gzz_list = []
+    presentation_list = []
+    if estimation == 1:
+        gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values,
+                                                                excitation_energies_ras, ppms)
+    else:
+        gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
+
+    cut_gxx = cut_gvalue * abs(max(gxx_list, key=abs))
+    cut_gyy = cut_gvalue * abs(max(gyy_list, key=abs))
+    cut_gzz = cut_gvalue * abs(max(gzz_list, key=abs))
+
+    # For the list with the data for all the configurations
+    states_list = []
+    for i in range(0, len(configuration_orbitals)):
+        state = (configuration_orbitals[i]["State"])
+        configuration = (configuration_orbitals[i]["Configuration"])
+        state_index = states_ras.index(state)
+        orbital = (configuration_orbitals[i]["SOMO orbitals"])
+
+        g_xx = gxx_list[state_index]
+        g_yy = gyy_list[state_index]
+        g_zz = gzz_list[state_index]
+        
+        if state == 1:
+            presentation_list.append([state, configuration, orbital, "--", "--", "--"])
+            states_list.append(state)
+        elif abs(g_xx) >= cut_gxx or abs(g_yy) >= cut_gyy or abs(g_zz) >= cut_gzz:
+            presentation_list.append([str(state), str(configuration), str(orbital), np.round(g_xx, 3), np.round(g_yy, 3), np.round(g_zz, 3)])
+            states_list.append(state)
+    presentation_matrix = np.array(presentation_list)
+
+    print("----------------------")
+    print(" G-TENSOR ANALYSIS")
+    print("----------------------")
+    print('g-shift cut-off:', np.round(cut_gxx, 3), np.round(cut_gyy, 3), np.round(cut_gzz, 3))
+    print(" ")
+    if presentation_list: 
+        df = pd.DataFrame(presentation_matrix, index=states_list,
+                        columns=['state', 'config.', 'unpaired orb', 'gxx', 'gyy', 'gzz'])
+        print(df)
+        print(" ")
+        print('g sum: ',
+        np.round(np.sum(presentation_matrix[1:, 3].astype(float)), 3),
+        np.round(np.sum(presentation_matrix[1:, 4].astype(float)), 3),
+        np.round(np.sum(presentation_matrix[1:, 5].astype(float)), 3))
+        count_singlet_triplets(states_ras, s2_list)
+        print(" ")
+    else:
+        print("The list is empty: no excited states with the features selected")

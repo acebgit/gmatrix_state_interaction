@@ -1,10 +1,10 @@
+__author__ = 'Antonio Cebreiro-Gallardo'
+
 #####################################
 #          MODULES SELECTION
 #####################################
-__author__ = 'Antonio Cebreiro-Gallardo'
-
 from projectmethod.parsers.parser_gtensor import gfactor_presentation
-from projectmethod.parsers.parser_excitstates import get_excited_states_analysis
+from projectmethod.parsers.parser_excitstates import get_excited_states_analysis, get_gtensor_analysis
 from projectmethod.parsers.parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcalculation_gestimation
 
 # from_gvalue_to_shift([1.9692187, 1.9862375, 1.9977903])
@@ -12,14 +12,14 @@ from projectmethod.parsers.parser_plots import sos_analysis_and_plot, gfactor_al
 #####################################
 #            INPUT VALUES
 #####################################
-ras_input = 'molecules/\
-triangulenes/triplet_3Tm_ccpVTZ_8_8/triplet_3Tm_ccpVTZ_8_8.out'
+ras_input = '\
+molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_triplets/C64H28B4_8_8_triplets.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 0
+g_calculation = 1
 ppm = 1 # 0: ppt; 1: ppm
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1, 2, 3, 4, 5]
+state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+states_ras = [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 #  [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
@@ -30,13 +30,13 @@ excitanalysis_config_cut = 1 # cut-off for configurations amplitude (% of maximu
 excitanalysis_soc_cut = 0 # cut-off for soccs (cm-1)
 excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (cm-1)
 
-######## EXCITED STATES ANALYSIS: G-TENSOR FOR EACH STATE ########
-excitanalysis_gvalue_cut = 0.8 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum amplitude)
+######## G-TENSOR ANALYSIS ########
+excitanalysis_gvalue_cut = 0.2 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
 gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## SOS PLOTS ########
-sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
-gestimation_comparison = 0 # 1: comparison between g-shift calculated and estimated
+sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
+gestimation_comparison = 0 # 1: SOS comparison between g-shift calculated and estimated
 
 #  --------------------------------------------------------
 gfactor_excited_states = 0
@@ -49,8 +49,11 @@ if g_calculation == 1:
 
 if excitanalysis == 1:
     get_excited_states_analysis(ras_input, state_selection, states_ras, symmetry_selection, excitanalysis_config_cut,
-                                excitanalysis_soc_cut, excitanalysis_angmoment_cut, excitanalysis_gvalue_cut, ppm,
-                                gestimation, plots=0, save_pict=0)
+                                excitanalysis_soc_cut, excitanalysis_angmoment_cut, plots=0, save_pict=0)
+
+if excitanalysis_gvalue_cut != 0:   
+    get_gtensor_analysis(ras_input, state_selection, states_ras, symmetry_selection, excitanalysis_config_cut, 
+                     excitanalysis_gvalue_cut, ppm, gestimation)
 
 if sos_analysis == 1:
     sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, gestimation, order_symmetry=1, save_option=0)
