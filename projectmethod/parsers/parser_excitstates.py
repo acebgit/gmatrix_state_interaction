@@ -796,7 +796,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
     print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
           final_active_orbitals)
-
+    print(" ")
     if plots == 1:
         excited_states_plots(excited_states_presentation_matrix, save_pict)
 
@@ -813,6 +813,7 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
     # Taking all the data from all the states
     totalstates = get_number_of_states(file)
     states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selected)
+    state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
     excitation_energies_ras = [(i - excitation_energies_ras[0])*27.211399 for i in excitation_energies_ras]
     s2_list = s2_from_file(file, states_ras)
@@ -840,6 +841,7 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
     for i in range(0, len(configuration_orbitals)):
         state = (configuration_orbitals[i]["State"])
         configuration = (configuration_orbitals[i]["Configuration"])
+        symmetry = ordered_state_symmetries[state-1]
         state_index = states_ras.index(state)
         orbital = (configuration_orbitals[i]["SOMO orbitals"])
 
@@ -848,10 +850,10 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
         g_zz = gzz_list[state_index]
         
         if state == 1:
-            presentation_list.append([state, configuration, orbital, "--", "--", "--"])
+            presentation_list.append([state, configuration, symmetry, orbital, "--", "--", "--"])
             states_list.append(state)
         elif abs(g_xx) >= cut_gxx or abs(g_yy) >= cut_gyy or abs(g_zz) >= cut_gzz:
-            presentation_list.append([str(state), str(configuration), str(orbital), np.round(g_xx, 3), np.round(g_yy, 3), np.round(g_zz, 3)])
+            presentation_list.append([str(state), str(configuration), symmetry, str(orbital), np.round(g_xx, 3), np.round(g_yy, 3), np.round(g_zz, 3)])
             states_list.append(state)
     presentation_matrix = np.array(presentation_list)
 
@@ -862,13 +864,13 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
     print(" ")
     if presentation_list: 
         df = pd.DataFrame(presentation_matrix, index=states_list,
-                        columns=['state', 'config.', 'unpaired orb', 'gxx', 'gyy', 'gzz'])
+                        columns=['state', 'config.', 'symmetry', 'unpaired orb', 'gxx', 'gyy', 'gzz'])
         print(df)
         print(" ")
         print('g sum: ',
-        np.round(np.sum(presentation_matrix[1:, 3].astype(float)), 3),
         np.round(np.sum(presentation_matrix[1:, 4].astype(float)), 3),
-        np.round(np.sum(presentation_matrix[1:, 5].astype(float)), 3))
+        np.round(np.sum(presentation_matrix[1:, 5].astype(float)), 3),
+        np.round(np.sum(presentation_matrix[1:, 6].astype(float)), 3))
         count_singlet_triplets(states_ras, s2_list)
         print(" ")
     else:

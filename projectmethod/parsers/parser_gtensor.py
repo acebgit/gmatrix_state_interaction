@@ -669,6 +669,10 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     :return: g_shift
     """
 
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                 for row in np.round((standard_spin_matrix[:,:,0]))]))
+    # exit()
+
     def j_matrix_formation(spin, orbital, list_sz, sz_ground):
         """
         Get the total angular momentum matrix from the orbitals and spin angular momentums. Then, expand it to the
@@ -744,6 +748,10 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     # 8) from g_matrix_triangular to g-shifts
     upper_g_matrix = np.matmul(g_matrix_triangular, np.transpose(g_matrix_triangular))
     upper_g_matrix_eigenvalues, rotation_g_matrix, upper_g_matrix_diagonal = diagonalization(upper_g_matrix)
+    # print('Lande factor: ', lande_factor)
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #             for row in np.round((standard_spin_matrix[:,:,0]), 10)]))
+    # exit()
 
     g_shifts = np.zeros(3, dtype=complex)
     for i in range(0, 3):
@@ -843,6 +851,6 @@ def from_gvalue_to_shift(lista):
     """
     g_shift = []
     for i in range(0, len(lista)):
-        value = (lista[i] - lande_factor) * 10 ** 3
+        value = (lista[i] - lande_factor) * 10**3
         g_shift.append(value)
     print(np.round(g_shift, 3))
