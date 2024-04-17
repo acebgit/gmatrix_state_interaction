@@ -801,7 +801,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         excited_states_plots(excited_states_presentation_matrix, save_pict)
 
 
-def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_gvalue, ppms, estimation):
+def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, cut_gvalue, ppms, estimation, cut_off):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
     of the 1st configuration that need to have the other configurations to be shown in each state.

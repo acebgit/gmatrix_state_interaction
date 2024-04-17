@@ -8,34 +8,31 @@ from projectmethod.parsers.parser_excitstates import get_excited_states_analysis
 from projectmethod.parsers.parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcalculation_gestimation
 # import cProfile
 
-from_gvalue_to_shift([2.0932, 2.1380])
-from_gvalue_to_shift([2.0910, 2.1410])
-exit()
 #####################################
 #            INPUT VALUES
 #####################################
 # ras_input='molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_singletref_concat_triplets/C74H32B4_8_8_singletref_concat_triplets.out'
 ras_input = '\
-molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_singletref_concat_triplets/C54H24B4_8_8_singletref_concat_triplets.out' 
+molecules/roberto_molecules_2/C94H40B4/C94H40B4_4_4_singletref_triplets.out' 
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 0
+g_calculation = 1
 ppm = 1 # 0: ppt; 1: ppm
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1,2,3,4,5]
+states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 #  [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
+
+######## G-TENSOR ANALYSIS ########
+excitanalysis_gvalue_cut = 0.5 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
+gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## EXCITED STATES ANALYSIS ########
 excitanalysis = 1
 excitanalysis_config_cut = 1 # cut-off for configurations amplitude (% of maximum amplitude)
 excitanalysis_soc_cut = 0 # cut-off for soccs (cm-1)
 excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (cm-1)
-
-######## G-TENSOR ANALYSIS ########
-excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
-gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## SOS PLOTS ########
 sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
@@ -53,13 +50,12 @@ gfactor_excited_states = 0
 if g_calculation == 1:
     gfactor_presentation(ras_input, states_ras, state_selection, symmetry_selection, soc_options, ppm)
 
+if excitanalysis_gvalue_cut != 0:   
+    get_gtensor_analysis(ras_input, state_selection, states_ras, symmetry_selection, excitanalysis_gvalue_cut, ppm, gestimation, cut_off=0.5)
+    
 if excitanalysis == 1:
     get_excited_states_analysis(ras_input, state_selection, states_ras, symmetry_selection, excitanalysis_config_cut,
                                 excitanalysis_soc_cut, excitanalysis_angmoment_cut, plots=0, save_pict=0)
-
-if excitanalysis_gvalue_cut != 0:   
-    get_gtensor_analysis(ras_input, state_selection, states_ras, symmetry_selection, excitanalysis_config_cut, 
-                     excitanalysis_gvalue_cut, ppm, gestimation)
 
 if sos_analysis == 1:
     sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, gestimation, order_symmetry=1, save_option=0)
