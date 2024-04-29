@@ -1,12 +1,11 @@
 import json
 import numpy as np
-import sys
 from scipy import constants
 from projectmethod.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
     angular_matrices_obtention, g_factor_calculation
 
-file = '../../\
-molecules/tddft_outs/triplet_ref/anthracene_opt_tddft_tripletref_allmultip.out'
+file = '\
+molecules/triangulenes/3Tm_triplet_ccpVDZ_tddft.out' 
 file = file + ".json"
 ppm = 1
 
@@ -65,8 +64,7 @@ def get_input_data(spin_state):
 
     max_multip = float(s2_to_s(max(spin_state)))
     max_multip_szlist = list(np.arange(-max_multip, max_multip + 1, 1))
-
-    s_ground = int(float(s2_to_s(spin_state[0])))
+    s_ground = float(s2_to_s(spin_state[0]))
     if s_ground == 0:
         raise ValueError("Warning! It is not allowed the calculation of the g-tensor in a singlet ground state. "
                          "Ground state corresponds to the first of the included states selected.")

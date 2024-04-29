@@ -3,11 +3,11 @@ import numpy as np
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1, 2, 3, 4, 5] # 0 is the ground state
-ground_state = 'T2'
+ground_state = '0'
 selected_multiplicity = 3
 
 file = '../../\
-molecules/tddft_outs/triplet_ref/anthracene_opt_tddft_tripletref_allmultip.out'  # str(sys.argv[1])
+molecules/triangulenes/3Tm_triplet_ccpVDZ_tddft.out'  # str(sys.argv[1])
 
 #################################
 # FUNCTIONS AND CLASSES    ######
