@@ -1,7 +1,7 @@
 __author__ = 'Antonio Cebreiro-Gallardo'
 from gtensor_doublets import *
 
-ras_input = 'example_doublets.out'  # str(sys.argv[1])
+ras_input = str(sys.argv[1])
 
 selected_states = 0  # 0: use "state_ras" ; 1: use all states_selected ; # 2: use states_selected by selected symmetry "symmetry_selection"
 states_ras = [1, 2, 3]  # States to be included when "states_option = 0"
