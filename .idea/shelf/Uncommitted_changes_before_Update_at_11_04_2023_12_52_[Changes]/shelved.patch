@@ -1,0 +1,139 @@
+Index: doublets_expansion/g_operations.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\r\n    G-TENSOR CALCULATION WITH ORBITAL AND SPIN\r\n    ANGULAR MOMENTUM AND SOC BETWEEN STATES\r\n Analysis of the excited states and print of those\r\n orbitals involved in the configurations with the\r\n highest amplitudes in the excited states\r\n\"\"\"\r\nimport numpy as np\r\nfrom numpy import linalg, sqrt\r\n\r\n\r\ndef get_Hamiltonian_construction(selected_states, eigenenergies, spin_orbit_coupling):\r\n    \"\"\"\r\n    Hamiltonian is written 'bra' in rows and 'ket' in columns,\r\n    with spin order -1/2 , +1/2.\r\n    :param: selected_states, eigenenergies, spin_orbit_coupling\r\n    :return: Hamiltonian\r\n    \"\"\"\r\n    Hamiltonian = np.zeros((len(selected_states) * 2, len(selected_states) * 2), dtype=complex)\r\n    # spin_orbit_coupling[:,:] = 0\r\n\r\n    for i in range(0, len(selected_states) * 2):\r\n        for j in range(0, len(selected_states) * 2):\r\n            if (i == j):\r\n                Hamiltonian[i, i] = eigenenergies[i // 2]\r\n            else:\r\n                Hamiltonian[i, j] = spin_orbit_coupling[i, j]\r\n\r\n    # print('Hamiltonian (SOC in cm-1, energies in a.u):')\r\n    # print('\\n'.join([''.join(['{:^20}'.format(item) for item in row])\\\r\n    #                  for row in np.round((Hamiltonian[:,:]),5)]))\r\n    # print(\" \")\r\n    # exit()\r\n\r\n    return Hamiltonian\r\n\r\n\r\ndef Hamiltonian_diagonalization(Hamiltonian):\r\n    \"\"\"\r\n    1) Hamiltonian is diagonalized\r\n    2) eigenvectors-eigenvalues are ordered by weight coefficients\r\n    3) Doublet with the lowest energy is set as the new basis (Kramer doublet)\r\n    :param: Hamiltonian\r\n    :return eigenvalues, eigenvectors, kramer_st: kramer_st is the index\r\n    of the state set as Kramer doublet * 2\r\n    \"\"\"\r\n    # def normalize_vector(vector):\r\n    #     \"\"\"\r\n    #     Normalize a complex vector\r\n    #     :param vector:\r\n    #     :return:\r\n    #     \"\"\"\r\n    #     sum_of_coefficients = 0\r\n    #     for i in range(0, len(vector)):\r\n    #         coefficient = vector.real[i]**2 + vector.imag[i]**2\r\n    #         sum_of_coefficients += coefficient\r\n    #\r\n    #     module = sqrt( sum_of_coefficients )\r\n    #     vector[:] = vector[:] / module\r\n    #     return vector, module\r\n\r\n    eigenvalues, eigenvectors = linalg.eigh(Hamiltonian)\r\n\r\n    # Reorder eigenvectors (and eigenenergies) by weight coefficients\r\n    change_order = np.zeros(len(eigenvectors), dtype=complex)\r\n    for v_1 in range(0, len(eigenvectors)):\r\n        for v_2 in range(v_1, len(eigenvectors)):\r\n\r\n            if (abs(eigenvectors[v_1, v_2]) > abs(eigenvectors[v_1, v_1])):\r\n                change_order[:] = eigenvectors[:, v_1]\r\n                eigenvectors[:, v_1] = eigenvectors[:, v_2]\r\n                eigenvectors[:, v_2] = change_order[:]\r\n\r\n                change_order.real[0] = eigenvalues[v_1]\r\n                eigenvalues[v_1] = eigenvalues[v_2]\r\n                eigenvalues[v_2] = change_order.real[0]\r\n\r\n    # Normalize the eigenvectors\r\n    # for i in range(0, len(eigenvalues)):\r\n    #     print('Before eigenvector:', eigenvectors[:, i])\r\n    #     module = sqrt(sum( ( abs(eigenvectors[:, i]) )** 2) )\r\n    #     eigenvectors[:, i] = eigenvectors[:, i] / module\r\n    #     print('After eigenvector:', eigenvectors[:, i])\r\n    #     print('module:', module)\r\n    #     print()\r\n    # print('-------------------------------------')\r\n    # for i in range(0, len(eigenvalues)):\r\n    #     eigenvectors[:, i],module = normalize_vector(eigenvectors[:,i])\r\n    #     print('eigenvalue:', eigenvalues[i])\r\n    #     print('eigenvector:', eigenvectors[:, i])\r\n    #     print('module:', module)\r\n    #     print()\r\n\r\n    # Kramer doublets selection:\r\n    minimum_energy = min(eigenvalues)\r\n    eigenvalues_list = list(eigenvalues)\r\n    kramer_st = eigenvalues_list.index(minimum_energy)\r\n\r\n    # The index of the selected state must be even since\r\n    # Kramer doublets are [kramer_st, kramer_st+1]\r\n    if (kramer_st % 2) != 0:\r\n        kramer_st = kramer_st - 1\r\n\r\n    # for i in range(0, len(eigenvalues)):\r\n    #     print('eigenvalue:', eigenvalues[i])\r\n    #     print('eigenvector:', eigenvectors[:, i])\r\n    #     print()\r\n\r\n    return eigenvalues, eigenvectors, kramer_st\r\n\r\n\r\ndef angular_matrixes_obtention(eigenvalues, eigenvectors, kramer_st, input_angular_matrix):\r\n    \"\"\"\r\n    Spin or orbital angular matrix calculation using:\r\n    1) coeff_bra, coeff_ket: coefficients of the lineal combination of non-relativistic states,\r\n    that come from Kramer doublet states eigenvectors\r\n    2) angular_value: angular momentum between states. Depending on the\r\n    column of the final matrix, it takes real (col 0), imaginary (col 1) or\r\n    both parts (col 2).\r\n\r\n    :param eigenvalues, eigenvectors, kramer_st, input_angular_matrix\r\n    :return angular_matrix: contains the spin value < B(S,Sz) | Sx | A(S',Sz') >,\r\n    meaning < B(S,Sz)| corresponds to state \"i\" (in rows) and | A(S',Sz') > to\r\n    state \"j\" (in columns)\r\n    \"\"\"\r\n    # Matrices calculation:\r\n    angular_matrix = np.zeros((3, 3), dtype=complex)\r\n\r\n    for row in range(0, 3):  # dimension x,y,z\r\n        for column in range(0, 3):  # dimension x,y,z\r\n\r\n            for bra in range(0, len(eigenvalues)):  # state <B|\r\n                for ket in range(0, len(eigenvalues)):  # state |A>\r\n\r\n                    # coeff_ket for 1st and 2nd column (\"x\", \"y\" dir)\r\n                    # coeff_ket_2 for 3rd column (\"z\" direction)\r\n                    coeff_bra = np.conj(eigenvectors[bra, kramer_st + 1])\r\n                    coeff_ket = (eigenvectors[ket, kramer_st])\r\n                    coeff_ket_2 = (eigenvectors[ket, kramer_st + 1])\r\n\r\n                    angular_value = (input_angular_matrix[bra, ket, row])\r\n\r\n                    if column == 0:\r\n                        element = coeff_bra * coeff_ket * angular_value\r\n                        angular_matrix[row, column] += 2 * element.real\r\n\r\n                    elif column == 1:\r\n                        element = coeff_bra * coeff_ket * angular_value\r\n                        angular_matrix[row, column] += 2 * element.imag\r\n\r\n                    elif column == 2:\r\n                        element = coeff_bra * coeff_ket_2 * angular_value\r\n                        angular_matrix[row, column] += 2 * element\r\n\r\n    # print('SIGMA matrix with all spin angular momentums:')\r\n    # print('\\n'.join([''.join(['{:^15}'.format(item) for item in row])\\\r\n    #                  for row in np.round((angular_matrix[:,:]),8)]))\r\n    # print(\" \")\r\n\r\n    return angular_matrix\r\n\r\n\r\ndef g_factor_calculation(lambda_matrix, sigma_matrix):\r\n    \"\"\"\r\n    Calculation of the G-tensor with lambda and sigma matrices. Then, g-factors\r\n    are calculated as square roots of the eigenvalues of the G-tensor.\r\n    \"\"\"\r\n    # G-tensor matrix obtention:\r\n    lande_factor = 2.002319304363\r\n\r\n    sigma_plus_lambda = lande_factor * sigma_matrix + lambda_matrix\r\n\r\n    G_matrix = np.matmul((sigma_plus_lambda), np.transpose(sigma_plus_lambda))\r\n\r\n    # Diagonalize and reorder by weight coefficients:\r\n    G_matrix_diagonal, rotation_matrix = linalg.eigh(G_matrix)\r\n\r\n    change_order = np.zeros(len(G_matrix_diagonal), dtype=complex)\r\n    for i in range(0, 3):\r\n        for j in range(i, 3):\r\n            if (abs(rotation_matrix[i, j]) > abs(rotation_matrix[i, i])):\r\n                change_order[:] = rotation_matrix[:, j]\r\n                rotation_matrix[:, j] = rotation_matrix[:, i]\r\n                rotation_matrix[:, i] = change_order[:]\r\n\r\n                change_order.real[0] = G_matrix_diagonal[j]\r\n                G_matrix_diagonal[j] = G_matrix_diagonal[i]\r\n                G_matrix_diagonal[i] = change_order.real[0]\r\n\r\n    # Obtain the g-factor: g = O^(1r) * X * sqrt(Gdiag) * O\r\n    # X_mat = np.identity(3)\r\n    # g_value = (np.transpose(rotation_matrix)).dot(X_mat).dot(sqrt(G_matrix_diagonal)).dot(rotation_matrix)\r\n    # g_value = ( (g_value) - lande_factor ) * 1000\r\n\r\n    g_tensor_values = np.zeros(3, dtype=complex)\r\n    for i in range(0, 3):\r\n        g_tensor_values[i] = (sqrt(G_matrix_diagonal[i]) - lande_factor) * 1000\r\n\r\n    # print('G_tensor matrix:')\r\n    # print(''.join(['{:^15}'.format(item) for item in ['x','y','z']]) )\r\n    # print('\\n'.join([''.join(['{:^15}'.format(item) for item in row])\\\r\n    #                  for row in np.round((G_matrix[:,:]),5)]))\r\n    # print('')\r\n    # print(np.round(g_tensor_values.real[0], 3), np.round(g_tensor_values.real[1], 3), \\\r\n    #       np.round(g_tensor_values.real[2], 3))\r\n    # print('')\r\n\r\n    return G_matrix, g_tensor_values\r\n\r\n\r\ndef from_energies_SOC_to_g_values(input, states_ras, totalstates, excitation_energies_ras, SOC_ras):\r\n    \"\"\"\"\r\n    Obtention of the g-values from the eigenenergies and the SOCs.\r\n    :param: input, states, totalstates, excitation_energies, SOC\r\n    :return: G_matrix, G_tensor_results\r\n    \"\"\"\r\n    from g_read import get_spin_matrices, get_orbital_matrices, get_orbital_matrices_pyqchem\r\n\r\n    Hamiltonian_ras = get_Hamiltonian_construction(states_ras, excitation_energies_ras, SOC_ras)\r\n\r\n    eigenvalues, eigenvector, kramers_states = Hamiltonian_diagonalization(Hamiltonian_ras)\r\n\r\n    spin_matrix = get_spin_matrices(input, states_ras)\r\n\r\n    l_matrix = get_orbital_matrices_pyqchem(input, totalstates, states_ras)\r\n\r\n    sigma_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, spin_matrix)\r\n\r\n    lambda_matrix = angular_matrixes_obtention(eigenvalues, eigenvector, kramers_states, l_matrix)\r\n\r\n    G_matrix, g_values = g_factor_calculation(lambda_matrix, sigma_matrix)\r\n\r\n    return G_matrix, g_values, eigenvalues, eigenvector\r\n\r\n\r\ndef print_g_calculation(input, totalstates, selected_states, symmetry_selection, states_ras, G_tensor_results_ras):\r\n    print(\"--------------------------------------\")\r\n    print(\"     INPUT SECTION\")\r\n    print(\"--------------------------------------\")\r\n    print(\"File selected: \", input)\r\n    print(\"Number of states: \", totalstates)\r\n    if (selected_states == 2):\r\n        print(\"Symmetry: \", symmetry_selection)\r\n        print(\"Selected states: \", states_ras)\r\n    else:\r\n        print(\"Selected states: \", states_ras)\r\n\r\n    print(\" \")\r\n    print(\"------------------------\")\r\n    print(\" ras-CI OUTPUT SECTION\")\r\n    print(\"------------------------\")\r\n    print('g-factor (x y z dimensions):')\r\n    print(np.round(G_tensor_results_ras.real[0], 3), np.round(G_tensor_results_ras.real[1], 3), \\\r\n          np.round(G_tensor_results_ras.real[2], 3))\r\n    print('')\r\n\r\n\r\ndef perturbative_method(totalstates, eigenenergies, spin_orbit_coupling):\r\n    \"\"\"\r\n    The coefficients that previously were on the eigenvectors\r\n    are now calculated using equation 27: they are called \"eta\". Similar\r\n    process to the one used in Hamiltonian construction, BUT considering\r\n    also the eigenvalues substraction in the denominator: en[a] - en[b],\r\n    where the \"a\" corresponds to the row number and the \"b\" to the column number\r\n    \"\"\"\r\n    coef = np.zeros((len(states_ras) * 2, len(states_ras) * 2), dtype=complex)\r\n    k1 = 0\r\n    k2 = 0\r\n    for y in range(0, len(totalstates) * 2):\r\n        k1 = 0\r\n        for x in range(0, len(totalstates) * 2):\r\n            if (y == x) or (x % 2 != 0 and x - 1 == y):\r\n                coef[x][y] = 0\r\n                k1 = k1 + 1\r\n            elif (y % 2 == 0):\r\n                coef[x][y] = spin_orbit_coupling[x - k1 + k2][0] / (eigenenergies[x] - eigenenergies[y])\r\n                coef[x][y + 1] = spin_orbit_coupling[x - k1 + k2][1] / (eigenenergies[x] - eigenenergies[y + 1])\r\n        k2 = k2 + len(states_ras) - 1\r\n\r\n    # The procedure is the same than for the Hamiltonian case. Coefficients matrix\r\n    # obtained by perturbation expressions is symmetric, meaning multiplication does not\r\n    # change if it is done by columns or by rows\r\n    # gpt_mat_ras = np.zeros((len(states_ras) * 2, len(states_ras) * 2, 3), dtype=complex)\r\n    # for z in range(0, 3):\r\n    #     for y in range(0, len(states_ras) * 2, 2):\r\n    #         for x in range(0, len(states_ras) * 2):\r\n    #             if (y == x) or (x % 2 != 0 and x - 1 == y):\r\n    #                 gpt_mat_ras[y, x, z] = 0\r\n    #                 gpt_mat_ras[x, y, z] = 0\r\n    #             elif (x % 2 == 0):\r\n    #                 gpt_mat_ras[x, y, z] = -4000 * etacoeff_ras[y, x] * l_matrix[x // 2, y // 2, z]\r\n    #                 gpt_mat_ras[x + 1, y, z] = -4000 * etacoeff_ras[y, x + 1] * l_matrix[x // 2, y // 2, z]\r\n    #                 gpt_mat_ras[x, y + 1, z] = -4000 * etacoeff_ras[y + 1, x] * l_matrix[x // 2, y // 2, z]\r\n    #                 gpt_mat_ras[x + 1, y + 1, z] = -4000 * etacoeff_ras[y + 1, x + 1] * l_matrix[x // 2, y // 2, z]\r\n\r\n    return\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/doublets_expansion/g_operations.py b/doublets_expansion/g_operations.py
+--- a/doublets_expansion/g_operations.py	(revision 03056788b7f9cafb899c107763c2301d11b1c531)
++++ b/doublets_expansion/g_operations.py	(date 1680272049595)
+@@ -101,10 +101,10 @@
+     if (kramer_st % 2) != 0:
+         kramer_st = kramer_st - 1
+ 
+-    # for i in range(0, len(eigenvalues)):
+-    #     print('eigenvalue:', eigenvalues[i])
+-    #     print('eigenvector:', eigenvectors[:, i])
+-    #     print()
++    for i in range(0, len(eigenvalues)):
++        print('eigenvalue:', eigenvalues[i])
++        print('eigenvector:', eigenvectors[:, i])
++        print()
+ 
+     return eigenvalues, eigenvectors, kramer_st
+ 
+@@ -153,9 +153,9 @@
+                         angular_matrix[row, column] += 2 * element
+ 
+     # print('SIGMA matrix with all spin angular momentums:')
+-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+-    #                  for row in np.round((angular_matrix[:,:]),8)]))
+-    # print(" ")
++    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
++                     for row in np.round((angular_matrix[:,:]),8)]))
++    print(" ")
+ 
+     return angular_matrix
+ 
+Index: doublets_expansion/g_main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#####################################\r\n#          MODULES SELECTION\r\n#####################################\r\n# module load Python/3.7.4-Anaconda3-2019.10\r\n\r\nimport numpy as np\r\nimport sys\r\n\r\nfrom g_read import get_number_of_states, get_eigenenergies, get_selected_states, get_spin_orbit_couplings, \\\r\n    get_SOCC_values, get_ground_state_orbital_momentum, get_symmetry_states, get_spin_orbit_couplings_pyqchem, \\\r\n    get_mulliken_spin\r\n\r\nfrom g_operations import from_energies_SOC_to_g_values, print_g_calculation\r\n\r\nfrom g_excited_states_analysis import get_excited_states_analysis, improved_active_space\r\n\r\nfrom doublets_expansion.eom_analysis.g_take_eom_states import get_eom_transitions_analysis\r\n\r\nfrom doublets_expansion.eom_analysis.g_ras_eom_change import ras_and_eom_energy_exchange\r\n\r\nfrom g_plots import get_bar_chart, sos_analysis_and_plot\r\n\r\n#####################################\r\n#            INPUT VALUES\r\n#####################################\r\n# g_lista = [-18, -10, -65.3]\r\n# lande_factor = 2.002319304363\r\n# for i in range(0, len(g_lista)):\r\n#     # g_shift = (g_lista[i] - lande_factor) * 1000\r\n#     g_shift = g_lista[i] / 1000 + lande_factor\r\n#     print(np.round(g_shift,3))\r\n# exit()\r\n\r\n# G-TENSOR CALCULATION\r\ng_calculation = 1\r\nras_input = '../\\\r\nRASCI_results/cu_mnt2_2-/cu_mnt2_2-_def2tzvp_19_11_30_states.out'  # str(sys.argv[1])'''\r\n\r\nselected_states = 1  # 0: use \"state_ras\" ; 1: use all states ; 2: use states by selected symmetry\r\nstates_ras = [1,6]  # States to be included when \"selected_states = 0\"\r\nsymmetry_selection = 'A2'  # Symmetry selected states\r\nselected_SOC = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix\r\n\r\n# EXCITED STATES ANALYSIS IN ras\r\nexcited_states_analysis = 0\r\nnew_active_space = 0\r\nsos_analysis = 1\r\nbar_plots = 0\r\n\r\n# eom ANALYSIS AND ras-eom ENERGIES EXCHANGE\r\neom_information = 0\r\neom_input = '../EOM_outputs/fe_pyms2_def2tzvp_17_11_d5_doublet_enerproc.out'\r\n\r\neom_change_energies = 0\r\nras_states_to_change = [2,3,4]\r\neom_states_to_change = [4,7,9]\r\n\r\n# OUTPUT\r\nwrite_file = 0 # 0: write results directly; 1: write in output file\r\noutput_file = ras_input + '-gvalues.txt'\r\nif (write_file == 1):\r\n    sys.stdout = open(output_file, \"w\")\r\n\r\n#####################################\r\n#      G-VALUE CALCULATION\r\n#####################################\r\nif (g_calculation == 1):\r\n\r\n    totalstates = get_number_of_states(ras_input)\r\n\r\n    states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_states, symmetry_selection)\r\n\r\n    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)\r\n\r\n    soc_ras = get_spin_orbit_couplings_pyqchem(ras_input, totalstates, states_ras, selected_SOC)\r\n\r\n    ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_SOC_to_g_values(ras_input, states_ras,\r\n                                                                                         totalstates,\r\n                                                                                         excitation_energies_ras,\r\n                                                                                         soc_ras)\r\n\r\n    print_g_calculation(ras_input, totalstates, selected_states, symmetry_selection, states_ras, ras_g_values)\r\n\r\n#####################################\r\n#        EXCITED STATE ANALYSIS\r\n#####################################\r\nif (excited_states_analysis == 1):\r\n    get_excited_states_analysis(ras_input)\r\n\r\nif (new_active_space == 1):\r\n    improved_active_space(ras_input)\r\n\r\n#####################################\r\n#        PLOT ANALYSIS\r\n#####################################\r\n\r\nif (sos_analysis == 1):\r\n    sos_analysis_and_plot(ras_input, save_picture=0)\r\n\r\nif (bar_plots == 1):\r\n\r\n    totalstates = get_number_of_states(ras_input)\r\n\r\n    states_ras = get_selected_states(ras_input, totalstates, states_ras, selected_states=1, symmetry_selection='None')\r\n\r\n    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)\r\n\r\n    soc_ras = get_spin_orbit_couplings(ras_input, totalstates, states_ras, selected_SOC)\r\n\r\n    ras_G_matrix, ras_g_values, eigenvalues, eigenvector = from_energies_SOC_to_g_values(ras_input, states_ras, totalstates,\r\n                                                               excitation_energies_ras, soc_ras)\r\n\r\n    # Printing excitation energies versus orbital symmetries:\r\n    state_symmetries, ordered_state_symmetries = get_symmetry_states(ras_input, totalstates)\r\n\r\n    get_bar_chart(ras_input, ordered_state_symmetries, excitation_energies_ras * 27.211399, 'State', 'Energy (eV)',\r\n                  'Excitation energies')\r\n\r\n    # Printing SOCC versus orbital symmetries:\r\n    SOCC_values = get_SOCC_values(ras_input, totalstates)\r\n    get_bar_chart(ras_input, ordered_state_symmetries, SOCC_values / 8065.540107, 'State', 'Energy (eV)',\r\n                  'Mean-field spin-orbit coupling constants')\r\n\r\n    # Printing orbital angular momentum versus orbital symmetries:\r\n    orbital_momentum = get_ground_state_orbital_momentum(ras_input, totalstates)\r\n    get_bar_chart(ras_input, ordered_state_symmetries, orbital_momentum, 'State', 'Orbital angular momentum','')\r\n\r\n    # Printing Mulliken spin:\r\n    mulliken_charge, mulliken_spin = get_mulliken_spin(ras_input, totalstates, states_ras)\r\n    get_bar_chart(ras_input, ordered_state_symmetries, mulliken_spin, 'State', 'Mulliken spin','')\r\n\r\n#####################################\r\n#      eom COMPARISON\r\n#####################################\r\nif eom_information == 1:\r\n    get_eom_transitions_analysis(eom_input)\r\n\r\nif (eom_change_energies == 1):\r\n    comparison_presentation_list, G_tensor_results = ras_and_eom_energy_exchange(eom_input, ras_input, states_ras, ras_states_to_change, eom_states_to_change)\r\n\r\n    print('g-factor (x y z dimensions) with ras energies:')\r\n    print(np.round(ras_g_values.real[0], 3), np.round(ras_g_values.real[1], 3),np.round(ras_g_values.real[2], 3))\r\n    print('')\r\n\r\n    print('g-factor (x y z dimensions) with eom eigenenergies:')\r\n    print(np.round(G_tensor_results.real[0], 3), np.round(G_tensor_results.real[1], 3),np.round(G_tensor_results.real[2], 3))\r\n    print('')\r\n\r\n    print(\"ras file selected: \", ras_input)\r\n    print(\"eom-CC file selected: \", eom_input)\r\n    print('\\n'.join([''.join(['{:^30}'.format(item) for item in row]) \\\r\n                     for row in (comparison_presentation_list)]))\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/doublets_expansion/g_main.py b/doublets_expansion/g_main.py
+--- a/doublets_expansion/g_main.py	(revision 03056788b7f9cafb899c107763c2301d11b1c531)
++++ b/doublets_expansion/g_main.py	(date 1680271341068)
+@@ -23,28 +23,28 @@
+ #####################################
+ #            INPUT VALUES
+ #####################################
+-# g_lista = [-18, -10, -65.3]
++# g_lista = [1.9755, 1.9990]
+ # lande_factor = 2.002319304363
+ # for i in range(0, len(g_lista)):
+-#     # g_shift = (g_lista[i] - lande_factor) * 1000
+-#     g_shift = g_lista[i] / 1000 + lande_factor
++#     g_shift = (g_lista[i] - lande_factor) * 1000
++#     # g_shift = g_lista[i] / 1000 + lande_factor
+ #     print(np.round(g_shift,3))
+ # exit()
+ 
+ # G-TENSOR CALCULATION
+ g_calculation = 1
+ ras_input = '../\
+-RASCI_results/cu_mnt2_2-/cu_mnt2_2-_def2tzvp_19_11_30_states.out'  # str(sys.argv[1])'''
++RASCI_results/co_mnt2_2-/co_mnt2_2-_def2tzvp_9_9.out'  # str(sys.argv[1])'''
+ 
+-selected_states = 1  # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
+-states_ras = [1,6]  # States to be included when "selected_states = 0"
+-symmetry_selection = 'A2'  # Symmetry selected states
+-selected_SOC = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
++selected_states = 0 # 0: use "state_ras" ; 1: use all states ; 2: use states by selected symmetry
++states_ras = [1,2] # States to be included when "selected_states = 0"
++symmetry_selection = 'Ag' # Symmetry selected states
++selected_SOC = 0 # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
+ 
+ # EXCITED STATES ANALYSIS IN ras
+ excited_states_analysis = 0
+ new_active_space = 0
+-sos_analysis = 1
++sos_analysis = 0
+ bar_plots = 0
+ 
+ # eom ANALYSIS AND ras-eom ENERGIES EXCHANGE
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" project-jdk-name=\"Python 3.10 (g-tensor_with_pyqchem)\" project-jdk-type=\"Python SDK\" />\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 03056788b7f9cafb899c107763c2301d11b1c531)
++++ b/.idea/misc.xml	(date 1680094723894)
+@@ -1,4 +1,4 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (g-tensor_with_pyqchem)" project-jdk-type="Python SDK" />
++  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (g-tensor_with_pyqchem)" project-jdk-type="Python SDK" />
+ </project>
+\ No newline at end of file
+Index: RASCI_results/mncn5no_2-/mncn5no_2-_def2tzvp_9_10_d5_sextet_enerproc.out
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/RASCI_results/mncn5no_2-/mncn5no_2-_def2tzvp_9_10_d5_sextet_enerproc.out b/RASCI_results/mncn5no_2-/mncn5no_2-_def2tzvp_9_10_d5_sextet_enerproc.out
+--- a/RASCI_results/mncn5no_2-/mncn5no_2-_def2tzvp_9_10_d5_sextet_enerproc.out	(revision 03056788b7f9cafb899c107763c2301d11b1c531)
++++ b/RASCI_results/mncn5no_2-/mncn5no_2-_def2tzvp_9_10_d5_sextet_enerproc.out	(date 1680094724311)
+@@ -1,6 +1,6 @@
+                   Welcome to Q-Chem
+      A Quantum Leap Into The Future Of Chemistry
+-m
++
+ 
+  Q-Chem 6.0 (devel), Q-Chem, Inc., Pleasanton, CA (2022)
+ 
+Index: .idea/g-tensor_with_pyqchem.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"PYTHON_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\">\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <excludeFolder url=\"file://$MODULE_DIR$/venv\" />\r\n      <excludeFolder url=\"file://$MODULE_DIR$/venv_2\" />\r\n    </content>\r\n    <orderEntry type=\"jdk\" jdkName=\"Python 3.10 (g-tensor_with_pyqchem)\" jdkType=\"Python SDK\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/g-tensor_with_pyqchem.iml b/.idea/g-tensor_with_pyqchem.iml
+--- a/.idea/g-tensor_with_pyqchem.iml	(revision 03056788b7f9cafb899c107763c2301d11b1c531)
++++ b/.idea/g-tensor_with_pyqchem.iml	(date 1680094724311)
+@@ -5,7 +5,7 @@
+       <excludeFolder url="file://$MODULE_DIR$/venv" />
+       <excludeFolder url="file://$MODULE_DIR$/venv_2" />
+     </content>
+-    <orderEntry type="jdk" jdkName="Python 3.10 (g-tensor_with_pyqchem)" jdkType="Python SDK" />
++    <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
+   </component>
+ </module>
+\ No newline at end of file

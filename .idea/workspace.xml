@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="13a220d9-7bff-4095-be48-9c60b3006394" name="Changes" comment="New inputs">
+      <change afterPath="$PROJECT_DIR$/.vscode/c_cpp_properties.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C44H20B4/C44H20B4_4_4_singletref_allmultip2.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C44H20B4/C44H20B4_4_4_singletref_triplets2.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C44H20B4/C44H20B4_6_6_singletref_allmultip2.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C44H20B4/C44H20B4_6_6_singletref_triplets2.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C84H36B4/C84H36B4_4_4_singletref_allmultip.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C84H36B4/C84H36B4_4_4_singletref_triplets.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C84H36B4/C84H36B4_6_6_singletref_allmultip.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C84H36B4/C84H36B4_6_6_singletref_triplets.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C94H40B4/C94H40B4_4_4_singletref_allmultip.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C94H40B4/C94H40B4_4_4_singletref_triplets.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVDZ_tddft.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVDZ_tddft.out.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVQZ_7_7.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVTZ_tddft.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVTZ_tddft.out.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triangulenes/3Tm_triplet_ccpVDZ_tddft.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triangulenes/3Tm_triplet_ccpVDZ_tddft.out.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triplets_molecules/o2_11_9_triplets_60states.inp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/molecules/triplets_molecules/take_inputs_from_outputs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/tasks.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/tasks.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bolvinmethod/test_doublets.py" beforeDir="false" afterPath="$PROJECT_DIR$/bolvinmethod/test_doublets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C22H12B2/C22H12B2_4_4.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C22H12B2/C22H12B2_4_4.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C22H12B2/C22H12B2_6_6.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C22H12B2/C22H12B2_6_6.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C22H12B2/C22H12B2_8_8.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C22H12B2/C22H12B2_8_8.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_4_4_singletref.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_4_4_singletref.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_4_4_singletref_concat.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_4_4_singletref_concat.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_4_4_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_4_4_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_4_4_singletref_concat_singlets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_4_4_singletref_concat_singlets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_6_6_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_6_6_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_6_6_singletref_concat_singlets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_6_6_singletref_concat_singlets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_6_6_singletref_concat_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_6_6_singletref_concat_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_allmultip_noholenopart.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_allmultip_noholenopart.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_singletref_concat_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_singletref_concat_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C54H24B4/C54H24B4_8_8_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_4_4_singletref.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_4_4_singletref.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_4_4_singletref_concat.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_4_4_singletref_concat.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_4_4_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_4_4_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_4_4_singletref_concat_singlets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_4_4_singletref_concat_singlets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_6_6_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_6_6_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_6_6_singletref_concat_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_6_6_singletref_concat_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_singletref_concat_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_singletref_concat_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C64H28B4/C64H28B4_8_8_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_4_4_singletref.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_4_4_singletref.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_4_4_singletref_concat.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_4_4_singletref_concat.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_4_4_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_4_4_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_4_4_singletref_concat_singlets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_4_4_singletref_concat_singlets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_6_6_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_6_6_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_6_6_singletref_concat_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_6_6_singletref_concat_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_singletref_concat_allmultip.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_singletref_concat_allmultip.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_singletref_concat_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_singletref_concat_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_triplets.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_triplets.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVDZ_7_7.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVDZ_7_7.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVTZ_7_7.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/triangulenes/2Tm_doublet_ccpVTZ_7_7.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/triangulenes/3Tm_triplet_ccpVDZ_8_8.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/triangulenes/3Tm_triplet_ccpVDZ_8_8.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/triangulenes/3Tm_triplet_ccpVTZ_8_8.out" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/triangulenes/3Tm_triplet_ccpVTZ_8_8.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/molecules/triplets_molecules/triplet_molecules.tar.gz" beforeDir="false" afterPath="$PROJECT_DIR$/molecules/triplets_molecules/triplet_molecules.tar.gz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectmethod/parsers/parser_excitstates.py" beforeDir="false" afterPath="$PROJECT_DIR$/projectmethod/parsers/parser_excitstates.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectmethod/parsers/parser_gtensor.py" beforeDir="false" afterPath="$PROJECT_DIR$/projectmethod/parsers/parser_gtensor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectmethod_allparsers/parsers/gtensor_calculation.py" beforeDir="false" afterPath="$PROJECT_DIR$/projectmethod_allparsers/parsers/gtensor_calculation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectmethod_allparsers/parsers/parser_qchem_tddft.py" beforeDir="false" afterPath="$PROJECT_DIR$/projectmethod_allparsers/parsers/parser_qchem_tddft.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projectmethod_allparsers/test/qchem_tddft_doublets.out.json" beforeDir="false" afterPath="$PROJECT_DIR$/projectmethod_allparsers/test/qchem_tddft_doublets.out.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_general.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_general.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/PyQchem" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Me2ya0rjAr4rXI0TgitTC4jCxy" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/HP.LAPTOP-F127N3L3/PycharmProjects/gtensor/bolvinmethod&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\bolvinmethod" />
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\bolvinmethod\pyqchem_bolvin" />
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor" />
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\automatic_active_space" />
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\generalization_projection_technique\parsers" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\generalization_projection_technique\test" />
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\generalization_projection_technique\parsers" />
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor" />
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\tests" />
+      <recent name="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\procedure_projection_technique\tests" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.test_eom (1)">
+    <configuration name="gtensor_calculation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="doublets_g-tensor" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/generalization_projection_technique/parsers" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/generalization_projection_technique/parsers/gtensor_calculation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="doublets_g-tensor" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\venv\Scripts\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="parser_eom" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="doublets_g-tensor" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/procedure_bolvin/eom_extensions" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/generalization_projection_technique/parsers/parser_eom.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="parser_qchem_tddft" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="doublets_g-tensor" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/generalization_projection_technique/parsers" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/generalization_projection_technique/parsers/parser_qchem_tddft.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_eom (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="doublets_g-tensor" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/generalization_projection_technique/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/generalization_projection_technique/test/test_eom.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_eom" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="doublets_g-tensor" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\HP.LAPTOP-F127N3L3\PycharmProjects\gtensor\generalization_projection_technique\test\test_eom.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.test_eom" />
+      <item itemvalue="Python.test_eom (1)" />
+      <item itemvalue="Python.parser_eom" />
+      <item itemvalue="Python.parser_qchem_tddft" />
+      <item itemvalue="Python.gtensor_calculation" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test_eom (1)" />
+        <item itemvalue="Python.test_eom" />
+        <item itemvalue="Python.parser_eom" />
+        <item itemvalue="Python.parser_qchem_tddft" />
+        <item itemvalue="Python.gtensor_calculation" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="13a220d9-7bff-4095-be48-9c60b3006394" name="Changes" comment="" />
+      <created>1678113982789</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1678113982789</updated>
+    </task>
+    <task id="LOCAL-00104" summary="Including new acene inputs">
+      <created>1699950706109</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1699950706110</updated>
+    </task>
+    <task id="LOCAL-00105" summary="Including new inputs">
+      <created>1700033613395</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1700033613396</updated>
+    </task>
+    <task id="LOCAL-00106" summary="Including g-tensor analysis in parser_excited_states">
+      <created>1700065360106</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1700065360106</updated>
+    </task>
+    <task id="LOCAL-00107" summary="Including g-tensor analysis in parser_excited_states">
+      <created>1700066045459</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1700066045459</updated>
+    </task>
+    <task id="LOCAL-00108" summary="Including g-tensor analysis in parser_excited_states">
+      <created>1700082505257</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1700082505257</updated>
+    </task>
+    <task id="LOCAL-00109" summary="Including new inputs">
+      <created>1700935750119</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1700935750119</updated>
+    </task>
+    <task id="LOCAL-00110" summary="Including new inputs">
+      <created>1701686461960</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1701686461960</updated>
+    </task>
+    <task id="LOCAL-00111" summary="Including new inputs">
+      <created>1703657365988</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1703657365988</updated>
+    </task>
+    <task id="LOCAL-00112" summary="Reorganizing programs">
+      <created>1704820834179</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1704820834179</updated>
+    </task>
+    <task id="LOCAL-00113" summary="Reorganizing programs">
+      <created>1704820921951</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1704820921951</updated>
+    </task>
+    <task id="LOCAL-00114" summary="Reorganizing programs">
+      <created>1704821019422</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1704821019422</updated>
+    </task>
+    <task id="LOCAL-00115" summary="Reorganizing programs">
+      <created>1704821529188</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1704821529188</updated>
+    </task>
+    <task id="LOCAL-00116" summary="Reorganizing programs">
+      <created>1704821859244</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1704821859244</updated>
+    </task>
+    <task id="LOCAL-00117" summary="Reorganizing programs">
+      <created>1704821933597</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1704821933597</updated>
+    </task>
+    <task id="LOCAL-00118" summary="Reorganizing programs">
+      <created>1704821993735</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1704821993735</updated>
+    </task>
+    <task id="LOCAL-00119" summary="Reorganizing programs">
+      <created>1704822608137</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1704822608137</updated>
+    </task>
+    <task id="LOCAL-00120" summary="Reorganizing programs">
+      <created>1704823015726</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1704823015726</updated>
+    </task>
+    <task id="LOCAL-00121" summary="Reorganizing programs">
+      <created>1704823309101</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1704823309101</updated>
+    </task>
+    <task id="LOCAL-00122" summary="Reorganizing programs">
+      <created>1704823542615</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1704823542615</updated>
+    </task>
+    <task id="LOCAL-00123" summary="Reorganizing programs">
+      <created>1704823905675</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1704823905675</updated>
+    </task>
+    <task id="LOCAL-00124" summary="Reorganizing programs">
+      <created>1704823962645</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1704823962645</updated>
+    </task>
+    <task id="LOCAL-00125" summary="Reorganizing programs">
+      <created>1704824011421</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1704824011421</updated>
+    </task>
+    <task id="LOCAL-00126" summary="Reorganizing programs">
+      <created>1704824245985</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1704824245985</updated>
+    </task>
+    <task id="LOCAL-00127" summary="Reorganizing programs">
+      <created>1704824292205</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1704824292205</updated>
+    </task>
+    <task id="LOCAL-00128" summary="Generalization of the program">
+      <created>1704990659086</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1704990659087</updated>
+    </task>
+    <task id="LOCAL-00129" summary="Generalization of the program">
+      <created>1705060979422</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1705060979422</updated>
+    </task>
+    <task id="LOCAL-00130" summary="Generalization of the program">
+      <created>1705329750105</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1705329750106</updated>
+    </task>
+    <task id="LOCAL-00131" summary="Generalization of the program for QCHEM-TDDFT">
+      <created>1705334587048</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1705334587048</updated>
+    </task>
+    <task id="LOCAL-00132" summary="Generalization of the program for QCHEM-TDDFT">
+      <created>1705429563589</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1705429563589</updated>
+    </task>
+    <task id="LOCAL-00133" summary="Generalization of the program for QCHEM-TDDFT">
+      <created>1705517532231</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1705517532231</updated>
+    </task>
+    <task id="LOCAL-00134" summary="Generalization of the program for QCHEM-EOMCC">
+      <created>1705527874198</created>
+      <option name="number" value="00134" />
+      <option name="presentableId" value="LOCAL-00134" />
+      <option name="project" value="LOCAL" />
+      <updated>1705527874198</updated>
+    </task>
+    <task id="LOCAL-00135" summary="Generalization of the program for QCHEM-EOMCC">
+      <created>1705538394100</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1705538394101</updated>
+    </task>
+    <task id="LOCAL-00136" summary="Generalization of the program for QCHEM-EOMCC">
+      <created>1705538539154</created>
+      <option name="number" value="00136" />
+      <option name="presentableId" value="LOCAL-00136" />
+      <option name="project" value="LOCAL" />
+      <updated>1705538539154</updated>
+    </task>
+    <task id="LOCAL-00137" summary="Generalization of the program for QCHEM-EOMCC">
+      <created>1705571988634</created>
+      <option name="number" value="00137" />
+      <option name="presentableId" value="LOCAL-00137" />
+      <option name="project" value="LOCAL" />
+      <updated>1705571988635</updated>
+    </task>
+    <task id="LOCAL-00138" summary="Generalization of the program for QCHEM-TDDFT">
+      <created>1705684647274</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1705684647274</updated>
+    </task>
+    <task id="LOCAL-00139" summary="Generalization of the program for QCHEM-TDDFT">
+      <created>1705748213063</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1705748213063</updated>
+    </task>
+    <task id="LOCAL-00140" summary="Generalization of the program for QCHEM-TDDFT">
+      <created>1705767861711</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1705767861711</updated>
+    </task>
+    <task id="LOCAL-00141" summary="Generalization of the program for QCHEM-TDDFT">
+      <created>1705943958143</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1705943958143</updated>
+    </task>
+    <task id="LOCAL-00142" summary="Generalization of the program for QCHEM-EOMCC">
+      <created>1705952725098</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1705952725098</updated>
+    </task>
+    <task id="LOCAL-00143" summary="New inputs">
+      <created>1706020857159</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1706020857159</updated>
+    </task>
+    <task id="LOCAL-00144" summary="Editing parser excited states">
+      <created>1706264069198</created>
+      <option name="number" value="00144" />
+      <option name="presentableId" value="LOCAL-00144" />
+      <option name="project" value="LOCAL" />
+      <updated>1706264069203</updated>
+    </task>
+    <task id="LOCAL-00145" summary="New inputs">
+      <created>1706288755487</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1706288755487</updated>
+    </task>
+    <task id="LOCAL-00146" summary="New inputs">
+      <created>1706288782229</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1706288782229</updated>
+    </task>
+    <task id="LOCAL-00147" summary="New inputs">
+      <created>1706288819487</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1706288819487</updated>
+    </task>
+    <task id="LOCAL-00148" summary="New inputs">
+      <created>1706288842570</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1706288842570</updated>
+    </task>
+    <task id="LOCAL-00149" summary="New inputs">
+      <created>1706288923902</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1706288923902</updated>
+    </task>
+    <task id="LOCAL-00150" summary="EOM Parser">
+      <created>1706386834437</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1706386834437</updated>
+    </task>
+    <task id="LOCAL-00151" summary="New inputs">
+      <created>1706573182246</created>
+      <option name="number" value="00151" />
+      <option name="presentableId" value="LOCAL-00151" />
+      <option name="project" value="LOCAL" />
+      <updated>1706573182246</updated>
+    </task>
+    <task id="LOCAL-00152" summary="New inputs">
+      <created>1714674124454</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
+      <option name="project" value="LOCAL" />
+      <updated>1714674124454</updated>
+    </task>
+    <option name="localTasksCounter" value="153" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Reading two inputs" />
+    <MESSAGE value="Including triplet inputs" />
+    <MESSAGE value="Obtaining Roberto molecules results" />
+    <MESSAGE value="Uploading triplet molecules." />
+    <MESSAGE value="Remaking program to calculate the g-tensor using two different inputs Ms 0 and not 0." />
+    <MESSAGE value="Finishing program mixing Ms = 0 and Ms not 0 states" />
+    <MESSAGE value="Change in name &quot;selected_states&quot; variable" />
+    <MESSAGE value="Improving program to automatically calculate new active spaces" />
+    <MESSAGE value="Using program to automatically calculate new active spaces" />
+    <MESSAGE value="Check program: check standard spin matrixes, cleaning program" />
+    <MESSAGE value="Reorganizing programs." />
+    <MESSAGE value="Including several multiplicities outputs to test the general g-tensor program" />
+    <MESSAGE value="Creating g-tensor program to be included in PyQchem" />
+    <MESSAGE value="New inputs: obtaining g-values with triplets and singlets states" />
+    <MESSAGE value="Modifying correlation analysis program" />
+    <MESSAGE value="Including new acene inputs" />
+    <MESSAGE value="Including g-tensor analysis in parser_excited_states" />
+    <MESSAGE value="Including new inputs" />
+    <MESSAGE value="Reorganizing programs" />
+    <MESSAGE value="Generalization of the program" />
+    <MESSAGE value="Generalization of the program for QCHEM-TDDFT" />
+    <MESSAGE value="Generalization of the program for QCHEM-EOMCC" />
+    <MESSAGE value="Editing parser excited states" />
+    <MESSAGE value="EOM Parser" />
+    <MESSAGE value="New inputs" />
+    <option name="LAST_COMMIT_MESSAGE" value="New inputs" />
+  </component>
+</project>
