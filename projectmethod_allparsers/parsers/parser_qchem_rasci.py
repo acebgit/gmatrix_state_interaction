@@ -7,7 +7,7 @@ state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use 
 initial_states = [1, 2, 3]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 
-file = '../test/qchem_rasci.out'  # str(sys.argv[1])
+file = '../../molecules/triangulenes/2Tm_doublet_ccpVDZ_7_7.out'  # str(sys.argv[1])
 
 #################################
 # FUNCTIONS AND CLASSES    ######

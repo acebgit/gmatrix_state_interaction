@@ -4,10 +4,10 @@ import numpy as np
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1, 2, 3, 4, 5] # 0 is the ground state
 ground_state = '0'
-selected_multiplicity = 3
+selected_multiplicity = 2
 
-file = '../../\
-molecules/triangulenes/3Tm_triplet_ccpVDZ_tddft.out'  # str(sys.argv[1])
+file = '../\
+test/qchem_tddft_doublets.out'  # str(sys.argv[1])
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -229,52 +229,78 @@ def get_socs(filee, selected_state, ground_state, all_states_named):
     return selected_socs
 
 
-def get_energies(filee, selected_state, ground_statee, all_states):
+def get_states_info(filee, selected_state, ground_statee, all_states):
     """
     Obtain:
     i) dictionary with the total and excitation energies of the selected states
-    ii) List with all the states with its multiplicities ordered by energy: [T1, S1, T2..]
+    ii) list with all the states with its multiplicities ordered by energy: [T1, S1, T2..]
+    iii) dictionary with the transitions of each configuration of each state
     :param filee:
     :param selected_state:
     :param multiplicity_diction:
     :param reals2_approxs2:
     :return: selected_states_energies
     """
-    with open(filee, encoding="utf8") as f:
-        for line in f:
-            if ' Total energy in the final basis set' in line:
-                ground_state_total_energy = float(line.split()[-1])
-                break
-
-    all_states_energies = {'0': [ground_state_total_energy, 0.0000]}
     state_index = 1
     multip_count = {'Singlet': 0, 'Doublet': 0, 'Triplet': 0, 'Quartet': 0, 'Quintet': 0, 'Sextet': 0, 'Heptet': 0}
 
     with open(filee, encoding="utf8") as f:
         for line in f:
+            if 'Total energy in the final basis set' in line:
+                ground_state_total_energy = float(line.split()[-1])
+                all_states_energies = {'0': [ground_state_total_energy, 0.0000]}
+            
+            if 'beta electrons' in line:
+                alpha = int(line.split()[2])
+                beta = int(line.split()[5])
+                orbital_dict = {}
+                for i in range(1, beta+1):
+                    orbital_dict.update({'D('+str(i)+')': i})
+                for i in range(beta+1, alpha+1):
+                    orbital_dict.update({'S('+str(i-beta)+')': i})
+                for i in range(alpha+1, alpha+30):
+                    orbital_dict.update({'V('+str(i-alpha)+')': i})
+                config_list = []
+                   
             if 'Excited state' in line:
+                nstate = int(line.split()[2].replace(':',''))
                 excit_energy = float(line.split()[-1])
                 line = next(f)
                 total_energy = float(line.split()[-2])
 
                 line = next(f)
                 if '<S**2>' in line:  # Word shown in doublets multiplicities in TDDFT
-                    all_states_energies.update({all_states[state_index]: [total_energy, excit_energy]})
-                    state_index += 1
-
+                    state_with_multip = all_states[nstate]
+                    all_states_energies.update({state_with_multip: [total_energy, excit_energy]})
                 elif 'Multiplicity' in line:  # Word shown in singlets multiplicities in TDDFT
                     multip_count[line.split()[-1]] += 1
-                    state = line.split()[-1][0] + str(multip_count[line.split()[-1]])
-                    all_states_energies.update({state: [total_energy, excit_energy]})
+                    state_with_multip = line.split()[-1][0] + str(multip_count[line.split()[-1]])
+                    all_states_energies.update({state_with_multip: [total_energy, excit_energy]})
+
+                # Go to configurations/transitions lines
+                line = next(f)
+                line = next(f)
+                line = next(f)
+                while len(line) > 2: # While line is not empty
+                    # Each transition is saved in the dictionary
+                    initial_orb = orbital_dict[''.join(line.split()[0:2])]
+                    final_orb = orbital_dict[''.join(line.split()[3:5])]
+                    config_list.append({'state': state_with_multip, 
+                                       'transition/SOMO': str(initial_orb)+'-->'+str(final_orb), 
+                                       'amplitude': float(line.split()[7])})
+                    line = next(f)
 
     all_states_energy_order = list(all_states_energies.keys())
-
     selected_states_energies = {ground_statee: [all_states_energies[ground_statee][0], 0.000]}
+    selected_config = []
+    selected_config.append([{'state': 0,'transition/SOMO': list(range(beta+1, alpha+1)),'amplitude': 1.000}])
+
     for i in selected_state:
         if i != ground_statee:
             excit_energy = all_states_energies[i][1] - all_states_energies[ground_statee][1]
             selected_states_energies.update({i: [all_states_energies[i][0], excit_energy]})
-    return selected_states_energies, all_states_energy_order
+            selected_config.append([d for d in config_list if d.get('state') == i])
+    return selected_states_energies, all_states_energy_order, selected_config
 
 
 def get_orbital_angmoment(filee, selected_state, ground_statee, all_states):
@@ -334,14 +360,13 @@ totalstates = get_number_of_states(file)
 # Take SOCs of the selected states
 # This is done first since in interstate properties is where the approximate spin is defined
 # WARNING! TDDFT states by default are going to have spin contamination.
-
 approx_spin_dict, all_states, selected_states = get_spins(file, initial_states, state_selection, ground_state, multiplicity_dict,
                                          selected_multiplicity)
 
 soclist_dict = get_socs(file, selected_states, ground_state, all_states)
 
 # Take energies of the selected states
-energylist_dict, all_states_energy_ordered = get_energies(file, selected_states, ground_state, all_states)
+energylist_dict, all_states_energy_ordered, transitions_dict = get_states_info(file, selected_states, ground_state, all_states)
 
 # Take orbital angular momentum of the selected states
 orbitalmomentlist_dict = get_orbital_angmoment(file, selected_states, ground_state, all_states_energy_ordered)
@@ -351,6 +376,7 @@ output_dict = {
     "soclist_dict": soclist_dict,
     "spin_dict": approx_spin_dict,
     "orbitalmomentlist_dict": orbitalmomentlist_dict,
+    "transitions_dict": transitions_dict
 }
 
 output_json(file)

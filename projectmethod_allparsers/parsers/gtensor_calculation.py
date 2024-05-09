@@ -1,13 +1,38 @@
 import json
 import numpy as np
+import pandas as pd
 from scipy import constants
+
 from projectmethod.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
     angular_matrices_obtention, g_factor_calculation
+from projectmethod.parsers.parser_excitstates import get_bar_chart
+from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 
-file = '\
-molecules/triangulenes/3Tm_triplet_ccpVDZ_tddft.out' 
-file = file + ".json"
-ppm = 1
+# INPUT FILE
+file = '../../projectmethod_allparsers/test/qchem_tddft_doublets.out' 
+
+######## G-TENSOR CALCULATION ########
+g_calculation = 1
+ppm = 0 # 0: ppt; 1: ppm
+# state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+# states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
+# symmetry_selection = 'B1u'  # Symmetry selected states_selected
+# soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
+
+######## G-TENSOR ANALYSIS ########
+excitanalysis_gvalue_cut = 0.1 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
+# gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
+
+######## EXCITED STATES ANALYSIS ########
+excitanalysis = 1
+excitanalysis_plot = 0
+# excitanalysis_config_cut = 0.5 # cut-off for configurations amplitude (% of maximum amplitude)
+# excitanalysis_soc_cut = 0 # cut-off for soccs (cm-1)
+# excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (cm-1)
+
+######## SOS PLOTS ########
+sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
+# gestimation_comparison = 0 # 1: SOS comparison between g-shift calculated and estimated
 
 
 def extract_data_from_json(filee):
@@ -24,24 +49,17 @@ def extract_data_from_json(filee):
     excitation_energy_list = []
     for i in input_dict['selected_energy_dict']:
         total_energy_list.append(float(input_dict['selected_energy_dict'][i][0]))
-        excit_energy = float(input_dict['selected_energy_dict'][i][1]) / constants.physical_constants['Hartree '
-                                                                                                      'energy in eV'][0]
+        excit_energy = float(input_dict['selected_energy_dict'][i][1]) 
         excitation_energy_list.append(excit_energy)
 
-    spin_list = []
-    for i in input_dict['spin_dict']:
-        spin_list.append(float(input_dict['spin_dict'][i]))
-
-    soc_list = []
-    for i in input_dict['soclist_dict']:
-        soc_list.append((input_dict['soclist_dict'][i]))
-
-    orbital_momentum_list = []
-    for i in input_dict['orbitalmomentlist_dict']:
-        orbital_momentum_list.append([complex(input_dict['orbitalmomentlist_dict'][i][0]),
-                                      complex(input_dict['orbitalmomentlist_dict'][i][1]),
-                                      complex(input_dict['orbitalmomentlist_dict'][i][2])])
-    return total_energy_list, excitation_energy_list, spin_list, soc_list, orbital_momentum_list
+    spin_list = [float(input_dict['spin_dict'][i]) for i in input_dict['spin_dict']]
+    soc_list = [input_dict['soclist_dict'][i] for i in input_dict['soclist_dict']]
+    orbital_momentum_list = [[complex(input_dict['orbitalmomentlist_dict'][i][0]),
+                            complex(input_dict['orbitalmomentlist_dict'][i][1]),
+                            complex(input_dict['orbitalmomentlist_dict'][i][2])] 
+                            for i in input_dict['orbitalmomentlist_dict']]
+    transitions_list = [i for i in input_dict['transitions_dict']]
+    return total_energy_list, excitation_energy_list, spin_list, soc_list, orbital_momentum_list, transitions_list
 
 
 def s2_to_s(s2):
@@ -60,8 +78,6 @@ def get_input_data(spin_state):
     :param spin_state:
     :return:
     """
-    nstate = len(spin_state)
-
     max_multip = float(s2_to_s(max(spin_state)))
     max_multip_szlist = list(np.arange(-max_multip, max_multip + 1, 1))
     s_ground = float(s2_to_s(spin_state[0]))
@@ -70,7 +86,7 @@ def get_input_data(spin_state):
                          "Ground state corresponds to the first of the included states selected.")
     ground_state_szlist = list(np.arange(-s_ground, s_ground + 1))
 
-    return nstate, max_multip_szlist, ground_state_szlist
+    return max_multip_szlist, ground_state_szlist
 
 
 def from_soclist_socmatrix(soc_list, maxsz_list):
@@ -102,7 +118,8 @@ def from_soclist_socmatrix(soc_list, maxsz_list):
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
     #                 for row in np.round((socmatrix[:,:]))]))
     # exit()
-    socmatrix = socmatrix / (constants.physical_constants['hartree-inverse meter relationship'][0]/100)
+    cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
+    socmatrix = socmatrix * cm_to_ev
     return socmatrix
 
 
@@ -309,6 +326,9 @@ def get_orbital_matrices(states_momentum, maxsz_list):
 
 
 def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras):
+    print("---------------------")
+    print(" G-SHIFT RESULTS")
+    print("---------------------")
     print("File selected: ", filee)
     print("Number of states: ", totalstates)
     print('g-factor (x y z dimensions):')
@@ -317,25 +337,186 @@ def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras):
     print('')
 
 
-energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json = extract_data_from_json(file)
+def from_json_to_matrices(json_energies, json_excitenergies, json_spin, json_soc, json_orbitmoment):
+    max_sz_list, sz_ground = get_input_data(json_spin)
 
-nstates, max_sz_list, sz_ground = get_input_data(spin_json)
+    soc_matrix = from_soclist_socmatrix(json_soc, max_sz_list)
 
-soc_matrix = from_soclist_socmatrix(soc_json, max_sz_list)
+    spin_matrix, standard_spin_matrix = get_spin_matrices(json_spin, max_sz_list)
 
-hamiltonian = get_hamiltonian_construction(excitenergies_json, soc_matrix, max_sz_list)
+    orbital_matrix = get_orbital_matrices(json_orbitmoment, max_sz_list)
+    return max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix
 
-eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
-spin_matrix, standard_spin_matrix = get_spin_matrices(spin_json, max_sz_list)
+def from_matrices_to_gshift(excitenergies_json, soc, max_sz, spin, orbital, standard_spin, szground, ppms):
+    hamiltonian = get_hamiltonian_construction(excitenergies_json, soc, max_sz)
 
-orbital_matrix = get_orbital_matrices(orbitmoment_json, max_sz_list)
+    eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
-combination_spin_matrix = angular_matrices_obtention(eigenvector, spin_matrix, max_sz_list)
+    combination_spin_matrix = angular_matrices_obtention(eigenvector, spin, max_sz)
 
-combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, max_sz_list)
+    combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital, max_sz)
 
-g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
-                               max_sz_list, sz_ground, ppm)
+    g_shift = g_factor_calculation(standard_spin, combination_spin_matrix, combination_orbital_matrix,
+                                max_sz, szground, ppms)
+    return g_shift
 
-print_g_calculation(file, nstates, g_shift)
+
+def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot):
+    """
+    Get a table in pandas with information for each of the excited states. 
+    """
+    max_orbitmoment = [abs(max(sublista, key=abs)) for sublista in orbitmoment]
+    socc = [((sum((abs(complex(elemento)))**2 for sublista in i for elemento in sublista))**(1/2)) for i in soc]
+
+    presentation_list = []
+    list_states = []
+    for state in range(0, nstate):
+        for transition in list(transitions_json[state]):
+            if state == 0:
+                presentation_list.append([excitenergies[state], "---", "---", 
+                                        transition['transition/SOMO'], 
+                                        transition['amplitude']])
+            else:
+                presentation_list.append([np.round(excitenergies[state],3), 
+                                        np.round(max_orbitmoment[state-1],3), 
+                                        np.round(socc[state-1],3),  
+                                        transition['transition/SOMO'], 
+                                        transition['amplitude']])
+            list_states.append(state)
+    df = pd.DataFrame(presentation_list, index=list_states, columns=['energy', 'orbit mom', 'socc', 
+                                                                    'transition/SOMO', 'amplitude'])
+    
+    print("--------------------------")
+    print(" EXCITED STATES ANALYSIS")
+    print("--------------------------")
+    print(df)
+    print()
+
+    if plot == 1: 
+        get_bar_chart(file[:-4], [i for i in range(1,nstate+1)], excitenergies, 'Electronic State',
+                        'Excitation energy (eV)', 'energ_analysis', save_pict=0)
+        get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], max_orbitmoment, 'Electronic State',
+                        'Orbital angular momentum', 'orbit_analysis', save_pict=0)
+        get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], socc, 'Electronic State',
+                        'Spin-orbit coupling constants (cm-1)', 'soc_analysis', save_pict=0)
+
+
+def sum_over_state_plot(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, ppm):
+        """
+        Generate the sum-over-states plot, i.e. calculation of the g-tensor by including states
+        from 1 to nstates. 
+        :param: 
+        :return: shows SOS plot
+        """
+        presentation_list = []
+        for state in range(1, len(energies_json)+1):
+            energies = energies_json[0:state]
+            excitenergies = excitenergies_json[0:state]
+            spin = spin_json[0:state]
+            soc = soc_json[0:state]
+            orbitmoment = orbitmoment_json[0:state]
+
+            max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
+                = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
+
+            g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
+                                            max_sz_list, spin_matrix, orbital_matrix, 
+                                            standard_spin_matrix, sz_ground, ppm)
+            
+            presentation_list.append([state, np.round(g_shift[0].real, 3),
+                                            np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+        presentation_matrix = np.array(presentation_list, dtype=object)
+
+        print("------------------------------")
+        print(" SUM-OVER-STATE ANALYSIS")
+        print("------------------------------")
+        df = pd.DataFrame([row[1:4] for row in presentation_list], list(range(1, nstates+1)), columns=['gxx','gyy','gzz'])
+        print(df)
+        print()
+
+        y_title = r'$\Delta g, ppt$'
+        if ppm == 1:
+            y_title = r'$\Delta g, ppm$'
+        plot_g_tensor_vs_states(file[:-4],presentation_matrix,'Electronic State',y_title,'sos_analysis', save_options=0)
+
+
+def get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json, 
+                         orbitmoment_json, transitions_json, ppm, cut_gvalue):
+    """
+    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
+    of the 1st configuration that need to have the other configurations to be shown in each state.
+    :param: file_ms_notnull, cutoff
+    :return: excit_matrix
+    """
+    # Calculate the g-tensor for each ground-excited state pair and save it in g_shift_list
+    g_shift_list = []
+    for state in range(1, len(energies_json)):
+        energies = [energies_json[0], energies_json[state]]
+        excitenergies = [excitenergies_json[0], excitenergies_json[state]]
+        spin = [spin_json[0], spin_json[state]]
+        soc = [soc_json[state-1]]
+        orbitmoment = [orbitmoment_json[state-1]]
+
+        max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
+            = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
+
+        g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
+                                        max_sz_list, spin_matrix, orbital_matrix, 
+                                        standard_spin_matrix, sz_ground, ppm)
+        
+        g_shift_list.append([np.round(g_shift[0].real, 3),np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+
+    # Forming different list depending on if g-shift is calculated or not
+    cut_gxx = cut_gvalue * max([abs(row[0]) for row in g_shift_list])
+    cut_gyy = cut_gvalue * max([abs(row[1]) for row in g_shift_list])
+    cut_gzz = cut_gvalue * max([abs(row[2]) for row in g_shift_list])
+
+    # For the list with the data for all the configurations
+    presentation_list = []
+    list_states = []
+    for state in range(0, len(energies_json)):
+        for transition in list(transitions_json[state]):
+            if state == 0:
+                presentation_list.append([transition['transition/SOMO'],transition['amplitude'],'---','---','---'])
+                list_states.append(state)
+
+            else:
+                gxx = np.round(g_shift_list[state-1][0],3)
+                gyy = np.round(g_shift_list[state-1][1],3)
+                gzz = np.round(g_shift_list[state-1][2],3)
+                if abs(gxx) >= cut_gxx or abs(gyy) >= cut_gyy or abs(gzz) >= cut_gzz:
+                    presentation_list.append([transition['transition/SOMO'],transition['amplitude'],gxx,gyy,gzz])
+                    list_states.append(state)
+    
+    df = pd.DataFrame(presentation_list, index=list_states, columns=['transition/SOMO', 'amplitude', 
+                                                                     'gxx','gyy','gzz'])
+    
+    print("--------------------------")
+    print(" G-SHIFT IN STATES PAIRS")
+    print("--------------------------")
+    print(df)
+    print()
+
+file = file + ".json"
+energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, transitions_json = extract_data_from_json(file)
+nstates = len(energies_json)
+
+if g_calculation == 1:
+    max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
+    = from_json_to_matrices(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json)
+    
+    g_shift = from_matrices_to_gshift(excitenergies_json, soc_matrix, max_sz_list, spin_matrix, 
+                                      orbital_matrix, standard_spin_matrix, sz_ground, ppm)
+    
+    print_g_calculation(file, nstates, g_shift)
+
+if excitanalysis_gvalue_cut != 0:
+    get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, 
+                     transitions_json, ppm, excitanalysis_gvalue_cut)
+
+if excitanalysis == 1: 
+    excitedstates_analysis(nstates, excitenergies_json, orbitmoment_json, soc_json, excitanalysis_plot)
+
+if sos_analysis == 1:
+    sum_over_state_plot(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, ppm)
