@@ -1,13 +1,14 @@
 import json
 import numpy as np
+import sys 
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1, 2, 3, 4, 5] # 0 is the ground state
-ground_state = '0'
-selected_multiplicity = 2
+ground_state = 'T1'
+selected_multiplicity = 3
 
-file = '../\
-test/qchem_tddft_doublets.out'  # str(sys.argv[1])
+# file = str(sys.argv[1])
+file = '../../projectmethod_allparsers/test/qchem_tddft_singlets.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -360,23 +361,23 @@ totalstates = get_number_of_states(file)
 # Take SOCs of the selected states
 # This is done first since in interstate properties is where the approximate spin is defined
 # WARNING! TDDFT states by default are going to have spin contamination.
-approx_spin_dict, all_states, selected_states = get_spins(file, initial_states, state_selection, ground_state, multiplicity_dict,
+approx_spin_json, all_states, selected_states = get_spins(file, initial_states, state_selection, ground_state, multiplicity_dict,
                                          selected_multiplicity)
 
-soclist_dict = get_socs(file, selected_states, ground_state, all_states)
+soclist_json = get_socs(file, selected_states, ground_state, all_states)
 
 # Take energies of the selected states
-energylist_dict, all_states_energy_ordered, transitions_dict = get_states_info(file, selected_states, ground_state, all_states)
+energylist_json, all_states_energy_ordered, transitions_json = get_states_info(file, selected_states, ground_state, all_states)
 
 # Take orbital angular momentum of the selected states
-orbitalmomentlist_dict = get_orbital_angmoment(file, selected_states, ground_state, all_states_energy_ordered)
+orbitalmomentlist_json = get_orbital_angmoment(file, selected_states, ground_state, all_states_energy_ordered)
 
 output_dict = {
-    "selected_energy_dict": energylist_dict,
-    "soclist_dict": soclist_dict,
-    "spin_dict": approx_spin_dict,
-    "orbitalmomentlist_dict": orbitalmomentlist_dict,
-    "transitions_dict": transitions_dict
+    "selected_energy_dict": energylist_json,
+    "soclist_dict": soclist_json,
+    "spin_dict": approx_spin_json,
+    "orbitalmomentlist_dict": orbitalmomentlist_json,
+    "transitions_dict": transitions_json
 }
 
 output_json(file)

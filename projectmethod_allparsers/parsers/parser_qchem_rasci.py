@@ -1,13 +1,17 @@
 import json
+import numpy as np
+import sys 
 from pyqchem.parsers.parser_rasci import parser_rasci
 from projectmethod.parsers.parser_gtensor import get_number_of_states, get_selected_states, \
     get_symmetry_states
+from projectmethod.parsers.parser_excitstates import get_configurations_unpaired_orbitals
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-initial_states = [1, 2, 3]
+initial_states = [1, 2, 3, 4, 5]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 
-file = '../../molecules/triangulenes/2Tm_doublet_ccpVDZ_7_7.out'  # str(sys.argv[1])
+# # file = str(sys.argv[1])
+file = "../../projectmethod_allparsers/test/qchem_rasci.out"
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -111,6 +115,29 @@ def get_orbital_angmoment(outpuut, all_pairstate, selected_pairstate):
     return selected_momentums
 
 
+def get_states_somos(filee, selectedstates):
+    """
+    Get SOMOs of each of the configuration of each of the states. Output: list of dictionaries with
+    each configuration of each state, its SOMOs and its amplitudes. 
+    :param: file, selected_states
+    """
+    configuration_amplitudes, configuration_orbitals, initial_active_orbitals = \
+        get_configurations_unpaired_orbitals(filee, selectedstates, cutoff=0)
+    transitions = []
+    for configuration in configuration_orbitals:
+        state = int(configuration['State'])
+        amplitude = configuration_amplitudes[configuration_orbitals.index(configuration)]['amplitude']
+        transitions.append({'state': state, 
+                                'transition/SOMO': configuration['SOMO orbitals'], 
+                                'amplitude': np.round(amplitude, 4)})
+
+    state_values = list(set([d['state'] for d in transitions if 'state' in d]))
+    transitions_ordered = []
+    for state in state_values:
+        transitions_ordered.append([d for d in transitions if d['state'] == state])
+    return transitions_ordered
+
+
 def output_json(outpuut):
     outfile_name = outpuut + ".json"
     with open(outfile_name, 'w') as archivo:
@@ -151,11 +178,16 @@ soclist_dict = get_socs(output, all_pairstates, selected_pairstates)
 # 4) Take orbital angular momentum of the selected states
 orbitalmomentlist_dict = get_orbital_angmoment(output, all_pairstates, selected_pairstates)
 
+# 5) Take SOMOs of each of the configurations of each state
+transitions_json = get_states_somos(file, selected_states)
+
+# 6) Put it in the output
 output_dict = {
     "selected_energy_dict": energylist_dict,
     "soclist_dict": soclist_dict,
     "spin_dict": spin_dict,
     "orbitalmomentlist_dict": orbitalmomentlist_dict,
+    "transitions_dict": transitions_json
 }
 
 output_json(file)

@@ -1,4 +1,5 @@
 import json
+import sys 
 import numpy as np
 import pandas as pd
 from scipy import constants
@@ -9,7 +10,8 @@ from projectmethod.parsers.parser_excitstates import get_bar_chart
 from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
-file = '../../projectmethod_allparsers/test/qchem_tddft_doublets.out' 
+# file = str(sys.argv[1])
+file = '../../projectmethod_allparsers/test/qchem_eomcc.out'
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1
@@ -383,7 +385,11 @@ def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot):
                                         np.round(socc[state-1],3),  
                                         transition['transition/SOMO'], 
                                         transition['amplitude']])
-            list_states.append(state)
+            list_states.append(state+1)
+    
+    # Set display options to show all rows and columns
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
     df = pd.DataFrame(presentation_list, index=list_states, columns=['energy', 'orbit mom', 'socc', 
                                                                     'transition/SOMO', 'amplitude'])
     
@@ -411,9 +417,12 @@ def sum_over_state_plot(energies_json, excitenergies_json, spin_json, soc_json, 
         """
         presentation_list = []
         for state in range(1, len(energies_json)+1):
-            energies = energies_json[0:state]
-            excitenergies = excitenergies_json[0:state]
-            spin = spin_json[0:state]
+            # State properties
+            energies = energies_json[0:state+1]
+            excitenergies = excitenergies_json[0:state+1]
+            spin = spin_json[0:state+1]
+
+            # Interstate properties
             soc = soc_json[0:state]
             orbitmoment = orbitmoment_json[0:state]
 
@@ -478,16 +487,20 @@ def get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json,
     for state in range(0, len(energies_json)):
         for transition in list(transitions_json[state]):
             if state == 0:
-                presentation_list.append([transition['transition/SOMO'],transition['amplitude'],'---','---','---'])
-                list_states.append(state)
+                presentation_list.append([str(transition['transition/SOMO']),
+                                          (transition['amplitude']),
+                                          '---','---','---'])
+                list_states.append(state+1)
 
             else:
                 gxx = np.round(g_shift_list[state-1][0],3)
                 gyy = np.round(g_shift_list[state-1][1],3)
                 gzz = np.round(g_shift_list[state-1][2],3)
                 if abs(gxx) >= cut_gxx or abs(gyy) >= cut_gyy or abs(gzz) >= cut_gzz:
-                    presentation_list.append([transition['transition/SOMO'],transition['amplitude'],gxx,gyy,gzz])
-                    list_states.append(state)
+                    presentation_list.append([str(transition['transition/SOMO']),
+                                              (transition['amplitude']),
+                                              gxx,gyy,gzz])
+                    list_states.append(state+1)
     
     df = pd.DataFrame(presentation_list, index=list_states, columns=['transition/SOMO', 'amplitude', 
                                                                      'gxx','gyy','gzz'])
