@@ -12,8 +12,7 @@ from projectmethod.parsers.parser_plots import sos_analysis_and_plot, gfactor_al
 #            INPUT VALUES
 #####################################
 # ras_input='molecules/roberto_molecules_2/C74H32B4/C74H32B4_8_8_singletref_concat_triplets/C74H32B4_8_8_singletref_concat_triplets.out'
-ras_input = '\
-molecules/triangulenes/3Tm_triplet_ccpVTZ_8_8.out' 
+ras_input = '../molecules/roberto_molecules_2/C94H40B4/C94H40B4_8_8_singletref_triplets.out'
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1
@@ -25,12 +24,12 @@ soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 #  [2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]
 
 ######## G-TENSOR ANALYSIS ########
-excitanalysis_gvalue_cut = 0.3 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
+excitanalysis_gvalue_cut = 0.1 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
 gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## EXCITED STATES ANALYSIS ########
 excitanalysis = 1
-excitanalysis_config_cut = 1 # cut-off for configurations amplitude (% of maximum amplitude)
+excitanalysis_config_cut = 0.5 # cut-off for configurations amplitude (% of maximum amplitude)
 excitanalysis_soc_cut = 0 # cut-off for soccs (cm-1)
 excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (cm-1)
 
