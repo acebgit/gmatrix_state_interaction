@@ -6,12 +6,13 @@ from projectmethod.parsers.parser_gtensor import get_number_of_states, get_selec
     get_symmetry_states
 from projectmethod.parsers.parser_excitstates import get_configurations_unpaired_orbitals
 
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-initial_states = [1, 2, 3, 4, 5]
+state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+initial_states = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
+soctype = 0
 
-# # file = str(sys.argv[1])
-file = "../../projectmethod_allparsers/test/qchem_rasci.out"
+# file = str(sys.argv[1])
+file = "../../molecules/doublets/cucl4_2-_def2tzvp_17_10_20_states.out"
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -67,18 +68,26 @@ def get_spin_momentum(outpuut, all_state, selected_state):
     return selected_spin
 
 
-def get_socs(outpuut, all_pairstate, selected_pairstate):
+def get_socs(outpuut, all_pairstate, selected_pairstate, soc_type):
     """
     Obtain a dictionary with SOCs between ground state and all the rest, written as strings.
+    Depending on soc_type: 0) Total MF 1) Monoelectronic part 2) Bielectronic part
     :param outpuut:
     :param all_pairstate:
     :param selected_pairstate:
     :return:
     """
+    if soc_type == 0:
+        soc_text = 'total_soc_mat'
+    elif soc_type == 1:
+        soc_text = '1e_soc_mat'
+    elif soc_type == 2:
+        soc_text = '2e_soc_mat'
+
     data = outpuut['interstate_properties']
     all_socs = {}
     for i in range(2, len(all_pairstate) + 1):
-        pair_socs = data[(1, i)]['total_soc_mat']
+        pair_socs = data[(1, i)][soc_text]
 
         soc_list = []
         for row in range(0, len(pair_socs)):
@@ -173,7 +182,7 @@ all_pairstates = [all_states_symmetry[ground_state] + "_" + state_sym for state_
 selected_pairstates = [all_states_symmetry[ground_state] + "_" + state_sym for state_sym in selected_states_symmetry
                        if state_sym != all_states_symmetry[ground_state]]
 
-soclist_dict = get_socs(output, all_pairstates, selected_pairstates)
+soclist_dict = get_socs(output, all_pairstates, selected_pairstates, soctype)
 
 # 4) Take orbital angular momentum of the selected states
 orbitalmomentlist_dict = get_orbital_angmoment(output, all_pairstates, selected_pairstates)

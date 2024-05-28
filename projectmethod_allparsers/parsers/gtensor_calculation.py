@@ -11,10 +11,10 @@ from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
 # file = str(sys.argv[1])
-file = '../../projectmethod_allparsers/test/qchem_eomcc.out'
+file = '../../molecules/doublets/cucl4_2-_def2tzvp_17_10_20_states.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 1
+g_calculation = 0
 ppm = 0 # 0: ppt; 1: ppm
 # state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 # states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
@@ -22,11 +22,11 @@ ppm = 0 # 0: ppt; 1: ppm
 # soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 ######## G-TENSOR ANALYSIS ########
-excitanalysis_gvalue_cut = 0.1 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
+excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
 # gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## EXCITED STATES ANALYSIS ########
-excitanalysis = 1
+excitanalysis = 0
 excitanalysis_plot = 0
 # excitanalysis_config_cut = 0.5 # cut-off for configurations amplitude (% of maximum amplitude)
 # excitanalysis_soc_cut = 0 # cut-off for soccs (cm-1)
@@ -440,6 +440,9 @@ def sum_over_state_plot(energies_json, excitenergies_json, spin_json, soc_json, 
         print("------------------------------")
         print(" SUM-OVER-STATE ANALYSIS")
         print("------------------------------")
+        # Set display options to show all rows and columns
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
         df = pd.DataFrame([row[1:4] for row in presentation_list], list(range(1, nstates+1)), columns=['gxx','gyy','gzz'])
         print(df)
         print()
@@ -501,7 +504,10 @@ def get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json,
                                               (transition['amplitude']),
                                               gxx,gyy,gzz])
                     list_states.append(state+1)
-    
+
+    # Set display options to show all rows and columns
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
     df = pd.DataFrame(presentation_list, index=list_states, columns=['transition/SOMO', 'amplitude', 
                                                                      'gxx','gyy','gzz'])
     
