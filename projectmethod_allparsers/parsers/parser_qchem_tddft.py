@@ -4,8 +4,8 @@ import sys
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [1, 2, 3, 4, 5] # 0 is the ground state
-ground_state = 'T1'
-selected_multiplicity = 3
+ground_state = '0'
+selected_multiplicity = 2
 
 # file = str(sys.argv[1])
 file = '../../projectmethod_allparsers/test/qchem_tddft_singlets.out'
@@ -126,7 +126,8 @@ def get_spins(filee, initial_selected_state, states_option, ground_statee, multi
             final_states.insert(0, ground_statee)
         return final_states
 
-    all_states_spins = {}
+    all_states_approx_spins = {}
+    all_states_real_spins = {}
     multiplicity_count = {'Singlet': 0, 'Doublet': 0, 'Triplet': 0, 'Quartet': 0, 'Quintet': 0, 'Sextet': 0, 'Heptet': 0}
     with open(filee, encoding="utf8") as f:
         for line in f:
@@ -134,26 +135,35 @@ def get_spins(filee, initial_selected_state, states_option, ground_statee, multi
                 bra_state, ket_state = take_states(f, line)
 
                 linne = search_word_line(f, 'Ket state')
-                state_a_spin = linne.split()[-4]
+                state_a_approx_spin = linne.split()[-4]
+                state_a_real_spin = linne.split()[5]
+                print(state_a_real_spin)
+                exit()
+
                 linne = search_word_line(f, 'Bra state')
-                state_b_spin = linne.split()[-4]
+                state_b_approx_spin = linne.split()[-4]
+                state_b_real_spin = linne.split()[5]
 
-                ket_state = change_state_name(state_b_spin, multiplicity_diction, multiplicity_count)
-                all_states_spins.update({bra_state: state_a_spin})
-                all_states_spins.update({ket_state: state_b_spin})
+                ket_state = change_state_name(state_b_approx_spin, multiplicity_diction, multiplicity_count)
+                all_states_approx_spins.update({bra_state: state_a_approx_spin})
+                all_states_approx_spins.update({ket_state: state_b_approx_spin})
+                all_states_real_spins.update({bra_state: state_a_real_spin})
+                all_states_real_spins.update({ket_state: state_b_real_spin})
 
-    all_states = list(all_states_spins.keys())
+    all_states = list(all_states_approx_spins.keys())
     selected_states = get_selected_states(states_option, initial_selected_state, ground_statee, all_states,
                                           selected_multiplicity, multiplicity_diction)
 
-    selected_states_spins = {}
+    selected_states_approx_spins = {}
+    selected_states_real_spins = {}
     for i in selected_states:
-        if i in list(all_states_spins.keys()):
-            selected_states_spins.update({i: all_states_spins[i]})
+        if i in list(all_states_approx_spins.keys()):
+            selected_states_approx_spins.update({i: all_states_approx_spins[i]})
+            selected_states_real_spins.update({i: all_states_real_spins[i]})
 
-    if len(selected_states_spins) <= 1:
+    if len(selected_states_approx_spins) <= 1:
         raise ValueError("Multiplicity or initial states have not been well selected. ")
-    return selected_states_spins, all_states, selected_states
+    return selected_states_approx_spins, selected_states_real_spins, all_states, selected_states
 
 
 def get_socs(filee, selected_state, ground_state, all_states_named):
@@ -361,7 +371,7 @@ totalstates = get_number_of_states(file)
 # Take SOCs of the selected states
 # This is done first since in interstate properties is where the approximate spin is defined
 # WARNING! TDDFT states by default are going to have spin contamination.
-approx_spin_json, all_states, selected_states = get_spins(file, initial_states, state_selection, ground_state, multiplicity_dict,
+approx_spin_json, real_spin_json, all_states, selected_states = get_spins(file, initial_states, state_selection, ground_state, multiplicity_dict,
                                          selected_multiplicity)
 
 soclist_json = get_socs(file, selected_states, ground_state, all_states)
@@ -381,3 +391,5 @@ output_dict = {
 }
 
 output_json(file)
+
+print(real_spin_json)

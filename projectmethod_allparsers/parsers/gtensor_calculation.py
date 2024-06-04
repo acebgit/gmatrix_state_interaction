@@ -14,7 +14,7 @@ from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 file = '../../molecules/doublets/cucl4_2-_def2tzvp_17_10_20_states.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 0
+g_calculation = 1
 ppm = 0 # 0: ppt; 1: ppm
 # state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 # states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
@@ -33,7 +33,7 @@ excitanalysis_plot = 0
 # excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (cm-1)
 
 ######## SOS PLOTS ########
-sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
+sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
 # gestimation_comparison = 0 # 1: SOS comparison between g-shift calculated and estimated
 
 
