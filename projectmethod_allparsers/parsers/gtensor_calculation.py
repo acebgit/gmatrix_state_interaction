@@ -11,11 +11,11 @@ from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
 # file = str(sys.argv[1])
-file = '../../molecules/doublets/cucl4_2-_def2tzvp_17_10_20_states.out'
+file = '../../molecules/triangulenes/2Tm_doublet_eomea.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 1
-ppm = 0 # 0: ppt; 1: ppm
+g_calculation = 0
+ppm = 1 # 0: ppt; 1: ppm
 # state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 # states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
 # symmetry_selection = 'B1u'  # Symmetry selected states_selected
@@ -33,7 +33,7 @@ excitanalysis_plot = 0
 # excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (cm-1)
 
 ######## SOS PLOTS ########
-sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
+sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
 # gestimation_comparison = 0 # 1: SOS comparison between g-shift calculated and estimated
 
 
@@ -416,7 +416,7 @@ def sum_over_state_plot(energies_json, excitenergies_json, spin_json, soc_json, 
         :return: shows SOS plot
         """
         presentation_list = []
-        for state in range(1, len(energies_json)+1):
+        for state in range(1, len(energies_json)):
             # State properties
             energies = energies_json[0:state+1]
             excitenergies = excitenergies_json[0:state+1]
@@ -432,8 +432,8 @@ def sum_over_state_plot(energies_json, excitenergies_json, spin_json, soc_json, 
             g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
                                             max_sz_list, spin_matrix, orbital_matrix, 
                                             standard_spin_matrix, sz_ground, ppm)
-            
-            presentation_list.append([state, np.round(g_shift[0].real, 3),
+
+            presentation_list.append([state+1, np.round(g_shift[0].real, 3),
                                             np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
         presentation_matrix = np.array(presentation_list, dtype=object)
 
@@ -443,7 +443,7 @@ def sum_over_state_plot(energies_json, excitenergies_json, spin_json, soc_json, 
         # Set display options to show all rows and columns
         pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', None)
-        df = pd.DataFrame([row[1:4] for row in presentation_list], list(range(1, nstates+1)), columns=['gxx','gyy','gzz'])
+        df = pd.DataFrame([row[1:4] for row in presentation_list], list(range(2, nstates+1)), columns=['gxx','gyy','gzz'])
         print(df)
         print()
 

@@ -3,18 +3,29 @@ import sys
 import numpy as np
 import pandas as pd
 
-from projectmethod_allparsers.parsers.parser_qchem_tddft import search_word_line
-
 state_selection = 1  # 0: use selected states ; 1: use all states_selected
 initial_states = [1]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
 # file = str(sys.argv[1])
-file = '../../projectmethod_allparsers/test/qchem_eomcc.out'
+file = '../../molecules/triangulenes/2Tm_doublet_eomea.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######
 #################################
+
+def search_word_line(archivo, text):
+    """
+    Search a text and goes to that line.
+    :param archivo
+    :param text
+    :return: linee
+    """
+    linee = next(archivo)
+    while text not in linee:
+        linee = next(archivo)
+    return linee
+
 
 def get_interstate_properties(filee):
     """
