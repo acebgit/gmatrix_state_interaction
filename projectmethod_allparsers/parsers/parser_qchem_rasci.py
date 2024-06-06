@@ -12,7 +12,7 @@ symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soctype = 0
 
 # file = str(sys.argv[1])
-file = "../../molecules/triangulenes/2Tm_doublet_eomea.out"
+file = "../../molecules/triangulenes/2Tm_doublet_ccpVDZ_7_7.out"
 
 #################################
 # FUNCTIONS AND CLASSES    ######
