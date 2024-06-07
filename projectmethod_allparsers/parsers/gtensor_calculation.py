@@ -15,7 +15,7 @@ from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 file = '../../molecules/triangulenes/2Tm_doublet_ccpVDZ_3_3_100st.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 0
+g_calculation = 1
 ppm = 1 # 0: ppt; 1: ppm
 # state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 # states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
@@ -27,7 +27,7 @@ excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-e
 # gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## EXCITED STATES ANALYSIS ########
-excitanalysis = 0
+excitanalysis = 1
 cutoffamp = 0.9 # cut-off for configurations amplitude
 excitanalysis_plot = 0
 
@@ -516,7 +516,7 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
 
             # Take states with estimated g-shift higher than a cutoff
             max_gvalues = [max(col) * cutoff for col in zip(*estimation_list)]
-            relevant_states = [sublist[0] for sublist in estimation_list if sublist[1]>=max_gvalues[1] 
+            relevant_states = [sublist[0]-1 for sublist in estimation_list if sublist[1]>=max_gvalues[1] 
                                or sublist[2]>=max_gvalues[2] or sublist[3]>=max_gvalues[3]]
 
             # Make procedure with states with estimated g-shift different than 0
