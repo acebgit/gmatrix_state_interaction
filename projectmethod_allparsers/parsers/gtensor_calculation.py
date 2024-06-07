@@ -2,6 +2,7 @@ import json
 import sys 
 import numpy as np
 import pandas as pd
+import math 
 from scipy import constants
 
 from projectmethod.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
@@ -14,7 +15,7 @@ from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 file = '../../molecules/triangulenes/2Tm_doublet_ccpVDZ_3_3_100st.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 1
+g_calculation = 0
 ppm = 1 # 0: ppt; 1: ppm
 # state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 # states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
@@ -26,13 +27,14 @@ excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-e
 # gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## EXCITED STATES ANALYSIS ########
-excitanalysis = 1
+excitanalysis = 0
 cutoffamp = 0.9 # cut-off for configurations amplitude
 excitanalysis_plot = 0
 
 ######## SOS PLOTS ########
 sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
 amp_cutoff = 0.5
+g_estimation = 1
 
 
 def extract_data_from_json(filee):
@@ -424,47 +426,29 @@ def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot, cutoff
                         'Spin-orbit coupling constants (cm-1)', 'soc_analysis', save_pict=0)
 
 
-def from_ppt_to_ppm(gvalues, ppm=None):
-    """
-        Pass from ppt to ppm the gvalues.
-        :param: ppm, gvalues
-        :return: gvalues
-        """
-    if ppm == 1:
-        gvalues = [i * 1000 for i in gvalues]
-    else:
-        pass
-    return gvalues
-
-
 def gshift_estimation_loop(nstates, orbit_moments, soccs, energies, ppm):
     """
     Calculate the g-values in all the selected states.
-    :return:
+    :param: nstates, orbit_moments, soccs, energies, ppm
+    :return: 
     """
     # SOCC from cm-1 to au
     from_cm_to_ev = 100 / constants.physical_constants['electron volt-inverse meter relationship'][0]
     soccs = soccs * from_cm_to_ev
 
-    g_xx = [0]
-    g_yy = [0]
-    g_zz = [0]
+    presentation_list = []
+    for state in range(1, nstates+1):
+        # Units = part per thousand
+        # Since result is going to be imaginary, it is transformed to real
+        g_xx = abs(-4 * orbit_moments[state-1][0] * soccs[state-1] / energies[state]) * 1000
+        g_yy = abs(-4 * orbit_moments[state-1][1] * soccs[state-1] / energies[state]) * 1000
+        g_zz = abs(-4 * orbit_moments[state-1][2] * soccs[state-1] / energies[state]) * 1000
 
-    for i in range(1, len(nstates)):  # Units = part per thousand
-        element_xx = (-4 * orbit_moments[i, 0] * soccs[i] / energies[i]) * 1000
-        element_yy = (-4 * orbit_moments[i, 1] * soccs[i] / energies[i]) * 1000
-        element_zz = (-4 * orbit_moments[i, 2] * soccs[i] / energies[i]) * 1000
-
-        g_xx.append(element_xx)
-        g_yy.append(element_yy)
-        g_zz.append(element_zz)
-
-    g_xx = from_ppt_to_ppm(g_xx, ppm)
-    g_yy = from_ppt_to_ppm(g_yy, ppm)
-    g_zz = from_ppt_to_ppm(g_zz, ppm)
-
-    # From_qchem_to_sto
-    return g_yy, g_xx, g_zz
+        if ppm == 0:
+            presentation_list.append([state+1,np.round(g_xx, 3),np.round(g_yy, 3),np.round(g_zz, 3)])
+        elif ppm == 1:
+            presentation_list.append([state+1,np.round(g_xx, 3)*1000,np.round(g_yy, 3)*1000,np.round(g_zz, 3)*1000])
+    return presentation_list
 
 
 def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, ppm, cutoff):
@@ -489,48 +473,73 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
 
                 max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
                     = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
-
+                
+                # Calculate g-shift between ground state and excited states
                 g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
-                                            max_sz_list, spin_matrix, orbital_matrix, 
-                                            standard_spin_matrix, sz_ground, ppm)
+                                        max_sz_list, spin_matrix, orbital_matrix, 
+                                        standard_spin_matrix, sz_ground, ppm)
+                
+                presentation_list_all.append([state+1, np.round(g_shift[0].real, 3),np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
 
-                presentation_list_all.append([state+1, np.round(g_shift[0].real, 3),
-                                            np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
-        
+            # Filter all the g-values and take those where the difference with the previous
+            # state g-value is >= than a cut-off multiplied by the maximum g-value
+            xx_cut = abs(max(sublist[1] for sublist in presentation_list_all)) * cutoff
+            yy_cut = abs(max(sublist[2] for sublist in presentation_list_all)) * cutoff
+            zz_cut = abs(max(sublist[3] for sublist in presentation_list_all)) * cutoff
+            presentation_list = []
+
+            for row in range(1,len(presentation_list_all)):
+                xx_diff = abs(presentation_list_all[row][1] - presentation_list_all[row-1][1]) 
+                yy_diff = abs(presentation_list_all[row][2] - presentation_list_all[row-1][2]) 
+                zz_diff = abs(presentation_list_all[row][3] - presentation_list_all[row-1][3]) 
+                if (xx_diff > xx_cut) or (yy_diff > yy_cut) or (zz_diff > zz_cut):
+                    presentation_list.append(presentation_list_all[row])
+
         elif gestimation == 1:
-            for state in range(1, len(energies_json)):
-                    # State properties
-                    energies = energies_json[0:state+1]
-                    excitenergies = excitenergies_json[0:state+1]
-                    spin = spin_json[0:state+1]
+            def from_socmatrix_to_socc(soc_matrix):
+                """
+                From SOC matrix to SOCC between states. 
+                """
+                socclist = []
+                for interstate in range(0, len(soc_matrix)):
+                    socc = 0
+                    for ms1 in range(0, len(soc_matrix[interstate])):
+                        for ms2 in range(0, len(soc_matrix[interstate][ms1])):
+                            socc += (abs(complex(soc_matrix[interstate][ms1][ms2]))) ** 2
+                    socclist.append(math.sqrt(socc))
+                soccmatrix = np.array(socclist, dtype=object)
+                return soccmatrix
 
-                    # Interstate properties
-                    soc = soc_json[0:state]
-                    orbitmoment = orbitmoment_json[0:state]
+            # Calculate estimated g-shift between ground state and excited states
+            socc = from_socmatrix_to_socc(soc_json)
+            estimation_list = gshift_estimation_loop(len(socc), orbitmoment_json, socc, excitenergies_json, ppm)
 
-                    max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
-                        = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
+            # Take states with estimated g-shift higher than a cutoff
+            max_gvalues = [max(col) * cutoff for col in zip(*estimation_list)]
+            relevant_states = [sublist[0] for sublist in estimation_list if sublist[1]>=max_gvalues[1] 
+                               or sublist[2]>=max_gvalues[2] or sublist[3]>=max_gvalues[3]]
 
-                    g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
-                                                max_sz_list, spin_matrix, orbital_matrix, 
-                                                standard_spin_matrix, sz_ground, ppm)
+            # Make procedure with states with estimated g-shift different than 0
+            for state in relevant_states:
+                # State properties
+                energies = energies_json[0:state+1]
+                excitenergies = excitenergies_json[0:state+1]
+                spin = spin_json[0:state+1]
 
-                    presentation_list_all.append([state+1, np.round(g_shift[0].real, 3),
-                                                np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
-        
-        # Filter all the g-values and take those where the difference with the previous
-        # state g-value is >= than a cut-off multiplied by the maximum g-value
-        xx_cut = abs(max(sublist[1] for sublist in presentation_list_all)) * cutoff
-        yy_cut = abs(max(sublist[2] for sublist in presentation_list_all)) * cutoff
-        zz_cut = abs(max(sublist[3] for sublist in presentation_list_all)) * cutoff
-        presentation_list = []
+                # Interstate properties
+                soc = soc_json[0:state]
+                orbitmoment = orbitmoment_json[0:state]
 
-        for row in range(1,len(presentation_list_all)):
-            xx_diff = abs(presentation_list_all[row][1] - presentation_list_all[row-1][1]) 
-            yy_diff = abs(presentation_list_all[row][2] - presentation_list_all[row-1][2]) 
-            zz_diff = abs(presentation_list_all[row][3] - presentation_list_all[row-1][3]) 
-            if (xx_diff > xx_cut) or (yy_diff > yy_cut) or (zz_diff > zz_cut):
-                presentation_list.append(presentation_list_all[row])
+                max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
+                    = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
+                
+                # Calculate g-shift between ground state and excited states
+                g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
+                                        max_sz_list, spin_matrix, orbital_matrix, 
+                                        standard_spin_matrix, sz_ground, ppm)
+                
+                presentation_list_all.append([state+1, np.round(g_shift[0].real, 3),np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+                presentation_list = presentation_list_all
         presentation_matrix = np.array(presentation_list, dtype=object)
 
         print("------------------------------")
@@ -629,4 +638,4 @@ if excitanalysis == 1:
     excitedstates_analysis(nstates, excitenergies_json, orbitmoment_json, soc_json, excitanalysis_plot, cutoffamp)
 
 if sos_analysis == 1:
-    sum_over_state_plot(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, ppm, amp_cutoff)
+    sum_over_state_plot(g_estimation, energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, ppm, amp_cutoff)
