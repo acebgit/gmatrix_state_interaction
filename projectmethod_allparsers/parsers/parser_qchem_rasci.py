@@ -11,8 +11,8 @@ initial_states = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soctype = 0
 
-# file = str(sys.argv[1])
-file = "../../molecules/triangulenes/2Tm_doublet_ccpVDZ_7_7.out"
+file = str(sys.argv[1])
+# file = "../../molecules/triangulenes/2Tm_ccpVDZ_1_1_100st.out"
 
 #################################
 # FUNCTIONS AND CLASSES    ######

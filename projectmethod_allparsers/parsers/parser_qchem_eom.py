@@ -7,8 +7,8 @@ state_selection = 1  # 0: use selected states ; 1: use all states_selected
 initial_states = [1]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
-# file = str(sys.argv[1])
-file = '../../molecules/triangulenes/2Tm_doublet_eomea.out'
+file = str(sys.argv[1])
+# file = '../../molecules/triangulenes/2Tm_doublet_eomea.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######

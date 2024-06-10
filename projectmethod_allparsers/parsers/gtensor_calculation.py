@@ -11,8 +11,8 @@ from projectmethod.parsers.parser_excitstates import get_bar_chart
 from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
-# file = str(sys.argv[1])
-file = '../../molecules/triangulenes/2Tm_doublet_ccpVDZ_3_3_100st.out'
+file = str(sys.argv[1])
+# file = '../../molecules/triangulenes/2Tm_ccpVDZ_3_3_100st.out'
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1
@@ -33,7 +33,7 @@ excitanalysis_plot = 0
 
 ######## SOS PLOTS ########
 sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
-amp_cutoff = 0.5
+amp_cutoff = 0.1
 g_estimation = 1
 
 

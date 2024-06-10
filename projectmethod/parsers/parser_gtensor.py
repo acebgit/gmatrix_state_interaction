@@ -758,7 +758,7 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         g_shifts[i] = (sqrt(upper_g_matrix_diagonal[i, i]) - lande_factor) * 1000
 
     g_shifts = from_ppt_to_ppm(g_shifts, ppms)
-    g_shifts = from_qchem_to_sto(g_shifts)
+    # g_shifts = from_qchem_to_sto(g_shifts)
 
     return g_shifts
 

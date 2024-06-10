@@ -7,8 +7,8 @@ initial_states = [1, 2, 3, 4, 5] # 0 is the ground state
 ground_state = '0'
 selected_multiplicity = 2
 
-# file = str(sys.argv[1])
-file = '../../projectmethod_allparsers/test/qchem_tddft_singlets.out'
+file = str(sys.argv[1])
+# file = '../../projectmethod_allparsers/test/qchem_tddft_singlets.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -137,8 +137,6 @@ def get_spins(filee, initial_selected_state, states_option, ground_statee, multi
                 linne = search_word_line(f, 'Ket state')
                 state_a_approx_spin = linne.split()[-4]
                 state_a_real_spin = linne.split()[5]
-                print(state_a_real_spin)
-                exit()
 
                 linne = search_word_line(f, 'Bra state')
                 state_b_approx_spin = linne.split()[-4]
@@ -392,4 +390,4 @@ output_dict = {
 
 output_json(file)
 
-print(real_spin_json)
+# print(real_spin_json)

@@ -383,12 +383,12 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
         for orbital in initial_scf_space:  # RAS2
             scf_orbitals_order.append(orbital)
 
-        for orbital in range(homo_orbit + 1, homo_orbit + 50):  # RAS3
+        for orbital in range(homo_orbit + 1, homo_orbit + 200):  # RAS3
             if orbital not in initial_scf_space:
                 scf_orbitals_order.append(orbital)
 
         # ras_orbitals_order: orbital_list in RAS energetic order, meaning RAS1 - RAS2 - RAS3
-        ras_orbitals_order = list(range(1, homo_orbit + 50))
+        ras_orbitals_order = list(range(1, homo_orbit + 200))
 
         # print('ras_orbitals_order', 'scf_orbitals_order')
         # for i in range(0, len(ras_orbitals_order)):
