@@ -3,9 +3,9 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 #####################################
 #          MODULES SELECTION
 #####################################
-from projectmethod.parsers.parser_gtensor import gfactor_presentation, from_gvalue_to_shift
-from projectmethod.parsers.parser_excitstates import get_excited_states_analysis, get_gtensor_analysis
-from projectmethod.parsers.parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcalculation_gestimation
+from projection_method.parsers.parser_gtensor import gfactor_presentation, from_gvalue_to_shift
+from projection_method.parsers.parser_excitstates import get_excited_states_analysis, get_gtensor_analysis
+from projection_method.parsers.parser_plots import sos_analysis_and_plot, gfactor_all_states, compare_gcalculation_gestimation
 # import cProfile
 
 #####################################

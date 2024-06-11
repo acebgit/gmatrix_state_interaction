@@ -5,7 +5,7 @@
 import numpy as np
 # from tabulate import tabulate
 
-from projectmethod_allparsers.parsers.parser_eom import get_eom_type, get_scf_energy, get_irreps_energies, \
+from projection_method.parsers.parser_eom import get_eom_type, get_scf_energy, get_irreps_energies, \
     get_maximum_amplitude_orbitals, get_eom_socc_values, second_smallest_number
 
 #####################################
