@@ -11,11 +11,11 @@ from projectmethod.parsers.parser_excitstates import get_bar_chart
 from projectmethod.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
-file = str(sys.argv[1])
-# file = '../../molecules/triangulenes/2Tm_ccpVDZ_3_3_100st.out'
+# file = str(sys.argv[1])
+file = '../../molecules/phenalenyl/2Tm_doublet_eomea.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 1
+g_calculation = 0
 ppm = 1 # 0: ppt; 1: ppm
 # state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 # states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
@@ -33,8 +33,8 @@ excitanalysis_plot = 0
 
 ######## SOS PLOTS ########
 sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
-amp_cutoff = 0.1
-g_estimation = 1
+amp_cutoff = 0
+g_estimation = 0
 
 
 def extract_data_from_json(filee):
@@ -486,15 +486,17 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
             xx_cut = abs(max(sublist[1] for sublist in presentation_list_all)) * cutoff
             yy_cut = abs(max(sublist[2] for sublist in presentation_list_all)) * cutoff
             zz_cut = abs(max(sublist[3] for sublist in presentation_list_all)) * cutoff
-            presentation_list = []
 
+            presentation_list = [presentation_list_all[0]] # First value is included
             for row in range(1,len(presentation_list_all)):
-                xx_diff = abs(presentation_list_all[row][1] - presentation_list_all[row-1][1]) 
-                yy_diff = abs(presentation_list_all[row][2] - presentation_list_all[row-1][2]) 
-                zz_diff = abs(presentation_list_all[row][3] - presentation_list_all[row-1][3]) 
-                if (xx_diff > xx_cut) or (yy_diff > yy_cut) or (zz_diff > zz_cut):
+                # If difference between one value and the previous one is over a cut-off, include
+                # it in the presentation list
+                xx_diff = abs(presentation_list_all[row][1] - presentation_list_all[row-1][1])
+                yy_diff = abs(presentation_list_all[row][2] - presentation_list_all[row-1][2])
+                zz_diff = abs(presentation_list_all[row][3] - presentation_list_all[row-1][3])
+                if (xx_diff >= xx_cut) or (yy_diff >= yy_cut) or (zz_diff >= zz_cut):
                     presentation_list.append(presentation_list_all[row])
-
+        
         elif gestimation == 1:
             def from_socmatrix_to_socc(soc_matrix):
                 """
