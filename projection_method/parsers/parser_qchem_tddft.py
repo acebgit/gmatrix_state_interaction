@@ -2,13 +2,13 @@ import json
 import numpy as np
 import sys 
 
-state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
-initial_states = [1, 2, 3, 4, 5] # 0 is the ground state
+state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected
+initial_states = [0, 18] # 0 is the ground state
 ground_state = '0'
-selected_multiplicity = 3
+selected_multiplicity = 2
 
 file = str(sys.argv[1])
-# file = '../../projectmethod_allparsers/test/qchem_tddft_singlets.out'
+# file = '../../molecules/phenalenyl/2Tm_doublet_ccpVTZ_tddft.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######

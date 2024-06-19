@@ -12,7 +12,7 @@ from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
 file = str(sys.argv[1])
-# file = '../../molecules/phenalenyl/2Tm_doublet_eomea.out'
+# file = '../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_tddft.out'
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1
@@ -28,11 +28,11 @@ excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-e
 
 ######## EXCITED STATES ANALYSIS ########
 excitanalysis = 1
-cutoffamp = 0.9 # cut-off for configurations amplitude
+cutoffamp = 0 # cut-off for configurations amplitude
 excitanalysis_plot = 0
 
 ######## SOS PLOTS ########
-sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
+sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
 amp_cutoff = 0.25
 g_estimation = 1
 
@@ -359,6 +359,12 @@ def from_matrices_to_gshift(excitenergies_json, soc, max_sz, spin, orbital, stan
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital, max_sz)
 
+    # for ndim in range(0,3):
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #             for row in np.round((eigenvector[:,:]),5)]))
+    # print("...")
+    # exit()
+
     g_shift = g_factor_calculation(standard_spin, combination_spin_matrix, combination_orbital_matrix,
                                 max_sz, szground, ppms)
     return g_shift
@@ -384,8 +390,13 @@ def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot, cutoff
     """
     Get a table in pandas with information for each of the excited states. 
     """
-    max_orbitmoment = [abs(max(sublista, key=abs)) for sublista in orbitmoment]
+    # max_orbitmoment = [abs(max(sublista, key=abs)) for sublista in orbitmoment]
     socc = [((sum((abs(complex(elemento)))**2 for sublista in i for elemento in sublista))**(1/2)) for i in soc]
+    
+    # Make a list of orbital angular momentums rounded by two decimals 
+    np_data = np.array(orbitmoment)
+    rounded_data = np.around(np_data, decimals=2)
+    orbitmoment = rounded_data.tolist()
 
     presentation_list_all = []
     list_states = []
@@ -397,7 +408,7 @@ def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot, cutoff
                                         transition['amplitude']])
             else:
                 presentation_list_all.append([state+1, np.round(excitenergies[state],3), 
-                                        np.round(max_orbitmoment[state-1],3), 
+                                        orbitmoment[state-1], 
                                         np.round(socc[state-1],3),  
                                         transition['transition/SOMO'], 
                                         transition['amplitude']])
@@ -625,10 +636,16 @@ nstates = len(energies_json)
 if g_calculation == 1:
     max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
     = from_json_to_matrices(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json)
-    
+
+    # for ndim in range(0,3):
+    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                 for row in np.round((orbital_matrix[:,:,ndim]),5)]))
+    #     print("...")
+    # exit()
+
     g_shift = from_matrices_to_gshift(excitenergies_json, soc_matrix, max_sz_list, spin_matrix, 
                                       orbital_matrix, standard_spin_matrix, sz_ground, ppm)
-    
+
     print_g_calculation(file, nstates, g_shift)
 
 if excitanalysis_gvalue_cut != 0:
