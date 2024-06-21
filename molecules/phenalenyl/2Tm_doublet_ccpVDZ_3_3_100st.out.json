@@ -4,32 +4,32 @@
             -497.580777828796,
             0.0
         ],
-        "21A1":[
-            -497.290624331649,
-            7.895478366736
+        "5A1":[
+            -497.424007341267,
+            4.265942009993
         ]
     },
     "soclist_dict":{
-        "1A1_21A1":[
+        "1A1_5A1":[
             [
-                "0.000634j",
-                "(0.089015+1.896186j)"
+                "0.11608j",
+                "(-0.000112-0.001353j)"
             ],
             [
-                "(-0.089015+1.896186j)",
-                "-0.000634j"
+                "(0.000112-0.001353j)",
+                "-0.11608j"
             ]
         ]
     },
     "spin_dict":{
         "1A1":"0.7500",
-        "21A1":"0.7500"
+        "5A1":"0.7500"
     },
     "orbitalmomentlist_dict":{
-        "1A1_21A1":[
-            "0.282162054j",
-            "-0.01214669j",
-            "-0.000572701j"
+        "1A1_5A1":[
+            "-0.000128898j",
+            "-7.3509e-05j",
+            "1.818801183j"
         ]
     },
     "transitions_dict":[
@@ -47,29 +47,19 @@
         ],
         [
             {
-                "state":21,
-                "transition/SOMO":51,
-                "amplitude":0.8596
+                "state":5,
+                "transition/SOMO":41,
+                "amplitude":0.9276
             },
             {
-                "state":21,
-                "transition/SOMO":52,
-                "amplitude":0.277
+                "state":5,
+                "transition/SOMO":45,
+                "amplitude":0.2912
             },
             {
-                "state":21,
-                "transition/SOMO":38,
-                "amplitude":0.27
-            },
-            {
-                "state":21,
-                "transition/SOMO":57,
-                "amplitude":0.1705
-            },
-            {
-                "state":21,
-                "transition/SOMO":49,
-                "amplitude":0.1288
+                "state":5,
+                "transition/SOMO":"43,44,46",
+                "amplitude":0.1291
             }
         ]
     ]

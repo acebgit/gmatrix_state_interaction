@@ -7,12 +7,12 @@ from projection_method.parsers.parser_gtensor import get_number_of_states, get_s
 from projection_method.parsers.parser_excitstates import get_configurations_unpaired_orbitals
 
 state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-initial_states = [1, 21]
+initial_states = [1, 4]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soctype = 0
 
 file = str(sys.argv[1])
-# file = "../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_3_3_100st.out"
+# file = "../../2Tm_ccpVDZ_eomip.out"
 
 #################################
 # FUNCTIONS AND CLASSES    ######

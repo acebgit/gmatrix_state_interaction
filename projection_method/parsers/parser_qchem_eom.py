@@ -3,12 +3,12 @@ import sys
 import numpy as np
 import pandas as pd
 
-state_selection = 1  # 0: use selected states ; 1: use all states_selected
-initial_states = [1]
+state_selection = 0  # 0: use selected states ; 1: use all states_selected
+initial_states = [1, 25]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 
 file = str(sys.argv[1])
-# file = '../../molecules/triangulenes/2Tm_doublet_eomea.out'
+# file = '../../2Tm_ccpVDZ_eomip.out'
 
 #################################
 # FUNCTIONS AND CLASSES    ######
@@ -131,11 +131,10 @@ def get_selectedstates_and_totalenergies(filee, states_option, init_states, sym_
 
     select_states = []
     if states_option == 0:
-        for i in init_states:
-            if 0 < i <= nstates:
-                check_state = str(i) + "/"
+        for i in init_states: # For all the initial states selected
+            if 0 < i <= nstates: # States between 1 and nstates
                 for state in all_states:
-                    if check_state in state:
+                    if int(state.split('/')[0]) == i: # Take all "i" states, regardless of their symmetry 
                         select_states.append(state)
             else:
                 raise ValueError("The number of states selected selected must be among the total number of states "

@@ -33,8 +33,8 @@ excitanalysis_plot = 0
 
 ######## SOS PLOTS ########
 sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
-amp_cutoff = 0.25
-g_estimation = 1
+amp_cutoff = 0.1
+g_estimation = 0
 
 
 def extract_data_from_json(filee):
