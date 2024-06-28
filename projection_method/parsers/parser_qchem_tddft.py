@@ -2,7 +2,7 @@ import json
 import numpy as np
 import sys 
 
-state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected
+state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [0, 4] # 0 is the ground state
 ground_state = '0'
 selected_multiplicity = 2

@@ -746,8 +746,8 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     g_matrix_triangular[0, 0] = trace_g_values(j_matrix_transformed_x, standard_spin_matrix[:, :, 2])
 
     # 8) from g_matrix_triangular to g-shifts
-    upper_g_matrix = np.matmul(g_matrix_triangular, np.transpose(g_matrix_triangular))
-    upper_g_matrix_eigenvalues, rotation_g_matrix, upper_g_matrix_diagonal = diagonalization(upper_g_matrix)
+    g_matrix = np.matmul(g_matrix_triangular, np.transpose(g_matrix_triangular))
+    g_matrix_eigenvalues, rotation_g_matrix, g_matrix_diagonal = diagonalization(g_matrix)
     # print('Lande factor: ', lande_factor)
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
     #             for row in np.round((standard_spin_matrix[:,:,0]), 10)]))
@@ -755,12 +755,12 @@ def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
 
     g_shifts = np.zeros(3, dtype=complex)
     for i in range(0, 3):
-        g_shifts[i] = (sqrt(upper_g_matrix_diagonal[i, i]) - lande_factor) * 1000
+        g_shifts[i] = (sqrt(g_matrix_diagonal[i, i]) - lande_factor) * 1000
 
     g_shifts = from_ppt_to_ppm(g_shifts, ppms)
     # g_shifts = from_qchem_to_sto(g_shifts)
 
-    return g_shifts
+    return g_matrix, g_shifts
 
 
 def from_energies_soc_to_g_values(file, states_ras, totalstates,
@@ -782,10 +782,10 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
 
-    g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, ground_sz, ppm)
 
-    return g_shift
+    return gshift
 
 
 def print_g_calculation(file, totalstates, selected_states,
@@ -837,10 +837,10 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
 
-    g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground, ppm)
 
-    print_g_calculation(ras_input, totalstates, states_option, states_ras, g_shift, symmetry_selection)
+    print_g_calculation(ras_input, totalstates, states_option, states_ras, gshift, symmetry_selection)
 
 
 def from_gvalue_to_shift(lista):

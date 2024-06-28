@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import pandas as pd
 
-state_selection = 0  # 0: use selected states ; 1: use all states_selected
+state_selection = 1  # 0: use selected states ; 1: use all states_selected
 initial_states = [1, 25]
 symmetry_selection = 'B1'  # Symmetry selected states_selected
 

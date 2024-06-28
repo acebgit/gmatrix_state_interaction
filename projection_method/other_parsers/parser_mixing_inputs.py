@@ -460,12 +460,12 @@ def gfactor_presentation_mixinputs(file_msnull, file_ms_notnull, selection_state
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
 
-    g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground, ppms)
 
     singlet, triplet = count_state_multiplicities(file_msnull, file_ms_notnull, states_ras_1, states_ras_2, list_mapping)
 
-    print_g_calculation_mixinputs(file_msnull, totalstates, states_ras_1, states_ras_2, g_shift, singlet, triplet)
+    print_g_calculation_mixinputs(file_msnull, totalstates, states_ras_1, states_ras_2, gshift, singlet, triplet)
 
 
 def get_input_data_excited_states(file, state_selections, states_ras):
@@ -621,9 +621,9 @@ def gfactor_sos_analysis(file_msnull, file_ms_notnull, states_ras, states_option
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list_1)
 
-    g_shift = g_factor_calculation(standard_spin_matrix_1, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = g_factor_calculation(standard_spin_matrix_1, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list_1, sz_ground_1)
-    return g_shift
+    return gshift
 
 
 def plot_g_tensor_vs_states(presentation_matrix, x_title, y_title, main_title, save_picture):

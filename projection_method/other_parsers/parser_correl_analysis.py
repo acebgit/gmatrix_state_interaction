@@ -140,10 +140,10 @@ def orbitmomentum_and_gvalues_correlation(file, nstates, excit_energ, socs, list
         # exit()
 
         combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, list_sz)
-        g_shift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+        gmatrix, gshift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                        list_sz, ground_sz, ppms=0)
-        presentation_tuple.append([abs(l_value), np.round(g_shift.real[0], 3), np.round(g_shift.real[1], 3),
-                                   np.round(g_shift.real[2], 3)])
+        presentation_tuple.append([abs(l_value), np.round(gshift.real[0], 3), np.round(gshift.real[1], 3),
+                                   np.round(gshift.real[2], 3)])
 
     presentation_matrix = np.array(presentation_tuple, dtype=object)
     plot_g_tensor_vs_states(file, presentation_matrix, x_title='Orbital Angular Momentum', y_title='g-values (ppt)',

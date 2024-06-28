@@ -16,7 +16,7 @@ file = str(sys.argv[1])
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1
-ppm = 1 # 0: ppt; 1: ppm
+ppm = 0 # 0: ppt; 1: ppm
 # state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 # states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
 # symmetry_selection = 'B1u'  # Symmetry selected states_selected
@@ -27,7 +27,7 @@ excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-e
 # gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## EXCITED STATES ANALYSIS ########
-excitanalysis = 1
+excitanalysis = 0
 cutoffamp = 0 # cut-off for configurations amplitude
 excitanalysis_plot = 0
 
@@ -327,13 +327,16 @@ def get_orbital_matrices(states_momentum, maxsz_list):
     return all_multip_lk
 
 
-def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras):
+def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras, ppms):
     print("---------------------")
     print(" G-SHIFT RESULTS")
     print("---------------------")
     print("File selected: ", filee)
     print("Number of states: ", totalstates)
-    print('g-factor (x y z dimensions):')
+    if ppms == 0:
+        print('g-factor (x y z dimensions) in ppt:')
+    elif ppms == 1:
+        print('g-factor (x y z dimensions) in ppm:')
     print(np.round(upper_g_tensor_results_ras[0].real, 3), np.round(upper_g_tensor_results_ras[1].real, 3),
           np.round(upper_g_tensor_results_ras[2].real, 3))
     print('')
@@ -359,15 +362,9 @@ def from_matrices_to_gshift(excitenergies_json, soc, max_sz, spin, orbital, stan
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital, max_sz)
 
-    # for ndim in range(0,3):
-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #             for row in np.round((eigenvector[:,:]),5)]))
-    # print("...")
-    # exit()
-
-    g_shift = g_factor_calculation(standard_spin, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = g_factor_calculation(standard_spin, combination_spin_matrix, combination_orbital_matrix,
                                 max_sz, szground, ppms)
-    return g_shift
+    return gmatrix, gshift
 
 
 def filter_list(my_list, ncolumn, cutoff):
@@ -485,11 +482,11 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
                     = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
                 
                 # Calculate g-shift between ground state and excited states
-                g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
+                gmatrix, gshift = from_matrices_to_gshift(excitenergies, soc_matrix, 
                                         max_sz_list, spin_matrix, orbital_matrix, 
                                         standard_spin_matrix, sz_ground, ppm)
                 
-                presentation_list_all.append([state+1, np.round(g_shift[0].real, 3),np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+                presentation_list_all.append([state+1, np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
 
             # Filter all the g-values and take those where the difference with the previous
             # state g-value is >= than a cut-off multiplied by the maximum g-value
@@ -546,11 +543,11 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
                     = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
                 
                 # Calculate g-shift between ground state and excited states
-                g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
+                gmatrix, gshift = from_matrices_to_gshift(excitenergies, soc_matrix, 
                                         max_sz_list, spin_matrix, orbital_matrix, 
                                         standard_spin_matrix, sz_ground, ppm)
                 
-                presentation_list_all.append([state+1, np.round(g_shift[0].real, 3),np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+                presentation_list_all.append([state+1, np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
                 presentation_list = presentation_list_all
         presentation_matrix = np.array(presentation_list, dtype=object)
 
@@ -590,11 +587,11 @@ def get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json,
         max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
             = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
 
-        g_shift = from_matrices_to_gshift(excitenergies, soc_matrix, 
+        gmatrix, gshift = from_matrices_to_gshift(excitenergies, soc_matrix, 
                                         max_sz_list, spin_matrix, orbital_matrix, 
                                         standard_spin_matrix, sz_ground, ppm)
         
-        g_shift_list.append([np.round(g_shift[0].real, 3),np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+        g_shift_list.append([np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
 
     # Forming different list depending on if g-shift is calculated or not
     cut_gxx = cut_gvalue * max([abs(row[0]) for row in g_shift_list])
@@ -643,10 +640,15 @@ if g_calculation == 1:
     #     print("...")
     # exit()
 
-    g_shift = from_matrices_to_gshift(excitenergies_json, soc_matrix, max_sz_list, spin_matrix, 
+    gmatrix, gshift = from_matrices_to_gshift(excitenergies_json, soc_matrix, max_sz_list, spin_matrix, 
                                       orbital_matrix, standard_spin_matrix, sz_ground, ppm)
 
-    print_g_calculation(file, nstates, g_shift)
+    print_g_calculation(file, nstates, gshift, ppm)
+
+    print("g-matrix: ")
+    print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                for row in np.round((gmatrix[:,:]), 10)]))
+    print()
 
 if excitanalysis_gvalue_cut != 0:
     get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, 

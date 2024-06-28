@@ -6,7 +6,7 @@ from projection_method.parsers.parser_gtensor import get_number_of_states, get_s
     get_symmetry_states
 from projection_method.parsers.parser_excitstates import get_configurations_unpaired_orbitals
 
-state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 initial_states = [1, 4]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soctype = 0
