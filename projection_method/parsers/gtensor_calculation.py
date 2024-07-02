@@ -11,12 +11,12 @@ from projection_method.parsers.parser_excitstates import get_bar_chart
 from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
-file = str(sys.argv[1])
-# file = '../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_tddft.out'
+# file = str(sys.argv[1])
+file = '../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_7_7.out'
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1
-ppm = 0 # 0: ppt; 1: ppm
+ppm = 1 # 0: ppt; 1: ppm
 # state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 # states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
 # symmetry_selection = 'B1u'  # Symmetry selected states_selected
@@ -646,8 +646,8 @@ if g_calculation == 1:
     print_g_calculation(file, nstates, gshift, ppm)
 
     print("g-matrix: ")
-    print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-                for row in np.round((gmatrix[:,:]), 10)]))
+    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+                for row in np.round(np.sqrt(gmatrix[:,:]), 6)]))
     print()
 
 if excitanalysis_gvalue_cut != 0:
