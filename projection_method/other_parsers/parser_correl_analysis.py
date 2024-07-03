@@ -8,7 +8,7 @@ from scipy import stats
 
 from projection_method.parsers.parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, get_spin_orbit_couplings, \
     from_energies_soc_to_g_values, get_hamiltonian_construction, diagonalization, get_spin_matrices, \
-    get_orbital_matrices, angular_matrices_obtention, g_factor_calculation
+    get_orbital_matrices, angular_matrices_obtention, from_angmoments_to_gshifts
 from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
 
 ras_input = 'triplets_molecules/o2_8_6_triplets.out'  # str(sys.argv[1])
@@ -140,7 +140,7 @@ def orbitmomentum_and_gvalues_correlation(file, nstates, excit_energ, socs, list
         # exit()
 
         combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, list_sz)
-        gmatrix, gshift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+        gmatrix, gshift = from_angmoments_to_gshifts(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                        list_sz, ground_sz, ppms=0)
         presentation_tuple.append([abs(l_value), np.round(gshift.real[0], 3), np.round(gshift.real[1], 3),
                                    np.round(gshift.real[2], 3)])

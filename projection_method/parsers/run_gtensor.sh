@@ -20,6 +20,9 @@ case $method in
         python ~/Desktop/gtensor/projection_method/parsers/parser_qchem_rasci.py $archivo
         python ~/Desktop/gtensor/projection_method/parsers/gtensor_calculation.py $archivo
         ;;
+    "rascifull")
+        python ~/Desktop/gtensor/tests/test_general.py $archivo
+        ;;
     "tddft")
         python ~/Desktop/gtensor/projection_method/parsers/parser_qchem_tddft.py $archivo
         python ~/Desktop/gtensor/projection_method/parsers/gtensor_calculation.py $archivo
@@ -29,6 +32,6 @@ case $method in
         python ~/Desktop/gtensor/projection_method/parsers/gtensor_calculation.py $archivo
         ;;
     *)
-        echo "Not valid"
+        echo "Not valid. Methods available: rasci, rascifull, tddft, eomcc"
         ;;
 esac

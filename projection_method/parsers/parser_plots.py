@@ -196,6 +196,7 @@ def gfactor_all_states(file, nstates, ppms):
 
     totalstates = get_number_of_states(file)
     presentation_list = ['Ground state', 'gxx', 'gyy', 'gzz']
+    states_list = []
 
     for i in range(0, len(nstates)):
         states_ras = swap_positions(nstates, 0, i)
@@ -208,14 +209,23 @@ def gfactor_all_states(file, nstates, ppms):
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz, ppms)
 
-        presentation_list.append([nstates[0], np.round(g_shift[0].real, 3), np.round(g_shift[1].real, 3),
+        presentation_list.append([np.round(g_shift[0].real, 3), np.round(g_shift[1].real, 3),
                                   np.round(g_shift[2].real, 3)])
-
+        states_list.append(nstates[0])
+    
+    print(len(presentation_list), len(states_list))
+    exit()
+    
     presentation_matrix = np.array(presentation_list, dtype=object)
+    if presentation_list: 
+        df = pd.DataFrame(presentation_matrix, index=states_list,columns=['Ground state', 'gxx', 'gyy', 'gzz'])
+        
     print("-----------------------------------------------")
     print(" G-TENSOR WITH DIFFERENT GROUND STATES")
     print("-----------------------------------------------")
-    print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
+    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
+    print(df)
+    exit()
 
     presentation_matrix_2 = np.delete(presentation_matrix, 0, 0)
     plot_g_tensor_vs_states(file, presentation_matrix_2, x_title='Number of states_selected',

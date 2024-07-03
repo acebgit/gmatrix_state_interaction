@@ -6,7 +6,7 @@ import math
 from scipy import constants
 
 from projection_method.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
-    angular_matrices_obtention, g_factor_calculation
+    angular_matrices_obtention, from_angmoments_to_gshifts
 from projection_method.parsers.parser_excitstates import get_bar_chart
 from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
 
@@ -15,21 +15,16 @@ from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
 file = '../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_7_7.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 1
+g_calculation = 0
 ppm = 1 # 0: ppt; 1: ppm
-# state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-# states_ras = [1,3,4,5,6,7,8,9,10,11,12,13,14,16,17,18,19,20]
-# symmetry_selection = 'B1u'  # Symmetry selected states_selected
-# soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 ######## G-TENSOR ANALYSIS ########
 excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
-# gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor estimation (g = -4 L SOC / E)
 
 ######## EXCITED STATES ANALYSIS ########
-excitanalysis = 0
-cutoffamp = 0 # cut-off for configurations amplitude
-excitanalysis_plot = 0
+excitanalysis = 1
+cutoffamp = 0.9 # cut-off for configurations amplitude
+excitanalysis_plot = 1
 
 ######## SOS PLOTS ########
 sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
@@ -71,6 +66,15 @@ def s2_to_s(s2):
     :return: total spin (s)
     """
     return 0.5 * (-1 + np.sqrt(1 + 4 * s2))
+
+
+def s_to_s2(spin):
+    """
+    get s2_all from total spin (s)
+    :param: spin: total spin (s)
+    :return: s2_all
+    """
+    return spin * (spin + 1)
 
 
 def get_input_data(spin_state):
@@ -132,14 +136,6 @@ def get_spin_matrices(states_spin, maxsz_list):
     :param: filee, selected_state.
     :return: spin_matr, standard_spin_mat.
     """
-    def s_to_s2(spin):
-        """
-        get s2_all from total spin (s)
-        :param: spin: total spin (s)
-        :return: s2_all
-        """
-        return spin * (spin + 1)
-
     def spin_matrices(spin):
         """
         Get spin matrices s_x, s_y, s_z between two spin states selected (s,m) and (s,m') such that
@@ -327,12 +323,36 @@ def get_orbital_matrices(states_momentum, maxsz_list):
     return all_multip_lk
 
 
-def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras, ppms):
+def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras, ppms, spin_list):
+    def count_spin_states(spins):
+        """
+        Obtain a list with the number of states with each multiplicity. If there is 0 states
+        with that multiplicity, the multiplicity is not printed.  
+        """
+        counter_dict = {s_to_s2(i): 0 for i in np.arange(0, 4, 1/2)}
+        for number in spins:
+            if number in counter_dict:
+                counter_dict[number] += 1
+
+        # Change the keys from s2 to multiplicity word
+        multip_dict = {}
+        s2_multip_mapping = {0: 'singlets',0.75: 'doublets',2.0: 'triplets', 3.75: 'quartets', \
+                         6.0: 'quintets', 8.75: 'sextets', 12.0: 'heptets', 15.75: 'octets'}
+
+        for old_key, new_key in s2_multip_mapping.items():
+            if old_key in counter_dict and counter_dict[old_key] != 0:
+                multip_dict[new_key] = counter_dict[old_key]
+        return multip_dict
+    
+    multipdict = count_spin_states(spin_list)
     print("---------------------")
     print(" G-SHIFT RESULTS")
     print("---------------------")
     print("File selected: ", filee)
     print("Number of states: ", totalstates)
+    print("States multiplicity: ")
+    [print(" ", key, value, end=',') for key, value in multipdict.items()]
+    print()
     if ppms == 0:
         print('g-factor (x y z dimensions) in ppt:')
     elif ppms == 1:
@@ -362,7 +382,7 @@ def from_matrices_to_gshift(excitenergies_json, soc, max_sz, spin, orbital, stan
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital, max_sz)
 
-    gmatrix, gshift = g_factor_calculation(standard_spin, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = from_angmoments_to_gshifts(standard_spin, combination_spin_matrix, combination_orbital_matrix,
                                 max_sz, szground, ppms)
     return gmatrix, gshift
 
@@ -424,10 +444,11 @@ def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot, cutoff
     print(df.to_string(index=False))
     print()
 
-    if plot == 1: 
+    if plot == 1:
         get_bar_chart(file[:-4], [i for i in range(1,nstate+1)], excitenergies, 'Electronic State',
                         'Excitation energy (eV)', 'energ_analysis', save_pict=0)
-        get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], max_orbitmoment, 'Electronic State',
+        orbit_max_values = [max(map(abs, sublist)) for sublist in orbitmoment]
+        get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], orbit_max_values, 'Electronic State',
                         'Orbital angular momentum', 'orbit_analysis', save_pict=0)
         get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], socc, 'Electronic State',
                         'Spin-orbit coupling constants (cm-1)', 'soc_analysis', save_pict=0)
@@ -634,16 +655,10 @@ if g_calculation == 1:
     max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
     = from_json_to_matrices(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json)
 
-    # for ndim in range(0,3):
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                 for row in np.round((orbital_matrix[:,:,ndim]),5)]))
-    #     print("...")
-    # exit()
-
     gmatrix, gshift = from_matrices_to_gshift(excitenergies_json, soc_matrix, max_sz_list, spin_matrix, 
                                       orbital_matrix, standard_spin_matrix, sz_ground, ppm)
 
-    print_g_calculation(file, nstates, gshift, ppm)
+    print_g_calculation(file, nstates, gshift, ppm, spin_json)
 
     print("g-matrix: ")
     print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\

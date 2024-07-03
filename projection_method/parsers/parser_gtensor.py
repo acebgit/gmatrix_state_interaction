@@ -662,7 +662,7 @@ def from_ppt_to_ppm(gvalues, ppm=None):
     return gvalues
 
 
-def g_factor_calculation(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=None):
+def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=None):
     """
     g-shift with orbitals and spin angular momentum matrices.
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
@@ -782,7 +782,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
 
-    gmatrix, gshift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = from_angmoments_to_gshifts(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, ground_sz, ppm)
 
     return gshift
@@ -819,28 +819,28 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
     """
     totalstates = get_number_of_states(ras_input)
 
-    states_ras = get_selected_states(ras_input, totalstates, states_ras, states_option, symmetry_selection)
+    states_selected = get_selected_states(ras_input, totalstates, states_ras, states_option, symmetry_selection)
 
-    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_ras)
+    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_selected)
 
-    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_ras, soc_options)
+    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_selected, soc_options)
 
     hamiltonian_ras = get_hamiltonian_construction(excitation_energies_ras, selected_socs, sz_list)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
 
-    spin_matrix, standard_spin_matrix = get_spin_matrices(ras_input, states_ras)
+    spin_matrix, standard_spin_matrix = get_spin_matrices(ras_input, states_selected)
 
-    orbital_matrix = get_orbital_matrices(ras_input, totalstates, states_ras, sz_list)
+    orbital_matrix = get_orbital_matrices(ras_input, totalstates, states_selected, sz_list)
 
     combination_spin_matrix = angular_matrices_obtention(eigenvector, spin_matrix, sz_list)
 
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
 
-    gmatrix, gshift = g_factor_calculation(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = from_angmoments_to_gshifts(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground, ppm)
 
-    print_g_calculation(ras_input, totalstates, states_option, states_ras, gshift, symmetry_selection)
+    print_g_calculation(ras_input, totalstates, states_option, states_selected, gshift, symmetry_selection)
 
 
 def from_gvalue_to_shift(lista):
