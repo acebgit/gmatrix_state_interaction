@@ -323,7 +323,7 @@ def get_orbital_matrices(states_momentum, maxsz_list):
     return all_multip_lk
 
 
-def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras, ppms, spin_list):
+def print_g_calculation(filee, totalstates, gtensor, ppms, spin_list):
     def count_spin_states(spins):
         """
         Obtain a list with the number of states with each multiplicity. If there is 0 states
@@ -357,8 +357,8 @@ def print_g_calculation(filee, totalstates, upper_g_tensor_results_ras, ppms, sp
         print('g-factor (x y z dimensions) in ppt:')
     elif ppms == 1:
         print('g-factor (x y z dimensions) in ppm:')
-    print(np.round(upper_g_tensor_results_ras[0].real, 3), np.round(upper_g_tensor_results_ras[1].real, 3),
-          np.round(upper_g_tensor_results_ras[2].real, 3))
+    print(np.round(gtensor[0].real, 3), np.round(gtensor[1].real, 3),
+          np.round(gtensor[2].real, 3))
     print('')
 
 

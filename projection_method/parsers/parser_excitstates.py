@@ -483,7 +483,7 @@ def get_configurations_unpaired_orbitals(ras_input, states_selected, cutoff):
     return amplitude_list_selected, orbit_list_selected, initial_active_orbitals_list
 
 
-def count_singlet_triplets(states, s2_lists):
+def count_states_multiplicity(states, s2_lists):
     singlets = []
     doublets = []
     triplets = []
@@ -545,7 +545,7 @@ def get_new_active_space_electrons(active_space, alpha, beta):
     return electrons
 
 
-def improved_active_space(file, states_option, selected_states, cut_off, cut_soc, cut_ang):
+def improved_active_space(file, states_option, selected_states, config_cut_off, cut_soc, cut_ang):
     """
     Obtain an improved active space of RAS-CI Q-Chem output including orbitals
     with unpaired electrons in relevant hole/particle configurations.
@@ -560,7 +560,7 @@ def improved_active_space(file, states_option, selected_states, cut_off, cut_soc
 
     elec_alpha, elec_beta = get_alpha_beta(file)
 
-    configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
+    configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, config_cut_off)
 
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
 
@@ -719,23 +719,36 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
 
     file_string = file
 
-    # Taking all the data from all the states
+    # Getting input states data
     totalstates = get_number_of_states(file)
+
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
+
     states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selected)
+
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
-    excitation_energies_ras = [(i - excitation_energies_ras[0])*27.211399 for i in excitation_energies_ras]
+
+    excitation_energies_ras_ev = [(i - excitation_energies_ras[0])*27.211399 for i in excitation_energies_ras]
+
     s2_list = s2_from_file(file, states_ras)
+
     hole_contributions, part_contributions = get_hole_part_contributions(file, totalstates, states_ras)
+
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
+    max_socc_value = max(abs(x) for x in socc_values)
+
     orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, states_ras)
+    max_orbit_value = max(abs(x) for x in orbitmoment_max)
+
     elec_alpha, elec_beta = get_alpha_beta(file)
+
     configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
-    excited_states_presentation_list = []
 
     # For the list with the data for all the configurations
+    excited_states_presentation_list = []
     states_list = []
     final_active_orbitals = []
+
     for i in range(0, len(configuration_orbitals)):
         state = configuration_orbitals[i]["State"]
         configuration = configuration_orbitals[i]["Configuration"]
@@ -744,7 +757,8 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         symmetry = ordered_state_symmetries[state-1]
         hole = np.around(float(hole_contributions[state_index, 0]), 2)
         part = np.around(float(part_contributions[state_index, 0]), 2)
-        excit_energy = np.round(float(excitation_energies_ras[state_index]), 3)
+        
+        excit_energy = np.round(float(excitation_energies_ras_ev[state_index]), 3)
         soc = np.round(float(socc_values[state_index]), 3)
         orbital_ground_state = np.round(float(orbitmoment_max[state_index]), 3)
         s2 = s2_list[state_index]
@@ -752,7 +766,8 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         orbital = configuration_orbitals[i]["SOMO orbitals"]
         amplitude = np.round(configuration_amplitudes[i]["amplitude"], 2)
 
-        if abs(orbital_ground_state) >= cut_ang and abs(soc) >= cut_soc:
+        if abs(orbital_ground_state) >= (cut_ang * max_orbit_value) and abs(soc) >= (cut_soc * max_socc_value) \
+            or state == 1:
                 excited_states_presentation_list.append([state, configuration, symmetry,
                                                          hole, part, orbital, amplitude, excit_energy, soc,
                                                          orbital_ground_state, s2])
@@ -760,10 +775,6 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
                 states_list.append(state)
 
     excited_states_presentation_matrix = np.array(excited_states_presentation_list)
-    # print(excited_states_presentation_matrix)
-    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #                 for row in (excited_states_presentation_matrix[:,:])]))
-
     if excited_states_presentation_list: 
         df = pd.DataFrame(excited_states_presentation_matrix, index=states_list,
                             columns=['state', 'config', 'sym', 'hole', 'part',
@@ -780,8 +791,8 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     print(" EXCITED STATES ANALYSIS")
     print("------------------------")
     print('Configurations cut-off:', cut_off)
-    print(df)
-    count_singlet_triplets(states_ras, s2_list)
+    print(df.to_string(index=False))
+    count_states_multiplicity(states_ras, s2_list)
     print(" ")
 
     print("------------------------")
@@ -871,7 +882,7 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
         np.round(np.sum(presentation_matrix[1:, 4].astype(float)), 3),
         np.round(np.sum(presentation_matrix[1:, 5].astype(float)), 3),
         np.round(np.sum(presentation_matrix[1:, 6].astype(float)), 3))
-        count_singlet_triplets(states_ras, s2_list)
+        count_states_multiplicity(states_ras, s2_list)
         print(" ")
     else:
         print("The list is empty: no excited states with the features selected")

@@ -184,7 +184,7 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, estimation, order
                             main_title, save_option)
 
 
-def gfactor_all_states(file, nstates, ppms):
+def gfactor_change_ground_state(filee, initial_states, states_option, symmetry_selection, soc_option, ppms):
     """
     Returns the g-shifts for doublet ground state molecules.
     :param: file_ms_notnull, states_msnull, states_option, symmetry_selection, soc_options
@@ -194,42 +194,35 @@ def gfactor_all_states(file, nstates, ppms):
         lista[pos1], lista[pos2] = lista[pos2], lista[pos1]
         return lista
 
-    totalstates = get_number_of_states(file)
-    presentation_list = ['Ground state', 'gxx', 'gyy', 'gzz']
-    states_list = []
+    totalstates = get_number_of_states(filee)
 
-    for i in range(0, len(nstates)):
-        states_ras = swap_positions(nstates, 0, i)
+    states_selected = get_selected_states(filee, totalstates, initial_states, states_option, symmetry_selection)
 
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
+    presentation_list = []
 
-        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_ras, soc_option=0)
+    for i in range(0, len(states_selected)):
+        istates = swap_positions(states_selected, 0, i)
 
-        g_shift = from_energies_soc_to_g_values(file, states_ras,
+        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(filee, totalstates, istates)
+
+        selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(filee, totalstates, istates, soc_option)
+
+        g_shift = from_energies_soc_to_g_values(filee, istates,
                                                 totalstates, excitation_energies_ras,
                                                 selected_socs, sz_list, ground_sz, ppms)
 
-        presentation_list.append([np.round(g_shift[0].real, 3), np.round(g_shift[1].real, 3),
-                                  np.round(g_shift[2].real, 3)])
-        states_list.append(nstates[0])
+        presentation_list.append([istates[0], np.round(g_shift[0].real, 3), np.round(g_shift[1].real, 3),np.round(g_shift[2].real, 3)])
     
-    print(len(presentation_list), len(states_list))
-    exit()
-    
-    presentation_matrix = np.array(presentation_list, dtype=object)
-    if presentation_list: 
-        df = pd.DataFrame(presentation_matrix, index=states_list,columns=['Ground state', 'gxx', 'gyy', 'gzz'])
-        
+    presentation_matrix = np.array(presentation_list, dtype=object) 
+          
     print("-----------------------------------------------")
     print(" G-TENSOR WITH DIFFERENT GROUND STATES")
     print("-----------------------------------------------")
-    # print('\n'.join([''.join(['{:^20}'.format(item) for item in row]) for row in (presentation_matrix[:, :])]))
-    print(df)
-    exit()
-
-    presentation_matrix_2 = np.delete(presentation_matrix, 0, 0)
-    plot_g_tensor_vs_states(file, presentation_matrix_2, x_title='Number of states_selected',
-                            y_title=r'$\Delta g, ppm$', main_title=file, save_options=0)
+    pd.set_option('display.width', 400)
+    pd.set_option('display.max_columns', 10)
+    df = pd.DataFrame(presentation_matrix,columns=['Ground state', 'gxx', 'gyy', 'gzz'])
+    print(df.to_string(index=False))
+    print()
 
 
 def compare_gcalculation_gestimation(file, nstates, selected_state, ppms, plotting):

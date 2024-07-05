@@ -16,18 +16,11 @@ def get_number_of_states(file):
     Obtain the total number of states selected in RAS-CI in Q-Chem output.
     :param: file
     :return: totalstates
-    """
-    with open(file, encoding="utf8") as f:
-        data = f.readlines()
-
-    element = 0
-    word_search = ['Computed states:', 'Requested states:']
-    for line in data:
-        if any(i in line for i in word_search):
-            line = line.split()
-            element = line[3]
-            break
-    totalstates = int(element)
+    """   
+    with open(file, encoding="utf8") as file:
+        for line in file:
+            if 'RAS-CI total energy for state' in line:
+                totalstates = int(line.split(':')[0].split()[5])
     return totalstates
 
 
@@ -120,22 +113,24 @@ def get_eigenenergies(file, totalstates, selected_states):
     with open(file, encoding="utf8") as file:
         for line in file:
             if word_search in line:
-                line = line.split()
-                element = line[6]
-                element_energy.append(element)
-
+                element_energy.append(float(line.split(":")[1]))
                 next_line = next(file)
-                next_line = next_line.split()
-                element = next_line[4]
-                elements_excitenergy.append(element)
+
+                if "*******" in next_line.split("=")[1]:
+                    ener = float(line.split(":")[1]) - element_energy[0]
+                    elements_excitenergy.append(ener)
+                else:
+                    elements_excitenergy.append(float(next_line.split("=")[1]))
+
+
             if len(element_energy) == totalstates:
                 break
 
     energies_selected = take_selected_states_values(element_energy, selected_states)
     excited_energies_selected = take_selected_states_values(elements_excitenergy, selected_states)
 
-    eigenenergies = np.array(energies_selected, dtype=float)
-    excitation_energies_ev = np.array(excited_energies_selected, dtype=float)
+    eigenenergies = np.array(energies_selected)
+    excitation_energies_ev = np.array(excited_energies_selected)
     excitation_energies = excitation_energies_ev / constants.physical_constants['Hartree energy in eV'][0]
     return eigenenergies, excitation_energies
 
@@ -265,7 +260,6 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
     # print('SOC:')
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
     #                 for row in np.round((selected_socs[:,:]))]))
-    # exit()
     return selected_socs, sz_max_allstates, sz_ground_state
 
 
@@ -532,7 +526,6 @@ def get_spin_matrices(file, selected_states):
 
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
     #                 for row in np.round((spin_matrix[:,:,0]))]))
-    # exit()
 
     return spin_matrix, standard_spin_matrix
 
@@ -633,7 +626,6 @@ def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
     #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
     #                      for row in np.round((angular_matrix[:, :, k]), 5)]))
     #     print(" ")
-    # exit()
     return angular_matrix
 
 
@@ -671,7 +663,6 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
 
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
     #                 for row in np.round((standard_spin_matrix[:,:,0]))]))
-    # exit()
 
     def j_matrix_formation(spin, orbital, list_sz, sz_ground):
         """
