@@ -225,23 +225,19 @@ def get_ras_spaces(qchem_file):
 
     # List with active orbitals
     word_search = ['RAS_ACT_ORB']
-    elements = []
+    active_orbitals = []
     for line in data:
         if any(i in line for i in word_search):
-            line = line.replace('[', '')
-            line = line.replace(']', '')
-            line = line.replace(',', ' ')
-            line = line.split()
+            elements = line.split("[")[1].split("]")[0].split(",")
 
+            # Checking that the list is not empty and the orbitals have ben manually selected
             try:
-                prueba = float(line[1])
+                prueba = float(elements[1])
             except ValueError:
                 raise ValueError("'RAS_ACT_ORB' has not been manually selected.")
 
-            for i in range(1, ras_act+1):
-                elements.append(line[i])
+            active_orbitals = [int(i) for i in elements]
             break
-    act_orbitals_array = np.array(elements, dtype=int)
 
     # Number of occupied orbitals
     word_search = ['RAS_OCC']
@@ -251,7 +247,7 @@ def get_ras_spaces(qchem_file):
             split_line = line.split()
             ras_occ = int(split_line[1])
             break
-    return act_orbitals_array, ras_occ
+    return active_orbitals, ras_occ
 
 
 def get_alpha_beta(qchem_file):
@@ -400,11 +396,12 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
         return final_scf_orbital
 
     orbital_list = []
+    initial_actorbit_matrix = np.array(initial_active_orbitals)
 
     # If orbitals is in hole
     if configuration_data[0] != '-1':
         ras_orbital = int(configuration_data[0])
-        new_orbital = from_ras_to_scf_order(homo_orbital, initial_active_orbitals, ras_orbital)
+        new_orbital = from_ras_to_scf_order(homo_orbital, initial_actorbit_matrix, ras_orbital)
         new_orbital = int(new_orbital)
         orbital_list.append(new_orbital)
 
@@ -414,14 +411,14 @@ def get_orbital(homo_orbital, configuration_data, initial_active_orbitals):
 
     for active_orbital_index in range(0, len(alpha_config)):
         if alpha_config[active_orbital_index] != beta_config[active_orbital_index]:
-            new_orbital = initial_active_orbitals[active_orbital_index]
+            new_orbital = initial_actorbit_matrix[active_orbital_index]
             new_orbital = int(new_orbital)
             orbital_list.append(new_orbital)
 
     # If orbitals is in particle
     if configuration_data[3] != '-1':
         ras_orbital = int(configuration_data[3])
-        new_orbital = from_ras_to_scf_order(homo_orbital, initial_active_orbitals, ras_orbital)
+        new_orbital = from_ras_to_scf_order(homo_orbital, initial_actorbit_matrix, ras_orbital)
         new_orbital = int(new_orbital)
         orbital_list.append(new_orbital)
 
@@ -478,9 +475,7 @@ def get_configurations_unpaired_orbitals(ras_input, states_selected, cutoff):
 
                 orbit_list_selected.append(orbit_list[i])
                 amplitude_list_selected.append(amplitude_list[i])
-    initial_active_orbitals_list = list(initial_active_orbitals)
-
-    return amplitude_list_selected, orbit_list_selected, initial_active_orbitals_list
+    return amplitude_list_selected, orbit_list_selected, initial_active_orbitals
 
 
 def count_states_multiplicity(states, s2_lists):
