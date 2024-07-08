@@ -117,7 +117,7 @@ def get_eigenenergies(file, totalstates, selected_states):
                 next_line = next(file)
 
                 if "*******" in next_line.split("=")[1]:
-                    ener = float(line.split(":")[1]) - element_energy[0]
+                    ener = (float(line.split(":")[1]) - element_energy[0]) * constants.physical_constants['Hartree energy in eV'][0]
                     elements_excitenergy.append(ener)
                 else:
                     elements_excitenergy.append(float(next_line.split("=")[1]))
