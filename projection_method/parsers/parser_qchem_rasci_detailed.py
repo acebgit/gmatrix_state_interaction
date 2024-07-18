@@ -19,10 +19,14 @@ ras_input= str(sys.argv[1])
 # ras_input = '../../molecules/doublets/cucl4_2-_def2tzvp_11_6_d10_2.out'
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 0
+calculate_gshift = 1
 ppm = 0 # 0: ppt; 1: ppm 
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-states_ras = [1,2,3]
+
+states_ras = list(range(1, 48))
+states_ras.remove(5)
+states_ras.insert(0, 5)
+
 symmetry_selection = 'B3u'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
@@ -34,9 +38,9 @@ gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor es
 
 ######## EXCITED STATES ANALYSIS ########
 excited_states_analysis = 1
-excitanalysis_config_cut = 0.9 # cut-off for configurations amplitude (% of maximum amplitude)
-excitanalysis_soc_cut = 0.01 # cut-off for soccs (% of maximum SOCC)
-excitanalysis_angmoment_cut = 0.01 # cut-off for orbital angular momentum (% of maximum L)
+excitanalysis_config_cut = 0 # cut-off for configurations amplitude (% of maximum amplitude)
+excitanalysis_soc_cut = 0 # cut-off for soccs (% of maximum SOCC)
+excitanalysis_angmoment_cut = 0 #10E-10 # cut-off for orbital angular momentum (% of maximum L)
 excit_plot = 0 # 0: not show plot, 1: show plot 
 
 

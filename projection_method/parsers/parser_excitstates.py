@@ -762,7 +762,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         amplitude = np.round(configuration_amplitudes[i]["amplitude"], 2)
 
         if abs(orbital_ground_state) >= (cut_ang * max_orbit_value) and abs(soc) >= (cut_soc * max_socc_value) \
-            or state == 1:
+            or state == configuration_orbitals[0]["State"]:
                 excited_states_presentation_list.append([state, configuration, symmetry,
                                                          hole, part, orbital, amplitude, excit_energy, soc,
                                                          orbital_ground_state, s2])
