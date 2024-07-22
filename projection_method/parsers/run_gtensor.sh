@@ -18,18 +18,24 @@ archivo=$2
 # Utiliza la opción en una declaración case
 case $method in
     "rasci")
-        python ~/Desktop/my_programs/gtensor/projection_method/parsers/parser_qchem_rasci.py $archivo
+        if [ ! -e "$archivo.json" ]; then
+            python ~/Desktop/my_programs/gtensor/projection_method/parsers/parser_qchem_rasci.py $archivo
+        fi
         python ~/Desktop/my_programs/gtensor/projection_method/parsers/gtensor_calculation.py $archivo
         ;;
     "rascifull")
         python ~/Desktop/my_programs/gtensor/projection_method/parsers/parser_qchem_rasci_detailed.py $archivo
         ;;
     "tddft")
-        python ~/Desktop/my_programs/gtensor/projection_method/parsers/parser_qchem_tddft.py $archivo
+        if [ ! -e "$archivo.json" ]; then
+            python ~/Desktop/my_programs/gtensor/projection_method/parsers/parser_qchem_tddft.py $archivo
+        fi
         python ~/Desktop/my_programs/gtensor/projection_method/parsers/gtensor_calculation.py $archivo
         ;;
     "eomcc")
-        python ~/Desktop/my_programs/gtensor/projection_method/parsers/parser_qchem_eom.py $archivo
+        if [ ! -e "$archivo.json" ]; then
+            python ~/Desktop/my_programs/gtensor/projection_method/parsers/parser_qchem_eom.py $archivo
+        fi
         python ~/Desktop/my_programs/gtensor/projection_method/parsers/gtensor_calculation.py $archivo
         ;;
     *)

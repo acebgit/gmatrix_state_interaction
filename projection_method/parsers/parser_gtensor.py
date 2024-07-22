@@ -268,19 +268,43 @@ def hermitian_test(matrix, sz_list):
     Check if matrix is Hermitian. If not, "ValueError".
     :param: matrix, sz_list
     """
-    for i in range(0, len(matrix)):
-        for j in range(i, len(matrix)):
-            element_1 = np.round(matrix[i, j], 4)
-            element_2 = np.round(np.conjugate(matrix[j, i]), 4)
-            if element_1 != element_2:
-                state_1 = i // len(sz_list)
-                state_2 = j // len(sz_list)
+    # SLOW LOOP
+    # for i in range(0, len(matrix)):
+    #     for j in range(i, len(matrix)):
+    #         element_1 = np.round(matrix[i, j], 4)
+    #         element_2 = np.round(np.conjugate(matrix[j, i]), 4)
+    #         if element_1 != element_2:
+    #             state_1 = i // len(sz_list)
+    #             state_2 = j // len(sz_list)
 
-                print('State 1:', state_1, ', State 2:', state_2, ', row:', i, ', column:', j,
-                      ', value:', matrix[i, j])
-                print('State 2:', state_2, ', State 1:', state_2, ', row:', j, ', column:', i,
-                      ', value:', matrix[j, i])
-                raise ValueError("Matrix is not Hermitian: see the elements shown above (SOCs in cm-1)")
+    #             print('State 1:', state_1, ', State 2:', state_2, ', row:', i, ', column:', j,
+    #                   ', value:', matrix[i, j])
+    #             print('State 2:', state_2, ', State 1:', state_2, ', row:', j, ', column:', i,
+    #                   ', value:', matrix[j, i])
+    #             raise ValueError("Matrix is not Hermitian: see the elements shown above (SOCs in cm-1)")
+
+    # FASTER LOOP (done with ChatGPT)
+    # Assuming matrix and sz_list are already defined
+    matrix_rounded = np.round(matrix, 4)
+    conjugate_matrix_rounded = np.round(np.conjugate(matrix.T), 4)
+
+    # Create a mask for the upper triangle including the diagonal
+    mask = np.triu(np.ones(matrix.shape, dtype=bool))
+
+    # Compare elements
+    different_elements = (matrix_rounded != conjugate_matrix_rounded) & mask
+
+    # Get the indices where the elements are different
+    i_indices, j_indices = np.where(different_elements)
+
+    # Compute states
+    state_1 = i_indices // len(sz_list)
+    state_2 = j_indices // len(sz_list)
+
+    # Combine states into a list of tuples if needed
+    states = list(zip(state_1, state_2))
+
+    if states: print(states)
 
 
 def get_hamiltonian_construction(eigenenergies, spin_orbit_coupling, sz_values):
@@ -290,16 +314,19 @@ def get_hamiltonian_construction(eigenenergies, spin_orbit_coupling, sz_values):
     Make hermitian test to the matrix.
     :param: selected_states, eigenenergies, spin_orbit_coupling, sz_values
     :return: hamiltonian
-    """
-    hamiltonian = np.zeros((len(eigenenergies) * len(sz_values),
-                            len(eigenenergies) * len(sz_values)), dtype=complex)
+    """    
+    num_eigenenergies = len(eigenenergies)
+    num_sz_values = len(sz_values)
+    size = num_eigenenergies * num_sz_values
+    hamiltonian = np.zeros((size, size), dtype=complex)
 
-    for i in range(0, len(eigenenergies) * len(sz_values)):
-        for j in range(0, len(eigenenergies) * len(sz_values)):
-            if i == j:
-                hamiltonian[i, i] = eigenenergies[i // len(sz_values)]
-            else:
-                hamiltonian[i, j] = spin_orbit_coupling[i, j]
+    # Fill the diagonal with eigenenergies
+    for i in range(num_eigenenergies):
+        hamiltonian[i*num_sz_values:(i+1)*num_sz_values, i*num_sz_values:(i+1)*num_sz_values] = np.diag([eigenenergies[i]] * num_sz_values)
+
+    # Fill the off-diagonal with spin_orbit_coupling values
+    hamiltonian += spin_orbit_coupling
+
     hermitian_test(hamiltonian, sz_values)
     return hamiltonian
 
@@ -606,19 +633,32 @@ def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
     """
     angular_matrix = np.zeros((len(sz_list), len(sz_list), 3), dtype=complex)
 
-    for k in range(0, 3):
-        for row in range(0, len(sz_list)):  # state i
-            for column in range(0, len(sz_list)):  # state j
+    # SLOW LOOP
+    # for k in range(0, 3):
+    #     for row in range(0, len(sz_list)):  # state i
+    #         for column in range(0, len(sz_list)):  # state j
 
-                for bra in range(0, len(eigenvectors)):  # state <B|
-                    for ket in range(0, len(eigenvectors)):  # state |A>
+    #             for bra in range(0, len(eigenvectors)):  # state <B|
+    #                 for ket in range(0, len(eigenvectors)):  # state |A>
 
-                        coeff_bra = np.conj(eigenvectors[bra, row])
-                        coeff_ket = (eigenvectors[ket, column])
-                        angular_value = input_angular_matrix[bra, ket, k]
+    #                     coeff_bra = np.conj(eigenvectors[bra, row])
+    #                     coeff_ket = (eigenvectors[ket, column])
+    #                     angular_value = input_angular_matrix[bra, ket, k]
 
-                        element = coeff_bra * coeff_ket * angular_value
-                        angular_matrix[row, column, k] += element
+    #                     element = coeff_bra * coeff_ket * angular_value
+    #                     angular_matrix[row, column, k] += element
+
+    # FASTER LOOP
+    for k in range(3):
+        conj_eigenvectors = np.conj(eigenvectors)
+        for row in range(len(sz_list)):
+            coeff_bra = conj_eigenvectors[:, row]
+            for column in range(len(sz_list)):
+                coeff_ket = eigenvectors[:, column]
+                angular_values = input_angular_matrix[:, :, k]
+
+                elements = coeff_bra[:, np.newaxis] * coeff_ket * angular_values
+                angular_matrix[row, column, k] += np.sum(elements)
 
     # print('Angular matrix with all spin angular momentums:')
     # for k in range(0, 3):

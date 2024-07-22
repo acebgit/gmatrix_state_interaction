@@ -23,11 +23,11 @@ calculate_gshift = 1
 ppm = 0 # 0: ppt; 1: ppm 
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
-states_ras = list(range(1, 48))
-states_ras.remove(5)
-states_ras.insert(0, 5)
+states_ras = [1,3,4] #list(range(1, 200))
+# states_ras.remove(2)
+# states_ras.insert(0, 2)
 
-symmetry_selection = 'B3u'  # Symmetry selected states_selected
+symmetry_selection = 'B2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 
@@ -37,10 +37,10 @@ gestimation = 0 # 0: g-tensor calculation (projection procedure); 1: g-tensor es
 
 
 ######## EXCITED STATES ANALYSIS ########
-excited_states_analysis = 1
-excitanalysis_config_cut = 0 # cut-off for configurations amplitude (% of maximum amplitude)
-excitanalysis_soc_cut = 0 # cut-off for soccs (% of maximum SOCC)
-excitanalysis_angmoment_cut = 0 #10E-10 # cut-off for orbital angular momentum (% of maximum L)
+excited_states_analysis = 0
+excitanalysis_config_cut = 0.5 # cut-off for configurations amplitude (% of maximum amplitude)
+excitanalysis_soc_cut = 0.5 # cut-off for soccs (% of maximum SOCC)
+excitanalysis_angmoment_cut = 10E-10 # cut-off for orbital angular momentum (% of maximum L)
 excit_plot = 0 # 0: not show plot, 1: show plot 
 
 

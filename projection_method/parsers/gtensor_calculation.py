@@ -5,31 +5,34 @@ import pandas as pd
 import math 
 from scipy import constants
 
+import timeit
+from functools import partial
+
 from projection_method.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
     angular_matrices_obtention, from_angmoments_to_gshifts
 from projection_method.parsers.parser_excitstates import get_bar_chart
 from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
-# file = str(sys.argv[1])
-file = '../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_7_7.out'
+file = str(sys.argv[1])
+# file = '../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_7_7.out'
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 0
-ppm = 1 # 0: ppt; 1: ppm
+ppm = 0 # 0: ppt; 1: ppm
 
 ######## G-TENSOR ANALYSIS ########
 excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
 
 ######## EXCITED STATES ANALYSIS ########
-excitanalysis = 1
+excitanalysis = 0
 cutoffamp = 0.9 # cut-off for configurations amplitude
 excitanalysis_plot = 1
 
 ######## SOS PLOTS ########
-sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
+sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
 amp_cutoff = 0.1
-g_estimation = 0
+g_estimation = 1
 
 
 def extract_data_from_json(filee):
@@ -384,6 +387,7 @@ def from_matrices_to_gshift(excitenergies_json, soc, max_sz, spin, orbital, stan
 
     gmatrix, gshift = from_angmoments_to_gshifts(standard_spin, combination_spin_matrix, combination_orbital_matrix,
                                 max_sz, szground, ppms)
+
     return gmatrix, gshift
 
 
@@ -402,6 +406,13 @@ def filter_list(my_list, ncolumn, cutoff):
                 filtered_list.append(config)
     return filtered_list
     
+
+def measure_function_time(func, *args, **kwargs): 
+    funct_and_args = partial(func, *args, **kwargs)
+    tiempo = timeit.timeit(funct_and_args, number=1)
+    nombre_funcion = func.__name__
+    print(f"{nombre_funcion} tardó {tiempo:.4f} segundos en ejecutarse.")
+
 
 def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot, cutoff_amp):
     """
@@ -548,10 +559,12 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
             max_gvalues = [max(col) * cutoff for col in zip(*estimation_list)]
             relevant_states = [sublist[0]-1 for sublist in estimation_list if sublist[1]>=max_gvalues[1] 
                                or sublist[2]>=max_gvalues[2] or sublist[3]>=max_gvalues[3]]
-
+            print(relevant_states)
+            exit()
             # Make procedure with states with estimated g-shift different than 0
             for state in relevant_states:
                 # State properties
+                print("SOS: state ", state)
                 energies = energies_json[0:state+1]
                 excitenergies = excitenergies_json[0:state+1]
                 spin = spin_json[0:state+1]
@@ -567,7 +580,7 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
                 gmatrix, gshift = from_matrices_to_gshift(excitenergies, soc_matrix, 
                                         max_sz_list, spin_matrix, orbital_matrix, 
                                         standard_spin_matrix, sz_ground, ppm)
-                
+
                 presentation_list_all.append([state+1, np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
                 presentation_list = presentation_list_all
         presentation_matrix = np.array(presentation_list, dtype=object)
