@@ -1,0 +1,7 @@
+$molecule
+0 6    !charge and multiplicity
+Cr1
+F2 Cr1 dist
+
+dist = 1.784
+$end

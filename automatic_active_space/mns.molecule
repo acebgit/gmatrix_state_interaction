@@ -1,0 +1,7 @@
+$molecule
+0 6    !charge and multiplicity
+Mn1
+S2 Mn1 dist
+
+dist = 2.043
+$end

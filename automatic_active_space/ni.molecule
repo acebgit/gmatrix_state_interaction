@@ -1,0 +1,7 @@
+$molecule
+0 3    !charge and multiplicity
+I1
+Ni2 I1 dist
+
+dist = 2.007
+$end
