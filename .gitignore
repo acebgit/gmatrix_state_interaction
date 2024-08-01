@@ -1,0 +1,9 @@
+*/*/*.pyc
+*/*/*/*.pyc
+PyQchem
+
+molecules/high_spin_gshift_space/*out
+molecules/high_spin_initial_space/*out
+molecules/high_spin_soc_space/*out
+molecules/v2/*out
+
