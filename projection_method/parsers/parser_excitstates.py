@@ -649,7 +649,7 @@ def gshift_calculation_loop(states_ras, file, totalstates, ppms):
 
     for i in range(0, len(states_ras)):
         states_sos = [states_ras[0], states_ras[i]]  # Ground state and another excited state
-        # print('Calculating....', states_sos)
+        print('Calculating....', states_sos)
         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
         selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
         g_shift = from_energies_soc_to_g_values(file, states_sos,
@@ -687,8 +687,7 @@ def gshift_estimation_loop(nstates, orbit_moments, soccs, energies, ppm):
     g_yy = from_ppt_to_ppm(g_yy, ppm)
     g_zz = from_ppt_to_ppm(g_zz, ppm)
 
-    # From_qchem_to_sto
-    return g_yy, g_xx, g_zz
+    return g_xx, g_yy, g_zz
 
 
 def get_excited_states_analysis(file, state_selections, states_ras, symmetry_selected, cut_off, cut_soc,
@@ -790,9 +789,9 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     count_states_multiplicity(states_ras, s2_list)
     print(" ")
 
-    print("------------------------")
-    print(" IMPROVED ACTIVE SPACE ")
-    print("------------------------")
+    print("--------------------------------")
+    print(" IMPROVED ACTIVE SPACE BY SOC AND L")
+    print("--------------------------------")
 
     electrons = get_new_active_space_electrons(initial_active_orbitals, elec_alpha, elec_beta)
     print('Initial active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(initial_active_orbitals),
@@ -807,7 +806,7 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
         excited_states_plots(excited_states_presentation_matrix, save_pict)
 
 
-def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, cut_gvalue, ppms, estimation, cut_off):
+def gtensor_state_pairs_analysis(file, state_selections, states_ras, symmetry_selected, cut_gvalue, ppms, estimation, cut_off_configs):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
     of the 1st configuration that need to have the other configurations to be shown in each state.
@@ -818,25 +817,34 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
 
     # Taking all the data from all the states
     totalstates = get_number_of_states(file)
+
     states_ras = get_selected_states(file, totalstates, states_ras, state_selections, symmetry_selected)
+
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
+
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_ras)
+
     excitation_energies_ras = [(i - excitation_energies_ras[0])*27.211399 for i in excitation_energies_ras]
+
     s2_list = s2_from_file(file, states_ras)
+
     socc_values = get_groundst_socc_values(file, totalstates, states_ras)
+
     orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, states_ras)
-    configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off)
+
+    configuration_amplitudes, configuration_orbitals, initial_active_orbitals = get_configurations_unpaired_orbitals(file, states_ras, cut_off_configs)
+    
+    elec_alpha, elec_beta = get_alpha_beta(file)
 
     # Forming different list depending on if g-shift is calculated or not
     gxx_list = []
     gyy_list = []
     gzz_list = []
-    presentation_list = []
-    if estimation == 1:
+    if estimation == 0:
+        gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
+    else: 
         gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values,
                                                                 excitation_energies_ras, ppms)
-    else:
-        gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
 
     cut_gxx = cut_gvalue * abs(max(gxx_list, key=abs))
     cut_gyy = cut_gvalue * abs(max(gyy_list, key=abs))
@@ -844,6 +852,9 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
 
     # For the list with the data for all the configurations
     states_list = []
+    presentation_list = []
+    final_active_orbitals = []
+
     for i in range(0, len(configuration_orbitals)):
         state = (configuration_orbitals[i]["State"])
         configuration = (configuration_orbitals[i]["Configuration"])
@@ -857,10 +868,20 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
         
         if state == 1:
             presentation_list.append([state, configuration, symmetry, orbital, "--", "--", "--"])
+            final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
             states_list.append(state)
-        elif abs(g_xx) >= cut_gxx or abs(g_yy) >= cut_gyy or abs(g_zz) >= cut_gzz:
+
+        # Checking that the cut-off values are not zeros
+        elif abs(g_xx) >= cut_gxx and abs(cut_gxx) >= 10E-3 \
+            or abs(g_yy) >= cut_gyy and abs(cut_gyy) >= 10E-3 \
+                or abs(g_zz) >= cut_gzz and abs(cut_gzz) >= 10E-3: 
             presentation_list.append([str(state), str(configuration), symmetry, str(orbital), np.round(g_xx, 3), np.round(g_yy, 3), np.round(g_zz, 3)])
+            final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
             states_list.append(state)
+    
+    orbital_set = set(final_active_orbitals)
+    final_active_orbitals = list(orbital_set)
+    final_active_orbitals.sort()
     presentation_matrix = np.array(presentation_list)
 
     print("----------------------")
@@ -868,16 +889,24 @@ def get_gtensor_analysis(file, state_selections, states_ras, symmetry_selected, 
     print("----------------------")
     print('g-shift cut-off:', np.round(cut_gxx, 3), np.round(cut_gyy, 3), np.round(cut_gzz, 3))
     print(" ")
-    if presentation_list: 
-        df = pd.DataFrame(presentation_matrix, index=states_list,
-                        columns=['state', 'config.', 'symmetry', 'unpaired orb', 'gxx', 'gyy', 'gzz'])
-        print(df)
-        print(" ")
-        print('g sum: ',
-        np.round(np.sum(presentation_matrix[1:, 4].astype(float)), 3),
-        np.round(np.sum(presentation_matrix[1:, 5].astype(float)), 3),
-        np.round(np.sum(presentation_matrix[1:, 6].astype(float)), 3))
-        count_states_multiplicity(states_ras, s2_list)
-        print(" ")
-    else:
-        print("The list is empty: no excited states with the features selected")
+
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    df = pd.DataFrame(presentation_matrix, index=states_list,
+            columns=['state', 'config.', 'symmetry', 'unpaired orb', 'gxx', 'gyy', 'gzz'])    
+    print(df.to_string(index=False))
+    print()
+    
+    print("-------------------------------")
+    print(" IMPROVED ACTIVE SPACE BY G-TENSOR")
+    print("-------------------------------")
+
+    electrons = get_new_active_space_electrons(initial_active_orbitals, elec_alpha, elec_beta)
+    print('Initial active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(initial_active_orbitals),
+          '] ;',
+          initial_active_orbitals)
+
+    electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
+    print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
+          final_active_orbitals)
+    print(" ")

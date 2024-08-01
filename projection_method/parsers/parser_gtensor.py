@@ -5,8 +5,9 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 
 import numpy as np
 from numpy import linalg, sqrt
-from pyqchem.parsers.parser_rasci import parser_rasci
 from scipy import constants
+from PyQchem.pyqchem.parsers.parser_rasci import parser_rasci
+# from pyqchem.parsers.parser_rasci import parser_rasci
 
 lande_factor = 2.002319304363
 

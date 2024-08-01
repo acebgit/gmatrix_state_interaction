@@ -559,8 +559,7 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
             max_gvalues = [max(col) * cutoff for col in zip(*estimation_list)]
             relevant_states = [sublist[0]-1 for sublist in estimation_list if sublist[1]>=max_gvalues[1] 
                                or sublist[2]>=max_gvalues[2] or sublist[3]>=max_gvalues[3]]
-            print(relevant_states)
-            exit()
+            
             # Make procedure with states with estimated g-shift different than 0
             for state in relevant_states:
                 # State properties
@@ -588,6 +587,7 @@ def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_jso
         print("------------------------------")
         print(" SUM-OVER-STATE ANALYSIS")
         print("------------------------------")
+        
         # Set display options to show all rows and columns
         pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', None)

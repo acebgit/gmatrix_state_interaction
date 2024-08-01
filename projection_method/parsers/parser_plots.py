@@ -121,7 +121,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     save_picture(save_options, file, main_title)
 
 
-def sos_analysis_and_plot(file, nstates, selected_state, ppms, estimation, order_symmetry, save_option):
+def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, save_option):
     """"
     Calculate the g-shifts in the sum-over-states_selected expansion using
     from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
@@ -132,48 +132,54 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, estimation, order
     nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
 
-    presentation_list = []
+    presentation_list = [] 
 
-    if estimation == 1:
+    # if estimation == 0:
+    #     for i in range(0, len(nstates)):
+    #         states_sos = nstates[0:i+1]
+    #         print('Calculating....', states_sos)
+    #         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
+    #         selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
+    #         g_shift = from_energies_soc_to_g_values(file, states_sos,
+    #                                                 totalstates, excitation_energies_ras,
+    #                                                 selected_socs, sz_list, ground_sz, ppms)
 
-        eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
-        excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
-        socc_values = get_groundst_socc_values(file, totalstates, nstates)
-        orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
-        gxx_list, gyy_list, gzz_list = gshift_estimation_loop(nstates, orbitmoment_all, socc_values,
-                                                              excitation_energies_ras, ppms)
+    #         if order_symmetry == 1:
+    #             presentation_list.append([ordered_state_symmetries[i], np.round(g_shift[0].real, 3),
+    #                                       np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+    #         else:
+    #             presentation_list.append([i+1, np.round(g_shift[0].real, 3),
+    #                                       np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+    # else: 
 
-        if order_symmetry == 1:
-            for i in range(0, len(ordered_state_symmetries)):
-                presentation_list.append([ordered_state_symmetries[i], np.round(gxx_list[i], 3),
-                                          np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
-        else:
-            for i in range(0, len(ordered_state_symmetries)):
-                presentation_list.append([i, np.round(gxx_list[i][0], 3), np.round(gxx_list[i], 3),
-                                          np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
+    eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
+    excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
+    socc_values = get_groundst_socc_values(file, totalstates, nstates)
+    orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
+    gxx_list, gyy_list, gzz_list = gshift_estimation_loop(nstates, orbitmoment_all, socc_values,
+                                                            excitation_energies_ras, ppms)
 
+    if order_symmetry == 1:
+        for i in range(0, len(ordered_state_symmetries)):
+            presentation_list.append([ordered_state_symmetries[i], np.round(gxx_list[i], 3),
+                                        np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
     else:
-
-        for i in range(0, len(nstates)):
-            states_sos = nstates[0:i+1]
-            # print('Calculating....', states_sos)
-            eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
-            selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
-            g_shift = from_energies_soc_to_g_values(file, states_sos,
-                                                    totalstates, excitation_energies_ras,
-                                                    selected_socs, sz_list, ground_sz, ppms)
-
-            if order_symmetry == 1:
-                presentation_list.append([ordered_state_symmetries[i], np.round(g_shift[0].real, 3),
-                                          np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
-            else:
-                presentation_list.append([i+1, np.round(g_shift[0].real, 3),
-                                          np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
+        for i in range(0, len(ordered_state_symmetries)):
+            presentation_list.append([i+1, np.round(gxx_list[i], 3),
+                                        np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
     presentation_matrix = np.array(presentation_list, dtype=object)
 
     print("--------------------------------")
     print(" SUM-OVER-STATE ANALYSIS")
     print("--------------------------------")
+
+    # Set display options to show all rows and columns
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    df = pd.DataFrame([row[0:4] for row in presentation_list],[row[0] for row in presentation_list],columns=['state','gxx','gyy','gzz'])
+    print(df.to_string(index=False))
+    print()
+
     file = file[:-4]
     x_title = 'Electronic State'
     y_title = r'$\Delta g, ppt$'
