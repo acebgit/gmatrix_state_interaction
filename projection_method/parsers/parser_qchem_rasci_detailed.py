@@ -21,7 +21,7 @@ ras_input= str(sys.argv[1])
 
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 1
+calculate_gshift = 0
 ppm = 0 # 0: ppt; 1: ppm 
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
@@ -34,7 +34,7 @@ soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 
 
 ######## EXCITED STATES ANALYSIS ########
-excited_states_analysis = 1
+excited_states_analysis = 0
 excitanalysis_config_cut = 0.5 # cut-off for configurations amplitude (% of maximum amplitude)
 excitanalysis_soc_cut = 0.1 # cut-off for soccs (% of maximum SOCC)
 excitanalysis_angmoment_cut = 10E-10 # cut-off for orbital angular momentum (% of maximum L)
@@ -47,7 +47,7 @@ gshift_estimation_by_state_pairs = 0.5
 
 
 ######## SOS PLOTS ########
-sum_over_states_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
+sum_over_states_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
 gestimation_gsos_comparison = 0 # 1: SOS comparison between g-shift calculated and estimated
 
 

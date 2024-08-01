@@ -204,31 +204,50 @@ def take_new_active_spaces(file__new_active_spaces):
     return active_dict
     
 
-# 1) Take the total number of electrons and orbitals
+def take_ras_occ(total_electron, ras_actorb, somo_orbs, domo_orbs):
+    """
+    Obtain the number of occupied orbitals in RAS1. 
+    """
+    ras_occ_electrons = total_electron
+    for orbit in ras_actorb:
+        if orbit in somo_orbs:
+            ras_occ_electrons -= 1
+        elif orbit in domo_orbs:
+            ras_occ_electrons -= 2
+    return ras_occ_electrons // 2
+
+
+# 1) Take the total number of electrons and orbitals from the molecule and multiplicity with
+# - 2 arguments: active space is automatically selected
+# - 5 arguments: active space is manually selected
 total_electrons, input_multiplicity = take_data(molecule_file)
 
 ras_act, ras_elec, selected_multiplicity = take_ras_features(input_multiplicity)
 
-# 2) Take the alpha and beta electrons
+# 2) Take the domos, somos and vomos
 unpaired_electrons, ras_elec_alpha, ras_elec_beta = take_alpha_beta_orbitals(selected_multiplicity, ras_elec)
 
 domos, somos, vomos = take_domos_vomos_somos(total_electrons, unpaired_electrons)
 
 # 3) Form the active space 
+# - file_new_active_spaces is not null: 
+# - file_new_active_spaces is null: 
+
 if file_new_active_spaces: 
     # If we have file with new active spaces, redo the space
     ras_act_orb = take_new_active_spaces(file_new_active_spaces)[molecule_file]
-
     ras_act = len(ras_act_orb)
-    
+
     ras_elec = sum(2 for orbit in ras_act_orb if orbit in domos)
     ras_elec += sum(1 for orbit in ras_act_orb if orbit in somos)
 
     unpaired_electrons, ras_elec_alpha, ras_elec_beta = take_alpha_beta_orbitals(selected_multiplicity, ras_elec)
 
 else:
+     # If we have file with new active spaces, construct a new space
     ras_act_orb = construct_active_space(total_electrons, unpaired_electrons, ras_elec, ras_act, domos, somos, vomos)
 
+ras_occ = take_ras_occ(total_electrons, ras_act_orb, somos, domos)
 
 qchem_rasci_input = '''$comment
  RAS-SF CALCULATION
@@ -307,7 +326,6 @@ $end
 '''
 lines_list = qchem_rasci_input.splitlines()
 
-
 rasci_output = molecule_file.split('.')[0] + "_" + str(ras_elec) + "_" + str(ras_act) + ".inp"
 print("Electrons:", total_electrons, ", Multiplicity:", selected_multiplicity, ", Active space: ", ras_act_orb)
 
@@ -326,6 +344,6 @@ with open(rasci_output, "w", encoding="utf8") as f:
         elif 'RAS_ACT_ORB ' in line:
             f.write('RAS_ACT_ORB ' + str(ras_act_orb) + '\n')
         elif 'RAS_OCC ' in line:
-            f.write('RAS_OCC ' + str(ras_act_orb[0] - 1) + '\n')
+            f.write('RAS_OCC ' + str(ras_occ) + '\n')
         else:
             f.write(line + '\n')
