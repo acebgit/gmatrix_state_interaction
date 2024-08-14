@@ -101,8 +101,8 @@ def take_data(filee):
             # By the time it is written in g-matrix, delete the numbers from the element name 
             element = remove_numbers(lines[line].split()[0])
             
-            if element in elements:
-                electrons += elements[element]
+            if element.upper() in elements:
+                electrons += elements[element.upper()]
     
     electrons = electrons - charge
     return electrons, multiplicity

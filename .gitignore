@@ -1,6 +1,8 @@
 */*/*.pyc
 */*/*/*.pyc
 PyQchem
+.idea
+.vscode
 
 molecules/high_spin_gshift_space/*out
 molecules/high_spin_initial_space/*out
