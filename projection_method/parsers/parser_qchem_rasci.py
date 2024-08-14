@@ -1,7 +1,8 @@
 import json
 import numpy as np
 import sys 
-from pyqchem.parsers.parser_rasci import parser_rasci
+# from pyqchem.parsers.parser_rasci import parser_rasci
+
 from projection_method.parsers.parser_gtensor import get_number_of_states, get_selected_states, \
     get_symmetry_states
 from projection_method.parsers.parser_excitstates import get_configurations_unpaired_orbitals

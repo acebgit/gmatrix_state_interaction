@@ -794,19 +794,19 @@ def get_excited_states_analysis(file, state_selections, states_ras, symmetry_sel
     print("--------------------------------")
 
     electrons = get_new_active_space_electrons(initial_active_orbitals, elec_alpha, elec_beta)
-    print('Initial active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(initial_active_orbitals),
+    print('Initial space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(initial_active_orbitals),
           '] ;',
           initial_active_orbitals)
 
     electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
-    print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
+    print('Final space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
           final_active_orbitals)
     print(" ")
     if plots == 1:
         excited_states_plots(excited_states_presentation_matrix, save_pict)
 
 
-def gtensor_state_pairs_analysis(file, state_selections, states_ras, symmetry_selected, cut_gvalue, ppms, estimation, cut_off_configs):
+def gtensor_state_pairs_analysis(file, state_selections, states_ras, symmetry_selected, cut_gvalue, ppms, cut_off_configs):
     """
     Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
     of the 1st configuration that need to have the other configurations to be shown in each state.
@@ -840,10 +840,11 @@ def gtensor_state_pairs_analysis(file, state_selections, states_ras, symmetry_se
     gxx_list = []
     gyy_list = []
     gzz_list = []
-    if estimation == 0:
-        gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
-    else: 
-        gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values,
+
+    # if estimation == 0:
+    #     gxx_list, gyy_list, gzz_list = gshift_calculation_loop(states_ras, file, totalstates, ppms)
+    # else: 
+    gxx_list, gyy_list, gzz_list = gshift_estimation_loop(states_ras, orbitmoment_all, socc_values,
                                                                 excitation_energies_ras, ppms)
 
     cut_gxx = cut_gvalue * abs(max(gxx_list, key=abs))
@@ -872,13 +873,13 @@ def gtensor_state_pairs_analysis(file, state_selections, states_ras, symmetry_se
             states_list.append(state)
 
         # Checking that the cut-off values are not zeros
-        elif abs(g_xx) >= cut_gxx and abs(cut_gxx) >= 10E-3 \
-            or abs(g_yy) >= cut_gyy and abs(cut_gyy) >= 10E-3 \
-                or abs(g_zz) >= cut_gzz and abs(cut_gzz) >= 10E-3: 
+        elif abs(g_xx) >= cut_gxx and abs(cut_gxx) >= 10E-5 \
+            or abs(g_yy) >= cut_gyy and abs(cut_gyy) >= 10E-5 \
+                or abs(g_zz) >= cut_gzz and abs(cut_gzz) >= 10E-5:
             presentation_list.append([str(state), str(configuration), symmetry, str(orbital), np.round(g_xx, 3), np.round(g_yy, 3), np.round(g_zz, 3)])
             final_active_orbitals = add_orbitals_active_space(orbital, final_active_orbitals, elec_alpha)
             states_list.append(state)
-    
+
     orbital_set = set(final_active_orbitals)
     final_active_orbitals = list(orbital_set)
     final_active_orbitals.sort()
@@ -887,7 +888,9 @@ def gtensor_state_pairs_analysis(file, state_selections, states_ras, symmetry_se
     print("----------------------")
     print(" G-TENSOR ANALYSIS")
     print("----------------------")
-    print('g-shift cut-off:', np.round(cut_gxx, 3), np.round(cut_gyy, 3), np.round(cut_gzz, 3))
+    print("cut-offs: ")
+    print('- g-shift estimation (%):', cut_gvalue)
+    print('- configurations (% of amplitude): ', cut_off_configs)
     print(" ")
 
     pd.set_option('display.max_rows', None)
@@ -910,3 +913,10 @@ def gtensor_state_pairs_analysis(file, state_selections, states_ras, symmetry_se
     print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
           final_active_orbitals)
     print(" ")
+
+    # Print the excited state properties of those states that appear in the previous list
+    state_selection = 0
+    states_in_gestimation = sorted(set(states_list))
+    symmetry_selection = "A1"
+    get_excited_states_analysis(file, state_selection, states_in_gestimation, symmetry_selection, cut_off_configs,
+                                cut_soc=0, cut_ang=0, plots=0, save_pict=0)

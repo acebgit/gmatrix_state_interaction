@@ -5,8 +5,8 @@ import pandas as pd
 import math 
 from scipy import constants
 
-import timeit
-from functools import partial
+# import timeit
+# from functools import partial
 
 from projection_method.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
     angular_matrices_obtention, from_angmoments_to_gshifts

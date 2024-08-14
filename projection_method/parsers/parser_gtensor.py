@@ -6,8 +6,15 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 import numpy as np
 from numpy import linalg, sqrt
 from scipy import constants
-from PyQchem.pyqchem.parsers.parser_rasci import parser_rasci
 # from pyqchem.parsers.parser_rasci import parser_rasci
+
+# Get the absolute path to local folder 'PyQChem'
+import sys
+import os
+parent_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), 'C:\\Users\\HP.LAPTOP-F127N3L3\\Desktop\\my_programs\\PyQChem'))
+if parent_directory not in sys.path: # Add 'folder2' to the Python path
+    sys.path.append(parent_directory)
+from pyqchem.parsers.parser_rasci import parser_rasci
 
 lande_factor = 2.002319304363
 
@@ -136,7 +143,7 @@ def get_eigenenergies(file, totalstates, selected_states):
     return eigenenergies, excitation_energies
 
 
-def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
+def get_spin_orbit_couplings(output, totalstates, selected_states, soc_option):
     """
     Get: i) Spin-orbit matrix with dimensions 'bra' x 'ket', with spin order (-Ms , +Ms) in the order of
     "selected_states", ii) [-sz,..,+sz] of the highest s2 state, iii) [-sz,..,+sz] of ground state.
@@ -247,9 +254,6 @@ def get_spin_orbit_couplings(file, totalstates, selected_states, soc_option):
                         selected_soc[i_index][j_index] = socs[all_i_index][all_j_index]
         return selected_soc
 
-    with open(file, encoding="utf8") as f:
-        output = f.read()
-    output = parser_rasci(output)
     data = output['interstate_properties']
     soc_search = select_soc_search(soc_option)
 
@@ -558,7 +562,7 @@ def get_spin_matrices(file, selected_states):
     return spin_matrix, standard_spin_matrix
 
 
-def get_orbital_matrices(file, totalstates, selected_states, sz_list):
+def get_orbital_matrices(output, totalstates, selected_states, sz_list):
     """
     Get orbitals angular momentum matrix with dimensions ['bra' x 'ket' x 3] (x,y,z), with spin order (-Ms , +Ms) in the
     order of "selected_state".
@@ -566,7 +570,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
     :return: all_multip_lk
     """
 
-    def get_all_momentum(line, n_states):
+    def get_all_momentum(dataa, n_states):
         """
         Get Lk between all the states selected in x,y,z dimensions. | A > in columns, < B | in rows.
         :param: line, selected_states
@@ -577,7 +581,7 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
         for i in range(0, n_states):
             for j in range(0, n_states):
                 if i != j:
-                    element = line[(i + 1, j + 1)]['angular_momentum']
+                    element = dataa[(i + 1, j + 1)]['angular_momentum']
 
                     for k in range(0, 3):
                         all_orbital_momentum[j, i, k] = element[k]
@@ -614,9 +618,6 @@ def get_orbital_matrices(file, totalstates, selected_states, sz_list):
                         lk_values[i + multip, j + multip][k] = all_momentums[i // len(all_sz)][j // len(all_sz)][k]
         return lk_values
 
-    with open(file, encoding="utf8") as f:
-        output = f.read()
-    output = parser_rasci(output)
     data = output['interstate_properties']
 
     all_lk = get_all_momentum(data, totalstates)
@@ -802,13 +803,18 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
     :param:file_ms_notnull, states_msnull, states_option, excitation_energies_ras, soc_ras, list_sz, ground_sz
     :return: g_shift
     """
+    with open(file, encoding="utf8") as f:
+        output = f.read()
+    output_parsered = parser_rasci(output)
+    data = output['interstate_properties']
+
     hamiltonian_ras = get_hamiltonian_construction(excitation_energies_ras, soc_ras, sz_list)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
 
     spin_matrix, standard_spin_matrix = get_spin_matrices(file, states_ras)
 
-    orbital_matrix = get_orbital_matrices(file, totalstates, states_ras, sz_list)
+    orbital_matrix = get_orbital_matrices(output_parsered, totalstates, states_ras, sz_list)
 
     combination_spin_matrix = angular_matrices_obtention(eigenvector, spin_matrix, sz_list)
 
@@ -843,19 +849,51 @@ def print_g_calculation(file, totalstates, selected_states,
     print('')
 
 
+def get_states_notnull_soc(output, totalstatess, states_initial):
+    """
+    Take the initial states and create a list with all the states that have not null SOC 
+    with the first state, that is the considered ground state. 
+    :param: states_initial
+    :return: states_notnull_soc
+    """
+    data = output['interstate_properties']
+    for i in range(0, totalstatess):
+        for j in range(0, totalstatess):
+                element = data[(i + 1, j + 1)]['mf_socc']
+                print(element)
+
+    # # Take SOCCs between the considered ground state and all other states.
+    # ground_state_soccs = []
+    # initial_socc = (states_selected[0]-1) * totalstates
+    # final_socc = (states_selected[0]-1) * totalstates + totalstates
+    # for i in range(initial_socc, final_socc):
+    #     ground_state_soccs.append(all_soccs[i])
+
+    # # Take SOCCs between the considered ground state and the selected states.
+    # socc_list = take_selected_states_values(ground_state_soccs, states_selected)
+    # socc = np.array(socc_list, dtype=float)
+    # return socc
+
+
 def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selection, soc_options, ppm):
     """
     Returns the g-shifts for doublet ground state molecules.
     :param: file_ms_notnull, states_msnull, states_option, symmetry_selection, soc_options
     :return: g-shifts
     """
+    with open(ras_input, encoding="utf8") as f:
+        output = f.read()
+    output_parsered = parser_rasci(output)
+
     totalstates = get_number_of_states(ras_input)
 
     states_selected = get_selected_states(ras_input, totalstates, states_ras, states_option, symmetry_selection)
 
+    # states_selected = get_states_notnull_soc(output_parsered, totalstates, states_selected)
+
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_selected)
 
-    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(ras_input, totalstates, states_selected, soc_options)
+    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(output_parsered, totalstates, states_selected, soc_options)
 
     hamiltonian_ras = get_hamiltonian_construction(excitation_energies_ras, selected_socs, sz_list)
 
@@ -863,7 +901,7 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
 
     spin_matrix, standard_spin_matrix = get_spin_matrices(ras_input, states_selected)
 
-    orbital_matrix = get_orbital_matrices(ras_input, totalstates, states_selected, sz_list)
+    orbital_matrix = get_orbital_matrices(output_parsered, totalstates, states_selected, sz_list)
 
     combination_spin_matrix = angular_matrices_obtention(eigenvector, spin_matrix, sz_list)
 
