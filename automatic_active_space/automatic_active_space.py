@@ -17,7 +17,7 @@ import sys
 # Leave "file_new_active_spaces" empty if not improved active space is required
 
 molecule_file = str(sys.argv[1])
-file_new_active_spaces = "activespace_gtensor50.txt"
+file_new_active_spaces = "activespace_gtensor.txt"
 
 
 def take_data(filee):
@@ -101,9 +101,9 @@ def take_data(filee):
             # By the time it is written in g-matrix, delete the numbers from the element name 
             element = remove_numbers(lines[line].split()[0])
             
-            if element.upper() in elements:
-                electrons += elements[element.upper()]
-    
+            if element.capitalize() in elements:
+                electrons += elements[element.capitalize()]
+
     electrons = electrons - charge
     return electrons, multiplicity
 
@@ -156,7 +156,7 @@ def take_domos_vomos_somos(total_electrns, unpaired_elects):
     ndomos = total_electrns // 2 - unpaired_elects // 2 
     domos = [i for i in range(1, ndomos+1)]
     somos = [i for i in range(len(domos)+1, len(domos)+unpaired_elects+1)]
-    vomos = [i for i in range(len(domos)+unpaired_elects+1, len(domos)+unpaired_elects+20)]
+    vomos = [i for i in range(len(domos)+unpaired_elects+1, len(domos)+unpaired_elects+30)]
     return domos, somos, vomos
 
 
@@ -194,8 +194,8 @@ def take_new_active_spaces(file__new_active_spaces):
 
     active_dict = {}
     for line in range(0, len(lines)):
-        if "out" in lines[line]: 
-            output_file = lines[line].split("_")[0]+".molecule"
+        if ".out" in lines[line]: 
+            output_file = lines[line].split(":")[1].split("_")[0].split()[0]+".molecule"
         
         if "Final active space" in lines[line]: 
             string_list = str(lines[line].split(";")[1].replace("[","").replace("]","").replace(",",""))
@@ -271,9 +271,9 @@ UNRESTRICTED       FALSE
 !SCF_GUESS          core
 !SCF_GUESS_MIX      FALSE
 !SCF_GUESS_ALWAYS   FALSE
-!MAX_SCF_CYCLES     500
+MAX_SCF_CYCLES     500
 !SCF_CONVERGENCE    10
-!SCF_ALGORITHM      DIIS !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
+SCF_ALGORITHM      DIIS_GDM !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
 
 !SYMMETRY           TRUE   !use of symmetry for calculating integrals
 !SYM_IGNORE         FALSE  !turn off using symmetry
@@ -293,7 +293,7 @@ RAS_ELEC_BETA             !spin-β electrons in RAS2
 RAS_ACT            2       !number of orbitals in RAS2 
 RAS_ACT_ORB       1       !user-selected RAS2 orbitals
 RAS_OCC            2       !number of orbitals in RAS1
-N_FROZEN_CORE      FC     !Number of frozen core orbitals
+!N_FROZEN_CORE      FC     !Number of frozen core orbitals
 !N_FROZEN_VIRTUAL   0      !Number of frozen virtual orbitals
 
 !RAS_DO_HOLE        TRUE   !presence of hole excitations in RAS-CI wave function

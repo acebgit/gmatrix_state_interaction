@@ -6,6 +6,7 @@ import sys
 from projection_method.parsers.parser_gtensor import get_number_of_states, get_selected_states, \
     get_symmetry_states
 from projection_method.parsers.parser_excitstates import get_configurations_unpaired_orbitals
+from pyqchem.parsers.parser_rasci import parser_rasci
 
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 initial_states = [1, 2, 3]

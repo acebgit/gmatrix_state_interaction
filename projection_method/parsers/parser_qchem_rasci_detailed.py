@@ -8,7 +8,7 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 #          MODULES SELECTION
 #####################################
 import sys 
-from projection_method.parsers.parser_gtensor import gfactor_presentation
+from projection_method.parsers.parser_gtensor import gfactor_presentation 
 from projection_method.parsers.parser_excitstates import get_excited_states_analysis, gtensor_state_pairs_analysis, improved_active_space
 from projection_method.parsers.parser_plots import sos_analysis_and_plot, gfactor_change_ground_state, compare_gcalculation_gestimation
 
@@ -21,20 +21,21 @@ ras_input= str(sys.argv[1])
 
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 1
+calculate_gshift = 1 
 ppm = 1 # 0: ppt; 1: ppm 
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
-states_ras = list(range(1, 30))
-# states_ras.remove(2)
-# states_ras.insert(0, 2)
+states_ras = list(range(1, 526)) 
+# states_ras.extend([148, 149, 151, 152, 153, 154, 155]) 
+# states_ras.remove(2) 
+# states_ras.insert(0, 2) 
 
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 
 
 ######## G-TENSOR CALCULATION BY PAIRS ########
-gshift_estimation_by_state_pairs = 0.25
+gshift_estimation_by_state_pairs = 0.5
 cut_off_config = 0.75
 # ≠0: cut-off between ground-excited states (% of maximum g-value in each dim), where g = -4 L SOC / E
 

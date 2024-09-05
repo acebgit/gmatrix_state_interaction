@@ -18,7 +18,7 @@ file = str(sys.argv[1])
 # file = '../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_7_7.out'
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 0
+g_calculation = 1
 ppm = 0 # 0: ppt; 1: ppm
 
 ######## G-TENSOR ANALYSIS ########
@@ -30,7 +30,7 @@ cutoffamp = 0.9 # cut-off for configurations amplitude
 excitanalysis_plot = 1
 
 ######## SOS PLOTS ########
-sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
+sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
 amp_cutoff = 0.1
 g_estimation = 1
 
