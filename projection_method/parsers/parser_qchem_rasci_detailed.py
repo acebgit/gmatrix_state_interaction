@@ -21,12 +21,11 @@ ras_input= str(sys.argv[1])
 
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 1 
+calculate_gshift = 1
 ppm = 1 # 0: ppt; 1: ppm 
-state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
-states_ras = list(range(1, 526)) 
-# states_ras.extend([148, 149, 151, 152, 153, 154, 155]) 
+states_ras = list(range(1, 31)) 
 # states_ras.remove(2) 
 # states_ras.insert(0, 2) 
 
@@ -43,6 +42,7 @@ cut_off_config = 0.75
 ######## SOS PLOTS ########
 sum_over_states_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
 gestimation_gsos_comparison = 0 # 1: SOS comparison between g-shift calculated and estimated
+save_pict = 1
 
 
 ######## EXCITED STATES ANALYSIS ########
@@ -70,7 +70,8 @@ elif gshift_estimation_by_state_pairs == 0 and excited_states_analysis == 1:
                                 excitanalysis_soc_cut, excitanalysis_angmoment_cut, plots=excit_plot, save_pict=0)
 
 if sum_over_states_analysis == 1:
-    sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, order_symmetry=0, save_option=0)
+    order_symmetryy = 0
+    sos_analysis_and_plot(ras_input, states_ras, state_selection, ppm, order_symmetryy, save_pict)
 
 if gestimation_gsos_comparison == 1:
     compare_gcalculation_gestimation(ras_input, states_ras, state_selection, ppm, plotting=1)

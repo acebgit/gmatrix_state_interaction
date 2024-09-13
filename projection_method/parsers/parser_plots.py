@@ -98,7 +98,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
 
     # LEGEND
     legend = plt.legend(fontsize=medium_size, fancybox=True, framealpha=0.5,
-                        labelcolor='linecolor', loc='center')
+                        labelcolor='linecolor', loc='best')
     frame = legend.get_frame()
     frame.set_facecolor('white')
     frame.set_edgecolor('black')
@@ -130,7 +130,8 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
     """
     totalstates = get_number_of_states(file)
     nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
-    state_symmetries, ordered_state_symmetries = get_symmetry_states(file, nstates)
+    state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
+    states_selected_symmetries = [ordered_state_symmetries[i-1] for i in nstates]
 
     presentation_list = [] 
 
@@ -158,13 +159,13 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
     orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
     gxx_list, gyy_list, gzz_list = gshift_estimation_loop(nstates, orbitmoment_all, socc_values,
                                                             excitation_energies_ras, ppms)
-
+    
     if order_symmetry == 1:
-        for i in range(0, len(ordered_state_symmetries)):
+        for i in range(0, len(states_selected_symmetries)):
             presentation_list.append([ordered_state_symmetries[i], np.round(gxx_list[i], 3),
                                         np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
     else:
-        for i in range(0, len(ordered_state_symmetries)):
+        for i in range(0, len(states_selected_symmetries)):
             presentation_list.append([i+1, np.round(gxx_list[i], 3),
                                         np.round(gyy_list[i], 3), np.round(gzz_list[i], 3)])
     presentation_matrix = np.array(presentation_list, dtype=object)
