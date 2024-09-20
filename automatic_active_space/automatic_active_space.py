@@ -17,7 +17,7 @@ import sys
 # Leave "file_new_active_spaces" empty if not improved active space is required
 
 molecule_file = str(sys.argv[1])
-file_new_active_spaces = "activespace_gtensor.txt"
+file_new_active_spaces = "newspaces_by_gshift.txt"
 
 
 def take_data(filee):
@@ -195,7 +195,7 @@ def take_new_active_spaces(file__new_active_spaces):
     active_dict = {}
     for line in range(0, len(lines)):
         if ".out" in lines[line]: 
-            output_file = lines[line].split(":")[1].split("_")[0].split()[0]+".molecule"
+            output_file = lines[line].split(":")[1].split("_")[0].split()[0]+"_opt.molecule"
         
         if "Final active space" in lines[line]: 
             string_list = str(lines[line].split(";")[1].replace("[","").replace("]","").replace(",",""))
@@ -296,8 +296,8 @@ RAS_OCC            2       !number of orbitals in RAS1
 !N_FROZEN_CORE      FC     !Number of frozen core orbitals
 !N_FROZEN_VIRTUAL   0      !Number of frozen virtual orbitals
 
-!RAS_DO_HOLE        TRUE   !presence of hole excitations in RAS-CI wave function
-!RAS_DO_PART        TRUE   !presence of particle excitations
+RAS_DO_HOLE        FALSE   !presence of hole excitations in RAS-CI wave function
+RAS_DO_PART        FALSE   !presence of particle excitations
 !RAS_AMPL_PRINT     10     !threshold (×10 2 ) for the CI amplitudes
 
 !RAS_GUESS_CS       0      !number of closed shell guess conﬁgurations
@@ -316,8 +316,8 @@ CALC_SOC           TRUE   !calculate SOC for EOM-CC, RAS-CI, ADC, TDDFT/TDA and 
 RAS_SOC_SYM_DENS   TRUE   !averaging of α and β densities
 
 !****MEMORY****
-MEM_TOTAL          50000 !Default 2000 MB
-MEM_STATIC         2000  !Default 64 MB
+MEM_TOTAL          90000 !Default 2000 MB
+MEM_STATIC         20000  !Default 64 MB
 
 !**Molecular Properties and Analysis **                                                                                          
 GUI                0       !Checkpoints generation

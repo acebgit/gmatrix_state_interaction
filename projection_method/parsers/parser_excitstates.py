@@ -232,7 +232,7 @@ def get_ras_spaces(qchem_file):
 
             # Checking that the list is not empty and the orbitals have ben manually selected
             try:
-                prueba = float(elements[1])
+                prueba = float(elements[0])
             except ValueError:
                 raise ValueError("'RAS_ACT_ORB' has not been manually selected.")
 

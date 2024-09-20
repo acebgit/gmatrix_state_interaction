@@ -22,12 +22,12 @@ ras_input= str(sys.argv[1])
 
 ######## G-TENSOR CALCULATION ########
 calculate_gshift = 1
-ppm = 1 # 0: ppt; 1: ppm 
-state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+ppm = 0 # 0: ppt; 1: ppm
+state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
-states_ras = list(range(1, 31)) 
-# states_ras.remove(2) 
-# states_ras.insert(0, 2) 
+states_ras = [1, 3, 4] # list(range(1, 31))
+# states_ras.remove(2)
+# states_ras.insert(0, 2)
 
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
@@ -35,22 +35,17 @@ soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 
 ######## G-TENSOR CALCULATION BY PAIRS ########
 gshift_estimation_by_state_pairs = 0.5
-cut_off_config = 0.75
 # ≠0: cut-off between ground-excited states (% of maximum g-value in each dim), where g = -4 L SOC / E
+cut_off_config = 0.75 # cut-off for configurations amplitude (% of maximum amplitude)
 
+excitanalysis_soc_cut = 0 # cut-off for soccs (% of maximum SOCC)
+excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (% of maximum L)
+excit_plot = 0 # 0: not show plot, 1: show plot 
 
 ######## SOS PLOTS ########
-sum_over_states_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
+sum_over_states_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
 gestimation_gsos_comparison = 0 # 1: SOS comparison between g-shift calculated and estimated
 save_pict = 1
-
-
-######## EXCITED STATES ANALYSIS ########
-excited_states_analysis = 0
-excitanalysis_config_cut = 0.5 # cut-off for configurations amplitude (% of maximum amplitude)
-excitanalysis_soc_cut = 0.05 # cut-off for soccs (% of maximum SOCC)
-excitanalysis_angmoment_cut = 10E-10 # cut-off for orbital angular momentum (% of maximum L)
-excit_plot = 0 # 0: not show plot, 1: show plot 
 
 
 ######## G-TENSOR CALCULATION USING DIFFERENT STATES AS GROUND STATE ########
@@ -65,8 +60,8 @@ if calculate_gshift == 1:
 
 if gshift_estimation_by_state_pairs != 0:
     gtensor_state_pairs_analysis(ras_input, state_selection, states_ras, symmetry_selection, gshift_estimation_by_state_pairs, ppm, cut_off_config)
-elif gshift_estimation_by_state_pairs == 0 and excited_states_analysis == 1:
-    get_excited_states_analysis(ras_input, state_selection, states_ras, symmetry_selection, excitanalysis_config_cut,
+elif gshift_estimation_by_state_pairs == 0:
+    get_excited_states_analysis(ras_input, state_selection, states_ras, symmetry_selection, cut_off_config,
                                 excitanalysis_soc_cut, excitanalysis_angmoment_cut, plots=excit_plot, save_pict=0)
 
 if sum_over_states_analysis == 1:

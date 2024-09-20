@@ -19,7 +19,7 @@ file = str(sys.argv[1])
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1
-ppm = 0 # 0: ppt; 1: ppm
+ppm = 1 # 0: ppt; 1: ppm
 
 ######## G-TENSOR ANALYSIS ########
 excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
