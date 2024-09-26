@@ -18,66 +18,98 @@ def save_picture(save_options, filee, title_main):
     :return: plot (saved or shown)
     """
     if save_options == 1:
+        plt.tight_layout()  # Adjust layout
         plt.plot()
         figure_name = filee + '_' + title_main + '.png'
         plt.savefig(figure_name)
         plt.close()
     else:
+        plt.tight_layout()  # Adjust layout
         plt.plot()
         plt.show()
 
 
 def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_title, save_options):
     fig, ax = plt.subplots()
+    plot_type = 1 # 0: plot, 1: bars
 
     # MAIN FEATURES:
     fuente = 'sans-serif'  # 'serif'
     small_size = 16
-    medium_size = 28
-    bigger_size = 26
+    medium_size = 16
+    bigger_size = 16
     weight_selected = 'normal'
     line_width = 2
     marker_size = 10
 
-    # MAJOR AND MINOR TICKS:
-    # x_tick = int((max(presentation_matrix[:, 0]))) / 4
-    # x_tick = int((max(presentation_matrix[:, 0]))) / 4
-    # y_tick = int((max(presentation_matrix[:, :]))) / 4
-    # x_tick = 20
-    # y_tick = 1
-    # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
-    # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+    x = presentation_matrix[:, 0]  # First column for x-axis
+    y1 = presentation_matrix[:, 1]  # Second column for the first category
+    y2 = presentation_matrix[:, 2]  # Third column for the second category
+    y3 = presentation_matrix[:, 3]  # Fourth column for the third category
 
-    # x_tick_min = x_tick / 2
-    # y_tick_min = y_tick / 2
-    # ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
-    # ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
+    #################################
+    ###   PLOT TYPE
+    #################################
+    if plot_type == 0:
+        # MAJOR AND MINOR TICKS:
+        # x_tick = int((max(x))) / 4
+        # x_tick = int((max(x))) / 4
+        # y_tick = int((max(x))) / 4
+        # x_tick = 20
+        # y_tick = 1
+        # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
+        # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
 
-    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        # x_tick_min = x_tick / 2
+        # y_tick_min = y_tick / 2
+        # ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
+        # ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
 
-    # LIMIT TO AXIS:
-    # ax.set_xlim(xmin=0, xmax=20)
-    # ax.set_ylim(ymin=-0.5, ymax=9)
+        # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
-    # LINES:
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'r',
-            label=r'$\mathregular{\Delta g_{xx}}$', linewidth=line_width)
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'b', 
-            label=r'$\mathregular{\Delta g_{yy}}$', linewidth=line_width)
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'k',
-            label=r'$\mathregular{\Delta g_{zz}}$', linewidth=line_width)
+        # LIMIT TO AXIS:
+        # ax.set_xlim(xmin=0, xmax=20)
+        # ax.set_ylim(ymin=-0.5, ymax=9)
 
-    # MARKERS: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 1], 'ro', markersize=marker_size)
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 2], 'bo', markersize=marker_size,
-            markerfacecolor='none', markeredgewidth=1.5)
-    ax.plot(presentation_matrix[:, 0], presentation_matrix[:, 3], 'ko', markersize=marker_size)
+        # LINES:
+        # ax.plot(x, y1, 'r',
+        #         label=r'$\mathregular{\Delta g_{xx}}$', linewidth=line_width)
+        # ax.plot(x, y2, 'b', 
+        #         label=r'$\mathregular{\Delta g_{yy}}$', linewidth=line_width)
+        # ax.plot(x, y3, 'k',
+        #         label=r'$\mathregular{\Delta g_{zz}}$', linewidth=line_width)
 
-    # CHANGING THE FONTSIZE OF TICKS
-    plt.xticks(fontsize=small_size, weight=weight_selected)
-    plt.yticks(fontsize=small_size, weight=weight_selected)
-    # axis.set_major_locator(MaxNLocator(integer=True))
+        # MARKERS: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
+        ax.plot(x, y1, 'ro', markersize=marker_size)
+        ax.plot(x, y2, 'bv', markersize=marker_size,
+                markerfacecolor='none', markeredgewidth=1.5)
+        ax.plot(x, y3, 'ks', markersize=marker_size)
+
+        # CHANGING THE FONTSIZE OF TICKS
+        # plt.xticks(fontsize=small_size, weight=weight_selected)
+        # plt.yticks(fontsize=small_size, weight=weight_selected)
+        # axis.set_major_locator(MaxNLocator(integer=True))
+
+        # Enable grid lines for both x and y axes
+        plt.grid(axis='both', linestyle='--', linewidth=0.7, alpha=0.7)
+
+    #################################
+    ###   BAR PLOTS
+    #################################
+    elif plot_type == 1:
+        # Set width of the bars
+        bar_width = 0.25
+
+        # Set the positions of the bars on the x-axis
+        r1 = np.arange(len(x))
+        r2 = [x + bar_width for x in r1]
+        r3 = [x + bar_width * 2 for x in r1]
+
+        # Create the bar plot
+        plt.bar(r1, y1, width=bar_width, color='blue', edgecolor='blue', label=r'$\mathregular{\Delta g_{xx}}$')
+        plt.bar(r2, y2, width=bar_width, color='orange', edgecolor='orange', label=r'$\mathregular{\Delta g_{yy}}$')
+        plt.bar(r3, y3, width=bar_width, color='green', edgecolor='green', label=r'$\mathregular{\Delta g_{zz}}$')
 
     # LABELS:
     # labelpad: change the space between axis umbers and labels
@@ -101,7 +133,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
                         labelcolor='linecolor', loc='best')
     frame = legend.get_frame()
     frame.set_facecolor('white')
-    frame.set_edgecolor('black')
+    # frame.set_edgecolor('black')
 
     # plt.locator_params(nbins=10)
     # plt.grid()
