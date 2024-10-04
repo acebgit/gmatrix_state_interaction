@@ -6,6 +6,7 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 import numpy as np
 from numpy import linalg, sqrt
 from scipy import constants
+import pandas as pd
 # from pyqchem.parsers.parser_rasci import parser_rasci
 
 # Get the absolute path to local folder 'PyQChem'
@@ -143,7 +144,7 @@ def get_eigenenergies(file, totalstates, selected_states):
     return eigenenergies, excitation_energies
 
 
-def get_spin_orbit_couplings(output, totalstates, selected_states, soc_option):
+def get_spin_orbit_couplings(output, totalstates, selected_states, soc_option, soc_order):
     """
     Get: i) Spin-orbit matrix with dimensions 'bra' x 'ket', with spin order (-Ms , +Ms) in the order of
     "selected_states", ii) [-sz,..,+sz] of the highest s2 state, iii) [-sz,..,+sz] of ground state.
@@ -234,24 +235,50 @@ def get_spin_orbit_couplings(output, totalstates, selected_states, soc_option):
                             all_soc[j_position + sz_1, i_position + sz_2] = i_j_soc_matrix[sz_1][sz_2]
         return all_soc
 
-    def get_selected_states_socs(n_states, all_sz, socs):
+    def get_selected_states_socs(n_states, all_sz, socs, soc_orders):
         """
         Get SOC matrix of the selected states "n_states" from all the socs "all_sz".
         :param: n_states, all_sz, socs
         :return: selected_soc
         """
         selected_soc = np.zeros((len(n_states) * len(all_sz), len(n_states) * len(all_sz)), dtype=complex)
-        for i, all_i in enumerate(n_states):
-            for j, all_j in enumerate(n_states):
 
-                for sz_1 in range(0, len(all_sz)):
-                    for sz_2 in range(0, len(all_sz)):
-                        i_index = i * len(all_sz) + sz_1
-                        j_index = j * len(all_sz) + sz_2
-                        all_i_index = (all_i - 1) * len(all_sz) + sz_1
-                        all_j_index = (all_j - 1) * len(all_sz) + sz_2
+        if soc_orders == 0: # include all orders
+            for i, all_i in enumerate(n_states):
+                for j, all_j in enumerate(n_states):
+                    for sz_1 in range(0, len(all_sz)):
+                        for sz_2 in range(0, len(all_sz)):
+                            i_index = i * len(all_sz) + sz_1
+                            j_index = j * len(all_sz) + sz_2
+                            all_i_index = (all_i - 1) * len(all_sz) + sz_1
+                            all_j_index = (all_j - 1) * len(all_sz) + sz_2
+                            selected_soc[i_index][j_index] = socs[all_i_index][all_j_index]
 
-                        selected_soc[i_index][j_index] = socs[all_i_index][all_j_index]
+        elif soc_orders == 1: # include only first orders 
+            for i, all_i in enumerate(n_states): # Fist row
+                for j, all_j in enumerate(n_states):
+                    if i==0 or j==0:
+                        # print('i', i, 'j', j)
+                        for sz_1 in range(0, len(all_sz)):
+                            for sz_2 in range(0, len(all_sz)):
+                                i_index = i * len(all_sz) + sz_1
+                                j_index = j * len(all_sz) + sz_2
+                                all_i_index = (all_i - 1) * len(all_sz) + sz_1
+                                all_j_index = (all_j - 1) * len(all_sz) + sz_2
+                                selected_soc[i_index][j_index] = socs[all_i_index][all_j_index]
+
+        elif soc_orders == 2: # include only second orders 
+            for i, all_i in enumerate(n_states): # Fist row
+                for j, all_j in enumerate(n_states):
+                    if i!=0 and j!=0:
+                        print('i', i, 'j', j)
+                        for sz_1 in range(0, len(all_sz)):
+                            for sz_2 in range(0, len(all_sz)):
+                                i_index = i * len(all_sz) + sz_1
+                                j_index = j * len(all_sz) + sz_2
+                                all_i_index = (all_i - 1) * len(all_sz) + sz_1
+                                all_j_index = (all_j - 1) * len(all_sz) + sz_2
+                                selected_soc[i_index][j_index] = socs[all_i_index][all_j_index]
         return selected_soc
 
     data = output['interstate_properties']
@@ -259,12 +286,13 @@ def get_spin_orbit_couplings(output, totalstates, selected_states, soc_option):
 
     all_multiplicities, sz_max_allstates, sz_ground_state = get_states_sz(output, selected_states)
     all_socs = get_all_socs(data, totalstates, all_multiplicities, sz_max_allstates, soc_search)
-    selected_socs = get_selected_states_socs(selected_states, sz_max_allstates, all_socs)
+    selected_socs = get_selected_states_socs(selected_states, sz_max_allstates, all_socs, soc_order)
     selected_socs = selected_socs / (constants.physical_constants['hartree-inverse meter relationship'][0] / 100)
 
     # print('SOC:')
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                 for row in np.round((selected_socs[:,:]))]))
+    #                 for row in np.round((selected_socs[:,:])*(constants.physical_constants['hartree-inverse meter relationship'][0] / 100))]))
+    # exit()
     return selected_socs, sz_max_allstates, sz_ground_state
 
 
@@ -875,7 +903,7 @@ def get_states_notnull_soc(output, totalstatess, states_initial):
     # return socc
 
 
-def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selection, soc_options, ppm):
+def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selection, soc_options, soc_order, ppm):
     """
     Returns the g-shifts for doublet ground state molecules.
     :param: file_ms_notnull, states_msnull, states_option, symmetry_selection, soc_options
@@ -893,11 +921,35 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
 
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(ras_input, totalstates, states_selected)
 
-    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(output_parsered, totalstates, states_selected, soc_options)
+    selected_socs, sz_list, sz_ground = get_spin_orbit_couplings(output_parsered, totalstates, states_selected, soc_options, soc_order)
 
     hamiltonian_ras = get_hamiltonian_construction(excitation_energies_ras, selected_socs, sz_list)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
+
+    def change_eigenvectors():
+        row1 = 0
+        row2 = 2
+        # for column in range(0, len(eigenvector[:,:]), len(sz_ground)):
+        for column in range(0, 1):
+            a = eigenvector[:, column+row1].copy()
+            eigenvector[:, column+row1] = eigenvector[:, column+row2]
+            eigenvector[:, column+row2] = a
+        
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        df = pd.DataFrame(eigenvector)
+        # df = pd.DataFrame(eigenvector, index=states_list,
+                # columns=['state', 'config.', 'symmetry', 'unpaired orb', 'gxx', 'gyy', 'gzz'])    
+        df_rounded = df.round(2)
+        print(df)
+
+        for column in range(len(eigenvector)):
+            rounded_col = [complex(round(num.real, 2), round(num.imag, 2)) for num in eigenvector[:, column]]
+            print('State ', (column//len(sz_ground))+1, 'substate', column%len(sz_ground)+1)
+            print(rounded_col)
+            print()
+            # exit()
 
     spin_matrix, standard_spin_matrix = get_spin_matrices(ras_input, states_selected)
 
@@ -923,4 +975,4 @@ def from_gvalue_to_shift(lista):
     for i in range(0, len(lista)):
         value = (lista[i] - lande_factor) * 10**3
         g_shift.append(value)
-    print(np.round(g_shift, 3))
+    print(np.round(g_shift, 2))
