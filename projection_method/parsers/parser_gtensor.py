@@ -271,7 +271,7 @@ def get_spin_orbit_couplings(output, totalstates, selected_states, soc_option, s
             for i, all_i in enumerate(n_states): # Fist row
                 for j, all_j in enumerate(n_states):
                     if i!=0 and j!=0:
-                        print('i', i, 'j', j)
+                        # print('i', i, 'j', j)
                         for sz_1 in range(0, len(all_sz)):
                             for sz_2 in range(0, len(all_sz)):
                                 i_index = i * len(all_sz) + sz_1
@@ -855,7 +855,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
 
 def print_g_calculation(file, totalstates, selected_states,
-                        states_ras, upper_g_tensor_results_ras, symmetry_selection):
+                        states_ras, upper_g_tensor_results_ras, symmetry_selection, soc_orders, soc_option):
     print("--------------------------------------")
     print("     INPUT SECTION")
     print("--------------------------------------")
@@ -866,6 +866,10 @@ def print_g_calculation(file, totalstates, selected_states,
         print("Selected states selected: ", states_ras)
     else:
         print("Selected states selected: ", states_ras)
+
+    soc_options_dict = {0: "All BP Hamiltonian", 1: "One electron term", 2: "Bielectornic term"}
+    soc_order_dict = {0: "All orders", 1: "First-order", 2: "Second-order"}
+    print("SOC: ", soc_order_dict[soc_orders], ',', soc_options_dict[soc_option])
 
     print(" ")
     print("------------------------")
@@ -962,7 +966,7 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
     gmatrix, gshift = from_angmoments_to_gshifts(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground, ppm)
 
-    print_g_calculation(ras_input, totalstates, states_option, states_selected, gshift, symmetry_selection)
+    print_g_calculation(ras_input, totalstates, states_option, states_selected, gshift, symmetry_selection, soc_order, soc_options)
 
 
 def from_gvalue_to_shift(lista):
