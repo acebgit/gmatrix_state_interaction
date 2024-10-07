@@ -157,6 +157,9 @@ def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, s
     """"
     Calculate the g-shifts in the sum-over-states_selected expansion using
     from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
+    Make the comparison betweem g-shift calculated with the SOS procedure and the estimation equation
+    (eq. (11) or article J. Phys.Chem.A2023, 127, 8459−8472).
+    Estimation is done with (4 L SOC) / \Delta E, since only the absolute value gives information. 
     :param: file_ms_notnull
     :return: no returned value, it prints the plot
     """
@@ -267,7 +270,8 @@ def gfactor_change_ground_state(filee, initial_states, states_option, symmetry_s
 def compare_gcalculation_gestimation(file, nstates, selected_state, ppms, plotting):
     """
     Make the comparison betweem g-shift calculated with the SOS procedure and the estimation equation
-    (equation 11 or article J. Phys.Chem.A2023, 127, 8459−8472).
+    (eq. (11) or article J. Phys.Chem.A2023, 127, 8459−8472).
+    Estimation is done with (4 L SOC) / \Delta E, since only the absolute value gives information. 
     :param file:
     :param nstates:
     :param selected_state:
