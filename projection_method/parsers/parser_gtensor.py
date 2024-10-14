@@ -811,7 +811,10 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
     g_matrix_eigenvalues, rotation_g_matrix, g_matrix_diagonal = diagonalization(g_matrix)
     # print('Lande factor: ', lande_factor)
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #             for row in np.round((standard_spin_matrix[:,:,0]), 10)]))
+    #             for row in np.round((g_matrix[:,:]), 10)]))
+    # print("")
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #             for row in np.round((g_matrix[:,:]), 10)]))
     # exit()
 
     g_shifts = np.zeros(3, dtype=complex)
@@ -855,7 +858,7 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
 
 def print_g_calculation(file, totalstates, selected_states,
-                        states_ras, upper_g_tensor_results_ras, symmetry_selection, soc_orders, soc_option):
+                        states_ras, g_shifts, g_matrix, symmetry_selection, soc_orders, soc_option):
     print("--------------------------------------")
     print("     INPUT SECTION")
     print("--------------------------------------")
@@ -876,9 +879,13 @@ def print_g_calculation(file, totalstates, selected_states,
     print(" RAS-CI RESULTS")
     print("------------------------")
     print('g-factor (x y z dimensions):')
-    print(np.round(upper_g_tensor_results_ras[0].real, 3), np.round(upper_g_tensor_results_ras[1].real, 3),
-          np.round(upper_g_tensor_results_ras[2].real, 3))
+    print(np.round(g_shifts[0].real, 3), np.round(g_shifts[1].real, 3),
+          np.round(g_shifts[2].real, 3))
     print('')
+    print('g-matrix:')
+    print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) 
+                     for row in np.round((g_matrix[:,:]), 4)]))
+
 
 
 def get_states_notnull_soc(output, totalstatess, states_initial):
@@ -931,29 +938,33 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian_ras)
 
-    def change_eigenvectors():
-        row1 = 0
-        row2 = 2
-        # for column in range(0, len(eigenvector[:,:]), len(sz_ground)):
-        for column in range(0, 1):
-            a = eigenvector[:, column+row1].copy()
-            eigenvector[:, column+row1] = eigenvector[:, column+row2]
-            eigenvector[:, column+row2] = a
+    # def change_eigenvectors(eignvector):
+    #     row1 = 0
+    #     row2 = 1
+    #     for column in range(0, len(eigenvector[:,:]), len(sz_ground)):
+    #         a = eignvector[:, column+row1].copy()
+    #         eignvector[:, column+row1] = eignvector[:, column+row2]
+    #         eignvector[:, column+row2] = a
+    #     exit()
         
-        pd.set_option('display.max_rows', None)
-        pd.set_option('display.max_columns', None)
-        df = pd.DataFrame(eigenvector)
-        # df = pd.DataFrame(eigenvector, index=states_list,
-                # columns=['state', 'config.', 'symmetry', 'unpaired orb', 'gxx', 'gyy', 'gzz'])    
-        df_rounded = df.round(2)
-        print(df)
+    #     # pd.set_option('display.max_rows', None)
+    #     # pd.set_option('display.max_columns', None)
+    #     # df = pd.DataFrame(eignvector)
+    #     # # df = pd.DataFrame(eigenvector, index=states_list,
+    #     #         # columns=['state', 'config.', 'symmetry', 'unpaired orb', 'gxx', 'gyy', 'gzz'])    
+    #     # df_rounded = df.round(2)
+    #     # print(df)
+    #     # exit()
 
-        for column in range(len(eigenvector)):
-            rounded_col = [complex(round(num.real, 2), round(num.imag, 2)) for num in eigenvector[:, column]]
-            print('State ', (column//len(sz_ground))+1, 'substate', column%len(sz_ground)+1)
-            print(rounded_col)
-            print()
-            # exit()
+    #     for column in range(len(eignvector)):
+    #         rounded_col = [complex(round(num.real, 2), round(num.imag, 2)) for num in eignvector[:, column]]
+    #         print('State ', (column//len(sz_ground))+1, 'substate', column%len(sz_ground)+1)
+    #         print(rounded_col)
+    #         print()
+    #     exit()
+    #     return eignvector
+
+    # eigenvector = change_eigenvectors(eigenvector)
 
     spin_matrix, standard_spin_matrix = get_spin_matrices(ras_input, states_selected)
 
@@ -966,7 +977,7 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
     gmatrix, gshift = from_angmoments_to_gshifts(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground, ppm)
 
-    print_g_calculation(ras_input, totalstates, states_option, states_selected, gshift, symmetry_selection, soc_order, soc_options)
+    print_g_calculation(ras_input, totalstates, states_option, states_selected, gshift, gmatrix, symmetry_selection, soc_order, soc_options)
 
 
 def from_gvalue_to_shift(lista):

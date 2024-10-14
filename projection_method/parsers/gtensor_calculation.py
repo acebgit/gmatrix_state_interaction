@@ -19,20 +19,20 @@ file = str(sys.argv[1])
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1
-ppm = 1 # 0: ppt; 1: ppm
+ppm = 0 # 0: ppt; 1: ppm
 
 ######## G-TENSOR ANALYSIS ########
 excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
 
 ######## EXCITED STATES ANALYSIS ########
 excitanalysis = 0
-cutoffamp = 0.9 # cut-off for configurations amplitude
-excitanalysis_plot = 1
+cutoffamp = 0 # cut-off for configurations amplitude
+excitanalysis_plot = 0
 
 ######## SOS PLOTS ########
 sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
-amp_cutoff = 0.1
-g_estimation = 1
+amp_cutoff = 0
+g_estimation = 0
 
 
 def extract_data_from_json(filee):
@@ -347,19 +347,19 @@ def print_g_calculation(filee, totalstates, gtensor, ppms, spin_list):
                 multip_dict[new_key] = counter_dict[old_key]
         return multip_dict
     
-    multipdict = count_spin_states(spin_list)
-    print("---------------------")
-    print(" G-SHIFT RESULTS")
-    print("---------------------")
-    print("File selected: ", filee)
-    print("Number of states: ", totalstates)
-    print("States multiplicity: ")
-    [print(" ", key, value, end=',') for key, value in multipdict.items()]
-    print()
-    if ppms == 0:
-        print('g-factor (x y z dimensions) in ppt:')
-    elif ppms == 1:
-        print('g-factor (x y z dimensions) in ppm:')
+    # multipdict = count_spin_states(spin_list)
+    # print("---------------------")
+    # print(" G-SHIFT RESULTS")
+    # print("---------------------")
+    # print("File selected: ", filee)
+    # print("Number of states: ", totalstates)
+    # print("States multiplicity: ")
+    # [print(" ", key, value, end=',') for key, value in multipdict.items()]
+    # print()
+    # if ppms == 0:
+    #     print('g-factor (x y z dimensions) in ppt:')
+    # elif ppms == 1:
+    #     print('g-factor (x y z dimensions) in ppm:')
     print(np.round(gtensor[0].real, 3), np.round(gtensor[1].real, 3),
           np.round(gtensor[2].real, 3))
     print('')
@@ -673,10 +673,10 @@ if g_calculation == 1:
 
     print_g_calculation(file, nstates, gshift, ppm, spin_json)
 
-    print("g-matrix: ")
-    print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-                for row in np.round(np.sqrt(gmatrix[:,:]), 6)]))
-    print()
+    # print("g-matrix: ")
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #             for row in np.round(np.sqrt(gmatrix[:,:]), 6)]))
+    # print()
 
 if excitanalysis_gvalue_cut != 0:
     get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, 

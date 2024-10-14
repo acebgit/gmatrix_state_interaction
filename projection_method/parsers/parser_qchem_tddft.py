@@ -4,8 +4,8 @@ import sys
 
 state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
 initial_states = [0, 4] # 0 is the ground state
-ground_state = '0'
-selected_multiplicity = 2
+ground_state = 'T1'
+selected_multiplicity = 3
 
 file = str(sys.argv[1])
 # file = '../../molecules/phenalenyl/2Tm_doublet_ccpVTZ_tddft.out'
