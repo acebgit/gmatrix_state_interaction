@@ -10,6 +10,14 @@ from projection_method.parsers.parser_gtensor import get_number_of_states, get_s
 from projection_method.parsers.parser_excitstates import get_groundst_socc_values, get_groundst_orbital_momentum, \
     gshift_estimation_loop, gshift_calculation_loop
 
+# Get the absolute path to local folder 'PyQChem'
+import sys
+import os
+parent_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), 'C:\\Users\\HP.LAPTOP-F127N3L3\\Desktop\\my_programs\\PyQChem'))
+if parent_directory not in sys.path: # Add 'folder2' to the Python path
+    sys.path.append(parent_directory)
+from pyqchem.parsers.parser_rasci import parser_rasci
+
 
 def save_picture(save_options, filee, title_main):
     """
@@ -153,46 +161,51 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     save_picture(save_options, file, main_title)
 
 
-def sos_analysis_and_plot(file, nstates, selected_state, ppms, order_symmetry, save_option):
+def sos_analysis_and_plot(file, nstates, selected_state, analysis, ppms, order_symmetry, save_option):
     """"
-    Calculate the g-shifts in the sum-over-states_selected expansion using
-    from 2 states_selected to the total number of states_selected shown in the Q-Chem output.
-    Make the comparison betweem g-shift calculated with the SOS procedure and the estimation equation
-    (eq. (11) or article J. Phys.Chem.A2023, 127, 8459−8472).
-    Estimation is done with (4 L SOC) / \Delta E, since only the absolute value gives information. 
-    :param: file_ms_notnull
-    :return: no returned value, it prints the plot
+    Calculate the g-shifts in the sum-over-states_selected expansion using pair of states: 
+    Ground state - Excited states with all the excited states of the output.
+    Two options:
+    i) "analysis = 0": Effective Hamiltonian 
+    ii) "analysis = 1": g-shift calculated with the SOS procedure and the estimation equation 
+    (eq. (11) or article J. Phys.Chem.A2023, 127, 8459-8472).
+    Estimation is done with (L SOC / \Delta E), since only the absolute value gives "real" information. 
+    :param: file
+    :return: prints the plot
     """
+    with open(file, encoding="utf8") as f:
+        output = f.read()
+    output_parsered = parser_rasci(output)
+
     totalstates = get_number_of_states(file)
     nstates = get_selected_states(file, totalstates, nstates, selected_state, symmetry_selection=0)
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
     states_selected_symmetries = [ordered_state_symmetries[i-1] for i in nstates]
-
-    presentation_list = [] 
-
-    # if estimation == 0:
-    #     for i in range(0, len(nstates)):
-    #         states_sos = nstates[0:i+1]
-    #         print('Calculating....', states_sos)
-    #         eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, states_sos)
-    #         selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(file, totalstates, states_sos, soc_option=0)
-    #         g_shift = from_energies_soc_to_g_values(file, states_sos,
-    #                                                 totalstates, excitation_energies_ras,
-    #                                                 selected_socs, sz_list, ground_sz, ppms)
-
-    #         if order_symmetry == 1:
-    #             presentation_list.append([ordered_state_symmetries[i], np.round(g_shift[0].real, 3),
-    #                                       np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
-    #         else:
-    #             presentation_list.append([i+1, np.round(g_shift[0].real, 3),
-    #                                       np.round(g_shift[1].real, 3), np.round(g_shift[2].real, 3)])
-    # else: 
-
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
-    excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
-    socc_values = get_groundst_socc_values(file, totalstates, nstates)
-    orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
-    gxx_list, gyy_list, gzz_list = gshift_estimation_loop(nstates, orbitmoment_all, socc_values,
+
+    presentation_list = []
+    gxx_list = []
+    gyy_list = []
+    gzz_list = []
+
+    if analysis == 0:
+        for i in range(0, len(nstates)):
+            states_sos = [nstates[0], nstates[i]]
+            excitener_pairstates = [excitation_energies_ras[0], excitation_energies_ras[i]]
+            selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(output_parsered, totalstates, states_sos, soc_option=0, soc_order=0)
+            g_shift = from_energies_soc_to_g_values(file, states_sos,
+                                                    totalstates, excitener_pairstates,
+                                                    selected_socs, sz_list, ground_sz, ppms)
+            gxx_list.append(g_shift[0].real)
+            gyy_list.append(g_shift[1].real)
+            gzz_list.append(g_shift[2].real)
+
+    elif analysis == 1:
+        # Energy: from Hartree to a.u.
+        excitation_energies_ras[:] = (excitation_energies_ras[:] - excitation_energies_ras[0]) * 27.211399
+        socc_values = get_groundst_socc_values(file, totalstates, nstates)
+        orbitmoment_max, orbitmoment_all = get_groundst_orbital_momentum(file, totalstates, nstates)
+        gxx_list, gyy_list, gzz_list = gshift_estimation_loop(nstates, orbitmoment_all, socc_values,
                                                             excitation_energies_ras, ppms)
     
     if order_symmetry == 1:

@@ -837,7 +837,6 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
     with open(file, encoding="utf8") as f:
         output = f.read()
     output_parsered = parser_rasci(output)
-    data = output['interstate_properties']
 
     hamiltonian_ras = get_hamiltonian_construction(excitation_energies_ras, soc_ras, sz_list)
 

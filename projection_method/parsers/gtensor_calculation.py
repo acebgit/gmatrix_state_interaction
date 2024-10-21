@@ -25,12 +25,12 @@ ppm = 0 # 0: ppt; 1: ppm
 excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
 
 ######## EXCITED STATES ANALYSIS ########
-excitanalysis = 0
+excitanalysis = 1
 cutoffamp = 0 # cut-off for configurations amplitude
 excitanalysis_plot = 0
 
 ######## SOS PLOTS ########
-sos_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
+sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
 amp_cutoff = 0
 g_estimation = 0
 

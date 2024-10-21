@@ -9,7 +9,7 @@ from projection_method.parsers.parser_excitstates import get_configurations_unpa
 from pyqchem.parsers.parser_rasci import parser_rasci
 
 state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-initial_states = [1, 5]
+initial_states = [1, 5, 6]
 symmetry_selection = 'B1u'  # Symmetry selected states_selected
 soctype = 0
 
