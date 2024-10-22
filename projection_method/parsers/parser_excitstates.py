@@ -679,9 +679,9 @@ def gshift_estimation_loop(nstates, orbit_moments, soccs, energies, ppm):
         element_yy = (orbit_moments[i, 1] * soccs[i] / energies[i]) * 1000
         element_zz = (orbit_moments[i, 2] * soccs[i] / energies[i]) * 1000
 
-        g_xx.append(element_xx)
-        g_yy.append(element_yy)
-        g_zz.append(element_zz)
+        g_xx.append(abs(element_xx))
+        g_yy.append(abs(element_yy))
+        g_zz.append(abs(element_zz))
 
     g_xx = from_ppt_to_ppm(g_xx, ppm)
     g_yy = from_ppt_to_ppm(g_yy, ppm)

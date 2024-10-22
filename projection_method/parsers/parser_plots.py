@@ -165,11 +165,12 @@ def sos_analysis_and_plot(file, nstates, selected_state, analysis, ppms, order_s
     """"
     Calculate the g-shifts in the sum-over-states_selected expansion using pair of states: 
     Ground state - Excited states with all the excited states of the output.
+    g-shift in absolute value to make the estimation.
     Two options:
     i) "analysis = 0": Effective Hamiltonian 
     ii) "analysis = 1": g-shift calculated with the SOS procedure and the estimation equation 
-    (eq. (11) or article J. Phys.Chem.A2023, 127, 8459-8472).
-    Estimation is done with (L SOC / \Delta E), since only the absolute value gives "real" information. 
+    (eq. (11) or article J. Phys.Chem.A2023, 127, 8459-8472). Estimation is done with 
+    (L SOC / \Delta E), since only the absolute value gives "real" information. 
     :param: file
     :return: prints the plot
     """
@@ -196,9 +197,9 @@ def sos_analysis_and_plot(file, nstates, selected_state, analysis, ppms, order_s
             g_shift = from_energies_soc_to_g_values(file, states_sos,
                                                     totalstates, excitener_pairstates,
                                                     selected_socs, sz_list, ground_sz, ppms)
-            gxx_list.append(g_shift[0].real)
-            gyy_list.append(g_shift[1].real)
-            gzz_list.append(g_shift[2].real)
+            gxx_list.append(abs(g_shift[0].real))
+            gyy_list.append(abs(g_shift[1].real))
+            gzz_list.append(abs(g_shift[2].real))
 
     elif analysis == 1:
         # Energy: from Hartree to a.u.
