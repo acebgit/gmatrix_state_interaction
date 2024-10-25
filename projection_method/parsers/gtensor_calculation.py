@@ -15,7 +15,11 @@ from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
 
 # INPUT FILE
 file = str(sys.argv[1])
-# file = '../../molecules/phenalenyl/2Tm_doublet_ccpVDZ_7_7.out'
+
+# state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+# initial_states = [1, 5, 6]
+# symmetry_selection = 'B1u'  # Symmetry selected states_selected
+# soctype = 0
 
 ######## G-TENSOR CALCULATION ########
 g_calculation = 1

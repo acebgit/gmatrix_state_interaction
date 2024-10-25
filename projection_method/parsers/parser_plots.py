@@ -30,6 +30,7 @@ def save_picture(save_options, filee, title_main):
         plt.plot()
         figure_name = filee + '_' + title_main + '.png'
         plt.savefig(figure_name)
+        plt.show()
         plt.close()
     else:
         plt.tight_layout()  # Adjust layout
@@ -183,6 +184,13 @@ def sos_analysis_and_plot(file, nstates, selected_state, analysis, ppms, order_s
     state_symmetries, ordered_state_symmetries = get_symmetry_states(file, totalstates)
     states_selected_symmetries = [ordered_state_symmetries[i-1] for i in nstates]
     eigenenergies_ras, excitation_energies_ras = get_eigenenergies(file, totalstates, nstates)
+    selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(output_parsered, totalstates, nstates, soc_option=0, soc_order=0)
+
+    print(len(selected_socs))
+    print(len(sz_list))
+    print(ground_sz)
+    print(len(nstates))
+    exit()
 
     presentation_list = []
     gxx_list = []
@@ -191,12 +199,13 @@ def sos_analysis_and_plot(file, nstates, selected_state, analysis, ppms, order_s
 
     if analysis == 0:
         for i in range(0, len(nstates)):
+            print('SOS: state ', i)
             states_sos = [nstates[0], nstates[i]]
             excitener_pairstates = [excitation_energies_ras[0], excitation_energies_ras[i]]
-            selected_socs, sz_list, ground_sz = get_spin_orbit_couplings(output_parsered, totalstates, states_sos, soc_option=0, soc_order=0)
+            # st_selected_socs, st_sz_list, st_ground_sz = 
             g_shift = from_energies_soc_to_g_values(file, states_sos,
                                                     totalstates, excitener_pairstates,
-                                                    selected_socs, sz_list, ground_sz, ppms)
+                                                    st_selected_socs, st_sz_list, st_ground_sz, ppms)
             gxx_list.append(abs(g_shift[0].real))
             gyy_list.append(abs(g_shift[1].real))
             gzz_list.append(abs(g_shift[2].real))
