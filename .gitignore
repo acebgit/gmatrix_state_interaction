@@ -1,6 +1,7 @@
 */*/*.pyc
 */*/*/*.pyc
 */*/*/*/*.pyc
+projection_method/parsers/__pycache__/*.pyc
 
 .idea
 .vscode
