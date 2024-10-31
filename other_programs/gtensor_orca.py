@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 options = 1 # 0) take g-shift and times; 1) take g-shift, g-matrix and orientation
-ppm = 1
+ppm = 0
 file_path = str(sys.argv[1])
 
 with open(file_path, 'r') as file:
