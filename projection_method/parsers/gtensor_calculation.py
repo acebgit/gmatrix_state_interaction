@@ -13,30 +13,49 @@ from projection_method.parsers.parser_gtensor import get_hamiltonian_constructio
 from projection_method.parsers.parser_excitstates import get_bar_chart
 from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
 
-# INPUT FILE
+######## INPUT FILE ########
 file = str(sys.argv[1])
 
-# state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-# initial_states = [1, 5, 6]
-# symmetry_selection = 'B1u'  # Symmetry selected states_selected
-# soctype = 0
 
 ######## G-TENSOR CALCULATION ########
-g_calculation = 1
+calculate_gshift = 1
 ppm = 0 # 0: ppt; 1: ppm
+state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+
+initial_states = list(range(1, 101))
+# states_ras.remove(2)
+# states_ras.insert(0, 2)
+symmetry_selection = 'B2'  # Symmetry selected states_selected
+soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
+soc_orders = 0
+
 
 ######## G-TENSOR ANALYSIS ########
 excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
+
 
 ######## EXCITED STATES ANALYSIS ########
 excitanalysis = 1
 cutoffamp = 0 # cut-off for configurations amplitude
 excitanalysis_plot = 0
 
+
 ######## SOS PLOTS ########
-sos_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
+sum_over_states_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
 amp_cutoff = 0
 g_estimation = 0
+save_pict = 0
+analysiss = 0
+
+
+######## G-TENSOR CALCULATION BY PAIRS ########
+gshift_estimation_by_state_pairs = 0.5
+# ≠0: cut-off between ground-excited states (% of maximum g-value in each dim), where g = -4 L SOC / E
+cut_off_config = 0.75 # cut-off for configurations amplitude (% of maximum amplitude)
+
+excitanalysis_soc_cut = 0 # cut-off for soccs (% of maximum SOCC)
+excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (% of maximum L)
+excit_plot = 0 # 0: not show plot, 1: show plot 
 
 
 def extract_data_from_json(filee):
@@ -668,7 +687,7 @@ file = file + ".json"
 energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, transitions_json = extract_data_from_json(file)
 nstates = len(energies_json)
 
-if g_calculation == 1:
+if calculate_gshift == 1:
     max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
     = from_json_to_matrices(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json)
 
@@ -689,5 +708,5 @@ if excitanalysis_gvalue_cut != 0:
 if excitanalysis == 1:
     excitedstates_analysis(nstates, excitenergies_json, orbitmoment_json, soc_json, excitanalysis_plot, cutoffamp)
 
-if sos_analysis == 1:
+if sum_over_states_analysis == 1:
     sum_over_state_plot(g_estimation, energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, ppm, amp_cutoff)

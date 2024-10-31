@@ -10,6 +10,13 @@ def output_json(filename, output_dict):
     with open(outfile_name, 'w') as archivo:
         json.dump(output_dict, archivo, separators=(',', ':'), sort_keys=False, indent=4)
 
+
+def check_dimmensions(dictionary, lista, number):
+        for i in lista:
+            if len(dictionary[i]) != number:
+                raise ValueError("The dimensions of the dictionary {} are incorrect.".format(i))
+
+
 def gtensor_parser_rasci(outpuut):
     """
     Print all the states information in RASCI: 
@@ -100,6 +107,7 @@ def gtensor_parser_rasci(outpuut):
     data = parser_rasci(outpuut)
 
     # STATE PROPERTIES
+
     # Number of states
     excitstates_dict = data['excited_states']
     totalstates = len(excitstates_dict)
@@ -128,26 +136,38 @@ def gtensor_parser_rasci(outpuut):
 
     for i in range(1, totalstates+1):
         for j in range(1, totalstates+1):
-            if i != j: 
-                # SOC matrix: Pass numbers from complex to strings
+            bra_sym = states_symmetry[i-1]
+            ket_sym = states_symmetry[j-1]
+            braket = bra_sym + "_" + ket_sym
+            ketbra = ket_sym + "_" + bra_sym
+            
+            # If braket is written in code, then ketbra is skipped 
+            if i != j and braket not in soc_matrix_dict and ketbra not in soc_matrix_dict: 
+                # SOC matrix: Pass numbers from complex to strings 
                 pair_socs = [[str(element) for element in sublist] for sublist in interstates_dict[(i, j)][soc_text]]
-                soc_matrix_dict.update({states_symmetry[i-1]+'_'+states_symmetry[j-1]: pair_socs})
+                soc_matrix_dict.update({braket: pair_socs})
 
                 # SOCC elements
-                socc_dict.update({states_symmetry[i-1]+'_'+states_symmetry[j-1]: interstates_dict[(i, j)]['mf_socc']})
+                socc_dict.update({braket: interstates_dict[(i, j)]['mf_socc']})
 
                 # Orbital angular momentum L
                 pair_angmoment = [str(element) for element in interstates_dict[(i, j)]['angular_momentum']]
-                angmoment_dict.update({states_symmetry[i-1]+'_'+states_symmetry[j-1]: pair_angmoment})
+                angmoment_dict.update({braket: pair_angmoment})
 
     output_dict = {
     "energy_dict": energy_dict,
     "soc_matrix_dict": soc_matrix_dict,
+    "socc_dict": socc_dict, 
     "spin_dict": spin_dict,
     "angmoment_dict": angmoment_dict,
     "transitions_dict": transitions_dict
     }
+
+    check_dimmensions(output_dict, ["energy_dict", "spin_dict"], totalstates)
+    check_dimmensions(output_dict, ["soc_matrix_dict", "socc_dict", "angmoment_dict"], (totalstates * (totalstates - 1) // 2))
+    check_dimmensions(output_dict, ["transitions_dict"], totalstates)
     return output_dict
+
 
 def gtensor_parser_tddft(outpuut):
     """
@@ -158,6 +178,14 @@ def gtensor_parser_tddft(outpuut):
     "angmoment_dict": orbital angular momentum in the three directions,
     "transitions_dict": transitions information: state, configuration, SOMO, amplitude
     """
+    def s_to_s2(s):
+        """
+        get s from s^2
+        :param: s
+        :return: s^2
+        """
+        return ((2*s + 1)**2 - 1) / 4
+
     def get_tddft_configurations(dataa, totalstatess, cutoff_amp=0):
         """
         Form a dictionary with states, configurations, transitions and amplitudes
@@ -194,58 +222,78 @@ def gtensor_parser_tddft(outpuut):
 
     # STATE PROPERTIES
 
-    # Number of states
+    # Number of states 
     excitstates_dict = data['excited_states']
     totalstates = len(excitstates_dict)
 
-    # Take ground state energy 
+    # Energy (in a.u.) and excitation energy (in eV) 
     energy_dict = {0: [data['scf_energy'], 0.000], # Zero state energy (SCF)
                    **{i+1: [excitstates_dict[i]['total_energy'], excitstates_dict[i]['excitation_energy']]
                    for i in range(totalstates)}}
 
     # Spin multiplicity 
-    spin_dict = {0: str(data['scf_multiplicity']),  # Zero state energy (SCF)
-                 **{i+1: excitstates_dict[i]['multiplicity'] for i in range(totalstates)}}
+
+    try: # In case of doublets, spin is a float
+        spin_dict = {0: data['scf_multiplicity'],  # Zero state energy (SCF)
+                    **{i+1: float(excitstates_dict[i]['multiplicity']) for i in range(totalstates)}}
+
+    except: # In case of singlets, spin is a string
+        mapping_spin = {'Singlet': s_to_s2(0), 'Triplet': s_to_s2(1), 'Quintet': s_to_s2(2), 'Heptet': s_to_s2(3)}
+        spin_dict = {0: data['scf_multiplicity'],  # Zero state energy (SCF)
+                 **{i+1: mapping_spin[excitstates_dict[i]['multiplicity']] for i in range(totalstates)}}
     
     # ORBITALS INVOLVED IN TRANSITIONS
     transitions_dict = get_tddft_configurations(data, totalstates)
 
     # INTERSTATE PROPERTIES
-    soc_text = 'total_soc_mat' # total_soc_mat, 1e_soc_mat, 2e_soc_mat
-    interstates_dict = data['interstate_properties']
-    
     soc_matrix_dict = {}
     socc_dict = {}
     angmoment_dict = {}
 
-    for i in range(1, totalstates+1):
-        for j in range(1, totalstates+1):
-            if i != j: 
-                # SOC matrix: Pass numbers from complex to strings
-                pair_socs = [[str(element) for element in sublist] for sublist in interstates_dict[(i, j)][soc_text]]
-                soc_matrix_dict.update({i+'_'+j: pair_socs})
+    soc_text = 'mf_soc_mat' # 1e_socc, mf_soc_mat
+    socc_text = 'mf_socc' # 1e_socc, mf_socc
 
-                # SOCC elements
-                socc_dict.update({i+'_'+j: interstates_dict[(i, j)]['mf_socc']})
+    for i in range(0, totalstates+1): # Totalstates + the ground state 
+        for j in range(i+1, totalstates+1):
+            
+            try: # If there is SOC 
+                complex_list = [[str(complex(real, imag)) for real, imag in sublist] for sublist in data['interstate_socs'][(i, j)][soc_text]]
+                soc_matrix_dict.update({str(i)+'_'+str(j): complex_list})
+                socc_dict.update({str(i)+'_'+str(j): data['interstate_socs'][(i, j)][socc_text]})
 
-                # Orbital angular momentum L
-                pair_angmoment = [str(element) for element in interstates_dict[(i, j)]['angular_momentum']]
-                angmoment_dict.update({i+'_'+j: pair_angmoment})
+            except (KeyError, ValueError): # If the SOC is 0 or if it is not defined (Singlet-Triplets)
+                soc_matrix_dict.update({str(i)+'_'+str(j): 0})
+                socc_dict.update({str(i)+'_'+str(j): 0})
+            # print(socc_dict[str(i)+'_'+str(j)])
+            
+            try: # If there is angular momentum 
+                imaginary_list = [(str(num)+"j") for num in data['interstate_angmom'][(i, j)]['angular_momentum']]
+                angmoment_dict.update({str(i)+'_'+str(j): imaginary_list})
+            
+            except: # If the orbital momentum is 0 or if it is not defined (Singlet-Triplets)
+                angmoment_dict.update({str(i)+'_'+str(j): ['0j', '0j', '0j']})  
 
     output_dict = {
     "energy_dict": energy_dict,
     "soc_matrix_dict": soc_matrix_dict,
+    "socc_dict": socc_dict, 
     "spin_dict": spin_dict,
     "angmoment_dict": angmoment_dict,
     "transitions_dict": transitions_dict
     }
+    
+    check_dimmensions(output_dict, ["energy_dict", "spin_dict"], totalstates+1)
+    check_dimmensions(output_dict, ["soc_matrix_dict", "socc_dict", "angmoment_dict"], (totalstates * (totalstates + 1) // 2))
+    check_dimmensions(output_dict, ["transitions_dict"], totalstates)
     return output_dict
+
 
 with open(file, encoding="utf8") as f:
         outpuut = f.read()
 
 if bool(outpuut.find('R A S M A N 2')+1): # RAS method output
     output_dict = gtensor_parser_rasci(outpuut)
+
 elif bool(outpuut.find('TDDFT')+1): # TDDFT method output
     output_dict = gtensor_parser_tddft(outpuut)
 
