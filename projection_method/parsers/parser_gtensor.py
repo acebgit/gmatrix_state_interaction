@@ -7,18 +7,18 @@ import numpy as np
 from numpy import linalg, sqrt
 from scipy import constants
 import pandas as pd
-# from pyqchem.parsers.parser_rasci import parser_rasci
+from projection_method.parsers.gtensor_calculation import get_hamiltonian_construction, hermitian_test, \
+    from_ppt_to_ppm, diagonalization, angular_matrices_obtention
 
 # Get the absolute path to local folder 'PyQChem'
-import sys
-import os
+import sys 
+import os 
 parent_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), 'C:\\Users\\HP.LAPTOP-F127N3L3\\Desktop\\my_programs\\PyQChem'))
 if parent_directory not in sys.path: # Add 'folder2' to the Python path
     sys.path.append(parent_directory)
 from pyqchem.parsers.parser_rasci import parser_rasci
 
 lande_factor = 2.002319304363
-
 
 def get_number_of_states(file):
     """
@@ -296,109 +296,6 @@ def get_spin_orbit_couplings(output, totalstates, selected_states, soc_option, s
     return selected_socs, sz_max_allstates, sz_ground_state
 
 
-def hermitian_test(matrix, sz_list):
-    """
-    Check if matrix is Hermitian. If not, "ValueError".
-    :param: matrix, sz_list
-    """
-    # SLOW LOOP
-    # for i in range(0, len(matrix)):
-    #     for j in range(i, len(matrix)):
-    #         element_1 = np.round(matrix[i, j], 4)
-    #         element_2 = np.round(np.conjugate(matrix[j, i]), 4)
-    #         if element_1 != element_2:
-    #             state_1 = i // len(sz_list)
-    #             state_2 = j // len(sz_list)
-
-    #             print('State 1:', state_1, ', State 2:', state_2, ', row:', i, ', column:', j,
-    #                   ', value:', matrix[i, j])
-    #             print('State 2:', state_2, ', State 1:', state_2, ', row:', j, ', column:', i,
-    #                   ', value:', matrix[j, i])
-    #             raise ValueError("Matrix is not Hermitian: see the elements shown above (SOCs in cm-1)")
-
-    # FASTER LOOP (done with ChatGPT)
-    # Assuming matrix and sz_list are already defined
-    matrix_rounded = np.round(matrix, 4)
-    conjugate_matrix_rounded = np.round(np.conjugate(matrix.T), 4)
-
-    # Create a mask for the upper triangle including the diagonal
-    mask = np.triu(np.ones(matrix.shape, dtype=bool))
-
-    # Compare elements
-    different_elements = (matrix_rounded != conjugate_matrix_rounded) & mask
-
-    # Get the indices where the elements are different
-    i_indices, j_indices = np.where(different_elements)
-
-    # Compute states
-    state_1 = i_indices // len(sz_list)
-    state_2 = j_indices // len(sz_list)
-
-    # Combine states into a list of tuples if needed
-    states = list(zip(state_1, state_2))
-
-    if states: print(states)
-
-
-def get_hamiltonian_construction(eigenenergies, spin_orbit_coupling, sz_values):
-    """
-    Construct Hamiltonian matrix with dimensions 'bra' x 'ket', with spin order (-Ms , +Ms) in the order of
-    "selected_states".
-    Make hermitian test to the matrix.
-    :param: selected_states, eigenenergies, spin_orbit_coupling, sz_values
-    :return: hamiltonian
-    """    
-    num_eigenenergies = len(eigenenergies)
-    num_sz_values = len(sz_values)
-    size = num_eigenenergies * num_sz_values
-    hamiltonian = np.zeros((size, size), dtype=complex)
-
-    # Fill the diagonal with eigenenergies
-    for i in range(num_eigenenergies):
-        hamiltonian[i*num_sz_values:(i+1)*num_sz_values, i*num_sz_values:(i+1)*num_sz_values] = np.diag([eigenenergies[i]] * num_sz_values)
-
-    # Fill the off-diagonal with spin_orbit_coupling values
-    hamiltonian += spin_orbit_coupling
-
-    hermitian_test(hamiltonian, sz_values)
-    return hamiltonian
-
-
-def reordering_eigenvectors(eigenval, eigenvect):
-    """
-    Reorder eigenvectors and eigenenergies by eigenvectors weight coefficients.
-    :param: eigenvalues, eigenvectors
-    :return: eigenvalues, eigenvectors
-    """
-    change_order = np.zeros(len(eigenvect), dtype=complex)
-    for v_1 in range(0, len(eigenvect)):
-        for v_2 in range(v_1, len(eigenvect)):
-
-            if abs(eigenvect[v_1, v_2]) > abs(eigenvect[v_1, v_1]):
-                change_order[:] = eigenvect[:, v_1]
-                eigenvect[:, v_1] = eigenvect[:, v_2]
-                eigenvect[:, v_2] = change_order[:]
-
-                change_order.real[0] = eigenval[v_1]
-                eigenval[v_1] = eigenval[v_2]
-                eigenval[v_2] = change_order.real[0]
-    return eigenval, eigenvect
-
-
-def diagonalization(matrix):
-    """
-    Diagonalize Hamiltonian. Eigenvectors-eigenvalues are ordered by weight coefficients. Construct the diagonal matrix.
-    :param: matrix
-    :return: eigenvalues, eigenvectors, diagonal_matrix
-    """
-    eigenvalues, eigenvectors = linalg.eigh(matrix)
-    eigenvalues, eigenvectors = reordering_eigenvectors(eigenvalues, eigenvectors)
-
-    rotation_inverse = np.linalg.inv(eigenvectors)
-    diagonal_matrix = np.matmul(np.matmul(rotation_inverse, matrix), eigenvectors)
-    return eigenvalues, eigenvectors, diagonal_matrix
-
-
 def get_spin_matrices(file, selected_states):
     """
     Get spin matrix with dimensions ['bra' x 'ket' x 3] (x,y,z), with spin order (-Ms , +Ms) in the order of
@@ -654,51 +551,6 @@ def get_orbital_matrices(output, totalstates, selected_states, sz_list):
     return all_multip_lk
 
 
-def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
-    """
-    Angular matrix from non-relativistic states (states from Q-Chem) is expanded in the relativistic states. In
-    < B(S,Sz) | Sx | A(S',Sz') >, < B(S,Sz)| corresponds to rows and | A(S',Sz') > to columns.
-    :param: eigenvectors, input_angular_matrix, sz_list
-    :return: angular_matrix
-    """
-    angular_matrix = np.zeros((len(sz_list), len(sz_list), 3), dtype=complex)
-
-    # SLOW LOOP
-    # for k in range(0, 3):
-    #     for row in range(0, len(sz_list)):  # state i
-    #         for column in range(0, len(sz_list)):  # state j
-
-    #             for bra in range(0, len(eigenvectors)):  # state <B|
-    #                 for ket in range(0, len(eigenvectors)):  # state |A>
-
-    #                     coeff_bra = np.conj(eigenvectors[bra, row])
-    #                     coeff_ket = (eigenvectors[ket, column])
-    #                     angular_value = input_angular_matrix[bra, ket, k]
-
-    #                     element = coeff_bra * coeff_ket * angular_value
-    #                     angular_matrix[row, column, k] += element
-
-    # FASTER LOOP
-    for k in range(3):
-        conj_eigenvectors = np.conj(eigenvectors)
-        for row in range(len(sz_list)):
-            coeff_bra = conj_eigenvectors[:, row]
-            for column in range(len(sz_list)):
-                coeff_ket = eigenvectors[:, column]
-                angular_values = input_angular_matrix[:, :, k]
-
-                elements = coeff_bra[:, np.newaxis] * coeff_ket * angular_values
-                angular_matrix[row, column, k] += np.sum(elements)
-
-    # print('Angular matrix with all spin angular momentums:')
-    # for k in range(0, 3):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((angular_matrix[:, :, k]), 5)]))
-    #     print(" ")
-    return angular_matrix
-
-
 def from_qchem_to_sto(g_shift):
     """
         Change orientation  from Q-Chem to Standard Nuclear Orientation
@@ -709,19 +561,6 @@ def from_qchem_to_sto(g_shift):
     g_shift[0] = g_shift[1]
     g_shift[1] = a
     return g_shift
-
-
-def from_ppt_to_ppm(gvalues, ppm=None):
-    """
-        Pass from ppt to ppm the gvalues.
-        :param: ppm, gvalues
-        :return: gvalues
-        """
-    if ppm == 1:
-        gvalues = [i * 1000 for i in gvalues]
-    else:
-        pass
-    return gvalues
 
 
 def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=None):
@@ -884,7 +723,6 @@ def print_g_calculation(file, totalstates, selected_states,
     print('g-matrix:')
     print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) 
                      for row in np.round((g_matrix[:,:]), 4)]))
-
 
 
 def get_states_notnull_soc(output, totalstatess, states_initial):

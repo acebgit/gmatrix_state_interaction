@@ -28,9 +28,9 @@ ras_input= str(sys.argv[1])
 ######## G-TENSOR CALCULATION ########
 calculate_gshift = 1
 ppm = 0 # 0: ppt; 1: ppm
-state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
-states_ras = list(range(1, 101))
+states_ras = [1, 2, 3]
 # states_ras.remove(2)
 # states_ras.insert(0, 2)
 
@@ -39,7 +39,7 @@ soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-el
 soc_orders = 0
 
 ######## G-TENSOR CALCULATION BY PAIRS ########
-gshift_estimation_by_state_pairs = 0.5
+gshift_estimation_by_state_pairs = 0
 # ≠0: cut-off between ground-excited states (% of maximum g-value in each dim), where g = -4 L SOC / E
 cut_off_config = 0.75 # cut-off for configurations amplitude (% of maximum amplitude)
 

@@ -111,7 +111,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
         bar_width = 0.25
 
         # Set the positions of the bars on the x-axis
-        r1 = np.arange(len(x))
+        r1 = x  # np.arange(len(x))
         r2 = [x + bar_width for x in r1]
         r3 = [x + bar_width * 2 for x in r1]
 

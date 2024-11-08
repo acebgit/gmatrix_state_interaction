@@ -1,89 +1,16 @@
 import json
 import sys 
 import numpy as np
+from numpy import linalg, sqrt
 import pandas as pd
 import math 
 from scipy import constants
-
+from collections import Counter
+import matplotlib.pyplot as plt
 # import timeit
 # from functools import partial
 
-from projection_method.parsers.parser_gtensor import get_hamiltonian_construction, diagonalization, \
-    angular_matrices_obtention, from_angmoments_to_gshifts
-from projection_method.parsers.parser_excitstates import get_bar_chart
-from projection_method.parsers.parser_plots import plot_g_tensor_vs_states
-
-######## INPUT FILE ########
-file = str(sys.argv[1])
-
-
-######## G-TENSOR CALCULATION ########
-calculate_gshift = 1
-ppm = 0 # 0: ppt; 1: ppm
-state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-
-initial_states = list(range(1, 101))
-# states_ras.remove(2)
-# states_ras.insert(0, 2)
-symmetry_selection = 'B2'  # Symmetry selected states_selected
-soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
-soc_orders = 0
-
-
-######## G-TENSOR ANALYSIS ########
-excitanalysis_gvalue_cut = 0 # =0: not calculate; ≠0: cut-off between ground-excited states (% of maximum g-value in each dim)
-
-
-######## EXCITED STATES ANALYSIS ########
-excitanalysis = 1
-cutoffamp = 0 # cut-off for configurations amplitude
-excitanalysis_plot = 0
-
-
-######## SOS PLOTS ########
-sum_over_states_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
-amp_cutoff = 0
-g_estimation = 0
-save_pict = 0
-analysiss = 0
-
-
-######## G-TENSOR CALCULATION BY PAIRS ########
-gshift_estimation_by_state_pairs = 0.5
-# ≠0: cut-off between ground-excited states (% of maximum g-value in each dim), where g = -4 L SOC / E
-cut_off_config = 0.75 # cut-off for configurations amplitude (% of maximum amplitude)
-
-excitanalysis_soc_cut = 0 # cut-off for soccs (% of maximum SOCC)
-excitanalysis_angmoment_cut = 0 # cut-off for orbital angular momentum (% of maximum L)
-excit_plot = 0 # 0: not show plot, 1: show plot 
-
-
-def extract_data_from_json(filee):
-    """
-    Get lists with the information from "json" output filee.
-    :param filee:
-    :return: total_energy, excitation_energy_list, spin_list, soc_list, orbital_momentum_list
-    """
-    with open(filee, 'r') as f:
-        object_text = f.read()
-    input_dict = json.loads(object_text)
-
-    total_energy_list = []
-    excitation_energy_list = []
-    for i in input_dict['selected_energy_dict']:
-        total_energy_list.append(float(input_dict['selected_energy_dict'][i][0]))
-        excit_energy = float(input_dict['selected_energy_dict'][i][1]) 
-        excitation_energy_list.append(excit_energy)
-
-    spin_list = [float(input_dict['spin_dict'][i]) for i in input_dict['spin_dict']]
-    soc_list = [input_dict['soclist_dict'][i] for i in input_dict['soclist_dict']]
-    orbital_momentum_list = [[complex(input_dict['orbitalmomentlist_dict'][i][0]),
-                            complex(input_dict['orbitalmomentlist_dict'][i][1]),
-                            complex(input_dict['orbitalmomentlist_dict'][i][2])] 
-                            for i in input_dict['orbitalmomentlist_dict']]
-    transitions_list = [i for i in input_dict['transitions_dict']]
-    return total_energy_list, excitation_energy_list, spin_list, soc_list, orbital_momentum_list, transitions_list
-
+lande_factor = 2.002319304363
 
 def s2_to_s(s2):
     """
@@ -103,48 +30,124 @@ def s_to_s2(spin):
     return spin * (spin + 1)
 
 
-def get_input_data(spin_state):
+def extract_data_from_json(filee):
     """
-    Get: i) number of states, ii) a list from -sz to sz, where sz = maximum multiplicity,
-    iii) a list from -sz to sz, where sz = ground state spin multiplicity
-    :param spin_state:
-    :return:
+    Get lists with the information from "json" output filee.
+    :param filee:
+    :return: total_energy, excitation_energy_list, spin_list, soc_list, orbital_momentum_list
     """
-    max_multip = float(s2_to_s(max(spin_state)))
-    max_multip_szlist = list(np.arange(-max_multip, max_multip + 1, 1))
-    s_ground = float(s2_to_s(spin_state[0]))
-    if s_ground == 0:
-        raise ValueError("Warning! It is not allowed the calculation of the g-tensor in a singlet ground state. "
-                         "Ground state corresponds to the first of the included states selected.")
-    ground_state_szlist = list(np.arange(-s_ground, s_ground + 1))
+    with open(filee, 'r') as f:
+        object_text = f.read()
+    outpuut_dict = json.loads(object_text)
 
-    return max_multip_szlist, ground_state_szlist
+    # total_energy_list = []
+    # excitation_energy_list = []
+    # for i in outpuut_dict['selected_energy_dict']:
+    #     total_energy_list.append(float(outpuut_dict['selected_energy_dict'][i][0]))
+    #     excit_energy = float(outpuut_dict['selected_energy_dict'][i][1]) 
+    #     excitation_energy_list.append(excit_energy)
+
+    # spin_list = [float(outpuut_dict['spin_dict'][i]) for i in outpuut_dict['spin_dict']]
+    # soc_list = [outpuut_dict['soclist_dict'][i] for i in outpuut_dict['soclist_dict']]
+    # orbital_momentum_list = [[complex(outpuut_dict['orbitalmomentlist_dict'][i][0]),
+    #                         complex(outpuut_dict['orbitalmomentlist_dict'][i][1]),
+    #                         complex(outpuut_dict['orbitalmomentlist_dict'][i][2])] 
+    #                         for i in outpuut_dict['orbitalmomentlist_dict']]
+    # transitions_list = [i for i in outpuut_dict['transitions_dict']]
+    return outpuut_dict
 
 
-def from_soclist_socmatrix(soc_list, maxsz_list):
+def get_selected_dict(output__dict, totalstatess, initial__states, states__selection, sym__selected):
     """
-    Construct the SOC matrix from the SOC list of json filee.
-    :param soc_list:
-    :param maxsz_list:
+    Depending on "states_option" it returns states: 
+    0) in "state_ras" 
+    1) all states selected 
+    2) States selected by selected symmetry "symmetry_selection"
+    :param: file, totalstates, selected_states, states_option, symmetry_selection
+    :return: selected_states
+    """
+    selected_dict = {}
+
+    if states__selection == 0:
+        selected_states = initial__states
+
+    elif states__selection == 1:
+        selected_states = list(range(1, totalstatess+1))
+
+    elif states__selection == 2:
+        # Check that selected symmetry is between the symmetries
+        mapping_symmetry = {key: index+1 for index, key in enumerate(output__dict["energy_dict"].keys())}
+        if not any(sym__selected in key for key in mapping_symmetry.keys()):
+            raise ValueError("The symmetry selected is not between the states.")
+    
+    # Create a dictionary with indices as order of the states
+    # This is useful for mapping states symmetry in RASCI with their position
+    mapping_symmetry = {index+1: key for index, key in enumerate(output__dict["energy_dict"].keys())}
+
+    for name_dict, sub_dict in output__dict.items():
+        # Check that initial states are between 1 and totalstates
+        totalstates = len(output__dict["energy_dict"])
+        if any(i <= 0 or i > totalstates for i in selected_states):
+            raise ValueError("The number of states selected selected must be among the total number of states "
+                                "selected calculated in QChem. ")
+
+        data_dict = {}
+
+        # Dictionaries scf_alpha_beta_electrons
+        if name_dict == "scf_alpha_beta_electrons":
+            data_dict = sub_dict
+
+        # Dictionaries energy_dict, spin_dict, transitions_dict
+        if name_dict == "energy_dict" or name_dict == "spin_dict":
+            data_dict.update({i: sub_dict[mapping_symmetry[i]] for i in selected_states})
+        
+        # Dictionaries soc_matrix_dict, socc_dict, angmoment_dict
+        if name_dict == "soc_matrix_dict" or name_dict == "socc_dict" or name_dict == "angmoment_dict": 
+            for state_a in selected_states:
+                for state_b in selected_states:
+                    if state_a != state_b:
+                        braket = mapping_symmetry[state_a] + "_" + mapping_symmetry[state_b]
+                        if braket in sub_dict:
+                            data_dict[str(state_a) + "_" + str(state_b)] = sub_dict[braket]
+
+        # Dictionary transitions_dict
+        if name_dict == "transitions_dict":
+            data_list = []
+
+            for transition in sub_dict:
+                for state in selected_states:
+                    if state == transition[0]['state']:
+                        data_list.append(transition)
+            data_dict = data_list
+
+        selected_dict[name_dict] = data_dict
+    return selected_dict
+
+
+def get_soc_matrix(soc_dict, len_sz, nstates):
+    """
+    Construct the SOC matrix from the SOC list of json filee. Result in eV. 
+    Matrix is formed as: 
+    < B, S, Sz | HSOC | A, S, Sz' >   -->   < column, sz1 | HSOC | row, sz2 >
+    :param: soc_dict, len_sz, nstates
     :return: socmatrix
     """
-    len_sz = len(maxsz_list)  # dimension determined by the maximum multiplicity
-    nstate = len(soc_list) + 1  # +1 is the ground state
-    socmatrix = np.zeros((nstate * len_sz, nstate * len_sz), dtype=complex)
+    soc_list = list(soc_dict.values())
+    socmatrix = np.zeros((nstates * len_sz, nstates * len_sz), dtype=complex)
 
-    for i in range(1, nstate):  # ground state does not have soc, and there is no state j
-        soc_list_sz_state1 = len(soc_list[i-1][0])
-        soc_list_sz_state2 = len(soc_list[i-1])
+    for row in range(1, nstates):
+        for column in range(0, row):
+            bra = len(soc_list[row+column-1]) # Length of < State, S, : | HSOC | State, S, : > 
+            ket = len(soc_list[row+column-1][0]) # Length of < State, S, Sz | HSOC | State, S, : > 
 
-        for sz_1 in range(0, soc_list_sz_state1):
-            for sz_2 in range(0, soc_list_sz_state2):
-                matrix_row = sz_1 + ((len_sz-soc_list_sz_state1)//2)
-                matrix_col = i * len_sz + sz_2 + ((len_sz-soc_list_sz_state2)//2)
+            for sz1 in range(0, bra):
+                for sz2 in range(0, ket):
+                    matrix_row = row * len_sz + sz2 + ((len_sz-ket)//2)
+                    matrix_col = column * len_sz + sz1 + ((len_sz-bra)//2)
 
-                # print('State', i, 'Matrix:', matrix_row, matrix_col, '--> List:', i-1, sz_2, sz_1)
-                value = complex(soc_list[i-1][sz_2][sz_1])
-                socmatrix[matrix_row][matrix_col] = np.conj(value)
-                socmatrix[matrix_col][matrix_row] = value
+                    value = complex(soc_list[row+column-1][sz1][sz2])
+                    socmatrix[matrix_row][matrix_col] = value
+                    socmatrix[matrix_col][matrix_row] = np.conj(value)
 
     # print('SOC:')
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
@@ -155,7 +158,7 @@ def from_soclist_socmatrix(soc_list, maxsz_list):
     return socmatrix
 
 
-def get_spin_matrices(states_spin, maxsz_list):
+def get_spin_matrices(states_spin, len_sz):
     """
     Get spin matrix with dimensions ['bra' x 'ket' x 3] (x,y,z), with spin order (-Ms , +Ms) in the order of
     "selected_state". Functions "s2_to_s", "s_to_s2" and "spin_matrices" are taken from inside PyQChem.
@@ -227,7 +230,7 @@ def get_spin_matrices(states_spin, maxsz_list):
             long_sz = s_z
         return long_sx, long_sy, long_sz
 
-    def form_big_spin_matrix(statee, max_mult, sxx, syy, szz, spin_matr):
+    def form_final_spin_matrix(statee, max_mult, sxx, syy, szz, spin_matr):
         """
         Get big spin matrix with dimensions "(len(selected_state) * max_sz_listt, len(selected_state) *
         max_sz_listt, 3)" with s_x, s_y, s_z.
@@ -236,6 +239,7 @@ def get_spin_matrices(states_spin, maxsz_list):
         """
         s_dim = 0
         initial_pos = statee * max_mult
+
         for row in range(0, max_mult):
             for column in range(0, max_mult):
                 spin_matr[initial_pos, initial_pos, 0] = sxx[s_dim, s_dim]
@@ -260,7 +264,7 @@ def get_spin_matrices(states_spin, maxsz_list):
         :param: spin_states, max_sz_listt, spin_mat
         :return: standard_spin_mat
         """
-        ground_multiplicity = int(2 * s2_to_s(spin_states[0]) + 1)
+        ground_multiplicity = int(2 * spin_states[0] + 1)
         standard_spin_mat = np.zeros((ground_multiplicity, ground_multiplicity, 3), dtype=complex)
 
         multip_difference = (max_sz_listt - ground_multiplicity) // 2
@@ -270,148 +274,885 @@ def get_spin_matrices(states_spin, maxsz_list):
                     standard_spin_mat[ii, jj, k] = spin_mat[ii + multip_difference, jj + multip_difference, k]
         return standard_spin_mat
 
-    len_sz = len(maxsz_list)  # dimension determined by the maximum multiplicity
-    nstate = len(states_spin)
-    spinmatrix = np.zeros((nstate * len_sz, nstate * len_sz, 3), dtype=complex)
+    nstates = len(states_spin)
+    final_spin_matrix = np.zeros((nstates * len_sz, nstates * len_sz, 3), dtype=complex)
 
-    for state in range(0, nstate):
+    for state in range(0, nstates):
         # Form the spin matrix of the state
-        s2_state = states_spin[state]
-        s = s2_to_s(s2_state)
-        sx, sy, sz = spin_matrices(s)
+        s_state = states_spin[state]
+        sx, sy, sz = spin_matrices(s_state)
 
         # Expand the spin matrix of the st to the dimension of the maximum multiplicity (max_sz_listt)
-        state_multip = int(2 * s + 1)
+        state_multip = int(2 * s_state + 1)
         sx, sy, sz = expand_spin_matrices(sx, sy, sz, len_sz, state_multip)
 
         # Mix (sxx,syy,szz) in one spin matrix:
-        spinmatrix = form_big_spin_matrix(state, len_sz, sx, sy, sz, spinmatrix)
+        final_spin_matrix = form_final_spin_matrix(state, len_sz, sx, sy, sz, final_spin_matrix)
 
     # Take Standard Spin Matrix from Spin Matrix
-    standardspin_matrix = get_standard_spin_matrix(states_spin, len_sz, spinmatrix)
+    standard_spin_matrices = get_standard_spin_matrix(states_spin, len_sz, final_spin_matrix)
 
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #                 for row in np.round((standardspin_matrix[:,:,0]))]))
+    #                 for row in ((standard_spin_matrices[:,:,0]))]))
     # exit()
-    return spinmatrix, standardspin_matrix
+    return final_spin_matrix, standard_spin_matrices
 
 
-def get_orbital_matrices(states_momentum, maxsz_list):
+def get_orbital_matrices(angmoment_dict, len_sz, nstates):
     """
-    Get orbitals angular momentum matrix with dimensions ['bra' x 'ket' x 3] (x,y,z), with spin order (-Ms , +Ms) in the
-    order of "selected_state".
-    :param: filee, totalstates, selected_states, sz_list
+    Construct the L matrix from the L list of json filee. Matrix is formed as: 
+    < B | L | A >   -->   < col | HSOC | row >
+    :param: angmoment_dict, len_sz, nstates
     :return: all_multip_lk
     """
-    def get_selected_states_momentum(momentum_states):
-        """
-        Get Lk between the selected states selected in x,y,z dimensions.
-        :param: selected_states, all_momentum
-        :return: selected_momentum
-        """
-        n_states = len(momentum_states) + 1  # +1 because of the ground state
-        selected_momentum = np.zeros((n_states, n_states, 3), dtype=complex)
+    # Form the orbital matrices, with dimensions nstates * nstates
+    angular_momentums = list(angmoment_dict.values())
+    angmom_selected = np.zeros((nstates, nstates, 3), dtype=complex)
 
-        for i in range(1, n_states):
+    for row in range(1, nstates):
+        for col in range(0, row):
             for ndim in range(0, 3):
-                selected_momentum[i][0][ndim] = momentum_states[i-1][ndim]
-                selected_momentum[0][i][ndim] = np.conj(momentum_states[i - 1][ndim])
-        return selected_momentum
+                result = complex(angular_momentums[row+col-1][ndim])
+                angmom_selected[row][col][ndim] = result
+                angmom_selected[col][row][ndim] = np.conj(result)
+    
+    # Form the extended orbital matrices, with dimensions (nstates * len_sz) * (nstates * len_sz)
+    extended_orbit_matrix = np.zeros((nstates * len_sz, nstates * len_sz, 3), dtype=complex)
 
-    def get_all_multip_momentum(selected_momentums, max_szlist):
-        """
-        Get Lk between the selected states selected in x,y,z dimensions for doublets,
-        i.e. in each row (column) there are state A,-1/2 and A,+1/2.
-        :param: selected_momentums, max_szlist
-        :return: big_orbit_matrix
-        """
-        n_states = len(selected_momentums)
-        multip = len(max_szlist)
-        big_orbit_matrix = np.zeros((n_states * multip, n_states * multip, 3), dtype=complex)
+    for ndim in range(0, 3):
+        for row in range(0, nstates * len_sz, len_sz):
+            for col in range(0, nstates * len_sz, len_sz):
+                for sz in range(0, len_sz):
 
-        for k in range(0, 3):
-            for i in range(0, len(selected_momentums) * len(max_szlist), len(max_szlist)):
-                for j in range(0, len(selected_momentums) * len(max_szlist), len(max_szlist)):
-
-                    for multip in range(0, len(max_szlist)):
-                        big_orbit_matrix[i + multip, j + multip][k] = \
-                            selected_momentums[i // len(max_szlist)][j // len(max_szlist)][k]
-        return big_orbit_matrix
-
-    selected_lk = get_selected_states_momentum(states_momentum)
-    all_multip_lk = get_all_multip_momentum(selected_lk, maxsz_list)
+                    extended_orbit_matrix[row + sz, col + sz][ndim] = \
+                    angmom_selected[row // len_sz][col // len_sz][ndim]
 
     # for ndim in range(0, 3):
     #     print()
     #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
-    #                      for row in np.round(all_multip_lk[:, :, ndim], 3)]))
+    #                      for row in np.round(extended_orbit_matrix[:, :, ndim], 4)]))
     # exit()
-    return all_multip_lk
+    return extended_orbit_matrix
 
 
-def print_g_calculation(filee, totalstates, gtensor, ppms, spin_list):
-    def count_spin_states(spins):
+def from_json_to_matrices(outpuut_dict_selected):
+    """
+    Transform all the dictionaries to lists or matrices 
+    """
+    def get_sz_lists(spin_dict):
         """
-        Obtain a list with the number of states with each multiplicity. If there is 0 states
-        with that multiplicity, the multiplicity is not printed.  
-        """
-        counter_dict = {s_to_s2(i): 0 for i in np.arange(0, 4, 1/2)}
-        for number in spins:
-            if number in counter_dict:
-                counter_dict[number] += 1
+        Form the spin list with approximated spins, since they can come from non-pure spin eigenfunctions.
+        Form the sz list from -s to +s in +1 intervals for ground state and largest multiplicity state. 
+        :return: sz__ground, sz__maxspin, approx__spin_list
+        """ 
+        # Round the minimum spin to the nearest multiple of 0.5
+        min_s = s2_to_s(min(list(spin_dict.values())))
+        min_s_approx = round(min_s * 2) / 2 
+        min_s_approx_szlist = np.arange(min_s_approx, 15* min_s_approx + 1).tolist()
 
-        # Change the keys from s2 to multiplicity word
-        multip_dict = {}
-        s2_multip_mapping = {0: 'singlets',0.75: 'doublets',2.0: 'triplets', 3.75: 'quartets', \
-                         6.0: 'quintets', 8.75: 'sextets', 12.0: 'heptets', 15.75: 'octets'}
+        # Form a list with the approximated spins 
+        s2_list = list(spin_dict.values())
+        approx__spin_list = []
+        for s2_state in s2_list:
+            s_approx = min(min_s_approx_szlist, key=lambda x: abs(x - s2_to_s(s2_state)))
+            approx__spin_list.append(s_approx)
 
-        for old_key, new_key in s2_multip_mapping.items():
-            if old_key in counter_dict and counter_dict[old_key] != 0:
-                multip_dict[new_key] = counter_dict[old_key]
-        return multip_dict
+        if approx__spin_list[0] == 0:
+            raise ValueError("WARNING! It is not allowed the calculation of the g-tensor in a singlet ground state.")
+        
+        # Form the ground state and the largest multiplicity sz lists
+        sz__ground = np.arange(-approx__spin_list[0], approx__spin_list[0] + 1).tolist()
+        sz__maxspin = np.arange(-max(approx__spin_list), max(approx__spin_list) + 1).tolist()
+        return sz__ground, sz__maxspin, approx__spin_list
+
+    sz_ground, sz_maxspin, approx_spin_list = get_sz_lists(outpuut_dict_selected["spin_dict"])
     
-    # multipdict = count_spin_states(spin_list)
-    # print("---------------------")
-    # print(" G-SHIFT RESULTS")
-    # print("---------------------")
-    # print("File selected: ", filee)
-    # print("Number of states: ", totalstates)
-    # print("States multiplicity: ")
-    # [print(" ", key, value, end=',') for key, value in multipdict.items()]
-    # print()
-    # if ppms == 0:
-    #     print('g-factor (x y z dimensions) in ppt:')
-    # elif ppms == 1:
-    #     print('g-factor (x y z dimensions) in ppm:')
-    print(np.round(gtensor[0].real, 3), np.round(gtensor[1].real, 3),
-          np.round(gtensor[2].real, 3))
-    print('')
+    # Transform the dictionaries to matrices
+
+    excit_energies = [value[1] for value in outpuut_dict_selected["energy_dict"].values()]
+
+    totalstates = len(excit_energies)
+
+    soc_matrix = get_soc_matrix(outpuut_dict_selected["soc_matrix_dict"], len(sz_maxspin), totalstates)
+
+    spin_matrix, standard_spin_matrix = get_spin_matrices(approx_spin_list, len(sz_maxspin))
+
+    orbital_matrix = get_orbital_matrices(outpuut_dict_selected["angmoment_dict"], len(sz_maxspin), totalstates)
+
+    matrices__dict = {
+    "excit_energies": excit_energies,
+    "soc": soc_matrix,
+    "spin": spin_matrix, 
+    "standard_spin": standard_spin_matrix,
+    "orbital": orbital_matrix,
+    }
+    return sz_ground, sz_maxspin, approx_spin_list, matrices__dict
 
 
-def from_json_to_matrices(json_energies, json_excitenergies, json_spin, json_soc, json_orbitmoment):
-    max_sz_list, sz_ground = get_input_data(json_spin)
+def hermitian_test(matrix, sz_list):
+    """
+    Check if matrix is Hermitian. If not, "ValueError".
+    :param: matrix, sz_list
+    """
+    # Assuming matrix and sz_list are already defined
+    matrix_rounded = np.round(matrix, 4)
+    conjugate_matrix_rounded = np.round(np.conjugate(matrix.T), 4)
 
-    soc_matrix = from_soclist_socmatrix(json_soc, max_sz_list)
+    # Create a mask for the upper triangle including the diagonal
+    mask = np.triu(np.ones(matrix.shape, dtype=bool))
 
-    spin_matrix, standard_spin_matrix = get_spin_matrices(json_spin, max_sz_list)
+    # Compare elements
+    different_elements = (matrix_rounded != conjugate_matrix_rounded) & mask
 
-    orbital_matrix = get_orbital_matrices(json_orbitmoment, max_sz_list)
-    return max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix
+    # Get the indices where the elements are different
+    i_indices, j_indices = np.where(different_elements)
+
+    # Compute states
+    state_1 = i_indices // len(sz_list)
+    state_2 = j_indices // len(sz_list)
+
+    # Combine states into a list of tuples if needed
+    states = list(zip(state_1, state_2))
+
+    if states: print(states)
 
 
-def from_matrices_to_gshift(excitenergies_json, soc, max_sz, spin, orbital, standard_spin, szground, ppms):
-    hamiltonian = get_hamiltonian_construction(excitenergies_json, soc, max_sz)
+def get_hamiltonian_construction(eigenenergies, spin_orbit_coupling, sz_values):
+    """
+    Construct Hamiltonian matrix with dimensions 'bra' x 'ket', with spin order (-Ms , +Ms) in the order of
+    "selected_states".
+    Make hermitian test to the matrix.
+    :param: selected_states, eigenenergies, spin_orbit_coupling, sz_values
+    :return: hamiltonian
+    """    
+    num_eigenenergies = len(eigenenergies)
+    num_sz_values = len(sz_values)
+    size = num_eigenenergies * num_sz_values
+    hamiltonian = np.zeros((size, size), dtype=complex)
+
+    # Fill the diagonal with eigenenergies
+    for i in range(num_eigenenergies):
+        hamiltonian[i*num_sz_values:(i+1)*num_sz_values, i*num_sz_values:(i+1)*num_sz_values] = np.diag([eigenenergies[i]] * num_sz_values)
+
+    # Fill the off-diagonal with spin_orbit_coupling values
+    hamiltonian += spin_orbit_coupling
+
+    hermitian_test(hamiltonian, sz_values)
+
+    print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                        for row in np.round((hamiltonian[:, :]), 5)]))
+    print(" ")
+    return hamiltonian
+
+
+def diagonalization(matrix):
+    """
+    Diagonalize Hamiltonian. Eigenvectors-eigenvalues are ordered by weight coefficients. Construct the diagonal matrix.
+    :param: matrix
+    :return: eigenvalues, eigenvectors, diagonal_matrix
+    """
+    def reordering_eigenvectors(eigenval, eigenvect):
+        """
+        Reorder eigenvectors and eigenenergies by eigenvectors weight coefficients.
+        :param: eigenvalues, eigenvectors
+        :return: eigenvalues, eigenvectors
+        """
+        change_order = np.zeros(len(eigenvect), dtype=complex)
+        for v_1 in range(0, len(eigenvect)):
+            for v_2 in range(v_1, len(eigenvect)):
+
+                if abs(eigenvect[v_1, v_2]) > abs(eigenvect[v_1, v_1]):
+                    change_order[:] = eigenvect[:, v_1]
+                    eigenvect[:, v_1] = eigenvect[:, v_2]
+                    eigenvect[:, v_2] = change_order[:]
+
+                    change_order.real[0] = eigenval[v_1]
+                    eigenval[v_1] = eigenval[v_2]
+                    eigenval[v_2] = change_order.real[0]
+        return eigenval, eigenvect
+
+    eigenvalues, eigenvectors = linalg.eigh(matrix)
+    eigenvalues, eigenvectors = reordering_eigenvectors(eigenvalues, eigenvectors)
+
+    rotation_inverse = np.linalg.inv(eigenvectors)
+    diagonal_matrix = np.matmul(np.matmul(rotation_inverse, matrix), eigenvectors)
+    return eigenvalues, eigenvectors, diagonal_matrix
+
+
+def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
+    """
+    Angular matrix from non-relativistic states (states from Q-Chem) is expanded in the relativistic states. In
+    < B(S,Sz) | Sx | A(S',Sz') >, < B(S,Sz)| corresponds to rows and | A(S',Sz') > to columns.
+    :param: eigenvectors, input_angular_matrix, sz_list
+    :return: angular_matrix
+    """
+    angular_matrix = np.zeros((len(sz_list), len(sz_list), 3), dtype=complex)
+
+    for k in range(3):
+        conj_eigenvectors = np.conj(eigenvectors)
+        for row in range(len(sz_list)):
+            coeff_bra = conj_eigenvectors[:, row]
+            for column in range(len(sz_list)):
+                coeff_ket = eigenvectors[:, column]
+                angular_values = input_angular_matrix[:, :, k]
+
+                elements = coeff_bra[:, np.newaxis] * coeff_ket * angular_values
+                angular_matrix[row, column, k] += np.sum(elements)
+
+    # print('Angular matrix with all spin angular momentums:')
+    # for k in range(0, 3):
+    #     print('Dimension: ', k)
+    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+    #                      for row in np.round((angular_matrix[:, :, k]), 5)]))
+    #     print(" ")
+    return angular_matrix
+
+
+def from_ppt_to_ppm(gvalues, ppm=None):
+    """
+        Pass from ppt to ppm the gvalues.
+        :param: ppm, gvalues
+        :return: gvalues
+        """
+    if ppm == 1:
+        gvalues = [i * 1000 for i in gvalues]
+    else:
+        pass
+    return gvalues
+
+
+def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=None):
+    """
+    g-shift with orbitals and spin angular momentum matrices.
+    :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
+    :return: g_shift
+    """
+
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #                 for row in np.round((standard_spin_matrix[:,:,0]))]))
+
+    def j_matrix_formation(spin, orbital, list_sz, sz_ground):
+        """
+        Get the total angular momentum matrix from the orbitals and spin angular momentums. Then, expand it to the
+        multiplicity of the ground state multiplicity "sz_ground".
+        :param: spin, orbitals, list_sz, sz_ground
+        :return: j_matr
+        """
+        j_big_matrix = lande_factor * spin + orbital
+
+        sz_difference = (len(list_sz) - len(sz_ground)) // 2
+        j_matr = np.zeros((len(sz_ground), len(sz_ground), 3), dtype=complex)
+        for k in range(0, 3):
+            for ii in range(0, len(j_matr)):
+                for j in range(0, len(j_matr)):
+                    j_matr[ii, j, k] = j_big_matrix[ii + sz_difference, j + sz_difference, k]
+
+            hermitian_test(j_matr[:, :, k], list_sz)
+        return j_matr
+
+    def j_diagonalization(matrix):
+        """
+        J-matrix diagonalization giving i) eigenvectors ii) diagonal matrix.
+        :param: matrix
+        :return: eigenvalues, eigenvectors, diagonal_matrix
+        """
+        eigenvalues, eigenvectors = linalg.eigh(matrix)
+        rotation_inverse = np.linalg.inv(eigenvectors)
+        diagonal_matrix = np.matmul(np.matmul(rotation_inverse, matrix), eigenvectors)
+        return eigenvectors, diagonal_matrix
+
+    def trace_g_values(total_j, spin_matr):
+        """
+        Obtaining g_value with projection of the traces.
+        :param: total_j, spin_matr
+        :return: g_value
+        """
+        a = np.matmul(total_j, spin_matr)
+        b = np.matmul(spin_matr, spin_matr)
+        g_value = np.trace(a) / np.trace(b)
+        return g_value
+
+    j_matrix = j_matrix_formation(s_matrix, l_matrix, sz_list, ground_sz)
+
+    # PROJECTION TECHNIQUE TO OBTAIN THE TRIANGULAR G-MATRIX:
+    # 1) g-value zz
+    j_matrix_rotation, j_matrix_diagonal_z = j_diagonalization(j_matrix[:, :, 2])
+    g_matrix_triangular = np.zeros((3, 3), dtype=complex)
+    g_matrix_triangular[2, 2] = trace_g_values(j_matrix_diagonal_z, standard_spin_matrix[:, :, 2])
+
+    # 2) pseudospin z
+    pseudospin_matrix = np.zeros((len(j_matrix[0, :]), len(j_matrix[:, 0]), 3), dtype=complex)
+    pseudospin_matrix[:, :, 2] = j_matrix[:, :, 2] / g_matrix_triangular[2, 2]
+
+    # 3) g-value yz
+    g_matrix_triangular[1, 2] = trace_g_values(j_matrix[:, :, 1], pseudospin_matrix[:, :, 2])
+    residue = j_matrix[:, :, 1] - g_matrix_triangular[1, 2] * pseudospin_matrix[:, :, 2]
+
+    # 4) g-value yy
+    j_matrix_rotation, j_matrix_transformed_y = j_diagonalization(j_matrix[:, :, 1])
+    g_matrix_triangular[1, 1] = trace_g_values(j_matrix_transformed_y, standard_spin_matrix[:, :, 2])
+
+    # 5) pseudospin y
+    pseudospin_matrix[:, :, 1] = residue[:, :] / g_matrix_triangular[1, 1]
+
+    # 6) g-value xy and xz
+    g_matrix_triangular[0, 1] = trace_g_values(j_matrix[:, :, 0], pseudospin_matrix[:, :, 1])
+    g_matrix_triangular[0, 2] = trace_g_values(j_matrix[:, :, 0], pseudospin_matrix[:, :, 2])
+
+    # 7) g-value xx
+    j_matrix_rotation, j_matrix_transformed_x = j_diagonalization(j_matrix[:, :, 0])
+    g_matrix_triangular[0, 0] = trace_g_values(j_matrix_transformed_x, standard_spin_matrix[:, :, 2])
+
+    # 8) from g_matrix_triangular to g-shifts
+    g_matrix = np.matmul(g_matrix_triangular, np.transpose(g_matrix_triangular))
+    g_matrix_eigenvalues, rotation_g_matrix, g_matrix_diagonal = diagonalization(g_matrix)
+    # print('Lande factor: ', lande_factor)
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #             for row in np.round((g_matrix[:,:]), 10)]))
+    # print("")
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #             for row in np.round((g_matrix[:,:]), 10)]))
+    # exit()
+
+    g_shifts = np.zeros(3, dtype=complex)
+    for i in range(0, 3):
+        g_shifts[i] = (sqrt(g_matrix_diagonal[i, i]) - lande_factor) * 1000
+
+    g_shifts = from_ppt_to_ppm(g_shifts, ppms)
+    # g_shifts = from_qchem_to_sto(g_shifts)
+
+    return g_matrix, g_shifts
+
+
+def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms=1):
+    """
+    """
+    hamiltonian = get_hamiltonian_construction(matrices_dict["excit_energies"], matrices_dict["soc"], max_sz)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
-    combination_spin_matrix = angular_matrices_obtention(eigenvector, spin, max_sz)
+    combination_spin_matrix = angular_matrices_obtention(eigenvector, matrices_dict["spin"], max_sz)
+    
+    combination_orbital_matrix = angular_matrices_obtention(eigenvector, matrices_dict["orbital"], max_sz)
 
-    combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital, max_sz)
-
-    gmatrix, gshift = from_angmoments_to_gshifts(standard_spin, combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = from_angmoments_to_gshifts(matrices_dict["standard_spin"], combination_spin_matrix, combination_orbital_matrix,
                                 max_sz, szground, ppms)
 
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #             for row in np.round((gmatrix[:,:]), 10)]))
+    # exit()
     return gmatrix, gshift
+
+
+def print_g_calculation(filee, output_dict_selected, spin_list, g_shift, g_tensor, ppms=1):
+    """
+    Printing results. 
+    """
+    def separated_spin_states(spin_states, states__list):
+        """
+        Obtain a dictionary with multiplicities and the states with those multiplicities. 
+        """
+        spin_mapping = {0:'singlets',0.5:'doublets',1:'triplets',1.5:'quartets',2.0:'quintets',2.5:'sextets',3:'heptets',3.5:'octets'}        
+        data_dict = {key: [] for key in spin_mapping.values()}
+        for i, spin_state in enumerate(spin_states):
+            data_dict[spin_mapping[spin_state]].append(states__list[i]) 
+        return data_dict
+
+    states_list = list(output_dict_selected["energy_dict"].keys())
+    multip_dict = separated_spin_states(spin_list, states_list)
+
+    print()
+    print("---------------------")
+    print(" G-SHIFT RESULTS")
+    print("---------------------")
+    print("File selected: ", filee.replace(".json", ""))
+    print("States: ", states_list)
+    print("States multiplicity: ")
+    for key, value in multip_dict.items():
+        if value: 
+            print(f"- {key} = {len(value)}: {value}")
+
+    print(
+        f"g-factor (x y z dimensions) in {'ppt' if ppms == 0 else 'ppm'}:", 
+        np.round(g_shift[0].real, 3), 
+        np.round(g_shift[1].real, 3), 
+        np.round(g_shift[2].real, 3)
+    )
+    print('')
+
+    # print("g_tensor: ")
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+    #             for row in np.round(np.sqrt(g_tensor[:,:]), 6)]))
+    # print('')
+    # exit()
+
+
+def save_picture(save_options, filee, title_main):
+    """
+    Function that shows the plot (save_options=0) or save it (save_options=1).
+    :param save_options, file, main_title.
+    :return: plot (saved or shown)
+    """
+    if save_options == 1:
+        plt.plot()
+        figure_name = filee + '_' + title_main + '.png'
+        plt.savefig(figure_name)
+        plt.close()
+    else:
+        plt.plot()
+        plt.show()
+
+
+def gshift_estimation_loop(output_dict, ppm):
+        """
+        Calculate the g-values in all the selected states.
+        :param: output_dict, ppm
+        :return: presentation_list
+        """
+        def estimation_phormula(orbitmoment, socc, energy):
+            return abs(-4 * complex(orbitmoment) * socc / energy)
+        
+        ground_state = (list(output_dict["socc_dict"].keys())[0][0])
+        from_cm_to_ev = 100 / constants.physical_constants['electron volt-inverse meter relationship'][0]
+
+        g_xx = {}
+        g_yy = {}
+        g_zz = {}
+
+        for interstate, socc in output_dict["socc_dict"].items():
+            if (ground_state+"_") in interstate:
+
+                socc = socc * from_cm_to_ev
+                excited_state = int(interstate.split("_")[1])
+                excited_energy = output_dict["energy_dict"][excited_state][1]
+
+                units = 10**3 if ppm == 0 else 10**6
+
+                g_xx.update({interstate: estimation_phormula(output_dict["angmoment_dict"][interstate][0], socc, excited_energy) * units})
+                g_yy.update({interstate: estimation_phormula(output_dict["angmoment_dict"][interstate][1], socc, excited_energy) * units})
+                g_zz.update({interstate: estimation_phormula(output_dict["angmoment_dict"][interstate][2], socc, excited_energy) * units})
+        
+        g_shift_dict = {"gxx": g_xx, "gyy": g_yy, "gzz": g_zz}
+        return g_shift_dict
+
+
+def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_configs=0, plots=0, savepicture=0, cut_off_socc=0, cut_off_angmom=0):
+    """
+    Obtaining a matrix with several data for each excited state. 
+    The cut-off determines the fraction of the amplitude of the 1st configuration that need to have the other configurations to be shown in each state.
+    :param: file_ms_notnull, cutoff
+    :return: excit_matrix
+    """
+    def get_new_active_space(active_space, orbitals, alpha_elec):
+        """
+        Return the orbitals to be added to the active space list
+        :param orbitals:
+        :param active_space:
+        :return: active space
+        """
+        if orbitals == '-':  # It is a singlet, there is no SOMO so add HOMO
+            active_space.append(alpha_elec)
+
+        if type(orbitals) == int:  # It is a doublet, add SOMO
+            active_space.append(int(orbitals))
+
+        elif type(orbitals) == str and orbitals != '-':  # It is higher multiplicities, add all SOMOs
+            orbitals = orbitals.split(',')
+            for j in range(0, len(orbitals)):
+                active_space.append(int(orbitals[j]))
+        
+        # Delete repeated orbitals
+        active_space_set = set(active_space) 
+        active_space = sorted(list(active_space_set))
+        return active_space
+
+    def get_new_active_space_electrons(active_space, alpha, beta):
+        """
+        Electrons in the new active space considering if they are occupied
+        or unoccupied observing the HOMO position
+        """
+        electrons = 0
+        for i in range(0, len(active_space)):
+            if active_space[i] <= beta:
+                electrons += 2
+            elif (active_space[i] > beta) and (active_space[i] <= alpha):
+                electrons += 1
+            elif active_space[i] > alpha:
+                pass
+        return electrons
+
+    def get_bar_chart(file, x_list, y_list, x_title, y_title, main_title, save_pict):
+        """
+        Print Bar plots: y_list vs x_list.
+        :param:
+        :return:
+        """
+        # "matplotlib" help: https://aprendeconalf.es/docencia/python/manual/matplotlib/
+        # https://chartio.com/resources/tutorials/how-to-save-a-plot-to-a-file-using-matplotlib/
+        # https://pythonspot.com/matplotlib-bar-chart/
+        fuente = 'serif'  # "Sans"
+        medium_size = 16
+        big_size = 20
+
+        y_pos = (list(x_list))
+        plt.bar(x_list, y_list, align='center', width=0.5, color='r', edgecolor="black")
+        plt.xticks(y_pos)
+
+        plt.title(main_title, fontsize=big_size, fontname=fuente)
+        plt.xlabel(x_title, fontsize=medium_size, fontfamily=fuente)
+        plt.ylabel(y_title, fontsize=medium_size, fontfamily=fuente)
+        # plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+        plt.grid(True)
+
+        save_picture(save_pict, file, main_title)
+
+    def excited_states_plots(excit_list, save_pict):
+            file_string = str(sys.argv[1])
+
+            state_list = [excit_list[0][0]]
+            energy_list = [excit_list[0][5]]
+            socc_list = [0.0]
+            momentum_list = [0.0]
+
+            for line in excit_list[1:]:
+                if line[0] not in state_list:
+                    state_list.append(line[0])
+                    energy_list.append(line[5])
+                    socc_list.append(line[6])
+                    momentum_list.append(max([float(num.replace('j', '')) for num in line[7].split(',')], key=abs))
+
+            get_bar_chart(file_string[:-4], state_list, energy_list, 'Electronic State',
+                        'Excitation energy (eV)', 'energ_analysis', save_pict)
+            get_bar_chart(file_string[:-4], state_list, momentum_list, 'Electronic State',
+                        'Orbital angular momentum', 'orbitmoment_analysis', save_pict)
+            get_bar_chart(file_string[:-4], state_list, socc_list, 'Electronic State',
+                        'SOCC (cm-1)', 'socc_analysis', save_pict)
+
+    # Obtain all the g-shift estimations in the different direccions
+    gshift_dict = gshift_estimation_loop(outputdict, ppms)
+
+    # Cut-off for the g-values obtained
+    cut_gxx = cut_off_gvalue * abs(max(gshift_dict["gxx"].values(), key=abs))
+    cut_gyy = cut_off_gvalue * abs(max(gshift_dict["gyy"].values(), key=abs))
+    cut_gzz = cut_off_gvalue * abs(max(gshift_dict["gzz"].values(), key=abs))
+
+    # Cut-off for the soccs or orbital angular momentum
+    cut_socc = cut_off_socc * max(list(outputdict["socc_dict"].values()), key=abs)
+    grstate = outputdict["transitions_dict"][0][0]["state"]
+    grstate_angmom = [value for key, value in outputdict["angmoment_dict"].items() if str(grstate)+"_" in key]
+    cut_angmom = cut_off_angmom * abs(max([max([complex(x) for x in sublist], key=abs) for sublist in grstate_angmom], key=abs))
+
+    # Obtain the final list with the estimated g-values 
+    # mapping_symmetry = {index+1: key for index, key in enumerate(outputdict["energy_dict"].keys())}
+    gshift_presentation = [] # Final presentation list with g-shift estimation
+    gshift_states = [] # Taken to be used in pandas
+    final_active_orbitals = [] # New active space to be used
+
+    excitstates_presentation = [] # Final presentation list with states analysis
+    excitstates_states = [] # Taken to be used in pandas
+
+    for k1, transit_state in enumerate(outputdict["transitions_dict"]):
+
+        # Take the configurations with larger or equal to amplitude cut-off for each state
+        max_amplitude_transition = max(outputdict["transitions_dict"][k1], key=lambda d: abs(d['amplitude']))
+        cut_config = cut_off_configs * abs(max_amplitude_transition['amplitude'])
+
+        for transit_configuration in outputdict["transitions_dict"][k1]:
+
+            # For configurations with a certain amplitude
+            if abs(transit_configuration["amplitude"]) >= cut_config:
+
+                # Data required for g-tensor presentation list
+                state = transit_configuration["state"]
+                configuration = transit_configuration["configuration"]+1
+                somos = transit_configuration["SOMO"]
+                amplitude = transit_configuration["amplitude"]
+                elec_alpha = outputdict["scf_alpha_beta_electrons"][1]
+
+                # Data for excited states analysis
+                energy = round(outputdict["energy_dict"][state][0], 3)
+                excited_energy = round(outputdict["energy_dict"][state][1], 2)
+                spin = outputdict["spin_dict"][state]                    
+
+                if k1 == 0: # For the ground state, where there are no g-value
+                    gshift_presentation.append([state, configuration, amplitude, somos, "--", "--", "--"])
+                    final_active_orbitals = get_new_active_space(final_active_orbitals, somos, elec_alpha)
+                    gshift_states.append(state)
+
+                    excitstates_presentation.append([state, spin, configuration, amplitude, somos, energy, excited_energy, "--", "--"])
+                    excitstates_states.append(state)
+
+                else: # For the excited states
+                    # Including the g-values above a cut off
+                    interstate = f"{min(grstate, state)}_{max(grstate, state)}"
+                    g_xx = abs(gshift_dict["gxx"][interstate])
+                    g_yy = abs(gshift_dict["gyy"][interstate])
+                    g_zz = abs(gshift_dict["gzz"][interstate])
+
+                    threshold = 10**(-6)
+                    if any(abs(g) >= cut and abs(cut) >= threshold for g, cut in zip((g_xx, g_yy, g_zz), (cut_gxx, cut_gyy, cut_gzz))):
+                        gshift_presentation.append([str(state), str(configuration), amplitude, somos, 
+                                                round(g_xx, 3), round(g_yy, 3), round(g_zz, 3)])
+                        final_active_orbitals = get_new_active_space(final_active_orbitals, somos, elec_alpha)
+                        gshift_states.append(state)
+                    
+                    socc = round(outputdict["socc_dict"][f"{grstate}_{state}"], 0)
+                    angmom_max = max([complex(x) for x in outputdict["angmoment_dict"][f"{grstate}_{state}"]], key=abs)
+                    
+                    if socc >= cut_socc and abs(angmom_max) >= cut_angmom:
+                        angmom = ','.join(str(complex(round(c.real, 2), round(c.imag, 2))) 
+                                for c in map(complex, outputdict["angmoment_dict"][f"{grstate}_{state}"]))
+                        excitstates_presentation.append([state, spin, configuration, amplitude, somos, energy, excited_energy, socc, angmom])
+                        excitstates_states.append(state)
+
+    print("----------------------")
+    print(" G-TENSOR ANALYSIS")
+    print("----------------------")
+    print("cut-offs: ")
+    print('- g-shift estimation (%):', cut_off_gvalue)
+    print('- configurations (%): ', cut_off_configs)
+    print("- somos to add to new active space: ", final_active_orbitals)
+    print()
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    df = pd.DataFrame(np.array(gshift_presentation), index=gshift_states,
+            columns=['state', 'config.', 'amplitude', 'somo', 'gxx', 'gyy', 'gzz'])    
+    print(df.to_string(index=False))
+    print()
+
+    # electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
+    # print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
+    #       final_active_orbitals)
+    # print(" ")
+
+    print("------------------------")
+    print(" EXCITED STATES ANALYSIS")
+    print("------------------------")
+    print("cut-offs: ")
+    print('- configurations (%): ', cut_off_configs)
+    print('- soccs (%): ', cut_off_socc)
+    print('- angular momentum (%): ', cut_off_angmom)
+    print()
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    df = pd.DataFrame(np.array(excitstates_presentation), index=excitstates_states,
+            columns=['state', 'spin', 'config.', 'amplitude', 'somo', 'energy', 'excit. energy', 'socc', 'angmom'])    
+    print(df.to_string(index=False))
+
+    if plots == 1:
+        excited_states_plots(excitstates_presentation, savepicture)
+
+
+def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_title, save_options):
+    fig, ax = plt.subplots()
+    plot_type = 1 # 0: plot, 1: bars
+
+    # MAIN FEATURES:
+    fuente = 'sans-serif'  # 'serif'
+    small_size = 16
+    medium_size = 16
+    bigger_size = 16
+    weight_selected = 'normal'
+    line_width = 2
+    marker_size = 10
+
+    x = presentation_matrix[:, 0]  # First column for x-axis
+    y1 = presentation_matrix[:, 1]  # Second column for the first category
+    y2 = presentation_matrix[:, 2]  # Third column for the second category
+    y3 = presentation_matrix[:, 3]  # Fourth column for the third category
+
+    #################################
+    ###   PLOT TYPE
+    #################################
+    if plot_type == 0:
+        # MAJOR AND MINOR TICKS:
+        # x_tick = int((max(x))) / 4
+        # x_tick = int((max(x))) / 4
+        # y_tick = int((max(x))) / 4
+        # x_tick = 20
+        # y_tick = 1
+        # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
+        # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+
+        # x_tick_min = x_tick / 2
+        # y_tick_min = y_tick / 2
+        # ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
+        # ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
+
+        # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+        # LIMIT TO AXIS:
+        # ax.set_xlim(xmin=0, xmax=20)
+        # ax.set_ylim(ymin=-0.5, ymax=9)
+
+        # LINES:
+        # ax.plot(x, y1, 'r',
+        #         label=r'$\mathregular{\Delta g_{xx}}$', linewidth=line_width)
+        # ax.plot(x, y2, 'b', 
+        #         label=r'$\mathregular{\Delta g_{yy}}$', linewidth=line_width)
+        # ax.plot(x, y3, 'k',
+        #         label=r'$\mathregular{\Delta g_{zz}}$', linewidth=line_width)
+
+        # MARKERS: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
+        ax.plot(x, y1, 'ro', markersize=marker_size)
+        ax.plot(x, y2, 'bv', markersize=marker_size,
+                markerfacecolor='none', markeredgewidth=1.5)
+        ax.plot(x, y3, 'ks', markersize=marker_size)
+
+        # CHANGING THE FONTSIZE OF TICKS
+        # plt.xticks(fontsize=small_size, weight=weight_selected)
+        # plt.yticks(fontsize=small_size, weight=weight_selected)
+        # axis.set_major_locator(MaxNLocator(integer=True))
+
+        # Enable grid lines for both x and y axes
+        plt.grid(axis='both', linestyle='--', linewidth=0.7, alpha=0.7)
+
+    #################################
+    ###   BAR PLOTS
+    #################################
+    elif plot_type == 1:
+        # Set width of the bars
+        bar_width = 0.25
+
+        # Set the positions of the bars on the x-axis
+        r1 = x  # np.arange(len(x))
+        r2 = [x + bar_width for x in r1]
+        r3 = [x + bar_width * 2 for x in r1]
+
+        # Create the bar plot
+        plt.bar(r1, y1, width=bar_width, color='blue', edgecolor='blue', label=r'$\mathregular{\Delta g_{xx}}$')
+        plt.bar(r2, y2, width=bar_width, color='orange', edgecolor='orange', label=r'$\mathregular{\Delta g_{yy}}$')
+        plt.bar(r3, y3, width=bar_width, color='green', edgecolor='green', label=r'$\mathregular{\Delta g_{zz}}$')
+
+    # LABELS:
+    # labelpad: change the space between axis umbers and labels
+    plt.xlabel(x_title, fontsize=bigger_size, fontfamily=fuente, labelpad=15,
+               weight=weight_selected)
+    plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic',
+               weight=weight_selected, labelpad=15)
+    # x_min = 0
+    # x_max =  11
+    # y_min = -45
+    # y_max =  5
+    # plt.xlim([x_min, x_max])  # Limit axis values
+    # plt.ylim([y_min, y_max])  # Limit axis values
+
+    # TITLE:
+    # y = 1.05 change the space between title and plot
+    plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
+
+    # LEGEND
+    legend = plt.legend(fontsize=medium_size, fancybox=True, framealpha=0.5,
+                        labelcolor='linecolor', loc='best')
+    frame = legend.get_frame()
+    frame.set_facecolor('white')
+    # frame.set_edgecolor('black')
+
+    # plt.locator_params(nbins=10)
+    # plt.grid()
+
+    # Add an horizontal line in y = 0
+    # ax.hlines(y=0, xmin=x_min, xmax=x_max, linewidth=line_width, color='k',
+    #           linestyle='dotted')
+    # dotted, dashed, solid, dashdot
+
+    # Frame of the plot: https://e2eml.school/matplotlib_framing.html#spinestyle
+    line_width = line_width - 0.8
+    ax.spines["top"].set_linewidth(line_width)
+    ax.spines["bottom"].set_linewidth(line_width)
+    ax.spines["left"].set_linewidth(line_width)
+    ax.spines["right"].set_linewidth(line_width)
+    save_picture(save_options, file, main_title)
+
+
+def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
+    """
+    Generate the sum-over-states plot, i.e. calculation of the g-tensor by including states
+    from 1 to nstates, above a cutoff of g-value. 
+    This can be done by:
+    - gestimation = 0: effective Hamiltonian created between each pair of states
+    - gestimation = 1: use of predictive phormula 
+    :param: 
+    :return: shows SOS plot
+    """
+    def filter_dictionary(dictionary, state):
+        """
+        Form a dictionary with only a pair of states: ground state and "state"
+        """
+        new_dict = {}
+        ground_state = list(outputdict["energy_dict"].keys())[0]
+        
+        for name_dict in ["energy_dict", "spin_dict"]:
+            new_dict[name_dict] = {k: v for k, v in dictionary[name_dict].items() if k == ground_state or k == state}
+
+        for name_dict in ["soc_matrix_dict", "angmoment_dict"]:
+            for k, v in dictionary[name_dict].items():
+                if k in [f"{ground_state}_{state}", f"{state}_{ground_state}"]:
+                    new_dict[name_dict] = {k: v}
+        return new_dict
+    
+    filtered_gshifts = [] 
+
+    if gestimation == 0:
+        all_gshifts = []
+        
+        for excit_state in list(outputdict["energy_dict"].keys())[1:]:
+            
+            # Form a dictionary only for a pair of states
+            filtered_dict = filter_dictionary(outputdict, excit_state)
+
+            sz_ground, max_sz_list, approxspin_list, matrices_dict = from_json_to_matrices(filtered_dict)
+
+            gmatrix, gshift = from_matrices_to_gshift(max_sz_list, sz_ground, matrices_dict, ppm)
+            
+            all_gshifts.append([excit_state, np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
+
+        # Filter all the g-values and take those where the difference with the previous
+        # state g-value is >= than a cut-off multiplied by the maximum g-value
+        xx_cut = abs(max(sublist[1] for sublist in all_gshifts)) * cutoff
+        yy_cut = abs(max(sublist[2] for sublist in all_gshifts)) * cutoff
+        zz_cut = abs(max(sublist[3] for sublist in all_gshifts)) * cutoff
+
+        for row in range(0,len(all_gshifts)):
+            # If difference between one value and the previous one is over a cut-off, include
+            # it in the presentation list
+            xx_diff = abs(all_gshifts[row][1] - all_gshifts[row-1][1])
+            yy_diff = abs(all_gshifts[row][2] - all_gshifts[row-1][2])
+            zz_diff = abs(all_gshifts[row][3] - all_gshifts[row-1][3])
+
+            if (xx_diff >= xx_cut) or (yy_diff >= yy_cut) or (zz_diff >= zz_cut):
+                filtered_gshifts.append(all_gshifts[row])
+    
+    elif gestimation == 1: 
+        gshift_dict = gshift_estimation_loop(outputdict, ppm)
+
+        cut_gvalues = {key: abs(max(subdict.values(), key=abs)) * cutoff for key, subdict in gshift_dict.items()}
+
+        # Take states with estimated g-shift higher than a cutoff
+        threshold = 10**(-6)
+        for k, v in gshift_dict["gxx"].items():
+            excit_state = k.split('_')[1]
+            if any(abs(gshift_dict[key][k]) >= cut_gvalues[key] and cut_gvalues[key] >= threshold
+                for key in ["gxx", "gyy", "gzz"]):
+                    filtered_gshifts.append([excit_state, gshift_dict["gxx"][k], gshift_dict["gyy"][k], gshift_dict["gzz"][k]])
+
+    print("------------------------------")
+    print(" SUM-OVER-STATE ANALYSIS")
+    print("------------------------------")
+    technique = {0: "Effective Hamiltonian", 1: "Estimation phormula"}
+    print("Technique used:", technique.get(gestimation, "Unknown"))
+    print("cut-offs g-value (%): ", cutoff)
+
+    # Set display options to show all rows and columns
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    df = pd.DataFrame([row[0:4] for row in filtered_gshifts], [row[0] for row in filtered_gshifts], columns=['state','gxx','gyy','gzz'])
+    print(df.to_string(index=False))
+    print()
+    y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
+
+    plot_g_tensor_vs_states(file.split('.')[0],np.array(filtered_gshifts, dtype=object),'Electronic State',y_title,'sos_analysis', saveplot)
 
 
 def filter_list(my_list, ncolumn, cutoff):
@@ -486,227 +1227,3 @@ def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot, cutoff
                         'Orbital angular momentum', 'orbit_analysis', save_pict=0)
         get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], socc, 'Electronic State',
                         'Spin-orbit coupling constants (cm-1)', 'soc_analysis', save_pict=0)
-
-
-def gshift_estimation_loop(nstates, orbit_moments, soccs, energies, ppm):
-    """
-    Calculate the g-values in all the selected states.
-    :param: nstates, orbit_moments, soccs, energies, ppm
-    :return: 
-    """
-    # SOCC from cm-1 to au
-    from_cm_to_ev = 100 / constants.physical_constants['electron volt-inverse meter relationship'][0]
-    soccs = soccs * from_cm_to_ev
-
-    presentation_list = []
-    for state in range(1, nstates+1):
-        # Units = part per thousand
-        # Since result is going to be imaginary, it is transformed to real
-        g_xx = abs(-4 * orbit_moments[state-1][0] * soccs[state-1] / energies[state]) * 1000
-        g_yy = abs(-4 * orbit_moments[state-1][1] * soccs[state-1] / energies[state]) * 1000
-        g_zz = abs(-4 * orbit_moments[state-1][2] * soccs[state-1] / energies[state]) * 1000
-
-        if ppm == 0:
-            presentation_list.append([state+1,np.round(g_xx, 3),np.round(g_yy, 3),np.round(g_zz, 3)])
-        elif ppm == 1:
-            presentation_list.append([state+1,np.round(g_xx, 3)*1000,np.round(g_yy, 3)*1000,np.round(g_zz, 3)*1000])
-    return presentation_list
-
-
-def sum_over_state_plot(gestimation, energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, ppm, cutoff):
-        """
-        Generate the sum-over-states plot, i.e. calculation of the g-tensor by including states
-        from 1 to nstates. 
-        :param: 
-        :return: shows SOS plot
-        """
-        presentation_list_all = []
-
-        if gestimation == 0:
-            for state in range(1, len(energies_json)):
-                # State properties
-                energies = energies_json[0:state+1]
-                excitenergies = excitenergies_json[0:state+1]
-                spin = spin_json[0:state+1]
-
-                # Interstate properties
-                soc = soc_json[0:state]
-                orbitmoment = orbitmoment_json[0:state]
-
-                max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
-                    = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
-                
-                # Calculate g-shift between ground state and excited states
-                gmatrix, gshift = from_matrices_to_gshift(excitenergies, soc_matrix, 
-                                        max_sz_list, spin_matrix, orbital_matrix, 
-                                        standard_spin_matrix, sz_ground, ppm)
-                
-                presentation_list_all.append([state+1, np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
-
-            # Filter all the g-values and take those where the difference with the previous
-            # state g-value is >= than a cut-off multiplied by the maximum g-value
-            xx_cut = abs(max(sublist[1] for sublist in presentation_list_all)) * cutoff
-            yy_cut = abs(max(sublist[2] for sublist in presentation_list_all)) * cutoff
-            zz_cut = abs(max(sublist[3] for sublist in presentation_list_all)) * cutoff
-
-            presentation_list = [presentation_list_all[0]] # First value is included
-            for row in range(1,len(presentation_list_all)):
-                # If difference between one value and the previous one is over a cut-off, include
-                # it in the presentation list
-                xx_diff = abs(presentation_list_all[row][1] - presentation_list_all[row-1][1])
-                yy_diff = abs(presentation_list_all[row][2] - presentation_list_all[row-1][2])
-                zz_diff = abs(presentation_list_all[row][3] - presentation_list_all[row-1][3])
-                if (xx_diff >= xx_cut) or (yy_diff >= yy_cut) or (zz_diff >= zz_cut):
-                    presentation_list.append(presentation_list_all[row])
-        
-        elif gestimation == 1:
-            def from_socmatrix_to_socc(soc_matrix):
-                """
-                From SOC matrix to SOCC between states. 
-                """
-                socclist = []
-                for interstate in range(0, len(soc_matrix)):
-                    socc = 0
-                    for ms1 in range(0, len(soc_matrix[interstate])):
-                        for ms2 in range(0, len(soc_matrix[interstate][ms1])):
-                            socc += (abs(complex(soc_matrix[interstate][ms1][ms2]))) ** 2
-                    socclist.append(math.sqrt(socc))
-                soccmatrix = np.array(socclist, dtype=object)
-                return soccmatrix
-
-            # Calculate estimated g-shift between ground state and excited states
-            socc = from_socmatrix_to_socc(soc_json)
-            estimation_list = gshift_estimation_loop(len(socc), orbitmoment_json, socc, excitenergies_json, ppm)
-
-            # Take states with estimated g-shift higher than a cutoff
-            max_gvalues = [max(col) * cutoff for col in zip(*estimation_list)]
-            relevant_states = [sublist[0]-1 for sublist in estimation_list if sublist[1]>=max_gvalues[1] 
-                               or sublist[2]>=max_gvalues[2] or sublist[3]>=max_gvalues[3]]
-            
-            # Make procedure with states with estimated g-shift different than 0
-            for state in relevant_states:
-                # State properties
-                print("SOS: state ", state)
-                energies = energies_json[0:state+1]
-                excitenergies = excitenergies_json[0:state+1]
-                spin = spin_json[0:state+1]
-
-                # Interstate properties
-                soc = soc_json[0:state]
-                orbitmoment = orbitmoment_json[0:state]
-
-                max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
-                    = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
-                
-                # Calculate g-shift between ground state and excited states
-                gmatrix, gshift = from_matrices_to_gshift(excitenergies, soc_matrix, 
-                                        max_sz_list, spin_matrix, orbital_matrix, 
-                                        standard_spin_matrix, sz_ground, ppm)
-
-                presentation_list_all.append([state+1, np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
-                presentation_list = presentation_list_all
-        presentation_matrix = np.array(presentation_list, dtype=object)
-
-        print("------------------------------")
-        print(" SUM-OVER-STATE ANALYSIS")
-        print("------------------------------")
-        
-        # Set display options to show all rows and columns
-        pd.set_option('display.max_rows', None)
-        pd.set_option('display.max_columns', None)
-        df = pd.DataFrame([row[0:4] for row in presentation_list], [row[0] for row in presentation_list], columns=['state','gxx','gyy','gzz'])
-        print(df.to_string(index=False))
-        print()
-
-        y_title = r'$\Delta g, ppt$'
-        if ppm == 1:
-            y_title = r'$\Delta g, ppm$'
-        plot_g_tensor_vs_states(file[:-4],presentation_matrix,'Electronic State',y_title,'sos_analysis', save_options=0)
-
-
-def get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json, 
-                         orbitmoment_json, transitions_json, ppm, cut_gvalue):
-    """
-    Obtaining a matrix with several data for each excited state. The cut-off determines the fraction of the amplitude
-    of the 1st configuration that need to have the other configurations to be shown in each state.
-    :param: file_ms_notnull, cutoff
-    :return: excit_matrix
-    """
-    # Calculate the g-tensor for each ground-excited state pair and save it in g_shift_list
-    g_shift_list = []
-    for state in range(1, len(energies_json)):
-        energies = [energies_json[0], energies_json[state]]
-        excitenergies = [excitenergies_json[0], excitenergies_json[state]]
-        spin = [spin_json[0], spin_json[state]]
-        soc = [soc_json[state-1]]
-        orbitmoment = [orbitmoment_json[state-1]]
-
-        max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
-            = from_json_to_matrices(energies, excitenergies, spin, soc, orbitmoment)
-
-        gmatrix, gshift = from_matrices_to_gshift(excitenergies, soc_matrix, 
-                                        max_sz_list, spin_matrix, orbital_matrix, 
-                                        standard_spin_matrix, sz_ground, ppm)
-        
-        g_shift_list.append([np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
-
-    # Forming different list depending on if g-shift is calculated or not
-    cut_gxx = cut_gvalue * max([abs(row[0]) for row in g_shift_list])
-    cut_gyy = cut_gvalue * max([abs(row[1]) for row in g_shift_list])
-    cut_gzz = cut_gvalue * max([abs(row[2]) for row in g_shift_list])
-
-    # For the list with the data for all the configurations
-    presentation_list = []
-    for state in range(0, len(energies_json)):
-        for transition in list(transitions_json[state]):
-            if state == 0:
-                presentation_list.append([state+1,str(transition['transition/SOMO']),
-                                          (transition['amplitude']),
-                                          '---','---','---'])
-
-            else:
-                gxx = np.round(g_shift_list[state-1][0],3)
-                gyy = np.round(g_shift_list[state-1][1],3)
-                gzz = np.round(g_shift_list[state-1][2],3)
-                if abs(gxx) >= cut_gxx or abs(gyy) >= cut_gyy or abs(gzz) >= cut_gzz:
-                    presentation_list.append([state+1,str(transition['transition/SOMO']),
-                                              (transition['amplitude']),
-                                              gxx,gyy,gzz])
-                    
-    print("--------------------------")
-    print(" G-SHIFT IN STATES PAIRS")
-    print("--------------------------")
-    # Set display options to show all rows and columns
-    pd.set_option('display.max_rows', None)
-    pd.set_option('display.max_columns', None)
-    df = pd.DataFrame(presentation_list, columns=['state','transition/SOMO', 'amplitude','gxx','gyy','gzz'])
-    print(df.to_string(index=False))
-    print()
-
-file = file + ".json"
-energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, transitions_json = extract_data_from_json(file)
-nstates = len(energies_json)
-
-if calculate_gshift == 1:
-    max_sz_list, sz_ground, soc_matrix, spin_matrix, standard_spin_matrix, orbital_matrix \
-    = from_json_to_matrices(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json)
-
-    gmatrix, gshift = from_matrices_to_gshift(excitenergies_json, soc_matrix, max_sz_list, spin_matrix, 
-                                      orbital_matrix, standard_spin_matrix, sz_ground, ppm)
-
-    print_g_calculation(file, nstates, gshift, ppm, spin_json)
-
-    # print("g-matrix: ")
-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #             for row in np.round(np.sqrt(gmatrix[:,:]), 6)]))
-    # print()
-
-if excitanalysis_gvalue_cut != 0:
-    get_gtensor_analysis(energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, 
-                     transitions_json, ppm, excitanalysis_gvalue_cut)
-
-if excitanalysis == 1:
-    excitedstates_analysis(nstates, excitenergies_json, orbitmoment_json, soc_json, excitanalysis_plot, cutoffamp)
-
-if sum_over_states_analysis == 1:
-    sum_over_state_plot(g_estimation, energies_json, excitenergies_json, spin_json, soc_json, orbitmoment_json, ppm, amp_cutoff)
