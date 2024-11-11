@@ -7,7 +7,7 @@ calculate_gshift = 1
 ppm = 0 # 0: ppt; 1: ppm
 state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
-initial_states = [1, 2, 3]
+initial_states = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 soc_orders = 0 # 0: All orders; 1: First-order; 2: all higher order terms from second-order
@@ -18,10 +18,10 @@ cutoff_config = 0 # cut-off for configurations amplitude (% of maximum amplitude
 excit_plot = 0 # 0: not show plot, 1: show plot 
 
 ######## SOS PLOTS ########
-sum_over_states_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
+sum_over_states_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
 sos_cutoff = 0.5
 g_estimation = 0
-save_plot = 1
+save_plot = 0
 
 
 file = str(sys.argv[1]) + ".json"

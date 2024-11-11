@@ -1,0 +1,52 @@
+
+---------------------
+ G-SHIFT RESULTS
+---------------------
+File selected:  nbr_4_3.out
+States:  [1, 2, 3]
+States multiplicity: 
+- triplets = 3: [1, 2, 3]
+g-factor (x y z dimensions) in ppt: 12.414 12.414 -0.032
+
+----------------------
+ G-TENSOR ANALYSIS
+----------------------
+cut-offs: 
+- g-shift estimation (%): 0.1
+- configurations (%):  0
+- somos to add to new active space:  [17, 18, 21, 22, 31, 32]
+
+state config. amplitude        somo    gxx    gyy gzz
+    1       1     0.998       21,22     --     --  --
+    2       1     0.963       18,21 35.249  0.353 0.0
+    2       2     0.207       17,21 35.249  0.353 0.0
+    2       3     0.108 18,21,22,32 35.249  0.353 0.0
+    3       1     0.963       18,22  0.353 35.249 0.0
+    3       2     0.207       17,22  0.353 35.249 0.0
+    3       3    -0.108 18,21,22,31  0.353 35.249 0.0
+
+------------------------
+ EXCITED STATES ANALYSIS
+------------------------
+cut-offs: 
+- configurations (%):  0
+- soccs (%):  0
+- angular momentum (%):  0
+
+state spin config. amplitude        somo   energy excit. energy  socc         angmom
+    1  2.0       1     0.998       21,22  -2626.8           0.0    --             --
+    2  2.0       1     0.963       18,21 -2626.64          4.89 315.0 -1.1j,0.01j,0j
+    2  2.0       2     0.207       17,21 -2626.64          4.89 315.0 -1.1j,0.01j,0j
+    2  2.0       3     0.108 18,21,22,32 -2626.64          4.89 315.0 -1.1j,0.01j,0j
+    3  2.0       1     0.963       18,22 -2626.64          4.89 315.0  0.01j,1.1j,0j
+    3  2.0       2     0.207       17,22 -2626.64          4.89 315.0  0.01j,1.1j,0j
+    3  2.0       3    -0.108 18,21,22,31 -2626.64          4.89 315.0  0.01j,1.1j,0j
+------------------------------
+ SUM-OVER-STATE ANALYSIS
+------------------------------
+Technique used: Effective Hamiltonian
+cut-offs g-value (%):  0.5
+ state    gxx    gyy    gzz
+     2 12.462 -0.032 -0.032
+     3 -0.032 12.462 -0.032
+

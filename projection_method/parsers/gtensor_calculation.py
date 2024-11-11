@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 
 lande_factor = 2.002319304363
 
+
 def s2_to_s(s2):
     """
     get total spin (s) from s^2
@@ -128,7 +129,7 @@ def get_soc_matrix(soc_dict, len_sz, nstates):
     """
     Construct the SOC matrix from the SOC list of json filee. Result in eV. 
     Matrix is formed as: 
-    < B, S, Sz | HSOC | A, S, Sz' >   -->   < column, sz1 | HSOC | row, sz2 >
+    < B, S, Sz | HSOC | A, S, Sz' >   -->   < row, sz1 | HSOC | column, sz2 >
     :param: soc_dict, len_sz, nstates
     :return: socmatrix
     """
@@ -142,8 +143,8 @@ def get_soc_matrix(soc_dict, len_sz, nstates):
 
             for sz1 in range(0, bra):
                 for sz2 in range(0, ket):
-                    matrix_row = row * len_sz + sz2 + ((len_sz-ket)//2)
-                    matrix_col = column * len_sz + sz1 + ((len_sz-bra)//2)
+                    matrix_row = row * len_sz + sz1 + ((len_sz-bra)//2)
+                    matrix_col = column * len_sz + sz2 + ((len_sz-ket)//2)
 
                     value = complex(soc_list[row+column-1][sz1][sz2])
                     socmatrix[matrix_row][matrix_col] = value
@@ -162,6 +163,8 @@ def get_spin_matrices(states_spin, len_sz):
     """
     Get spin matrix with dimensions ['bra' x 'ket' x 3] (x,y,z), with spin order (-Ms , +Ms) in the order of
     "selected_state". Functions "s2_to_s", "s_to_s2" and "spin_matrices" are taken from inside PyQChem.
+    Matrix is formed as: 
+    < B, S, Sz | HSOC | A, S, Sz' >   -->   < row, sz1 | HSOC | column, sz2 >
     :param: filee, selected_state.
     :return: spin_matr, standard_spin_mat.
     """
@@ -293,7 +296,7 @@ def get_spin_matrices(states_spin, len_sz):
     standard_spin_matrices = get_standard_spin_matrix(states_spin, len_sz, final_spin_matrix)
 
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #                 for row in ((standard_spin_matrices[:,:,0]))]))
+    #                 for row in ((final_spin_matrix[:,:,0]))]))
     # exit()
     return final_spin_matrix, standard_spin_matrices
 
@@ -301,7 +304,7 @@ def get_spin_matrices(states_spin, len_sz):
 def get_orbital_matrices(angmoment_dict, len_sz, nstates):
     """
     Construct the L matrix from the L list of json filee. Matrix is formed as: 
-    < B | L | A >   -->   < col | HSOC | row >
+    < B | L | A >   -->   < row | HSOC | col >
     :param: angmoment_dict, len_sz, nstates
     :return: all_multip_lk
     """
@@ -327,7 +330,7 @@ def get_orbital_matrices(angmoment_dict, len_sz, nstates):
                     extended_orbit_matrix[row + sz, col + sz][ndim] = \
                     angmom_selected[row // len_sz][col // len_sz][ndim]
 
-    # for ndim in range(0, 3):
+    # for ndim in range(0, 1):
     #     print()
     #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
     #                      for row in np.round(extended_orbit_matrix[:, :, ndim], 4)]))
@@ -439,9 +442,9 @@ def get_hamiltonian_construction(eigenenergies, spin_orbit_coupling, sz_values):
 
     hermitian_test(hamiltonian, sz_values)
 
-    print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-                        for row in np.round((hamiltonian[:, :]), 5)]))
-    print(" ")
+    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+    #                     for row in np.round((hamiltonian[:, :]), 5)]))
+    # print(" ")
     return hamiltonian
 
 
@@ -870,8 +873,8 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
                 elec_alpha = outputdict["scf_alpha_beta_electrons"][1]
 
                 # Data for excited states analysis
-                energy = round(outputdict["energy_dict"][state][0], 3)
-                excited_energy = round(outputdict["energy_dict"][state][1], 2)
+                energy = round(outputdict["energy_dict"][state][0], 2)
+                excited_energy = round(outputdict["energy_dict"][state][1], 4)
                 spin = outputdict["spin_dict"][state]                    
 
                 if k1 == 0: # For the ground state, where there are no g-value
@@ -1152,7 +1155,9 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
     print()
     y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
 
-    plot_g_tensor_vs_states(file.split('.')[0],np.array(filtered_gshifts, dtype=object),'Electronic State',y_title,'sos_analysis', saveplot)
+    file_string = str(sys.argv[1])
+
+    plot_g_tensor_vs_states(file_string.split('.')[0],np.array(filtered_gshifts, dtype=object),'Electronic State',y_title,'sos_analysis', saveplot)
 
 
 def filter_list(my_list, ncolumn, cutoff):
