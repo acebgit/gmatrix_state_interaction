@@ -8,10 +8,10 @@ from projection_method.parsers.gtensor_calculation import extract_data_from_json
 
 ######## G-TENSOR CALCULATION ########
 calculate_gshift = 0
-ppm = 0 # 0: ppt; 1: ppm
-state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+ppm = 1 # 0: ppt; 1: ppm
+state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
-initial_states = list(range(1, 30))
+initial_states = list(range(1, 31))
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 soc_orders = 0 # 0: All orders; 1: First-order; 2: Higher-order 
@@ -23,9 +23,9 @@ excit_plot = 0 # 0: not show plot, 1: show plot
 
 ######## SOS PLOTS ########
 sum_over_states_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
-sos_cutoff = 0.5
+sos_cutoff = 0
 g_estimation = 0
-save_plot = 0
+save_plot = 1
 
 
 file = str(sys.argv[1]) + ".json"

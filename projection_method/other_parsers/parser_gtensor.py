@@ -8,7 +8,7 @@ from numpy import linalg, sqrt
 from scipy import constants
 import pandas as pd
 from projection_method.parsers.gtensor_calculation import get_hamiltonian_construction, hermitian_test, \
-    from_ppt_to_ppm, diagonalization, angular_matrices_obtention
+    units_gshift, diagonalization, angular_matrices_obtention
 
 # Get the absolute path to local folder 'PyQChem'
 import sys 
@@ -660,7 +660,7 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
     for i in range(0, 3):
         g_shifts[i] = (sqrt(g_matrix_diagonal[i, i]) - lande_factor) * 1000
 
-    g_shifts = from_ppt_to_ppm(g_shifts, ppms)
+    g_shifts = units_gshift(g_shifts, ppms)
     # g_shifts = from_qchem_to_sto(g_shifts)
 
     return g_matrix, g_shifts

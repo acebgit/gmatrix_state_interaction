@@ -560,20 +560,20 @@ def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
     return angular_matrix
 
 
-def from_ppt_to_ppm(gvalues, ppm=None):
+def units_gshift(gvalues, ppm=0):
     """
         Pass from ppt to ppm the gvalues.
         :param: ppm, gvalues
         :return: gvalues
-        """
-    if ppm == 1:
+        """    
+    if ppm == 0:
         gvalues = [i * 1000 for i in gvalues]
-    else:
-        pass
+    elif ppm == 1:
+        gvalues = [i * 1000000 for i in gvalues]
     return gvalues
 
 
-def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=None):
+def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=0):
     """
     g-shift with orbitals and spin angular momentum matrices.
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
@@ -672,15 +672,14 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
 
     g_shifts = np.zeros(3, dtype=complex)
     for i in range(0, 3):
-        g_shifts[i] = (sqrt(g_matrix_diagonal[i, i]) - lande_factor) * 1000
+        g_shifts[i] = (sqrt(g_matrix_diagonal[i, i]) - lande_factor) 
 
-    g_shifts = from_ppt_to_ppm(g_shifts, ppms)
+    g_shifts = units_gshift(g_shifts, ppms)
     # g_shifts = from_qchem_to_sto(g_shifts)
-
     return g_matrix, g_shifts
 
 
-def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms=1):
+def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms):
     """
     From matrices to the g-shift value. 
     """
@@ -1007,7 +1006,7 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
 
 
 def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_title, save_options):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 5))
     plot_type = 1 # 0: plot, 1: bars
 
     # MAIN FEATURES:
@@ -1023,8 +1022,6 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     y1 = presentation_matrix[:, 1]  # Second column for the first category
     y2 = presentation_matrix[:, 2]  # Third column for the second category
     y3 = presentation_matrix[:, 3]  # Fourth column for the third category
-
-    plt.figure(figsize=(10, 5))
 
     #################################
     ###   PLOT TYPE
@@ -1087,8 +1084,10 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     # axis.set_major_locator(MaxNLocator(integer=True))
 
     # LIMIT TO AXIS:
-    ax.set_xlim(min(x), max(x))
-    # ax.set_ylim(ymin=-0.5, ymax=9)
+    ax.set_xlim(min(x)-1, max(x)+1)
+    max_value = np.maximum.reduce([y1.max(), y2.max(), y3.max()])
+    min_value = np.minimum.reduce([y1.min(), y2.min(), y3.min()])
+    ax.set_ylim(min_value-0.05*max_value, max_value+0.1*max_value)
 
     # LABELS:
     # labelpad: change the space between axis umbers and labels
@@ -1106,7 +1105,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     # TITLE:
     # y = 1.05 change the space between title and plot
     # plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
-
+    
     # LEGEND
     legend = plt.legend(fontsize=legend_size, 
                         fancybox=True, 
@@ -1135,6 +1134,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     ax.spines["bottom"].set_linewidth(line_width)
     ax.spines["left"].set_linewidth(line_width)
     ax.spines["right"].set_linewidth(line_width)
+    
     save_picture(save_options, file, 'sos')
 
 
@@ -1164,7 +1164,7 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
                     new_dict[name_dict] = {k: v}
         return new_dict
     
-    filtered_gshifts = [] 
+    filtered_gshifts = []
 
     if gestimation == 0:
         all_gshifts = []
@@ -1173,12 +1173,15 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
             
             # Form a dictionary only for a pair of states
             filtered_dict = filter_dictionary(outputdict, excit_state)
-
+            
             sz_ground, max_sz_list, approxspin_list, matrices_dict = from_json_to_matrices(filtered_dict)
 
             gmatrix, gshift = from_matrices_to_gshift(max_sz_list, sz_ground, matrices_dict, ppm)
             
-            all_gshifts.append([excit_state, np.round(gshift[0].real, 3),np.round(gshift[1].real, 3), np.round(gshift[2].real, 3)])
+            all_gshifts.append([excit_state, 
+                                abs(np.round(gshift[0].real, 3)),
+                                abs(np.round(gshift[1].real, 3)), 
+                                abs(np.round(gshift[2].real, 3))])
 
         # Filter all the g-values and take those where the difference with the previous
         # state g-value is >= than a cut-off multiplied by the maximum g-value
@@ -1207,7 +1210,10 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
             excit_state = k.split('_')[1]
             if any(abs(gshift_dict[key][k]) >= cut_gvalues[key] and cut_gvalues[key] >= threshold
                 for key in ["gxx", "gyy", "gzz"]):
-                    filtered_gshifts.append([excit_state, gshift_dict["gxx"][k], gshift_dict["gyy"][k], gshift_dict["gzz"][k]])
+                    filtered_gshifts.append([excit_state, 
+                                             abs(gshift_dict["gxx"][k]), 
+                                             abs(gshift_dict["gyy"][k]), 
+                                             abs(gshift_dict["gzz"][k])])
 
     print("------------------------------")
     print(" SUM-OVER-STATE ANALYSIS")
