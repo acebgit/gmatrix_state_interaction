@@ -28,7 +28,7 @@ ras_input= str(sys.argv[1])
 ######## G-TENSOR CALCULATION ########
 calculate_gshift = 1
 ppm = 0 # 0: ppt; 1: ppm
-state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
 states_ras = [1, 2, 3]
 # states_ras.remove(2)
@@ -36,7 +36,7 @@ states_ras = [1, 2, 3]
 
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
-soc_orders = 0
+soc_orders = 1
 
 ######## G-TENSOR CALCULATION BY PAIRS ########
 gshift_estimation_by_state_pairs = 0

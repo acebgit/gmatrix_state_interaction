@@ -1,16 +1,20 @@
 import sys 
 from projection_method.parsers.gtensor_calculation import extract_data_from_json, get_selected_dict, \
-from_json_to_matrices, from_matrices_to_gshift, print_g_calculation, gtensor_state_pairs_analysis, sum_over_state_plot
+    from_json_to_matrices, select_soc_order, from_matrices_to_gshift, print_g_calculation, gtensor_state_pairs_analysis, \
+    sum_over_state_plot, from_gvalue_to_shift
+
+# from_gvalue_to_shift([1.9978])
+# exit()
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 1
+calculate_gshift = 0
 ppm = 0 # 0: ppt; 1: ppm
 state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
-initial_states = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
+initial_states = list(range(1, 30))
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
-soc_orders = 0 # 0: All orders; 1: First-order; 2: all higher order terms from second-order
+soc_orders = 0 # 0: All orders; 1: First-order; 2: Higher-order 
 
 ######## G-TENSOR CALCULATION BY PAIRS ########
 cutoff_gvalue = 0 # ≠0: cut-off between ground-excited states (% of maximum g-value in each dim) 
@@ -35,9 +39,11 @@ output_dict_selected = get_selected_dict(output_dict, len(output_dict["energy_di
 if calculate_gshift == 1:
     sz_ground, max_sz_list, approxspin_list, matrices_dict = from_json_to_matrices(output_dict_selected)
 
+    matrices_dict = select_soc_order(matrices_dict, soc_orders)
+
     gmatrix, gshift = from_matrices_to_gshift(max_sz_list, sz_ground, matrices_dict, ppm)
 
-    print_g_calculation(file, output_dict_selected, approxspin_list, gshift, gmatrix, ppm)
+    print_g_calculation(file, output_dict_selected, approxspin_list, gshift, gmatrix, ppm, soc_options, soc_orders)
 
 if cutoff_gvalue != 0:
     gtensor_state_pairs_analysis(output_dict_selected, ppm, cutoff_gvalue, cutoff_config, excit_plot, savepicture=0)

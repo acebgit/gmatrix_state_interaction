@@ -719,10 +719,10 @@ def print_g_calculation(file, totalstates, selected_states,
     print('g-factor (x y z dimensions):')
     print(np.round(g_shifts[0].real, 3), np.round(g_shifts[1].real, 3),
           np.round(g_shifts[2].real, 3))
-    print('')
-    print('g-matrix:')
-    print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) 
-                     for row in np.round((g_matrix[:,:]), 4)]))
+    # print('')
+    # print('g-matrix:')
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) 
+    #                  for row in np.round((g_matrix[:,:]), 4)]))
 
 
 def get_states_notnull_soc(output, totalstatess, states_initial):

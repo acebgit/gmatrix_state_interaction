@@ -5,7 +5,6 @@ from numpy import linalg, sqrt
 import pandas as pd
 import math 
 from scipy import constants
-from collections import Counter
 import matplotlib.pyplot as plt
 # import timeit
 # from functools import partial
@@ -392,6 +391,52 @@ def from_json_to_matrices(outpuut_dict_selected):
     return sz_ground, sz_maxspin, approx_spin_list, matrices__dict
 
 
+def select_soc_order(matrices__dict, soc_order):
+    """
+    Take all the SOC matrix, the first-order or the higher-order terms
+    """
+    nstates = len(matrices__dict["excit_energies"])
+    len_sz = len(matrices__dict["soc"]) // nstates
+    new_matrix = np.zeros((len(matrices__dict["soc"][:,:]), len(matrices__dict["soc"][:,:])), dtype=complex)
+
+    if soc_order == 0:
+        new_matrix = matrices__dict["soc"]
+
+    elif soc_order == 1:
+        for row in range(1, nstates):
+            for column in range(0, row): 
+                # Only for those socs involving ground state interaction
+                if row == 0 or column == 0: 
+                    for sz1 in range(0, len_sz):
+                        for sz2 in range(0, len_sz):
+                            matrix_row = row * len_sz + sz1 
+                            matrix_col = column * len_sz + sz2 
+
+                            new_matrix[matrix_row][matrix_col] = matrices__dict["soc"][matrix_row][matrix_col]
+                            new_matrix[matrix_col][matrix_row] = matrices__dict["soc"][matrix_col][matrix_row]
+
+    elif soc_order == 2:
+        for row in range(1, nstates):
+            for column in range(0, row): 
+                # Only for those socs not involving ground state interaction
+                if row != 0 and column != 0: 
+                    for sz1 in range(0, len_sz):
+                        for sz2 in range(0, len_sz):
+                            matrix_row = row * len_sz + sz1 
+                            matrix_col = column * len_sz + sz2 
+
+                            new_matrix[matrix_row][matrix_col] = matrices__dict["soc"][matrix_row][matrix_col]
+                            new_matrix[matrix_col][matrix_row] = matrices__dict["soc"][matrix_col][matrix_row]
+    
+    matrices__dict["soc"] = new_matrix
+    # print()
+    # print('SOC:')
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #                 for row in np.round((matrices__dict["soc"][:,:]/(constants.physical_constants['inverse meter-electron volt relationship'][0] * 100)))]))
+    # exit()
+    return matrices__dict
+
+
 def hermitian_test(matrix, sz_list):
     """
     Check if matrix is Hermitian. If not, "ValueError".
@@ -474,7 +519,11 @@ def diagonalization(matrix):
                     eigenval[v_2] = change_order.real[0]
         return eigenval, eigenvect
 
-    eigenvalues, eigenvectors = linalg.eigh(matrix)
+    try:
+        eigenvalues, eigenvectors = linalg.eigh(matrix)
+    except LinAlgError:
+        print("Some values are NaN in the QChem output")
+    
     eigenvalues, eigenvectors = reordering_eigenvectors(eigenvalues, eigenvectors)
 
     rotation_inverse = np.linalg.inv(eigenvectors)
@@ -559,7 +608,11 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
         :param: matrix
         :return: eigenvalues, eigenvectors, diagonal_matrix
         """
-        eigenvalues, eigenvectors = linalg.eigh(matrix)
+        try:
+            eigenvalues, eigenvectors = linalg.eigh(matrix)
+        except LinAlgError:
+            print("Some values are NaN in the QChem output")
+        
         rotation_inverse = np.linalg.inv(eigenvectors)
         diagonal_matrix = np.matmul(np.matmul(rotation_inverse, matrix), eigenvectors)
         return eigenvectors, diagonal_matrix
@@ -629,6 +682,7 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
 
 def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms=1):
     """
+    From matrices to the g-shift value. 
     """
     hamiltonian = get_hamiltonian_construction(matrices_dict["excit_energies"], matrices_dict["soc"], max_sz)
 
@@ -647,7 +701,7 @@ def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms=1):
     return gmatrix, gshift
 
 
-def print_g_calculation(filee, output_dict_selected, spin_list, g_shift, g_tensor, ppms=1):
+def print_g_calculation(filee, output_dict_selected, spin_list, g_shift, g_tensor, ppms, soc_option, soc_order):
     """
     Printing results. 
     """
@@ -669,6 +723,9 @@ def print_g_calculation(filee, output_dict_selected, spin_list, g_shift, g_tenso
     print(" G-SHIFT RESULTS")
     print("---------------------")
     print("File selected: ", filee.replace(".json", ""))
+    soc_options_dict = {0: "All BP Hamiltonian", 1: "One electron term", 2: "Bielectornic term"}
+    soc_order_dict = {0: "All orders", 1: "First-order", 2: "Second-order"}
+    print("SOC: ", soc_order_dict[soc_order], ',', soc_options_dict[soc_option])
     print("States: ", states_list)
     print("States multiplicity: ")
     for key, value in multip_dict.items():
@@ -699,7 +756,10 @@ def save_picture(save_options, filee, title_main):
     if save_options == 1:
         plt.plot()
         figure_name = filee + '_' + title_main + '.png'
-        plt.savefig(figure_name)
+        plt.savefig(figure_name, 
+                    bbox_inches="tight", 
+                    dpi=600
+                    )
         plt.close()
     else:
         plt.plot()
@@ -867,7 +927,7 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
 
                 # Data required for g-tensor presentation list
                 state = transit_configuration["state"]
-                configuration = transit_configuration["configuration"]+1
+                configuration = transit_configuration["configuration"]
                 somos = transit_configuration["SOMO"]
                 amplitude = transit_configuration["amplitude"]
                 elec_alpha = outputdict["scf_alpha_beta_electrons"][1]
@@ -875,7 +935,7 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
                 # Data for excited states analysis
                 energy = round(outputdict["energy_dict"][state][0], 2)
                 excited_energy = round(outputdict["energy_dict"][state][1], 4)
-                spin = outputdict["spin_dict"][state]                    
+                spin = round(outputdict["spin_dict"][state], 2)
 
                 if k1 == 0: # For the ground state, where there are no g-value
                     gshift_presentation.append([state, configuration, amplitude, somos, "--", "--", "--"])
@@ -899,7 +959,7 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
                         final_active_orbitals = get_new_active_space(final_active_orbitals, somos, elec_alpha)
                         gshift_states.append(state)
                     
-                    socc = round(outputdict["socc_dict"][f"{grstate}_{state}"], 0)
+                    socc = round(outputdict["socc_dict"][f"{grstate}_{state}"], 3)
                     angmom_max = max([complex(x) for x in outputdict["angmoment_dict"][f"{grstate}_{state}"]], key=abs)
                     
                     if socc >= cut_socc and abs(angmom_max) >= cut_angmom:
@@ -952,9 +1012,9 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
 
     # MAIN FEATURES:
     fuente = 'sans-serif'  # 'serif'
-    small_size = 16
-    medium_size = 16
-    bigger_size = 16
+    small_size = 17
+    legend_size = small_size + 3
+    bigger_size = small_size + 3
     weight_selected = 'normal'
     line_width = 2
     marker_size = 10
@@ -963,6 +1023,8 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     y1 = presentation_matrix[:, 1]  # Second column for the first category
     y2 = presentation_matrix[:, 2]  # Third column for the second category
     y3 = presentation_matrix[:, 3]  # Fourth column for the third category
+
+    plt.figure(figsize=(10, 5))
 
     #################################
     ###   PLOT TYPE
@@ -985,10 +1047,6 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
         # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
-        # LIMIT TO AXIS:
-        # ax.set_xlim(xmin=0, xmax=20)
-        # ax.set_ylim(ymin=-0.5, ymax=9)
-
         # LINES:
         # ax.plot(x, y1, 'r',
         #         label=r'$\mathregular{\Delta g_{xx}}$', linewidth=line_width)
@@ -1002,11 +1060,6 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
         ax.plot(x, y2, 'bv', markersize=marker_size,
                 markerfacecolor='none', markeredgewidth=1.5)
         ax.plot(x, y3, 'ks', markersize=marker_size)
-
-        # CHANGING THE FONTSIZE OF TICKS
-        # plt.xticks(fontsize=small_size, weight=weight_selected)
-        # plt.yticks(fontsize=small_size, weight=weight_selected)
-        # axis.set_major_locator(MaxNLocator(integer=True))
 
         # Enable grid lines for both x and y axes
         plt.grid(axis='both', linestyle='--', linewidth=0.7, alpha=0.7)
@@ -1024,9 +1077,18 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
         r3 = [x + bar_width * 2 for x in r1]
 
         # Create the bar plot
-        plt.bar(r1, y1, width=bar_width, color='blue', edgecolor='blue', label=r'$\mathregular{\Delta g_{xx}}$')
-        plt.bar(r2, y2, width=bar_width, color='orange', edgecolor='orange', label=r'$\mathregular{\Delta g_{yy}}$')
-        plt.bar(r3, y3, width=bar_width, color='green', edgecolor='green', label=r'$\mathregular{\Delta g_{zz}}$')
+        plt.bar(r1, y1, width=bar_width, color='red', edgecolor='red', label=r'$\mathregular{\Delta g_{xx}}$')
+        plt.bar(r2, y2, width=bar_width, color='blue', edgecolor='blue', label=r'$\mathregular{\Delta g_{yy}}$')
+        plt.bar(r3, y3, width=bar_width, color='black', edgecolor='black', label=r'$\mathregular{\Delta g_{zz}}$')
+
+    # CHANGING THE FONTSIZE OF TICKS
+    plt.xticks(fontsize=small_size, weight=weight_selected)
+    plt.yticks(fontsize=small_size, weight=weight_selected)
+    # axis.set_major_locator(MaxNLocator(integer=True))
+
+    # LIMIT TO AXIS:
+    ax.set_xlim(min(x), max(x))
+    # ax.set_ylim(ymin=-0.5, ymax=9)
 
     # LABELS:
     # labelpad: change the space between axis umbers and labels
@@ -1043,13 +1105,20 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
 
     # TITLE:
     # y = 1.05 change the space between title and plot
-    plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
+    # plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
 
     # LEGEND
-    legend = plt.legend(fontsize=medium_size, fancybox=True, framealpha=0.5,
-                        labelcolor='linecolor', loc='best')
-    frame = legend.get_frame()
-    frame.set_facecolor('white')
+    legend = plt.legend(fontsize=legend_size, 
+                        fancybox=True, 
+                        framealpha=0.5,
+                        labelcolor='linecolor', 
+                        loc='best', 
+                        frameon=False, 
+                        )
+    # plt.legend(frameon=False)
+    # frame = legend.get_frame().set_edgecolor('black')
+    # frame = legend.get_frame().set_linewidth(1)
+    # frame = legend.get_frame().set_facecolor('white')
     # frame.set_edgecolor('black')
 
     # plt.locator_params(nbins=10)
@@ -1066,7 +1135,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     ax.spines["bottom"].set_linewidth(line_width)
     ax.spines["left"].set_linewidth(line_width)
     ax.spines["right"].set_linewidth(line_width)
-    save_picture(save_options, file, main_title)
+    save_picture(save_options, file, 'sos')
 
 
 def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
@@ -1155,9 +1224,10 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
     print()
     y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
 
-    file_string = str(sys.argv[1])
+    file_string = str(sys.argv[1]).split('.')[0]
+    plot_title = 'sos_analysis: ' + file_string
 
-    plot_g_tensor_vs_states(file_string.split('.')[0],np.array(filtered_gshifts, dtype=object),'Electronic State',y_title,'sos_analysis', saveplot)
+    plot_g_tensor_vs_states(file_string,np.array(filtered_gshifts, dtype=object),'Number of states',y_title,plot_title, saveplot)
 
 
 def filter_list(my_list, ncolumn, cutoff):
@@ -1232,3 +1302,17 @@ def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot, cutoff
                         'Orbital angular momentum', 'orbit_analysis', save_pict=0)
         get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], socc, 'Electronic State',
                         'Spin-orbit coupling constants (cm-1)', 'soc_analysis', save_pict=0)
+
+
+def from_gvalue_to_shift(lista):
+    """
+    Obtain the g-shifts from the g-values
+    :param: list
+    :return: g_shift
+    """
+    g_shift = []
+    for i in range(0, len(lista)):
+        value = (lista[i] - lande_factor) * 10**3
+        g_shift.append(value)
+    print(np.round(g_shift, 2))
+
