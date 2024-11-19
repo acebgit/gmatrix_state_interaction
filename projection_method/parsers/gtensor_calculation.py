@@ -1227,7 +1227,7 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
     file_string = str(sys.argv[1]).split('.')[0]
     plot_title = 'sos_analysis: ' + file_string
 
-    plot_g_tensor_vs_states(file_string,np.array(filtered_gshifts, dtype=object),'Number of states',y_title,plot_title, saveplot)
+    plot_g_tensor_vs_states(file_string,np.array(filtered_gshifts, dtype=object),'# roots',y_title,plot_title, saveplot)
 
 
 def filter_list(my_list, ncolumn, cutoff):
