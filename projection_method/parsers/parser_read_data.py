@@ -305,4 +305,6 @@ if bool(outpuut.find('R A S M A N 2')+1): # RAS method output
 elif bool(outpuut.find('TDDFT')+1): # TDDFT method output
     output_dict = gtensor_parser_tddft(outpuut)
 
-output_json(file, output_dict)
+# Main code block that should not run when imported
+if __name__ == "__main__":
+    output_json(file, output_dict)

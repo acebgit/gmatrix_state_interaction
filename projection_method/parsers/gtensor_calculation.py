@@ -1138,7 +1138,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     save_picture(save_options, file, 'sos')
 
 
-def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
+def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot):
     """
     Generate the sum-over-states plot, i.e. calculation of the g-tensor by including states
     from 1 to nstates, above a cutoff of g-value. 
@@ -1233,7 +1233,10 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot):
     file_string = str(sys.argv[1]).split('.')[0]
     plot_title = 'sos_analysis: ' + file_string
 
-    plot_g_tensor_vs_states(file_string,np.array(filtered_gshifts, dtype=object),'# roots',y_title,plot_title, saveplot)
+    if showplot == 1:
+        plot_g_tensor_vs_states(file_string,np.array(filtered_gshifts, dtype=object),'# roots',y_title,plot_title, saveplot)
+    else: 
+        return filtered_gshifts
 
 
 def filter_list(my_list, ncolumn, cutoff):
@@ -1321,4 +1324,142 @@ def from_gvalue_to_shift(lista):
         value = (lista[i] - lande_factor) * 10**3
         g_shift.append(value)
     print(np.round(g_shift, 2))
+
+
+def comparison_s2(json_file, outputdict, save_options):
+    """
+    Program to obtain the plot comparing the calculated <S2> saved in dictionaries and 
+    the expected value <S2>. 
+    """
+    def plot_spin_states(file_name, presentation_matrix, x_title, y_title, main_title, save_options):
+        fig, ax = plt.subplots(figsize=(10, 5))
+
+        # MAIN FEATURES:
+        fuente = 'sans-serif'  # 'serif'
+        small_size = 17
+        legend_size = small_size + 3
+        bigger_size = small_size + 3
+        weight_selected = 'normal'
+        line_width = 2
+        marker_size = 10
+
+        x = presentation_matrix[:, 0]  # First column for x-axis
+        y1 = presentation_matrix[:, 1]  # Second column for the first category
+        y2 = presentation_matrix[:, 2]  # Third column for the second category
+
+        # Set width of the bars
+        bar_width = 0.25
+
+        # Set the positions of the bars on the x-axis
+        r1 = x  # np.arange(len(x))
+        r2 = [x + bar_width for x in r1]
+        r3 = [x + bar_width * 2 for x in r1]
+
+        # Create the bar plot
+        plt.bar(r1, y1, width=bar_width, color='red', edgecolor='red', label=r'Calc. $\mathregular{<S^{2}>}$')
+        plt.bar(r2, y2, width=bar_width, color='blue', edgecolor='blue', label=r'Real $\mathregular{<S^{2}>}$')
+
+        # CHANGING THE FONTSIZE OF TICKS
+        plt.xticks(fontsize=small_size, weight=weight_selected)
+        plt.yticks(fontsize=small_size, weight=weight_selected)
+        # axis.set_major_locator(MaxNLocator(integer=True))
+
+        # LIMIT TO AXIS:
+        ax.set_xlim(min(x)-0.5, max(x)+1)
+        max_value = np.maximum.reduce([y1.max(), y2.max()])
+        min_value = np.minimum.reduce([y1.min(), y2.min()])
+        ax.set_ylim(min_value-0.05*max_value, max_value+0.1*max_value)
+
+        # LABELS:
+        # labelpad: change the space between axis umbers and labels
+        plt.xlabel(x_title, fontsize=bigger_size, fontfamily=fuente, labelpad=15,
+                weight=weight_selected)
+        plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic',
+                weight=weight_selected, labelpad=15)
+        # x_min = 0
+        # x_max =  11
+        # y_min = -45
+        # y_max =  5
+        # plt.xlim([x_min, x_max])  # Limit axis values
+        # plt.ylim([y_min, y_max])  # Limit axis values
+
+        # TITLE:
+        # y = 1.05 change the space between title and plot
+        # plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
+        
+        # LEGEND
+        legend = plt.legend(fontsize=legend_size, 
+                            fancybox=True, 
+                            framealpha=0.5,
+                            labelcolor='linecolor', 
+                            loc='best', 
+                            frameon=False, 
+                            )
+        # plt.legend(frameon=False)
+        # frame = legend.get_frame().set_edgecolor('black')
+        # frame = legend.get_frame().set_linewidth(1)
+        # frame = legend.get_frame().set_facecolor('white')
+        # frame.set_edgecolor('black')
+
+        # plt.locator_params(nbins=10)
+        # plt.grid()
+
+        # Add an horizontal line in y = 0
+        # ax.hlines(y=0, xmin=x_min, xmax=x_max, linewidth=line_width, color='k',
+        #           linestyle='dotted')
+        # dotted, dashed, solid, dashdot
+
+        # Frame of the plot: https://e2eml.school/matplotlib_framing.html#spinestyle
+        line_width = line_width - 0.8
+        ax.spines["top"].set_linewidth(line_width)
+        ax.spines["bottom"].set_linewidth(line_width)
+        ax.spines["left"].set_linewidth(line_width)
+        ax.spines["right"].set_linewidth(line_width)
+        
+        save_picture(save_options, file_name, 'sos')
+
+    # Take the real spins
+    real_s2 = outputdict["spin_dict"]
+
+    # If the spins come from even or odd multiplicity and 
+    # create and approximate spins list for this. This is done because in some cases, 
+    # triplets have S2 value that is closer to doublet than to triplet 
+    ground_mult = int(2*(outputdict["spin_dict"][1])+1)
+    if ground_mult % 2 == 0: # doublets, quartets...
+        approx_s = [float(i) for i in np.arange(0.5, 5.5, 1)]
+    else: # singlets, triplets...
+        approx_s = [float(i) for i in np.arange(0, 5, 1)]
+
+    # Obtain the plots with S2 real and approximated
+    s_diff = {}
+    final_table = []
+
+    for k, v in real_s2.items():
+        # From s2 to s
+        s = s2_to_s(v)
+
+        # Find the closest s2
+        closest_s = min(approx_s, key=lambda x: abs(x - s))
+        closest_s2 = s_to_s2(closest_s)
+
+        # Take the value to a table 
+        final_table.append([int(k), v, closest_s2, v-closest_s2])
+
+    # Set display options to show all rows and columns
+    print("------------------------------")
+    print(" States <S2> comparison")
+    print("------------------------------")
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    df = pd.DataFrame(final_table, columns=['State','Calc. <S2>','Real <S2>', 'error'])
+    print(df.to_string(index=False))
+    print()
+
+    # Plot the spin relative errors for each of the states 
+    plot_spin_states(json_file.replace(".out.json", ""), 
+                    np.array(final_table, dtype=object), 
+                    '# roots', 
+                    '$\mathregular{<S^{2}>}$', 
+                    '<S2> comparison', 
+                    save_options)
 
