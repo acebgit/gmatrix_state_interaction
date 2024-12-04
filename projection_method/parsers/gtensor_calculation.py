@@ -1416,7 +1416,7 @@ def comparison_s2(json_file, outputdict, save_options):
         ax.spines["left"].set_linewidth(line_width)
         ax.spines["right"].set_linewidth(line_width)
         
-        save_picture(save_options, file_name, 'sos')
+        save_picture(save_options, file_name, 's2')
 
     # Take the real spins
     real_s2 = outputdict["spin_dict"]
