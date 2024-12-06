@@ -7,8 +7,8 @@ from projection_method.parsers.gtensor_calculation import extract_data_from_json
 # exit()
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 0
-ppm = 0 # 0: ppt; 1: ppm
+calculate_gshift = 1
+ppm = 1 # 0: ppt; 1: ppm
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
 initial_states = list(range(1, 31))
@@ -28,7 +28,7 @@ g_estimation = 0
 save_plot = 1
 
 #### <S2> comparison ####
-s2_comparison = 1
+s2_comparison = 0
 
 file = str(sys.argv[1]) + ".json"
 
