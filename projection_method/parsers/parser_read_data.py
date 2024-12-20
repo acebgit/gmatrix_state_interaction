@@ -69,9 +69,10 @@ def gtensor_parser_rasci(outpuut):
         # Take RAS_ACT_ORB 
         try:
             enum = outpuut.find('RAS_ACT_ORB')
-            ras_elec_orb = [int(x) for x in (outpuut[enum:enum+50].split('[')[1].split(']')[0]).split(", ")]
+            ras_elec_orb = [int(x) for x in (outpuut[enum:enum+50].split('[')[1].split(']')[0]).split(",")]
         except: # RAS_ACT_ORB automatically selected
             print("Make program for RAS_ACT_ORB automatically selected")
+            exit()
 
         # Take alpha and beta electrons
         enum = outpuut.find('There are')
@@ -275,7 +276,10 @@ def gtensor_parser_tddft(outpuut):
             
             try: # If there is angular momentum 
                 imaginary_list = [(str(num)+"j") for num in data['interstate_angmom'][(i, j)]['angular_momentum']]
-                angmoment_dict.update({str(i+1)+'_'+str(j+1): imaginary_list})
+
+                # Since it is written as ket-bra, the conjugated complex must be obtained 
+                imaginary_changed = [str(complex(x).conjugate()) for x in imaginary_list]
+                angmoment_dict.update({str(i+1)+'_'+str(j+1): imaginary_changed})
             
             except (KeyError, TypeError): # If the orbital momentum is 0 or if it is not defined (Singlet-Triplets)
                 angmoment_dict.update({str(i+1)+'_'+str(j+1): ['0j', '0j', '0j']}) 

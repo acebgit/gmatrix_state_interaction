@@ -8,7 +8,7 @@ from projection_method.parsers.gtensor_calculation import extract_data_from_json
 
 ######## G-TENSOR CALCULATION ########
 calculate_gshift = 1
-ppm = 1 # 0: ppt; 1: ppm
+ppm = 0 # 0: ppt; 1: ppm
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 
 initial_states = list(range(1, 31))
@@ -23,9 +23,9 @@ excit_plot = 0 # 0: not show plot, 1: show plot
 
 ######## SOS PLOTS ########
 sum_over_states_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
-sos_cutoff = 0.9
+sos_cutoff = 0
 g_estimation = 0
-save_plot = 1
+save_plot = 0
 
 #### <S2> comparison ####
 s2_comparison = 0

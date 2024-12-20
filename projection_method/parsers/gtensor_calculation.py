@@ -1179,9 +1179,9 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot
             gmatrix, gshift = from_matrices_to_gshift(max_sz_list, sz_ground, matrices_dict, ppm)
             
             all_gshifts.append([excit_state, 
-                                abs(np.round(gshift[0].real, 3)),
-                                abs(np.round(gshift[1].real, 3)), 
-                                abs(np.round(gshift[2].real, 3))])
+                                (np.round(gshift[0].real, 3)),
+                                (np.round(gshift[1].real, 3)), 
+                                (np.round(gshift[2].real, 3))])
 
         # Filter all the g-values and take those where the difference with the previous
         # state g-value is >= than a cut-off multiplied by the maximum g-value
