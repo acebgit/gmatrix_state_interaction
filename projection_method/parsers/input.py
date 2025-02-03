@@ -3,17 +3,18 @@ from projection_method.parsers.gtensor_calculation import extract_data_from_json
     from_json_to_matrices, select_soc_order, from_matrices_to_gshift, print_g_calculation, gtensor_state_pairs_analysis, \
     sum_over_state_plot, from_gvalue_to_shift, comparison_s2
 
-# from_gvalue_to_shift([1.9978])
+# from_gvalue_to_shift([1.5475, 2.6640, 3.7150])
 # exit()
 
-######## G-TENSOR CALCULATION ########
-calculate_gshift = 1
-ppm = 0 # 0: ppt; 1: ppm
-state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-
-initial_states = list(range(1, 31))
+######## STATES SELECTION ########
+state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+initial_states = [1, 2, 3, 4, 5] #list(range(1, 13))
 symmetry_selection = 'B2'  # Symmetry selected states_selected
-soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
+
+######## G-TENSOR CALCULATION ########
+calculate_gshift = 0
+ppm = 0 # 0: ppt; 1: ppm
+soc_options = 1  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 soc_orders = 0 # 0: All orders; 1: First-order; 2: Higher-order 
 
 ######## G-TENSOR CALCULATION BY PAIRS ########
@@ -22,8 +23,8 @@ cutoff_config = 0 # cut-off for configurations amplitude (% of maximum amplitude
 excit_plot = 0 # 0: not show plot, 1: show plot 
 
 ######## SOS PLOTS ########
-sum_over_states_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
-sos_cutoff = 0
+sum_over_states_analysis = 1 # SOS g-tensor plot: g-tensor calculation with n states
+sos_cutoff = 0.2
 g_estimation = 0
 save_plot = 0
 
@@ -62,5 +63,5 @@ if s2_comparison == 1:
     # Form the output_dict with the previous states
     output_dict_selected = get_selected_dict(output_dict, len(output_dict["energy_dict"]), states_gtensor, states__selection=0, sym__selected=0)
 
-    # Obtain the <S2> analysis
+    # Obtain the <S^2> analysis
     comparison_s2(file, output_dict_selected, save_plot)

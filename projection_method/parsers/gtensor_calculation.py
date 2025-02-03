@@ -790,9 +790,9 @@ def gshift_estimation_loop(output_dict, ppm):
 
                 units = 10**3 if ppm == 0 else 10**6
 
-                g_xx.update({interstate: estimation_phormula(output_dict["angmoment_dict"][interstate][0], socc, excited_energy) * units})
-                g_yy.update({interstate: estimation_phormula(output_dict["angmoment_dict"][interstate][1], socc, excited_energy) * units})
-                g_zz.update({interstate: estimation_phormula(output_dict["angmoment_dict"][interstate][2], socc, excited_energy) * units})
+                g_xx.update({excited_state: estimation_phormula(output_dict["angmoment_dict"][interstate][0], socc, excited_energy) * units})
+                g_yy.update({excited_state: estimation_phormula(output_dict["angmoment_dict"][interstate][1], socc, excited_energy) * units})
+                g_zz.update({excited_state: estimation_phormula(output_dict["angmoment_dict"][interstate][2], socc, excited_energy) * units})
         
         g_shift_dict = {"gxx": g_xx, "gyy": g_yy, "gzz": g_zz}
         return g_shift_dict
@@ -1073,7 +1073,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
         r2 = [x + bar_width for x in r1]
         r3 = [x + bar_width * 2 for x in r1]
 
-        # Create the bar plot
+        # Create the bar plot 
         plt.bar(r1, y1, width=bar_width, color='red', edgecolor='red', label=r'$\mathregular{\Delta g_{xx}}$')
         plt.bar(r2, y2, width=bar_width, color='blue', edgecolor='blue', label=r'$\mathregular{\Delta g_{yy}}$')
         plt.bar(r3, y3, width=bar_width, color='black', edgecolor='black', label=r'$\mathregular{\Delta g_{zz}}$')
@@ -1085,9 +1085,12 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
 
     # LIMIT TO AXIS:
     ax.set_xlim(min(x)-1, max(x)+1)
+
     max_value = np.maximum.reduce([y1.max(), y2.max(), y3.max()])
     min_value = np.minimum.reduce([y1.min(), y2.min(), y3.min()])
-    ax.set_ylim(min_value-0.05*max_value, max_value+0.1*max_value)
+    # Choose the larger value in absolute terms to calculate the interval
+    interval = 0.1 * max(abs(max_value), abs(min_value))
+    ax.set_ylim(min_value-interval, max_value+interval)
 
     # LABELS:
     # labelpad: change the space between axis umbers and labels
@@ -1183,23 +1186,26 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot
                                 (np.round(gshift[1].real, 3)), 
                                 (np.round(gshift[2].real, 3))])
 
-        # Filter all the g-values and take those where the difference with the previous
-        # state g-value is >= than a cut-off multiplied by the maximum g-value
-        xx_cut = abs(max(sublist[1] for sublist in all_gshifts)) * cutoff
-        yy_cut = abs(max(sublist[2] for sublist in all_gshifts)) * cutoff
-        zz_cut = abs(max(sublist[3] for sublist in all_gshifts)) * cutoff
+        # Convert to a NumPy array for efficient processing
+        all_gshifts_array = np.array(all_gshifts, dtype=np.float64)
 
-        for row in range(0,len(all_gshifts)):
-            # If difference between one value and the previous one is over a cut-off, include
-            # it in the presentation list
-            xx_diff = abs(all_gshifts[row][1] - all_gshifts[row-1][1])
-            yy_diff = abs(all_gshifts[row][2] - all_gshifts[row-1][2])
-            zz_diff = abs(all_gshifts[row][3] - all_gshifts[row-1][3])
+        # Step 1: Find the three maximum values in each of the last three columns and multiply by cutoff
+        cutoffs = np.max(np.abs(all_gshifts_array[:, 1:]), axis=0) * cutoff
 
-            if (xx_diff >= xx_cut) or (yy_diff >= yy_cut) or (zz_diff >= zz_cut):
-                filtered_gshifts.append(all_gshifts[row])
-    
-    elif gestimation == 1: 
+        # Step 2: Filter rows where at least one column meets or exceeds the threshold
+        data = [
+            [int(row[0])] + list(row[1:])  # Convert the first value to an integer and keep the rest as float
+            for row in all_gshifts_array
+            if any(abs(row[i]) >= cutoffs[i-1] for i in range(1, 4))
+        ]
+
+        # Convert np.float64 to regular float
+        filtered_gshifts = [
+            [row[0]] + [float(value) for value in row[1:]]  # Convert all elements except the first to floats
+            for row in data
+        ]
+
+    elif gestimation == 1:
         gshift_dict = gshift_estimation_loop(outputdict, ppm)
 
         cut_gvalues = {key: abs(max(subdict.values(), key=abs)) * cutoff for key, subdict in gshift_dict.items()}
@@ -1207,13 +1213,12 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot
         # Take states with estimated g-shift higher than a cutoff
         threshold = 10**(-6)
         for k, v in gshift_dict["gxx"].items():
-            excit_state = k.split('_')[1]
-            if any(abs(gshift_dict[key][k]) >= cut_gvalues[key] and cut_gvalues[key] >= threshold
+            if any(abs(gshift_dict[key][k]) > cut_gvalues[key] and cut_gvalues[key] >= threshold
                 for key in ["gxx", "gyy", "gzz"]):
-                    filtered_gshifts.append([excit_state, 
-                                             abs(gshift_dict["gxx"][k]), 
-                                             abs(gshift_dict["gyy"][k]), 
-                                             abs(gshift_dict["gzz"][k])])
+                    filtered_gshifts.append([int(k),
+                                             (gshift_dict["gxx"][k]),
+                                             (gshift_dict["gyy"][k]),
+                                             (gshift_dict["gzz"][k])])
 
     print("------------------------------")
     print(" SUM-OVER-STATE ANALYSIS")
@@ -1226,8 +1231,7 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
     df = pd.DataFrame([row[0:4] for row in filtered_gshifts], [row[0] for row in filtered_gshifts], columns=['state','gxx','gyy','gzz'])
-    print(df.to_string(index=False))
-    print()
+    print(df.to_string(index=False))   
     y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
 
     file_string = str(sys.argv[1]).split('.')[0]
@@ -1235,7 +1239,7 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot
 
     if showplot == 1:
         plot_g_tensor_vs_states(file_string,np.array(filtered_gshifts, dtype=object),'# roots',y_title,plot_title, saveplot)
-    else: 
+    else:
         return filtered_gshifts
 
 
