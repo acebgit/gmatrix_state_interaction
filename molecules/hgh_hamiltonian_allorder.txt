@@ -1,0 +1,22 @@
+
+SOC:
+   0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j   
+   0j      0j      0j      0j   (6681-0j)  -0j   (3857+0j)   0j   (-0-6681j)   0j   (-0+3857j)   0j      0j      0j   (-2685-0j)   0j      0j      0j    -2685j    0j   
+   0j      0j      0j      0j      0j   (3857-0j)   0j   (6681+0j)   0j   (-0-3857j)  -0j   (-0+6681j)   0j   (2685-0j)   0j      0j      0j   (-0-2685j)   0j      0j   
+   0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j   
+   0j   (6681+0j)   0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j    -4034j    0j      0j      0j   
+   0j      0j   (3857+0j)   0j      0j      0j      0j      0j      0j      0j   (-2685-0j)   0j      0j      0j    -2685j    0j      0j    -1345j    0j      0j   
+   0j   (3857-0j)   0j      0j      0j      0j      0j      0j      0j   (2685-0j)   0j      0j      0j   (-0-2685j)   0j      0j      0j      0j    1345j     0j   
+   0j      0j   (6681-0j)   0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j    4034j  
+   0j   (-0+6681j)   0j      0j      0j      0j      0j      0j      0j      0j      0j      0j    -4034j    0j      0j      0j      0j      0j      0j      0j   
+   0j      0j   (-0+3857j)   0j      0j      0j   (2685+0j)   0j      0j      0j      0j      0j      0j    -1345j    0j      0j     -0j      0j      0j      0j   
+   0j   (-0-3857j)   0j      0j      0j   (-2685+0j)   0j      0j      0j      0j      0j      0j      0j      0j    1345j     0j      0j     -0j      0j      0j   
+   0j      0j   (-0-6681j)   0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j    4034j     0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j      0j      0j    4034j    -0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j   
+   0j      0j   (2685+0j)   0j      0j      0j   (-0+2685j)   0j      0j    1345j    -0j      0j      0j      0j      0j      0j      0j     128j    -0j      0j   
+   0j   (-2685+0j)   0j      0j      0j    2685j     0j      0j      0j      0j    -1345j   -0j      0j      0j      0j      0j      0j      0j     128j    -0j   
+   0j      0j      0j      0j      0j      0j      0j      0j      0j      0j      0j    -4034j    0j      0j      0j      0j      0j      0j      0j      0j   
+   0j      0j      0j      0j    4034j    -0j      0j      0j      0j      0j      0j      0j      0j     -0j      0j      0j      0j      0j      0j      0j   
+   0j      0j   (-0+2685j)   0j      0j    1345j    -0j      0j      0j     -0j      0j      0j      0j    -128j    -0j      0j      0j      0j      0j      0j   
+   0j    2685j     0j      0j      0j      0j    -1345j   -0j      0j     -0j     -0j      0j      0j      0j    -128j     0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j      0j    -4034j    0j      0j     -0j      0j      0j      0j      0j      0j      0j      0j      0j      0j   

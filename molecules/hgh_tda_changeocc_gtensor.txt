@@ -1,0 +1,12 @@
+
+---------------------
+ G-SHIFT RESULTS
+---------------------
+File selected:  hgh_tda_changeocc.out
+SOC:  All orders , All BP Hamiltonian
+States:  [1, 2, 3, 5, 6]
+States multiplicity: 
+- doublets = 3: [1, 2, 3]
+- quartets = 2: [5, 6]
+g-factor (x y z dimensions) in ppt: -497.827 -58.503 -809.287
+

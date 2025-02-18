@@ -126,32 +126,88 @@ def get_selected_dict(output__dict, totalstatess, initial__states, states__selec
 
 def get_soc_matrix(soc_dict, len_sz, nstates):
     """
-    Construct the SOC matrix from the SOC list of json filee. Result in eV. 
+    Construct the SOC matrix from the json filee dictionary. Result in eV. 
     Matrix is formed as: 
     < B, S, Sz | HSOC | A, S, Sz' >   -->   < row, sz1 | HSOC | column, sz2 >
+    from -S to +S from left to right. 
     :param: soc_dict, len_sz, nstates
     :return: socmatrix
     """
-    soc_list = list(soc_dict.values())
+    def extract_unique_values(data):
+        """
+        Program to extract states from interstate dictionaries
+        """
+        unique_values = []
+        
+        for key in data.keys():
+            a, b = key.split('_')
+            if a not in unique_values:
+                unique_values.append(a)
+            if b not in unique_values:
+                unique_values.append(b)
+        return unique_values
+    
+    states = extract_unique_values(soc_dict)
     socmatrix = np.zeros((nstates * len_sz, nstates * len_sz), dtype=complex)
 
-    for row in range(1, nstates):
-        for column in range(0, row):
-            bra = len(soc_list[row+column-1]) # Length of < State, S, : | HSOC | State, S, : > 
-            ket = len(soc_list[row+column-1][0]) # Length of < State, S, Sz | HSOC | State, S, : > 
+    for row in range(len(states)):  # Iterate over all states (rows)
+        for column in range(len(states)):  # Iterate over all states (columns)
 
-            for sz1 in range(0, bra):
-                for sz2 in range(0, ket):
-                    matrix_row = row * len_sz + sz1 + ((len_sz-bra)//2)
-                    matrix_col = column * len_sz + sz2 + ((len_sz-ket)//2)
+            # Assign the row and column states
+            row_state = states[row]   # | A > (ket state)
+            col_state = states[column]  # < B | (bra state)
 
-                    value = complex(soc_list[row+column-1][sz1][sz2])
-                    socmatrix[matrix_row][matrix_col] = value
-                    socmatrix[matrix_col][matrix_row] = np.conj(value)
+            # Ensure that in interstates "A_B", A is always less than B (A < B)
+            if int(row_state) < int(col_state):
 
-    # print('SOC:')
-    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #                 for row in np.round((socmatrix[:,:]))]))
+                # Create the interstate key as "A_B"
+                interstate = row_state + "_" + col_state
+
+                # Get the size of the bra (row state) and ket (column state)
+                bra_size = len(soc_dict[interstate])      # Number of elements in < B |
+                ket_size = len(soc_dict[interstate][0])   # Number of elements in | A >
+
+                # Loop over Sz values for the bra state (< B |)
+                for sz1 in range(bra_size):
+                    # Loop over Sz values for the ket state (| A >)
+                    for sz2 in range(ket_size):
+                        
+                        # Compute matrix indices for row and column, adjusting offsets
+                        matrix_row = states.index(col_state) * len_sz + sz1 + ((len_sz - bra_size) // 2)
+                        matrix_col = states.index(row_state) * len_sz + sz2 + ((len_sz - ket_size) // 2)
+
+                        # Convert the SOC value to a complex number
+                        value = complex(soc_dict[interstate][sz1][sz2])
+
+                        # Assign the value to the SOC matrix and ensure Hermitian symmetry
+                        socmatrix[matrix_row][matrix_col] = value
+                        socmatrix[matrix_col][matrix_row] = np.conj(value)  # Conjugate symmetry
+
+                            # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
+                    # print()
+
+    # PREVIOUS WAY TO DO IT
+    # soc_list = list(soc_dict.values())
+    # for row in range(1, nstates):
+    #     for column in range(0, row):
+    #         bra = len(soc_list[row+column-1]) # Length of < State, S, : | HSOC | State, S, : > 
+    #         ket = len(soc_list[row+column-1][0]) # Length of < State, S, Sz | HSOC | State, S, : > 
+
+    #         for sz1 in range(0, bra):
+    #             for sz2 in range(0, ket):
+    #                 matrix_row = row * len_sz + sz1 + ((len_sz-bra)//2)
+    #                 matrix_col = column * len_sz + sz2 + ((len_sz-ket)//2)
+
+    #                 value = complex(soc_list[row+column-1][sz1][sz2])
+    #                 socmatrix[matrix_row][matrix_col] = value
+    #                 socmatrix[matrix_col][matrix_row] = np.conj(value)
+    #                 print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
+    #         print()
+
+    print('SOC:')
+    print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                    for row in np.round((socmatrix[:,:]))]))
+    print()
     # exit()
     cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
     socmatrix = socmatrix * cm_to_ev
@@ -164,6 +220,7 @@ def get_spin_matrices(states_spin, len_sz):
     "selected_state". Functions "s2_to_s", "s_to_s2" and "spin_matrices" are taken from inside PyQChem.
     Matrix is formed as: 
     < B, S, Sz | HSOC | A, S, Sz' >   -->   < row, sz1 | HSOC | column, sz2 >
+    from -S to +S from left to right. 
     :param: filee, selected_state.
     :return: spin_matr, standard_spin_mat.
     """
@@ -266,7 +323,8 @@ def get_spin_matrices(states_spin, len_sz):
         :param: spin_states, max_sz_listt, spin_mat
         :return: standard_spin_mat
         """
-        ground_multiplicity = int(2 * spin_states[0] + 1)
+        ground_spin = spin_states[0]
+        ground_multiplicity = int(2 * ground_spin + 1)
         standard_spin_mat = np.zeros((ground_multiplicity, ground_multiplicity, 3), dtype=complex)
 
         multip_difference = (max_sz_listt - ground_multiplicity) // 2
@@ -294,8 +352,19 @@ def get_spin_matrices(states_spin, len_sz):
     # Take Standard Spin Matrix from Spin Matrix
     standard_spin_matrices = get_standard_spin_matrix(states_spin, len_sz, final_spin_matrix)
 
-    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #                 for row in ((final_spin_matrix[:,:,0]))]))
+    print('SPIN MATRICES: ')
+    for ndim in range(0,3):
+        print('Ndim: ', ndim)
+        print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                        for row in ((final_spin_matrix[:,:,ndim]))]))
+        print()
+    
+    print('STARDARD SPIN MATRICES: ')
+    for ndim in range(0,3):
+        print('Ndim: ', ndim)
+        print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                        for row in ((standard_spin_matrices[:,:,ndim]))]))
+        print()
     # exit()
     return final_spin_matrix, standard_spin_matrices
 
@@ -329,10 +398,12 @@ def get_orbital_matrices(angmoment_dict, len_sz, nstates):
                     extended_orbit_matrix[row + sz, col + sz][ndim] = \
                     angmom_selected[row // len_sz][col // len_sz][ndim]
 
-    # for ndim in range(0, 1):
-    #     print()
-    #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
-    #                      for row in np.round(extended_orbit_matrix[:, :, ndim], 4)]))
+    print('Orbital angular matrix: ')
+    for ndim in range(0, 3):
+        print('Dim: ', ndim)
+        print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
+                         for row in np.round(extended_orbit_matrix[:, :, ndim], 4)]))
+        print()
     # exit()
     return extended_orbit_matrix
 
@@ -375,6 +446,10 @@ def from_json_to_matrices(outpuut_dict_selected):
 
     totalstates = len(excit_energies)
 
+    print('---------------')
+    print('INPUT DATA')
+    print('---------------')
+
     soc_matrix = get_soc_matrix(outpuut_dict_selected["soc_matrix_dict"], len(sz_maxspin), totalstates)
 
     spin_matrix, standard_spin_matrix = get_spin_matrices(approx_spin_list, len(sz_maxspin))
@@ -415,6 +490,8 @@ def select_soc_order(matrices__dict, soc_order):
                             new_matrix[matrix_row][matrix_col] = matrices__dict["soc"][matrix_row][matrix_col]
                             new_matrix[matrix_col][matrix_row] = matrices__dict["soc"][matrix_col][matrix_row]
 
+    # 2ND ORDER DOES NOT MAKES SENSE IF WE ARE NOT INCLUDED GROUND STATE SOCS, 
+    # SINCE G-TENSOR WILL BE ALWAYS ZERO
     elif soc_order == 2:
         for row in range(1, nstates):
             for column in range(0, row): 
@@ -487,9 +564,11 @@ def get_hamiltonian_construction(eigenenergies, spin_orbit_coupling, sz_values):
 
     hermitian_test(hamiltonian, sz_values)
 
-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                     for row in np.round((hamiltonian[:, :]), 5)]))
-    # print(" ")
+    print('Hamiltonian: ')
+    print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                        for row in np.round((hamiltonian[:, :]), 5)])) 
+    print(" ")
+    # exit()
     return hamiltonian
 
 
@@ -551,12 +630,12 @@ def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
                 elements = coeff_bra[:, np.newaxis] * coeff_ket * angular_values
                 angular_matrix[row, column, k] += np.sum(elements)
 
-    # print('Angular matrix with all spin angular momentums:')
-    # for k in range(0, 3):
-    #     print('Dimension: ', k)
-    #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-    #                      for row in np.round((angular_matrix[:, :, k]), 5)]))
-    #     print(" ")
+    print('Linear combination of Angular matrix:')
+    for k in range(0, 3):
+        print('Dimension: ', k)
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                         for row in np.round((angular_matrix[:, :, k]), 5)]))
+        print(" ")
     return angular_matrix
 
 
@@ -573,16 +652,12 @@ def units_gshift(gvalues, ppm=0):
     return gvalues
 
 
-def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=0):
+def projection_technique(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=0):
     """
     g-shift with orbitals and spin angular momentum matrices.
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
     :return: g_shift
     """
-
-    # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-    #                 for row in np.round((standard_spin_matrix[:,:,0]))]))
-
     def j_matrix_formation(spin, orbital, list_sz, sz_ground):
         """
         Get the total angular momentum matrix from the orbitals and spin angular momentums. Then, expand it to the
@@ -600,6 +675,14 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
                     j_matr[ii, j, k] = j_big_matrix[ii + sz_difference, j + sz_difference, k]
 
             hermitian_test(j_matr[:, :, k], list_sz)
+        
+        print('Total angular matrix: ')
+        for ndim in range(0, 3):
+            print('Dim: ', ndim)
+            print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
+                            for row in np.round(spin[:, :, ndim], 4)]))
+            print()
+
         return j_matr
 
     def j_diagonalization(matrix):
@@ -627,6 +710,26 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
         b = np.matmul(spin_matr, spin_matr)
         g_value = np.trace(a) / np.trace(b)
         return g_value
+
+    print('--------------------')
+    print('PROJECTION TECHNIQUE')
+    print('--------------------')
+
+    for ndim in range(0, 3):
+        print('Ndim: ', ndim)
+        print('Standard spin matrix:')
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+                        for row in np.round((standard_spin_matrix[:,:,ndim]), 2)]))
+        print()
+        print('Spin matrix:')
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+                        for row in np.round((s_matrix[:,:,ndim]), 2)]))
+        print()
+        print('Angular matrix:')
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
+                        for row in np.round((l_matrix[:,:,ndim]), 2)]))
+        print()
+    # exit()
 
     j_matrix = j_matrix_formation(s_matrix, l_matrix, sz_list, ground_sz)
 
@@ -662,10 +765,12 @@ def from_angmoments_to_gshifts(standard_spin_matrix, s_matrix, l_matrix, sz_list
     # 8) from g_matrix_triangular to g-shifts
     g_matrix = np.matmul(g_matrix_triangular, np.transpose(g_matrix_triangular))
     g_matrix_eigenvalues, rotation_g_matrix, g_matrix_diagonal = diagonalization(g_matrix)
+    
     # print('Lande factor: ', lande_factor)
-    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #             for row in np.round((g_matrix[:,:]), 10)]))
-    # print("")
+    print('Triangular g-matrix: ')
+    print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                for row in np.round((g_matrix_triangular[:,:]), 10)]))
+    print("")
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
     #             for row in np.round((g_matrix[:,:]), 10)]))
     # exit()
@@ -683,6 +788,10 @@ def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms):
     """
     From matrices to the g-shift value. 
     """
+    print('---------------')
+    print('CONSTRUCTED DATA')
+    print('---------------')
+
     hamiltonian = get_hamiltonian_construction(matrices_dict["excit_energies"], matrices_dict["soc"], max_sz)
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
@@ -691,9 +800,9 @@ def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms):
     
     combination_orbital_matrix = angular_matrices_obtention(eigenvector, matrices_dict["orbital"], max_sz)
 
-    gmatrix, gshift = from_angmoments_to_gshifts(matrices_dict["standard_spin"], combination_spin_matrix, combination_orbital_matrix,
+    gmatrix, gshift = projection_technique(matrices_dict["standard_spin"], combination_spin_matrix, combination_orbital_matrix,
                                 max_sz, szground, ppms)
-
+    
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
     #             for row in np.round((gmatrix[:,:]), 10)]))
     # exit()
@@ -946,10 +1055,10 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
 
                 else: # For the excited states
                     # Including the g-values above a cut off
-                    interstate = f"{min(grstate, state)}_{max(grstate, state)}"
-                    g_xx = abs(gshift_dict["gxx"][interstate])
-                    g_yy = abs(gshift_dict["gyy"][interstate])
-                    g_zz = abs(gshift_dict["gzz"][interstate])
+                    # interstate = f"{min(grstate, state)}_{max(grstate, state)}"
+                    g_xx = abs(gshift_dict["gxx"][state])
+                    g_yy = abs(gshift_dict["gyy"][state])
+                    g_zz = abs(gshift_dict["gzz"][state])
 
                     threshold = 10**(-6)
                     if any(abs(g) >= cut and abs(cut) >= threshold for g, cut in zip((g_xx, g_yy, g_zz), (cut_gxx, cut_gyy, cut_gzz))):
@@ -1141,7 +1250,7 @@ def plot_g_tensor_vs_states(file, presentation_matrix, x_title, y_title, main_ti
     save_picture(save_options, file, 'sos')
 
 
-def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot):
+def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot=1):
     """
     Generate the sum-over-states plot, i.e. calculation of the g-tensor by including states
     from 1 to nstates, above a cutoff of g-value. 
@@ -1208,12 +1317,16 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot
     elif gestimation == 1:
         gshift_dict = gshift_estimation_loop(outputdict, ppm)
 
-        cut_gvalues = {key: abs(max(subdict.values(), key=abs)) * cutoff for key, subdict in gshift_dict.items()}
-
-        # Take states with estimated g-shift higher than a cutoff
+        # Avoid to include g-tensor with zero
         threshold = 10**(-6)
+        new_cutoff = cutoff if cutoff != 0 else threshold
+
+        # Create the new dictionary with the maximum absolute value multiplied by cutoff
+        cut_gvalues = {key: max((abs(v), v) for v in values.values())[1] * new_cutoff for key, values in gshift_dict.items()}
+        
+        # Take states with estimated g-shift higher than a cutoff
         for k, v in gshift_dict["gxx"].items():
-            if any(abs(gshift_dict[key][k]) > cut_gvalues[key] and cut_gvalues[key] >= threshold
+            if any(abs(gshift_dict[key][k]) >= cut_gvalues[key] and cut_gvalues[key] >= threshold
                 for key in ["gxx", "gyy", "gzz"]):
                     filtered_gshifts.append([int(k),
                                              (gshift_dict["gxx"][k]),
@@ -1231,9 +1344,13 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
     df = pd.DataFrame([row[0:4] for row in filtered_gshifts], [row[0] for row in filtered_gshifts], columns=['state','gxx','gyy','gzz'])
-    print(df.to_string(index=False))   
-    y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
+    print(df.to_string(index=False)) 
 
+    # Compute the sum of all the elements
+    perturbative_sum = [round(float(sum(x)), 3) for x in zip(*filtered_gshifts)][1:]  # Sum columns, skipping the first
+    print('Total: ', perturbative_sum[0], perturbative_sum[1], perturbative_sum[2])
+
+    y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
     file_string = str(sys.argv[1]).split('.')[0]
     plot_title = 'sos_analysis: ' + file_string
 
@@ -1442,12 +1559,15 @@ def comparison_s2(json_file, outputdict, save_options):
         # From s2 to s
         s = s2_to_s(v)
 
-        # Find the closest s2
+        # Find the closest s and convert it to s2 again
         closest_s = min(approx_s, key=lambda x: abs(x - s))
         closest_s2 = s_to_s2(closest_s)
 
         # Take the value to a table 
-        final_table.append([int(k), v, closest_s2, v-closest_s2])
+        final_table.append([int(k), 
+                            round(v, 3), 
+                            round(closest_s2, 3), 
+                            round(v-closest_s2, 3)])
 
     # Set display options to show all rows and columns
     print("------------------------------")
