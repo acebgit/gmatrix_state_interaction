@@ -124,97 +124,91 @@ def get_selected_dict(output__dict, totalstatess, initial__states, states__selec
     return selected_dict
 
 
-def get_soc_matrix(soc_dict, len_sz, nstates):
+def get_soc_matrix(soc_dict, nstates, states_length_sz):
     """
     Construct the SOC matrix from the json filee dictionary. Result in eV. 
     Matrix is formed as: 
-    < B, S, Sz | HSOC | A, S, Sz' >   -->   < row, sz1 | HSOC | column, sz2 >
+    < B, S, Sz | HSOC | A, S, Sz' >   -->   < row, sz_row | HSOC | column, sz_col >, 
     from -S to +S from left to right. 
-    :param: soc_dict, len_sz, nstates
+    :param: soc_dict, nstates, states_length_sz
     :return: socmatrix
     """
-    def extract_unique_values(data):
+    def count_intervals(data):
         """
-        Program to extract states from interstate dictionaries
+        This function calculates how many values exist in the range [-value, value] 
+        for each key in the dictionary, using a step size of 1.
+
+        Parameters:
+        data (dict): A dictionary where keys are identifiers and values are numerical limits.
+
+        Returns:
+        dict: A dictionary with the same keys but values representing the count of intervals.
         """
-        unique_values = []
-        
-        for key in data.keys():
-            a, b = key.split('_')
-            if a not in unique_values:
-                unique_values.append(a)
-            if b not in unique_values:
-                unique_values.append(b)
-        return unique_values
+        result = {}  # Dictionary to store the results
+
+        for key, value in data.items():
+            # Use a fixed step size of 1
+            step = 1  
+
+            # Calculate the number of values in the range [-value, value] with step size 1
+            count = int((value - (-value)) / step) + 1  
+
+            # Store the result in the dictionary
+            result[key] = count  
+
+        return result  # Return the final dictionary
+
+    ndim = sum(states_length_sz.values())
+    socmatrix = np.zeros((ndim, ndim), dtype=complex)
     
-    states = extract_unique_values(soc_dict)
-    socmatrix = np.zeros((nstates * len_sz, nstates * len_sz), dtype=complex)
+    initial_column = 0
+    for column in range(len(nstates)):  # Iterate over all states (columns)
 
-    for row in range(len(states)):  # Iterate over all states (rows)
-        for column in range(len(states)):  # Iterate over all states (columns)
+        col_state = nstates[column]  # | A > (ket state)
+        ket_size = states_length_sz[col_state] # Number of elements in | A >
 
-            # Assign the row and column states
-            row_state = states[row]   # | A > (ket state)
-            col_state = states[column]  # < B | (bra state)
+        initial_row = 0
+        for row in range(len(nstates)):  # Iterate over all states (rows)
+            row_state = nstates[row]   # < B | (bra state)
+            bra_size = states_length_sz[row_state] # Number of elements in < B |
 
             # Ensure that in interstates "A_B", A is always less than B (A < B)
-            if int(row_state) < int(col_state):
+            if row_state <= col_state:
+                initial_row += bra_size
 
+            else:
                 # Create the interstate key as "A_B"
-                interstate = row_state + "_" + col_state
+                interstate = str(col_state) + "_" + str(row_state)
 
-                # Get the size of the bra (row state) and ket (column state)
-                bra_size = len(soc_dict[interstate])      # Number of elements in < B |
-                ket_size = len(soc_dict[interstate][0])   # Number of elements in | A >
-
-                # Loop over Sz values for the bra state (< B |)
-                for sz1 in range(bra_size):
-                    # Loop over Sz values for the ket state (| A >)
-                    for sz2 in range(ket_size):
+                # Loop over Sz values for the bra state ( < B | )
+                for sz_bra in range(bra_size):
+                    # Loop over Sz values for the ket state ( | A > )
+                    for sz_ket in range(ket_size):
                         
                         # Compute matrix indices for row and column, adjusting offsets
-                        matrix_row = states.index(col_state) * len_sz + sz1 + ((len_sz - bra_size) // 2)
-                        matrix_col = states.index(row_state) * len_sz + sz2 + ((len_sz - ket_size) // 2)
+                        matrix_row = initial_row + sz_bra 
+                        matrix_col = initial_column + sz_ket 
 
                         # Convert the SOC value to a complex number
-                        value = complex(soc_dict[interstate][sz1][sz2])
+                        value = complex(soc_dict[interstate][sz_bra][sz_ket])
 
                         # Assign the value to the SOC matrix and ensure Hermitian symmetry
                         socmatrix[matrix_row][matrix_col] = value
                         socmatrix[matrix_col][matrix_row] = np.conj(value)  # Conjugate symmetry
+                        # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
+        initial_column += ket_size
 
-                            # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
-                    # print()
-
-    # PREVIOUS WAY TO DO IT
-    # soc_list = list(soc_dict.values())
-    # for row in range(1, nstates):
-    #     for column in range(0, row):
-    #         bra = len(soc_list[row+column-1]) # Length of < State, S, : | HSOC | State, S, : > 
-    #         ket = len(soc_list[row+column-1][0]) # Length of < State, S, Sz | HSOC | State, S, : > 
-
-    #         for sz1 in range(0, bra):
-    #             for sz2 in range(0, ket):
-    #                 matrix_row = row * len_sz + sz1 + ((len_sz-bra)//2)
-    #                 matrix_col = column * len_sz + sz2 + ((len_sz-ket)//2)
-
-    #                 value = complex(soc_list[row+column-1][sz1][sz2])
-    #                 socmatrix[matrix_row][matrix_col] = value
-    #                 socmatrix[matrix_col][matrix_row] = np.conj(value)
-    #                 print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
-    #         print()
-
-    print('SOC:')
-    print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-                    for row in np.round((socmatrix[:,:]))]))
-    print()
+    # print('SOC:')
+    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #                 for row in np.round((socmatrix[:,:]))]))
+    # print()
     # exit()
     cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
     socmatrix = socmatrix * cm_to_ev
     return socmatrix
 
 
-def get_spin_matrices(states_spin, len_sz):
+def get_spin_matrices(approx_spin_dict, nstates, states_length_sz):
     """
     Get spin matrix with dimensions ['bra' x 'ket' x 3] (x,y,z), with spin order (-Ms , +Ms) in the order of
     "selected_state". Functions "s2_to_s", "s_to_s2" and "spin_matrices" are taken from inside PyQChem.
@@ -262,149 +256,137 @@ def get_spin_matrices(states_spin, len_sz):
                     s_y[iii, g] = 0.5j * np.sqrt(s_to_s2(spin) - sz_bra * sz_ket)
         return s_x, s_y, s_z
 
-    def expand_spin_matrices(s_x, s_y, s_z, max_mult, state_mult):
-        """
-        Expand (sxx, syy, szz) matrices with dimension of the st multiplicity to (sxx, syy, szz) with dimension of the
-        maximum multiplicity of states.
-        :param: s_x, s_y, s_z, max_sz_listt, state_mult
-        :return: long_sx, long_sy, long_sz
-        """
-        long_sx = np.zeros((max_mult, max_mult), dtype=complex)
-        long_sy = np.zeros((max_mult, max_mult), dtype=complex)
-        long_sz = np.zeros((max_mult, max_mult), dtype=complex)
+    ndim = sum(states_length_sz.values())
+    final_spin_matrix = np.zeros((ndim, ndim, 3), dtype=complex)
 
-        multipl_difference = int((max_mult - state_mult) // 2)
+    # Form the spin matrix
+    initial_position = 0
+    for state in nstates:
 
-        if multipl_difference != 0:
-            for n_row in range(0, len(sx)):
-                for n_column in range(0, len(sx)):
-                    iii = n_row + multipl_difference
-                    jj = n_column + multipl_difference
-                    long_sx[iii, jj] = s_x[n_row, n_column]
-                    long_sy[iii, jj] = s_y[n_row, n_column]
-                    long_sz[iii, jj] = s_z[n_row, n_column]
-        else:
-            long_sx = s_x
-            long_sy = s_y
-            long_sz = s_z
-        return long_sx, long_sy, long_sz
-
-    def form_final_spin_matrix(statee, max_mult, sxx, syy, szz, spin_matr):
-        """
-        Get big spin matrix with dimensions "(len(selected_state) * max_sz_listt, len(selected_state) *
-        max_sz_listt, 3)" with s_x, s_y, s_z.
-        :param: st, selected_state, max_sz_listt, sxx, syy, szz, spin_matr
-        :return: spin_matr
-        """
-        s_dim = 0
-        initial_pos = statee * max_mult
-
-        for row in range(0, max_mult):
-            for column in range(0, max_mult):
-                spin_matr[initial_pos, initial_pos, 0] = sxx[s_dim, s_dim]
-                spin_matr[initial_pos, initial_pos + column, 0] = sxx[s_dim, s_dim + column]
-                spin_matr[initial_pos + row, initial_pos, 0] = sxx[s_dim + row, s_dim]
-                spin_matr[initial_pos + row, initial_pos + column, 0] = sxx[s_dim + row, s_dim + column]
-
-                spin_matr[initial_pos, initial_pos, 1] = syy[s_dim, s_dim]
-                spin_matr[initial_pos, initial_pos + column, 1] = syy[s_dim, s_dim + column]
-                spin_matr[initial_pos + row, initial_pos, 1] = syy[s_dim + row, s_dim]
-                spin_matr[initial_pos + row, initial_pos + column, 1] = syy[s_dim + row, s_dim + column]
-
-                spin_matr[initial_pos, initial_pos, 2] = szz[s_dim, s_dim]
-                spin_matr[initial_pos, initial_pos + column, 2] = szz[s_dim, s_dim + column]
-                spin_matr[initial_pos + row, initial_pos, 2] = szz[s_dim + row, s_dim]
-                spin_matr[initial_pos + row, initial_pos + column, 2] = szz[s_dim + row, s_dim + column]
-        return spin_matr
-
-    def get_standard_spin_matrix(spin_states, max_sz_listt, spin_mat):
-        """
-        Construct Standard Spin matrix from the previous Spin Matrix.
-        :param: spin_states, max_sz_listt, spin_mat
-        :return: standard_spin_mat
-        """
-        ground_spin = spin_states[0]
-        ground_multiplicity = int(2 * ground_spin + 1)
-        standard_spin_mat = np.zeros((ground_multiplicity, ground_multiplicity, 3), dtype=complex)
-
-        multip_difference = (max_sz_listt - ground_multiplicity) // 2
-        for k in range(0, 3):
-            for ii in range(0, ground_multiplicity):
-                for jj in range(0, ground_multiplicity):
-                    standard_spin_mat[ii, jj, k] = spin_mat[ii + multip_difference, jj + multip_difference, k]
-        return standard_spin_mat
-
-    nstates = len(states_spin)
-    final_spin_matrix = np.zeros((nstates * len_sz, nstates * len_sz, 3), dtype=complex)
-
-    for state in range(0, nstates):
         # Form the spin matrix of the state
-        s_state = states_spin[state]
+        s_state = approx_spin_dict[state]
         sx, sy, sz = spin_matrices(s_state)
+        s_xyz_dict = {0: sx, 1: sy, 2: sz}
 
-        # Expand the spin matrix of the st to the dimension of the maximum multiplicity (max_sz_listt)
-        state_multip = int(2 * s_state + 1)
-        sx, sy, sz = expand_spin_matrices(sx, sy, sz, len_sz, state_multip)
+        # Locate the matrix in the final spin matrix
+        state_size = states_length_sz[state]
 
-        # Mix (sxx,syy,szz) in one spin matrix:
-        final_spin_matrix = form_final_spin_matrix(state, len_sz, sx, sy, sz, final_spin_matrix)
+        for dim in range(3): 
+            for sz_row in range(state_size):
+                for sz_col in range(state_size):
 
-    # Take Standard Spin Matrix from Spin Matrix
-    standard_spin_matrices = get_standard_spin_matrix(states_spin, len_sz, final_spin_matrix)
+                    # Compute matrix indices for row and column, adjusting offsets
+                    matrix_row = initial_position + sz_row 
+                    matrix_col = initial_position + sz_col 
 
-    print('SPIN MATRICES: ')
-    for ndim in range(0,3):
-        print('Ndim: ', ndim)
-        print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-                        for row in ((final_spin_matrix[:,:,ndim]))]))
-        print()
+                    # Assign the value to the final matrix 
+                    final_spin_matrix[matrix_row][matrix_col][dim] = s_xyz_dict[dim][sz_row][sz_col]
+        initial_position += state_size
     
-    print('STARDARD SPIN MATRICES: ')
-    for ndim in range(0,3):
-        print('Ndim: ', ndim)
-        print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-                        for row in ((standard_spin_matrices[:,:,ndim]))]))
-        print()
+    # Form the standard spin matrix
+    ndim_standard = states_length_sz[nstates[0]]
+    standard_spin_matrices = np.zeros((ndim_standard, ndim_standard, 3), dtype=complex)
+
+    s_state = approx_spin_dict[nstates[0]]
+    sx, sy, sz = spin_matrices(s_state)
+    s_xyz_dict = {0: sx, 1: sy, 2: sz}
+
+    for dim in range(3): 
+        for sz_row in range(ndim_standard):
+            for sz_col in range(ndim_standard):
+                standard_spin_matrices[sz_row][sz_col][dim] = s_xyz_dict[dim][sz_row][sz_col]
+
+    # print('SPIN MATRICES: ')
+    # for ndim in range(0,3):
+    #     print('Ndim: ', ndim)
+    #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #                     for row in ((final_spin_matrix[:,:,ndim]))]))
+    #     print()
+    
+    # print('STARDARD SPIN MATRICES: ')
+    # for ndim in range(0,3):
+    #     print('Ndim: ', ndim)
+    #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+    #                     for row in ((standard_spin_matrices[:,:,ndim]))]))
+    #     print()
     # exit()
     return final_spin_matrix, standard_spin_matrices
 
 
-def get_orbital_matrices(angmoment_dict, len_sz, nstates):
+def get_orbital_matrices(angmoment_dict, approx_spins, nstates, states_length_sz):
     """
     Construct the L matrix from the L list of json filee. Matrix is formed as: 
     < B | L | A >   -->   < row | HSOC | col >
     :param: angmoment_dict, len_sz, nstates
     :return: all_multip_lk
     """
+
     # Form the orbital matrices, with dimensions nstates * nstates
-    angular_momentums = list(angmoment_dict.values())
-    angmom_selected = np.zeros((nstates, nstates, 3), dtype=complex)
+    ndim = sum(states_length_sz.values())
+    orbital_matrix = np.zeros((ndim, ndim, 3), dtype=complex)
 
-    for row in range(1, nstates):
-        for col in range(0, row):
-            for ndim in range(0, 3):
-                result = complex(angular_momentums[row+col-1][ndim])
-                angmom_selected[row][col][ndim] = result
-                angmom_selected[col][row][ndim] = np.conj(result)
+    initial_column = 0
+    for column in range(len(nstates)):  # Iterate over all states (columns)
+        col_state = nstates[column]  # | A > (ket state)
+        ket_size = states_length_sz[col_state] # Number of elements in | A >
+
+        initial_row = 0
+        for row in range(len(nstates)):  # Iterate over all states (rows)
+            row_state = nstates[row]   # < B | (bra state)
+            bra_size = states_length_sz[row_state] # Number of elements in < B |
+
+            # Ensure that in interstates "A_B", A is always less than B (A < B)
+            if row_state <= col_state:
+                initial_row += bra_size
+
+            else:
+                # Create the interstate key as "A_B"
+                interstate = str(col_state) + "_" + str(row_state)
+
+                # Loop over Sz values for the bra state ( < B | )
+                for sz_bra in range(bra_size):
+                    # Loop over Sz values for the ket state ( | A > )
+                    for sz_ket in range(ket_size):
+                        
+                        # Compute matrix indices for row and column, adjusting offsets
+                        matrix_row = initial_row + sz_bra 
+                        matrix_col = initial_column + sz_ket 
+
+                        for k in range(0,3): 
+                            # Convert the SOC value to a complex number
+                            value = (angmoment_dict[interstate][sz_bra][sz_ket][k])
+
+                            # Assign the value to the SOC matrix and ensure Hermitian symmetry
+                            orbital_matrix[matrix_row][matrix_col][k] = value
+                            orbital_matrix[matrix_col][matrix_row][k] = np.conj(value)  # Conjugate symmetry
+                            # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
+        initial_column += ket_size
+
+    # for row in range(1, nstates):
+    #     for col in range(0, row):
+    #         for ndim in range(0, 3):
+    #             result = complex(angular_momentums[row+col-1][ndim])
+    #             angmom_selected[row][col][ndim] = result
+    #             angmom_selected[col][row][ndim] = np.conj(result)
     
-    # Form the extended orbital matrices, with dimensions (nstates * len_sz) * (nstates * len_sz)
-    extended_orbit_matrix = np.zeros((nstates * len_sz, nstates * len_sz, 3), dtype=complex)
+    # # Form the extended orbital matrices, with dimensions (nstates * len_sz) * (nstates * len_sz)
+    # extended_orbit_matrix = np.zeros((nstates * len_sz, nstates * len_sz, 3), dtype=complex)
 
-    for ndim in range(0, 3):
-        for row in range(0, nstates * len_sz, len_sz):
-            for col in range(0, nstates * len_sz, len_sz):
-                for sz in range(0, len_sz):
+    # for ndim in range(0, 3):
+    #     for row in range(0, nstates * len_sz, len_sz):
+    #         for col in range(0, nstates * len_sz, len_sz):
+    #             for sz in range(0, len_sz):
 
-                    extended_orbit_matrix[row + sz, col + sz][ndim] = \
-                    angmom_selected[row // len_sz][col // len_sz][ndim]
+    #                 extended_orbit_matrix[row + sz, col + sz][ndim] = \
+    #                 angmom_selected[row // len_sz][col // len_sz][ndim]
 
     print('Orbital angular matrix: ')
     for ndim in range(0, 3):
         print('Dim: ', ndim)
         print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
-                         for row in np.round(extended_orbit_matrix[:, :, ndim], 4)]))
+                         for row in np.round(orbital_matrix[:, :, ndim], 4)]))
         print()
-    # exit()
+    exit()
     return extended_orbit_matrix
 
 
@@ -412,49 +394,71 @@ def from_json_to_matrices(outpuut_dict_selected):
     """
     Transform all the dictionaries to lists or matrices 
     """
-    def get_sz_lists(spin_dict):
+    def get_approx_spin_dict(spin_dict):
         """
         Form the spin list with approximated spins, since they can come from non-pure spin eigenfunctions.
         Form the sz list from -s to +s in +1 intervals for ground state and largest multiplicity state. 
         :return: sz__ground, sz__maxspin, approx__spin_list
         """ 
         # Round the minimum spin to the nearest multiple of 0.5
-        min_s = s2_to_s(min(list(spin_dict.values())))
-        min_s_approx = round(min_s * 2) / 2 
-        min_s_approx_szlist = np.arange(min_s_approx, 15* min_s_approx + 1).tolist()
+        minimum_s = s2_to_s(min(list(spin_dict.values())))
+        approx_minimum_s = round(minimum_s * 2) / 2 
+        approx_minimum_s_list = np.arange(approx_minimum_s, 15* approx_minimum_s + 1).tolist()
 
-        # Form a list with the approximated spins 
-        s2_list = list(spin_dict.values())
-        approx__spin_list = []
-        for s2_state in s2_list:
-            s_approx = min(min_s_approx_szlist, key=lambda x: abs(x - s2_to_s(s2_state)))
-            approx__spin_list.append(s_approx)
+        # Form a dictionary with the approximated spins 
+        approx_spin_dict = {}
+        for k, state_s2 in spin_dict.items():
+            state_approx_s = min(approx_minimum_s_list, key=lambda x: abs(x - s2_to_s(state_s2)))
+            approx_spin_dict.update({k: state_approx_s})
 
-        if approx__spin_list[0] == 0:
+        # Warning for singlet ground states
+        if approx_spin_dict[next(iter(approx_spin_dict))] == 0:
             raise ValueError("WARNING! It is not allowed the calculation of the g-tensor in a singlet ground state.")
-        
-        # Form the ground state and the largest multiplicity sz lists
-        sz__ground = np.arange(-approx__spin_list[0], approx__spin_list[0] + 1).tolist()
-        sz__maxspin = np.arange(-max(approx__spin_list), max(approx__spin_list) + 1).tolist()
-        return sz__ground, sz__maxspin, approx__spin_list
+        return approx_spin_dict
 
-    sz_ground, sz_maxspin, approx_spin_list = get_sz_lists(outpuut_dict_selected["spin_dict"])
+    def count_intervals(data):
+        """
+        This function calculates how many values exist in the range [-value, value] 
+        for each key in the dictionary, using a step size of 1.
+
+        Parameters:
+        data (dict): A dictionary where keys are identifiers and values are numerical limits.
+
+        Returns:
+        dict: A dictionary with the same keys but values representing the count of intervals.
+        """
+        result = {}  # Dictionary to store the results
+
+        for key, value in data.items():
+            # Use a fixed step size of 1
+            step = 1  
+
+            # Calculate the number of values in the range [-value, value] with step size 1
+            count = int((value - (-value)) / step) + 1  
+
+            # Store the result in the dictionary
+            result[key] = count  
+
+        return result  # Return the final dictionary
+
+    # Get a dictionary with the "approximated" spin, i.e. the real value
+    approx_spins = get_approx_spin_dict(outpuut_dict_selected["spin_dict"])
+
+    # Take the list of states 
+    nstate = list(approx_spins.keys()) 
+
+    # Dimension coming from the multiplicity of each state 
+    states_lengthsz = count_intervals(approx_spins) 
     
     # Transform the dictionaries to matrices
 
     excit_energies = [value[1] for value in outpuut_dict_selected["energy_dict"].values()]
 
-    totalstates = len(excit_energies)
+    soc_matrix = get_soc_matrix(outpuut_dict_selected["soc_matrix_dict"], nstate, states_lengthsz)
 
-    print('---------------')
-    print('INPUT DATA')
-    print('---------------')
+    spin_matrix, standard_spin_matrix = get_spin_matrices(approx_spins, nstate, states_lengthsz)
 
-    soc_matrix = get_soc_matrix(outpuut_dict_selected["soc_matrix_dict"], len(sz_maxspin), totalstates)
-
-    spin_matrix, standard_spin_matrix = get_spin_matrices(approx_spin_list, len(sz_maxspin))
-
-    orbital_matrix = get_orbital_matrices(outpuut_dict_selected["angmoment_dict"], len(sz_maxspin), totalstates)
+    orbital_matrix = get_orbital_matrices(outpuut_dict_selected["angmoment_dict"], approx_spins, nstate, states_lengthsz)
 
     matrices__dict = {
     "excit_energies": excit_energies,
@@ -676,11 +680,18 @@ def projection_technique(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
 
             hermitian_test(j_matr[:, :, k], list_sz)
         
-        print('Total angular matrix: ')
+        print('Total BIG angular matrix: ')
         for ndim in range(0, 3):
             print('Dim: ', ndim)
             print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
-                            for row in np.round(spin[:, :, ndim], 4)]))
+                            for row in np.round(j_big_matrix[:, :, ndim], 4)]))
+            print()
+        
+        print('Total used angular matrix: ')
+        for ndim in range(0, 3):
+            print('Dim: ', ndim)
+            print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
+                            for row in np.round(j_matr[:, :, ndim], 4)]))
             print()
 
         return j_matr
@@ -806,7 +817,7 @@ def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms):
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
     #             for row in np.round((gmatrix[:,:]), 10)]))
     # exit()
-    return gmatrix, gshift
+    return gmatrix, gshift 
 
 
 def print_g_calculation(filee, output_dict_selected, spin_list, g_shift, g_tensor, ppms, soc_option, soc_order):
