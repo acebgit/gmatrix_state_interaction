@@ -1,46 +1,35 @@
----------------
-INPUT DATA
----------------
 SOC:
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j   (6681-0j)(-0-0j) (3857+0j)  -0j   
-   0j      0j      0j      0j     -0j   (3857-0j)  -0j   (6681+0j)
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j   (6681+0j)   0j      0j      0j      0j      0j      0j   
-   0j   (-0+0j) (3857+0j)   0j      0j      0j      0j      0j   
-   0j   (3857-0j)   0j      0j      0j      0j      0j      0j   
-   0j      0j   (6681-0j)   0j      0j      0j      0j      0j   
+   0j      0j   (6681-0j)(-0-0j) (3857+0j)  -0j   
+   0j      0j     -0j   (3857-0j)  -0j   (6681+0j)
+(6681+0j)   0j      0j      0j      0j      0j   
+(-0+0j) (3857+0j)   0j      0j      0j      0j   
+(3857-0j)   0j      0j      0j      0j      0j   
+   0j   (6681-0j)   0j      0j      0j      0j   
 
 SPIN MATRICES: 
 Ndim:  0
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j   (0.5+0j)   0j      0j      0j      0j      0j   
-   0j   (0.5+0j)   0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j   (0.8660254037844386+0j)   0j      0j   
-   0j      0j      0j      0j   (0.8660254037844386+0j)   0j    (1+0j)    0j   
-   0j      0j      0j      0j      0j    (1+0j)    0j   (0.8660254037844386+0j)
-   0j      0j      0j      0j      0j      0j   (0.8660254037844386+0j)   0j   
+   0j   (0.5+0j)   0j      0j      0j      0j   
+(0.5+0j)   0j      0j      0j      0j      0j   
+   0j      0j      0j   (0.8660254037844386+0j)   0j      0j   
+   0j      0j   (0.8660254037844386+0j)   0j    (1+0j)    0j   
+   0j      0j      0j    (1+0j)    0j   (0.8660254037844386+0j)
+   0j      0j      0j      0j   (0.8660254037844386+0j)   0j   
 
 Ndim:  1
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j     0.5j     0j      0j      0j      0j      0j   
-   0j    -0.5j     0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j   0.8660254037844386j   0j      0j   
-   0j      0j      0j      0j   -0.8660254037844386j   0j      1j      0j   
-   0j      0j      0j      0j      0j     -1j      0j   0.8660254037844386j
-   0j      0j      0j      0j      0j      0j   -0.8660254037844386j   0j   
+   0j     0.5j     0j      0j      0j      0j   
+ -0.5j     0j      0j      0j      0j      0j   
+   0j      0j      0j   0.8660254037844386j   0j      0j   
+   0j      0j   -0.8660254037844386j   0j      1j      0j   
+   0j      0j      0j     -1j      0j   0.8660254037844386j
+   0j      0j      0j      0j   -0.8660254037844386j   0j   
 
 Ndim:  2
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j   (-0.5+0j)   0j      0j      0j      0j      0j      0j   
-   0j      0j   (0.5+0j)   0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j   (-1.5+0j)   0j      0j      0j   
-   0j      0j      0j      0j      0j   (-0.5+0j)   0j      0j   
-   0j      0j      0j      0j      0j      0j   (0.5+0j)   0j   
-   0j      0j      0j      0j      0j      0j      0j   (1.5+0j)
+(-0.5+0j)   0j      0j      0j      0j      0j   
+   0j   (0.5+0j)   0j      0j      0j      0j   
+   0j      0j   (-1.5+0j)   0j      0j      0j   
+   0j      0j      0j   (-0.5+0j)   0j      0j   
+   0j      0j      0j      0j   (0.5+0j)   0j   
+   0j      0j      0j      0j      0j   (1.5+0j)
 
 STARDARD SPIN MATRICES: 
 Ndim:  0
@@ -57,173 +46,60 @@ Ndim:  2
 
 Orbital angular matrix: 
 Dim:  0
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-  -0j      0j      0j      0j      0j      0j      0j      0j   
-   0j     -0j      0j      0j      0j      0j      0j      0j   
-   0j      0j     -0j      0j      0j      0j      0j      0j   
-   0j      0j      0j     -0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
+  -0j      0j      0j      0j      0j      0j   
+   0j     -0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
 
 Dim:  1
-   0j      0j      0j      0j   -0.0857j   0j      0j      0j   
-   0j      0j      0j      0j      0j   -0.0857j   0j      0j   
-   0j      0j      0j      0j      0j      0j   -0.0857j   0j   
-   0j      0j      0j      0j      0j      0j      0j   -0.0857j
-0.0857j    0j      0j      0j      0j      0j      0j      0j   
-   0j   0.0857j    0j      0j      0j      0j      0j      0j   
-   0j      0j   0.0857j    0j      0j      0j      0j      0j   
-   0j      0j      0j   0.0857j    0j      0j      0j      0j   
+   0j      0j      0j   -0.0857j   0j      0j   
+   0j      0j      0j      0j   -0.0857j   0j   
+   0j      0j      0j      0j      0j      0j   
+0.0857j    0j      0j      0j      0j      0j   
+   0j   0.0857j    0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
 
 Dim:  2
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-   0j      0j      0j      0j      0j      0j      0j      0j   
-  -0j      0j      0j      0j      0j      0j      0j      0j   
-   0j     -0j      0j      0j      0j      0j      0j      0j   
-   0j      0j     -0j      0j      0j      0j      0j      0j   
-   0j      0j      0j     -0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
+  -0j      0j      0j      0j      0j      0j   
+   0j     -0j      0j      0j      0j      0j   
+   0j      0j      0j      0j      0j      0j   
 
----------------
-CONSTRUCTED DATA
----------------
 Hamiltonian: 
-      0j             0j             0j             0j             0j             0j             0j             0j       
-      0j             0j             0j             0j        (0.82828-0j)        0j        (0.47821+0j)        0j       
-      0j             0j             0j             0j             0j        (0.47821-0j)        0j        (0.82828+0j)  
-      0j             0j             0j             0j             0j             0j             0j             0j       
-      0j        (0.82828+0j)        0j             0j         (2.8291+0j)        0j             0j             0j       
-      0j             0j        (0.47821+0j)        0j             0j         (2.8291+0j)        0j             0j       
-      0j        (0.47821-0j)        0j             0j             0j             0j         (2.8291+0j)        0j       
-      0j             0j        (0.82828-0j)        0j             0j             0j             0j         (2.8291+0j)  
+      0j             0j        (0.82828-0j)        0j        (0.47821+0j)        0j       
+      0j             0j             0j        (0.47821-0j)        0j        (0.82828+0j)  
+ (0.82828+0j)        0j         (2.8291+0j)        0j             0j             0j       
+      0j        (0.47821+0j)        0j         (2.8291+0j)        0j             0j       
+ (0.47821-0j)        0j             0j             0j         (2.8291+0j)        0j       
+      0j        (0.82828-0j)        0j             0j             0j         (2.8291+0j)  
  
 Linear combination of Angular matrix:
 Dimension:  0
-      0j             0j             0j             0j       
-      0j             0j         (0.5429-0j)        0j       
-      0j         (0.5429+0j)      (-0+0j)          0j       
-      0j             0j             0j             0j       
+      0j         (0.5429+0j)  
+  (0.5429-0j)      (-0+0j)    
  
 Dimension:  1
-      0j             0j             0j             0j       
-      0j             0j            0.5j            0j       
-      0j            -0.5j           0j             0j       
-      0j             0j             0j             0j       
+      0j          (-0+0.5j)   
+   (-0-0.5j)         0j       
  
 Dimension:  2
-      0j             0j             0j             0j       
-      0j        (-0.5429+0j)      (-0+0j)          0j       
-      0j           (-0-0j)      (0.5429-0j)        0j       
-      0j             0j             0j             0j       
+ (-0.5429+0j)      (-0-0j)    
+    (-0+0j)      (0.5429+0j)  
  
 Linear combination of Angular matrix:
 Dimension:  0
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
+      0j             0j       
+      0j             0j       
  
 Dimension:  1
-      0j          -0.02174j         -0j            0j       
-   0.02174j          0j           (-0-0j)          0j       
-      0j           (-0+0j)        (-0+0j)     (-0+0.02174j) 
-      0j             0j        (-0-0.02174j)       0j       
+      0j             -0j      
+      0j           (-0+0j)    
  
 Dimension:  2
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
+      0j             0j       
+      0j             0j       
  
---------------------
-PROJECTION TECHNIQUE
---------------------
-Ndim:  0
-Standard spin matrix:
-      0j          (0.5+0j)    
-   (0.5+0j)          0j       
-
-Spin matrix:
-      0j             0j             0j             0j       
-      0j             0j          (0.54-0j)         0j       
-      0j          (0.54+0j)       (-0+0j)          0j       
-      0j             0j             0j             0j       
-
-Angular matrix:
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-
-Ndim:  1
-Standard spin matrix:
-      0j            0.5j      
-     -0.5j           0j       
-
-Spin matrix:
-      0j             0j             0j             0j       
-      0j             0j            0.5j            0j       
-      0j            -0.5j           0j             0j       
-      0j             0j             0j             0j       
-
-Angular matrix:
-      0j           -0.02j           -0j            0j       
-     0.02j           0j           (-0-0j)          0j       
-      0j           (-0+0j)        (-0+0j)      (-0+0.02j)   
-      0j             0j         (-0-0.02j)         0j       
-
-Ndim:  2
-Standard spin matrix:
-   (-0.5+0j)         0j       
-      0j          (0.5+0j)    
-
-Spin matrix:
-      0j             0j             0j             0j       
-      0j         (-0.54+0j)       (-0+0j)          0j       
-      0j           (-0-0j)       (0.54-0j)         0j       
-      0j             0j             0j             0j       
-
-Angular matrix:
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-      0j             0j             0j             0j       
-
-Total angular matrix: 
-Dim:  0
-   0j      0j      0j      0j   
-   0j      0j   (0.5429-0j)   0j   
-   0j   (0.5429+0j)(-0+0j)    0j   
-   0j      0j      0j      0j   
-
-Dim:  1
-   0j      0j      0j      0j   
-   0j      0j     0.5j     0j   
-   0j    -0.5j     0j      0j   
-   0j      0j      0j      0j   
-
-Dim:  2
-   0j      0j      0j      0j   
-   0j   (-0.5429+0j)(-0+0j)    0j   
-   0j   (-0-0j) (0.5429-0j)   0j   
-   0j      0j      0j      0j   
-
-Triangular g-matrix: 
-(2.1741017159+0j)(2.36e-08-0j)(-0-0j) 
-   0j   (2.0023193044-0j)(-0-0j) 
-   0j      0j   (2.1741017159-0j)
-
-
----------------------
- G-SHIFT RESULTS
----------------------
-File selected:  hgh_tda_changeocc.out
-SOC:  All orders , All BP Hamiltonian
-States:  [1, 5]
-States multiplicity: 
-- doublets = 1: [1]
-- quartets = 1: [5]
-g-factor (x y z dimensions) in ppt: 171.782 -0.0 171.782
-

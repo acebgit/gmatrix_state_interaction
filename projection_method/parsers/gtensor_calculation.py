@@ -133,31 +133,6 @@ def get_soc_matrix(soc_dict, nstates, states_length_sz):
     :param: soc_dict, nstates, states_length_sz
     :return: socmatrix
     """
-    def count_intervals(data):
-        """
-        This function calculates how many values exist in the range [-value, value] 
-        for each key in the dictionary, using a step size of 1.
-
-        Parameters:
-        data (dict): A dictionary where keys are identifiers and values are numerical limits.
-
-        Returns:
-        dict: A dictionary with the same keys but values representing the count of intervals.
-        """
-        result = {}  # Dictionary to store the results
-
-        for key, value in data.items():
-            # Use a fixed step size of 1
-            step = 1  
-
-            # Calculate the number of values in the range [-value, value] with step size 1
-            count = int((value - (-value)) / step) + 1  
-
-            # Store the result in the dictionary
-            result[key] = count  
-
-        return result  # Return the final dictionary
-
     ndim = sum(states_length_sz.values())
     socmatrix = np.zeros((ndim, ndim), dtype=complex)
     
@@ -196,13 +171,8 @@ def get_soc_matrix(soc_dict, nstates, states_length_sz):
                         socmatrix[matrix_row][matrix_col] = value
                         socmatrix[matrix_col][matrix_row] = np.conj(value)  # Conjugate symmetry
                         # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
+                initial_row += bra_size
         initial_column += ket_size
-
-    # print('SOC:')
-    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #                 for row in np.round((socmatrix[:,:]))]))
-    # print()
-    # exit()
     cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
     socmatrix = socmatrix * cm_to_ev
     return socmatrix
@@ -295,32 +265,16 @@ def get_spin_matrices(approx_spin_dict, nstates, states_length_sz):
         for sz_row in range(ndim_standard):
             for sz_col in range(ndim_standard):
                 standard_spin_matrices[sz_row][sz_col][dim] = s_xyz_dict[dim][sz_row][sz_col]
-
-    # print('SPIN MATRICES: ')
-    # for ndim in range(0,3):
-    #     print('Ndim: ', ndim)
-    #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #                     for row in ((final_spin_matrix[:,:,ndim]))]))
-    #     print()
-    
-    # print('STARDARD SPIN MATRICES: ')
-    # for ndim in range(0,3):
-    #     print('Ndim: ', ndim)
-    #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #                     for row in ((standard_spin_matrices[:,:,ndim]))]))
-    #     print()
-    # exit()
     return final_spin_matrix, standard_spin_matrices
 
 
-def get_orbital_matrices(angmoment_dict, approx_spins, nstates, states_length_sz):
+def get_orbital_matrices(angmoment_dict, nstates, states_length_sz):
     """
     Construct the L matrix from the L list of json filee. Matrix is formed as: 
     < B | L | A >   -->   < row | HSOC | col >
     :param: angmoment_dict, len_sz, nstates
     :return: all_multip_lk
     """
-
     # Form the orbital matrices, with dimensions nstates * nstates
     ndim = sum(states_length_sz.values())
     orbital_matrix = np.zeros((ndim, ndim, 3), dtype=complex)
@@ -330,64 +284,43 @@ def get_orbital_matrices(angmoment_dict, approx_spins, nstates, states_length_sz
         col_state = nstates[column]  # | A > (ket state)
         ket_size = states_length_sz[col_state] # Number of elements in | A >
 
-        initial_row = 0
-        for row in range(len(nstates)):  # Iterate over all states (rows)
-            row_state = nstates[row]   # < B | (bra state)
-            bra_size = states_length_sz[row_state] # Number of elements in < B |
+        initial_row = 0 
+        for row in range(len(nstates)):  # Iterate over all states (rows) 
+            row_state = nstates[row]   # < B | (bra state) 
+            bra_size = states_length_sz[row_state] # Number of elements in < B | 
 
-            # Ensure that in interstates "A_B", A is always less than B (A < B)
-            if row_state <= col_state:
-                initial_row += bra_size
+            # Ensure that in interstates "A_B", A is always less than B (A < B) 
+            if row_state <= col_state: 
+                initial_row += bra_size 
 
             else:
                 # Create the interstate key as "A_B"
                 interstate = str(col_state) + "_" + str(row_state)
 
                 # Loop over Sz values for the bra state ( < B | )
-                for sz_bra in range(bra_size):
-                    # Loop over Sz values for the ket state ( | A > )
-                    for sz_ket in range(ket_size):
+                # for sz_bra in range(bra_size):
+                # Loop over Sz values for the ket state ( | A > )
+                for sz_ket in range(ket_size):
+
+                    # Create offsets:
+                    shift_row = ((bra_size - ket_size) // 2) if bra_size > ket_size else 0
+                    shift_col = ((ket_size - bra_size) // 2) if ket_size > bra_size else 0
                         
-                        # Compute matrix indices for row and column, adjusting offsets
-                        matrix_row = initial_row + sz_bra 
-                        matrix_col = initial_column + sz_ket 
+                    # Compute matrix indices for row and column, adjusting offsets
+                    matrix_row = initial_row + sz_ket + shift_row
+                    matrix_col = initial_column + sz_ket + shift_col
 
-                        for k in range(0,3): 
-                            # Convert the SOC value to a complex number
-                            value = (angmoment_dict[interstate][sz_bra][sz_ket][k])
+                    for k in range(0, 3):
+                        # Convert the L value to a complex number
+                        value = complex((angmoment_dict[interstate][k]))
 
-                            # Assign the value to the SOC matrix and ensure Hermitian symmetry
-                            orbital_matrix[matrix_row][matrix_col][k] = value
-                            orbital_matrix[matrix_col][matrix_row][k] = np.conj(value)  # Conjugate symmetry
-                            # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
+                        # Assign the value to the L matrix and ensure Hermitian symmetry
+                        orbital_matrix[matrix_row][matrix_col][k] = value
+                        orbital_matrix[matrix_col][matrix_row][k] = np.conj(value)  # Conjugate symmetry
+                        # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
+                initial_row += bra_size
         initial_column += ket_size
-
-    # for row in range(1, nstates):
-    #     for col in range(0, row):
-    #         for ndim in range(0, 3):
-    #             result = complex(angular_momentums[row+col-1][ndim])
-    #             angmom_selected[row][col][ndim] = result
-    #             angmom_selected[col][row][ndim] = np.conj(result)
-    
-    # # Form the extended orbital matrices, with dimensions (nstates * len_sz) * (nstates * len_sz)
-    # extended_orbit_matrix = np.zeros((nstates * len_sz, nstates * len_sz, 3), dtype=complex)
-
-    # for ndim in range(0, 3):
-    #     for row in range(0, nstates * len_sz, len_sz):
-    #         for col in range(0, nstates * len_sz, len_sz):
-    #             for sz in range(0, len_sz):
-
-    #                 extended_orbit_matrix[row + sz, col + sz][ndim] = \
-    #                 angmom_selected[row // len_sz][col // len_sz][ndim]
-
-    print('Orbital angular matrix: ')
-    for ndim in range(0, 3):
-        print('Dim: ', ndim)
-        print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
-                         for row in np.round(orbital_matrix[:, :, ndim], 4)]))
-        print()
-    exit()
-    return extended_orbit_matrix
+    return orbital_matrix
 
 
 def from_json_to_matrices(outpuut_dict_selected):
@@ -441,24 +374,55 @@ def from_json_to_matrices(outpuut_dict_selected):
 
         return result  # Return the final dictionary
 
+    def print_all_matrices(matrices_dict):
+        print('-------------------------')
+        print('INPUT MATRICES')
+        print('-------------------------')
+
+        # cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
+        # matrices_dict["soc"] = matrices_dict["soc"] * cm_to_ev
+        # print('SOC:')
+        # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+        #                 for row in np.round((matrices_dict["soc"] [:,:]))]))
+        # print()
+
+        # print('Spin matrices: ')
+        # for ndim in range(0,1):
+        #     print('Ndim: ', ndim)
+        #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+        #                     for row in ((matrices_dict["spin"][:,:,ndim]))]))
+        #     print()
+        
+        # print('STARDARD SPIN MATRICES: ')
+        # for ndim in range(0,3):
+        #     print('Ndim: ', ndim)
+        #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+        #                     for row in ((matrices_dict["spin"][:,:,ndim]))]))
+        #     print()
+
+        print('Orbital angular matrices: ')
+        for ndim in range(1, 2):
+            print('Dim: ', ndim)
+            print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
+                            for row in np.round(matrices_dict["orbital"][:, :, ndim], 4)]))
+            print()
+        # exit()
+            
     # Get a dictionary with the "approximated" spin, i.e. the real value
     approx_spins = get_approx_spin_dict(outpuut_dict_selected["spin_dict"])
 
-    # Take the list of states 
-    nstate = list(approx_spins.keys()) 
-
     # Dimension coming from the multiplicity of each state 
-    states_lengthsz = count_intervals(approx_spins) 
+    states_lengthsz = count_intervals(approx_spins)
+    selected_states = list(states_lengthsz.keys())  # Take the list of states 
     
     # Transform the dictionaries to matrices
+    excit_energies = {key: value[1] for key, value in outpuut_dict_selected["energy_dict"].items()}
 
-    excit_energies = [value[1] for value in outpuut_dict_selected["energy_dict"].values()]
+    soc_matrix = get_soc_matrix(outpuut_dict_selected["soc_matrix_dict"], selected_states, states_lengthsz)
 
-    soc_matrix = get_soc_matrix(outpuut_dict_selected["soc_matrix_dict"], nstate, states_lengthsz)
+    spin_matrix, standard_spin_matrix = get_spin_matrices(approx_spins, selected_states, states_lengthsz)
 
-    spin_matrix, standard_spin_matrix = get_spin_matrices(approx_spins, nstate, states_lengthsz)
-
-    orbital_matrix = get_orbital_matrices(outpuut_dict_selected["angmoment_dict"], approx_spins, nstate, states_lengthsz)
+    orbital_matrix = get_orbital_matrices(outpuut_dict_selected["angmoment_dict"], selected_states, states_lengthsz)
 
     matrices__dict = {
     "excit_energies": excit_energies,
@@ -467,15 +431,17 @@ def from_json_to_matrices(outpuut_dict_selected):
     "standard_spin": standard_spin_matrix,
     "orbital": orbital_matrix,
     }
-    return sz_ground, sz_maxspin, approx_spin_list, matrices__dict
+
+    print_all_matrices(matrices__dict)
+
+    return states_lengthsz, approx_spins, matrices__dict
 
 
-def select_soc_order(matrices__dict, soc_order):
+def select_soc_order(soc_order, selected__states, states__lengthsz, matrices__dict):
     """
     Take all the SOC matrix, the first-order or the higher-order terms
     """
-    nstates = len(matrices__dict["excit_energies"])
-    len_sz = len(matrices__dict["soc"]) // nstates
+
     new_matrix = np.zeros((len(matrices__dict["soc"][:,:]), len(matrices__dict["soc"][:,:])), dtype=complex)
 
     if soc_order == 0:
@@ -546,33 +512,34 @@ def hermitian_test(matrix, sz_list):
     if states: print(states)
 
 
-def get_hamiltonian_construction(eigenenergies, spin_orbit_coupling, sz_values):
+def get_hamiltonian_construction(states__lengthsz, eigenenergies, soc_matrix):
     """
     Construct Hamiltonian matrix with dimensions 'bra' x 'ket', with spin order (-Ms , +Ms) in the order of
     "selected_states".
     Make hermitian test to the matrix.
     :param: selected_states, eigenenergies, spin_orbit_coupling, sz_values
     :return: hamiltonian
-    """    
-    num_eigenenergies = len(eigenenergies)
-    num_sz_values = len(sz_values)
-    size = num_eigenenergies * num_sz_values
-    hamiltonian = np.zeros((size, size), dtype=complex)
+    """ 
+    hamiltonian = np.zeros((len(soc_matrix), len(soc_matrix)), dtype=complex)
+    nstates = list(states__lengthsz.keys())
 
-    # Fill the diagonal with eigenenergies
-    for i in range(num_eigenenergies):
-        hamiltonian[i*num_sz_values:(i+1)*num_sz_values, i*num_sz_values:(i+1)*num_sz_values] = np.diag([eigenenergies[i]] * num_sz_values)
+    initial_row = 0
+    for row in range(len(nstates)):  # Iterate over all states (rows)
+        row_state = nstates[row]   # < B | (bra state)
+        bra_size = states__lengthsz[row_state] # Number of elements in < B |
+
+        # Loop over Sz values for the bra state ( < B | )
+        for sz_bra in range(bra_size):
+                
+            # Compute matrix indices for row and column, adjusting offsets
+            matrix_row = initial_row + sz_bra 
+
+            # Assign the value to the hamiltonian matrix 
+            hamiltonian[matrix_row][matrix_row] = eigenenergies[row_state]
+        initial_row += bra_size
 
     # Fill the off-diagonal with spin_orbit_coupling values
-    hamiltonian += spin_orbit_coupling
-
-    hermitian_test(hamiltonian, sz_values)
-
-    print('Hamiltonian: ')
-    print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-                        for row in np.round((hamiltonian[:, :]), 5)])) 
-    print(" ")
-    # exit()
+    hamiltonian += soc_matrix
     return hamiltonian
 
 
@@ -614,88 +581,41 @@ def diagonalization(matrix):
     return eigenvalues, eigenvectors, diagonal_matrix
 
 
-def angular_matrices_obtention(eigenvectors, input_angular_matrix, sz_list):
+def angular_matrices_obtention(eigenvectors, ndim, input_angular_matrix):
     """
     Angular matrix from non-relativistic states (states from Q-Chem) is expanded in the relativistic states. In
     < B(S,Sz) | Sx | A(S',Sz') >, < B(S,Sz)| corresponds to rows and | A(S',Sz') > to columns.
     :param: eigenvectors, input_angular_matrix, sz_list
     :return: angular_matrix
     """
-    angular_matrix = np.zeros((len(sz_list), len(sz_list), 3), dtype=complex)
+    angular_matrix = np.zeros((ndim, ndim, 3), dtype=complex)
+    conj_eigenvectors = np.conj(eigenvectors)
 
-    for k in range(3):
-        conj_eigenvectors = np.conj(eigenvectors)
-        for row in range(len(sz_list)):
-            coeff_bra = conj_eigenvectors[:, row]
-            for column in range(len(sz_list)):
-                coeff_ket = eigenvectors[:, column]
-                angular_values = input_angular_matrix[:, :, k]
+    for k in range(3): # For each dimension
+        for bra_final in range(ndim): # For each row = bra = < B |
+            for ket_final in range(ndim): # For each column = ket = | A >
+                # print('BRA, KET', bra_final, ket_final)
 
-                elements = coeff_bra[:, np.newaxis] * coeff_ket * angular_values
-                angular_matrix[row, column, k] += np.sum(elements)
+                for bra_eigen in range(len(eigenvectors)):
+                    for ket_eigen in range(len(eigenvectors)):
+                        # print('bra, ket', bra_eigen, ket_eigen)
 
-    print('Linear combination of Angular matrix:')
-    for k in range(0, 3):
-        print('Dimension: ', k)
-        print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-                         for row in np.round((angular_matrix[:, :, k]), 5)]))
-        print(" ")
+                        coeff_bra = conj_eigenvectors[bra_eigen, bra_final]
+                        coeff_ket = eigenvectors[ket_eigen, ket_final]
+
+                        angular_values = input_angular_matrix[bra_eigen, ket_eigen, k]
+
+                        elements = coeff_bra * coeff_ket * angular_values
+                        angular_matrix[bra_final, ket_final, k] += np.sum(elements)
     return angular_matrix
 
 
-def units_gshift(gvalues, ppm=0):
-    """
-        Pass from ppt to ppm the gvalues.
-        :param: ppm, gvalues
-        :return: gvalues
-        """    
-    if ppm == 0:
-        gvalues = [i * 1000 for i in gvalues]
-    elif ppm == 1:
-        gvalues = [i * 1000000 for i in gvalues]
-    return gvalues
-
-
-def projection_technique(standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz, ppms=0):
+def projection_technique(standard_spin_matrix, s_matrix, l_matrix, ppms=0):
     """
     g-shift with orbitals and spin angular momentum matrices.
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
     :return: g_shift
     """
-    def j_matrix_formation(spin, orbital, list_sz, sz_ground):
-        """
-        Get the total angular momentum matrix from the orbitals and spin angular momentums. Then, expand it to the
-        multiplicity of the ground state multiplicity "sz_ground".
-        :param: spin, orbitals, list_sz, sz_ground
-        :return: j_matr
-        """
-        j_big_matrix = lande_factor * spin + orbital
-
-        sz_difference = (len(list_sz) - len(sz_ground)) // 2
-        j_matr = np.zeros((len(sz_ground), len(sz_ground), 3), dtype=complex)
-        for k in range(0, 3):
-            for ii in range(0, len(j_matr)):
-                for j in range(0, len(j_matr)):
-                    j_matr[ii, j, k] = j_big_matrix[ii + sz_difference, j + sz_difference, k]
-
-            hermitian_test(j_matr[:, :, k], list_sz)
-        
-        print('Total BIG angular matrix: ')
-        for ndim in range(0, 3):
-            print('Dim: ', ndim)
-            print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
-                            for row in np.round(j_big_matrix[:, :, ndim], 4)]))
-            print()
-        
-        print('Total used angular matrix: ')
-        for ndim in range(0, 3):
-            print('Dim: ', ndim)
-            print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
-                            for row in np.round(j_matr[:, :, ndim], 4)]))
-            print()
-
-        return j_matr
-
     def j_diagonalization(matrix):
         """
         J-matrix diagonalization giving i) eigenvectors ii) diagonal matrix.
@@ -722,27 +642,19 @@ def projection_technique(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
         g_value = np.trace(a) / np.trace(b)
         return g_value
 
-    print('--------------------')
-    print('PROJECTION TECHNIQUE')
-    print('--------------------')
+    def units_gshift(gvalues, ppm=0):
+        """
+            Pass from ppt to ppm the gvalues.
+            :param: ppm, gvalues
+            :return: gvalues
+            """    
+        if ppm == 0:
+            gvalues = [i * 1000 for i in gvalues]
+        elif ppm == 1:
+            gvalues = [i * 1000000 for i in gvalues]
+        return gvalues
 
-    for ndim in range(0, 3):
-        print('Ndim: ', ndim)
-        print('Standard spin matrix:')
-        print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-                        for row in np.round((standard_spin_matrix[:,:,ndim]), 2)]))
-        print()
-        print('Spin matrix:')
-        print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-                        for row in np.round((s_matrix[:,:,ndim]), 2)]))
-        print()
-        print('Angular matrix:')
-        print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
-                        for row in np.round((l_matrix[:,:,ndim]), 2)]))
-        print()
-    # exit()
-
-    j_matrix = j_matrix_formation(s_matrix, l_matrix, sz_list, ground_sz)
+    j_matrix = lande_factor * s_matrix + l_matrix
 
     # PROJECTION TECHNIQUE TO OBTAIN THE TRIANGULAR G-MATRIX:
     # 1) g-value zz
@@ -776,76 +688,101 @@ def projection_technique(standard_spin_matrix, s_matrix, l_matrix, sz_list, grou
     # 8) from g_matrix_triangular to g-shifts
     g_matrix = np.matmul(g_matrix_triangular, np.transpose(g_matrix_triangular))
     g_matrix_eigenvalues, rotation_g_matrix, g_matrix_diagonal = diagonalization(g_matrix)
-    
-    # print('Lande factor: ', lande_factor)
-    print('Triangular g-matrix: ')
-    print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-                for row in np.round((g_matrix_triangular[:,:]), 10)]))
-    print("")
-    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #             for row in np.round((g_matrix[:,:]), 10)]))
-    # exit()
 
     g_shifts = np.zeros(3, dtype=complex)
     for i in range(0, 3):
         g_shifts[i] = (sqrt(g_matrix_diagonal[i, i]) - lande_factor) 
 
     g_shifts = units_gshift(g_shifts, ppms)
-    # g_shifts = from_qchem_to_sto(g_shifts)
     return g_matrix, g_shifts
 
 
-def from_matrices_to_gshift(max_sz, szground, matrices_dict, ppms):
+def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
     """
     From matrices to the g-shift value. 
     """
-    print('---------------')
-    print('CONSTRUCTED DATA')
-    print('---------------')
+    def print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix):
+        print('-------------------------')
+        print('PROJECTION TECHNIQUE')
+        print('-------------------------')
+        
+        # print('Hamiltonian: ')
+        # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+        #                     for row in np.round((hamiltonian[:, :]), 5)])) 
+        # print()
 
-    hamiltonian = get_hamiltonian_construction(matrices_dict["excit_energies"], matrices_dict["soc"], max_sz)
+        print('Eigenvectors:' )
+        for i, row in enumerate(eigenvector):
+            formatted_row = ["{:.2f}".format(value.real) for value in row]
+            print(f"{i}: " + " ".join(formatted_row))
+        print()
+
+        # print('Linear combination of Spin angular matrix:')
+        # for k in range(0, 1):
+        #     print('Dimension: ', k)
+        #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+        #                     for row in np.round((combination_spin_matrix[:, :, k]), 5)]))
+        #     print()
+        # exit()
+        
+        print('Linear combination of Orbital angular matrix:')
+        for k in range(1, 2):
+            print('Dimension: ', k)
+            print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                            for row in np.round((combination_orbital_matrix[:, :, k]), 5)]))
+            print()
+        exit()
+        
+        print('G-matrix: ')
+        print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                    for row in np.round((gmatrix[:,:]), 10)]))
+        print()
+
+        exit()
+
+    hamiltonian = get_hamiltonian_construction(states_lengthsz, dict_matrices["excit_energies"], dict_matrices["soc"])
 
     eigenvalue, eigenvector, diagonal_mat = diagonalization(hamiltonian)
 
-    combination_spin_matrix = angular_matrices_obtention(eigenvector, matrices_dict["spin"], max_sz)
-    
-    combination_orbital_matrix = angular_matrices_obtention(eigenvector, matrices_dict["orbital"], max_sz)
+    angular_matrix_dimension = next(iter(states_lengthsz.values()), None)
 
-    gmatrix, gshift = projection_technique(matrices_dict["standard_spin"], combination_spin_matrix, combination_orbital_matrix,
-                                max_sz, szground, ppms)
+    combination_spin_matrix = angular_matrices_obtention(eigenvector, angular_matrix_dimension, dict_matrices["spin"])
+
+    combination_orbital_matrix = angular_matrices_obtention(eigenvector, angular_matrix_dimension, dict_matrices["orbital"])
+
+    gmatrix, gshift = projection_technique(dict_matrices["standard_spin"], combination_spin_matrix, combination_orbital_matrix, ppms)
     
-    # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-    #             for row in np.round((gmatrix[:,:]), 10)]))
-    # exit()
+    print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix)
+
     return gmatrix, gshift 
 
 
-def print_g_calculation(filee, output_dict_selected, spin_list, g_shift, g_tensor, ppms, soc_option, soc_order):
+def print_g_calculation(filee, approxspin_dict, soc_order, soc_option, g_shift, g_tensor, ppms):
     """
     Printing results. 
     """
-    def separated_spin_states(spin_states, states__list):
+    def count_spin_states(approx_spin_dict):
         """
         Obtain a dictionary with multiplicities and the states with those multiplicities. 
         """
         spin_mapping = {0:'singlets',0.5:'doublets',1:'triplets',1.5:'quartets',2.0:'quintets',2.5:'sextets',3:'heptets',3.5:'octets'}        
         data_dict = {key: [] for key in spin_mapping.values()}
-        for i, spin_state in enumerate(spin_states):
-            data_dict[spin_mapping[spin_state]].append(states__list[i]) 
+        for state, spin_state in approx_spin_dict.items():
+            data_dict[spin_mapping[spin_state]].append(state) 
         return data_dict
-
-    states_list = list(output_dict_selected["energy_dict"].keys())
-    multip_dict = separated_spin_states(spin_list, states_list)
 
     print()
     print("---------------------")
     print(" G-SHIFT RESULTS")
     print("---------------------")
     print("File selected: ", filee.replace(".json", ""))
+
     soc_options_dict = {0: "All BP Hamiltonian", 1: "One electron term", 2: "Bielectornic term"}
     soc_order_dict = {0: "All orders", 1: "First-order", 2: "Second-order"}
     print("SOC: ", soc_order_dict[soc_order], ',', soc_options_dict[soc_option])
-    print("States: ", states_list)
+    print("States: ", list(approxspin_dict.keys()))
+
+    multip_dict = count_spin_states(approxspin_dict)
     print("States multiplicity: ")
     for key, value in multip_dict.items():
         if value: 
@@ -1105,7 +1042,7 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
     # electrons = get_new_active_space_electrons(final_active_orbitals, elec_alpha, elec_beta)
     # print('Final active space (HOMO =', elec_alpha, '):', '[', electrons, ',', len(final_active_orbitals), '] ;',
     #       final_active_orbitals)
-    # print(" ")
+    # print()
 
     print("------------------------")
     print(" EXCITED STATES ANALYSIS")

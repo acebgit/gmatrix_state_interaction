@@ -42,13 +42,11 @@ output_dict_selected = get_selected_dict(output_dict, len(output_dict["energy_di
 # In the class, give as input the input parameters at the beginning
 
 if calculate_gshift == 1:
-    sz_ground, max_sz_list, approxspin_list, matrices_dict = from_json_to_matrices(output_dict_selected)
+    states__lengthsz, approxspin_dict, matrices_dict = from_json_to_matrices(output_dict_selected)
 
-    matrices_dict = select_soc_order(matrices_dict, soc_orders)
+    gmatrix, gshift = from_matrices_to_gshift(states__lengthsz, matrices_dict, ppm)
 
-    gmatrix, gshift = from_matrices_to_gshift(max_sz_list, sz_ground, matrices_dict, ppm)
-
-    print_g_calculation(file, output_dict_selected, approxspin_list, gshift, gmatrix, ppm, soc_options, soc_orders)
+    print_g_calculation(file, approxspin_dict, soc_options, soc_orders, gshift, gmatrix, ppm)
 
 if cutoff_gvalue != 0:
     gtensor_state_pairs_analysis(output_dict_selected, ppm, cutoff_gvalue, cutoff_config, excit_plot, savepicture=0)
