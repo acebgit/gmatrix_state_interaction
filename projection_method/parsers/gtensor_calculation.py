@@ -289,26 +289,24 @@ def get_orbital_matrices(angmoment_dict, nstates, states_length_sz):
             row_state = nstates[row]   # < B | (bra state) 
             bra_size = states_length_sz[row_state] # Number of elements in < B | 
 
-            # Ensure that in interstates "A_B", A is always less than B (A < B) 
-            if row_state <= col_state: 
-                initial_row += bra_size 
-
-            else:
+            # Ensure that in interstates "A_B", | A > is always smaller than < B | 
+            if row_state > col_state:
+                
                 # Create the interstate key as "A_B"
                 interstate = str(col_state) + "_" + str(row_state)
 
                 # Loop over Sz values for the bra state ( < B | )
                 # for sz_bra in range(bra_size):
                 # Loop over Sz values for the ket state ( | A > )
-                for sz_ket in range(ket_size):
+                for sz_bra in range(bra_size):
 
                     # Create offsets:
                     shift_row = ((bra_size - ket_size) // 2) if bra_size > ket_size else 0
                     shift_col = ((ket_size - bra_size) // 2) if ket_size > bra_size else 0
                         
                     # Compute matrix indices for row and column, adjusting offsets
-                    matrix_row = initial_row + sz_ket + shift_row
-                    matrix_col = initial_column + sz_ket + shift_col
+                    matrix_row = initial_row + sz_bra + shift_row
+                    matrix_col = initial_column + sz_bra + shift_col
 
                     for k in range(0, 3):
                         # Convert the L value to a complex number
@@ -318,12 +316,15 @@ def get_orbital_matrices(angmoment_dict, nstates, states_length_sz):
                         try:
                             orbital_matrix[matrix_row][matrix_col][k] = value
                         except IndexError: 
-                            print(matrix_row, matrix_col)
+                            print(initial_row, sz_bra, shift_row)
                             exit()
 
                         orbital_matrix[matrix_col][matrix_row][k] = np.conj(value)  # Conjugate symmetry
                         # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
                 initial_row += bra_size
+            
+            else: 
+                initial_row += bra_size 
         initial_column += ket_size
     return orbital_matrix
 
