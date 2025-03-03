@@ -42,7 +42,7 @@ def gtensor_parser_rasci(outpuut):
         Obtain the orbitals with the unpaired electrons in each relevant configuration of each state.
         :return: 
         """
-        def from_ras_to_scf_order(homo, ras_elec_orbs, initial_orbitals):
+        def from_ras_to_scf_order(beta_homo, ras_elec_orbs, initial_orbitals):
             """
             Change from RAS order to SCF order.
             Example: if in (1,2,3,4) orbital_list the active space selected is [1,3],
@@ -52,14 +52,14 @@ def gtensor_parser_rasci(outpuut):
             """
             ras_scf_map = {}
 
-            for scf_orbital in range(1, homo + 1):  # RAS1
+            for scf_orbital in range(1, beta_homo + 1): # RAS1: from orbital 1 to last beta HOMO
                 if scf_orbital not in ras_elec_orbs:
                     ras_scf_map.update({len(ras_scf_map)+1: scf_orbital})
 
-            for scf_orbital in ras_elec_orbs:  # RAS2
+            for scf_orbital in ras_elec_orbs: # RAS2: from last beta HOMO to last alpha HOMO
                 ras_scf_map.update({len(ras_scf_map)+1: scf_orbital})
 
-            for scf_orbital in range(homo + 1, homo + 100):  # RAS3
+            for scf_orbital in range(beta_homo + 1, beta_homo + 100): # RAS3: all empty orbitals 
                 if scf_orbital not in ras_elec_orbs:
                     ras_scf_map.update({len(ras_scf_map)+1: scf_orbital})
 
@@ -74,31 +74,39 @@ def gtensor_parser_rasci(outpuut):
             print("Make program for RAS_ACT_ORB automatically selected")
             exit()
 
-        # Take alpha and beta electrons
-        enum = outpuut.find('There are')
-        elec_alpha, elec_beta = int(outpuut[enum:enum+70].split()[2]), int(outpuut[enum:enum+70].split()[5])
-
         # Form a dictionary with states, configurations, transitions and amplitudes
         transitions = []
         for state in range(totalstatess):
             state_transitions = []
             for configuration in dataa['excited_states'][state]['configurations']:
+
+                # Take alpha and beta electrons
+                # enum = outpuut.find('There are')
+                # elec_alpha, elec_beta = int(outpuut[enum:enum+70].split()[2]), int(outpuut[enum:enum+70].split()[5])
                 
                 # Take SOMOs
                 amplitude = float(configuration['amplitude'])
                 if abs(amplitude) >= cutoff_amp:
+
+                    # Alpha and beta occupations of the state
                     config_alpha = configuration['occupations']['alpha']
                     config_beta = configuration['occupations']['beta']
+                    elec_beta = config_beta.count(1) # Take number of beta electrons             
+
+                    # Take orbitals with unpaired electrons
+                    somo_orbitals_ras = [i+1 for i in range(len(config_alpha)) if config_alpha[i] != config_beta[i]]
 
                     # From RAS order to SCF order
-                    somo_orbitals_ras = [i+1 for i in range(len(config_alpha)) if config_alpha[i] != config_beta[i]]
-                    somo_orbitals = from_ras_to_scf_order(elec_beta, ras_elec_orb, somo_orbitals_ras)
+                    somo_orbitals_scf = from_ras_to_scf_order(elec_beta, ras_elec_orb, somo_orbitals_ras)
                     
+                    # if state == 3:
+                    #     print(somo_orbitals_ras, ':', somo_orbitals_scf)
+                    #     exit()
                     config_index = excitstates_dict[state]['configurations'].index(configuration)
 
                     state_transitions.append({'state': state+1,
                                         'configuration': config_index,
-                                        'SOMO': somo_orbitals,
+                                        'SOMO': somo_orbitals_scf,
                                         'amplitude': round(amplitude, 3)})
             transitions.append(state_transitions)
         return transitions

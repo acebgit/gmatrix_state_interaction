@@ -7,8 +7,9 @@ from projection_method.parsers.gtensor_calculation import extract_data_from_json
 # exit() 
 
 ######## STATES SELECTION ######## 
-state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
-initial_states = [1, 5] #list(range(1, 13))
+state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+initial_states = [1, 2, 3] #list(range(1, 31))
+# initial_states.remove(10)
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 
 ######## G-TENSOR CALCULATION ########

@@ -315,7 +315,12 @@ def get_orbital_matrices(angmoment_dict, nstates, states_length_sz):
                         value = complex((angmoment_dict[interstate][k]))
 
                         # Assign the value to the L matrix and ensure Hermitian symmetry
-                        orbital_matrix[matrix_row][matrix_col][k] = value
+                        try:
+                            orbital_matrix[matrix_row][matrix_col][k] = value
+                        except IndexError: 
+                            print(matrix_row, matrix_col)
+                            exit()
+
                         orbital_matrix[matrix_col][matrix_row][k] = np.conj(value)  # Conjugate symmetry
                         # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
                 initial_row += bra_size
@@ -432,7 +437,7 @@ def from_json_to_matrices(outpuut_dict_selected):
     "orbital": orbital_matrix,
     }
 
-    print_all_matrices(matrices__dict)
+    # print_all_matrices(matrices__dict)
 
     return states_lengthsz, approx_spins, matrices__dict
 
@@ -624,7 +629,7 @@ def projection_technique(standard_spin_matrix, s_matrix, l_matrix, ppms=0):
         """
         try:
             eigenvalues, eigenvectors = linalg.eigh(matrix)
-        except LinAlgError:
+        except np.linalg.LinAlgError:
             print("Some values are NaN in the QChem output")
         
         rotation_inverse = np.linalg.inv(eigenvectors)
@@ -655,7 +660,7 @@ def projection_technique(standard_spin_matrix, s_matrix, l_matrix, ppms=0):
         return gvalues
 
     j_matrix = lande_factor * s_matrix + l_matrix
-
+    
     # PROJECTION TECHNIQUE TO OBTAIN THE TRIANGULAR G-MATRIX:
     # 1) g-value zz
     j_matrix_rotation, j_matrix_diagonal_z = j_diagonalization(j_matrix[:, :, 2])
@@ -752,7 +757,7 @@ def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
 
     gmatrix, gshift = projection_technique(dict_matrices["standard_spin"], combination_spin_matrix, combination_orbital_matrix, ppms)
     
-    print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix)
+    # print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix)
 
     return gmatrix, gshift 
 
