@@ -136,46 +136,41 @@ def get_soc_matrix(soc_dict, nstates, states_length_sz):
     ndim = sum(states_length_sz.values())
     socmatrix = np.zeros((ndim, ndim), dtype=complex)
     
-    initial_column = 0
-    for column in range(len(nstates)):  # Iterate over all states (columns)
+    initial_column = 0 
+    for col_state in nstates:  # Iterate over ket | A > states (columns) 
+        ket_size = states_length_sz[col_state] # Number of microstates in | A > 
 
-        col_state = nstates[column]  # | A > (ket state)
-        ket_size = states_length_sz[col_state] # Number of elements in | A >
+        initial_row = 0 
+        for row_state in nstates:  # Iterate over bra < B | states (rows) 
+            bra_size = states_length_sz[row_state] # Number of microstates in < B | 
 
-        initial_row = 0
-        for row in range(len(nstates)):  # Iterate over all states (rows)
-            row_state = nstates[row]   # < B | (bra state)
-            bra_size = states_length_sz[row_state] # Number of elements in < B |
+            # < B | larger than | A >, i.e. lower part triangle is calculated
+            if row_state > col_state:
 
-            # Ensure that in interstates "A_B", A is always less than B (A < B)
-            if row_state <= col_state:
-                initial_row += bra_size
-
-            else:
                 # Create the interstate key as "A_B"
                 interstate = str(col_state) + "_" + str(row_state)
 
-                # Loop over Sz values for the bra state ( < B | )
-                for sz_bra in range(bra_size):
-                    # Loop over Sz values for the ket state ( | A > )
-                    for sz_ket in range(ket_size):
+                for sz_bra in range(bra_size): # Loop over Sz values for the bra state ( < B | )
+                    for sz_ket in range(ket_size): # Loop over Sz values for the ket state ( | A > )
                         
                         # Compute matrix indices for row and column, adjusting offsets
                         matrix_row = initial_row + sz_bra 
                         matrix_col = initial_column + sz_ket 
 
-                        # Convert the SOC value to a complex number
-                        value = complex(soc_dict[interstate][sz_bra][sz_ket])
-
                         # Assign the value to the SOC matrix and ensure Hermitian symmetry
-                        socmatrix[matrix_row][matrix_col] = value
-                        socmatrix[matrix_col][matrix_row] = np.conj(value)  # Conjugate symmetry
+                        socmatrix[matrix_row][matrix_col] = complex(soc_dict[interstate][sz_bra][sz_ket])
+                        socmatrix[matrix_col][matrix_row] = np.conj(socmatrix[matrix_row][matrix_col]) # Conjugate symmetry
                         # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
+
                 initial_row += bra_size
+            
+            else: 
+                initial_row += bra_size 
         initial_column += ket_size
+
     cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
-    socmatrix = socmatrix * cm_to_ev
-    return socmatrix
+    socmatrix_ev = socmatrix * cm_to_ev
+    return socmatrix_ev
 
 
 def get_spin_matrices(approx_spin_dict, nstates, states_length_sz):
@@ -279,34 +274,31 @@ def get_orbital_matrices(angmoment_dict, nstates, states_length_sz):
     ndim = sum(states_length_sz.values())
     orbital_matrix = np.zeros((ndim, ndim, 3), dtype=complex)
 
-    initial_column = 0
-    for column in range(len(nstates)):  # Iterate over all states (columns)
-        col_state = nstates[column]  # | A > (ket state)
-        ket_size = states_length_sz[col_state] # Number of elements in | A >
+    initial_column = 0 
+    for col_state in nstates:  # Iterate over ket | A > states (columns) 
+        ket_size = states_length_sz[col_state] # Number of microstates in | A > 
 
         initial_row = 0 
-        for row in range(len(nstates)):  # Iterate over all states (rows) 
-            row_state = nstates[row]   # < B | (bra state) 
-            bra_size = states_length_sz[row_state] # Number of elements in < B | 
+        for row_state in nstates:  # Iterate over bra < B | states (rows) 
+            bra_size = states_length_sz[row_state] # Number of microstates in < B | 
 
-            # Ensure that in interstates "A_B", | A > is always smaller than < B | 
+            # < B | larger than | A >, i.e. lower part triangle is calculated
             if row_state > col_state:
                 
                 # Create the interstate key as "A_B"
                 interstate = str(col_state) + "_" + str(row_state)
 
-                # Loop over Sz values for the bra state ( < B | )
-                # for sz_bra in range(bra_size):
-                # Loop over Sz values for the ket state ( | A > )
-                for sz_bra in range(bra_size):
+                # Create offsets from sz difference:
+                shift_row = ((bra_size - ket_size) // 2) if bra_size > ket_size else 0
+                shift_col = ((ket_size - bra_size) // 2) if ket_size > bra_size else 0
+                len_sz = ket_size if bra_size > ket_size else bra_size
 
-                    # Create offsets:
-                    shift_row = ((bra_size - ket_size) // 2) if bra_size > ket_size else 0
-                    shift_col = ((ket_size - bra_size) // 2) if ket_size > bra_size else 0
+                # Loop over Sz values for the bra state (< B |)
+                for sz_bra in range(len_sz):
                         
                     # Compute matrix indices for row and column, adjusting offsets
-                    matrix_row = initial_row + sz_bra + shift_row
-                    matrix_col = initial_column + sz_bra + shift_col
+                    matrix_row = initial_row + shift_row + sz_bra 
+                    matrix_col = initial_column + shift_col + sz_bra 
 
                     for k in range(0, 3):
                         # Convert the L value to a complex number
@@ -315,11 +307,13 @@ def get_orbital_matrices(angmoment_dict, nstates, states_length_sz):
                         # Assign the value to the L matrix and ensure Hermitian symmetry
                         try:
                             orbital_matrix[matrix_row][matrix_col][k] = value
-                        except IndexError: 
-                            print(initial_row, sz_bra, shift_row)
-                            exit()
+                            orbital_matrix[matrix_col][matrix_row][k] = np.conj(value)  # Conjugate symmetry
 
-                        orbital_matrix[matrix_col][matrix_row][k] = np.conj(value)  # Conjugate symmetry
+                        except IndexError: 
+                            print("Index error in orbital matrix")
+                            print("- initial_row, shift_row, sz_ket:", initial_row, shift_row, sz_bra)
+                            print("- initial_column, shift_col, sz_ket", initial_column, shift_col, sz_bra)
+
                         # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
                 initial_row += bra_size
             
@@ -387,32 +381,31 @@ def from_json_to_matrices(outpuut_dict_selected):
 
         # cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
         # matrices_dict["soc"] = matrices_dict["soc"] * cm_to_ev
-        # print('SOC:')
-        # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-        #                 for row in np.round((matrices_dict["soc"] [:,:]))]))
-        # print()
+        print('SOC:')
+        print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                        for row in np.round((matrices_dict["soc"] [:,:]),3)]))
+        print()
 
-        # print('Spin matrices: ')
-        # for ndim in range(0,1):
-        #     print('Ndim: ', ndim)
-        #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-        #                     for row in ((matrices_dict["spin"][:,:,ndim]))]))
-        #     print()
+        print('Spin matrices: ')
+        for ndim in range(0,3):
+            print('Ndim: ', ndim)
+            print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                            for row in ((matrices_dict["spin"][:,:,ndim]))]))
+            print()
         
-        # print('STARDARD SPIN MATRICES: ')
-        # for ndim in range(0,3):
-        #     print('Ndim: ', ndim)
-        #     print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-        #                     for row in ((matrices_dict["spin"][:,:,ndim]))]))
-        #     print()
+        print('STARDARD SPIN MATRICES: ')
+        for ndim in range(0,3):
+            print('Ndim: ', ndim)
+            print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
+                            for row in ((matrices_dict["spin"][:,:,ndim]))]))
+            print()
 
         print('Orbital angular matrices: ')
-        for ndim in range(1, 2):
+        for ndim in range(0, 3):
             print('Dim: ', ndim)
             print('\n'.join([''.join(['{:^8}'.format(item) for item in row]) \
                             for row in np.round(matrices_dict["orbital"][:, :, ndim], 4)]))
             print()
-        # exit()
             
     # Get a dictionary with the "approximated" spin, i.e. the real value
     approx_spins = get_approx_spin_dict(outpuut_dict_selected["spin_dict"])
@@ -438,7 +431,7 @@ def from_json_to_matrices(outpuut_dict_selected):
     "orbital": orbital_matrix,
     }
 
-    # print_all_matrices(matrices__dict)
+    print_all_matrices(matrices__dict)
 
     return states_lengthsz, approx_spins, matrices__dict
 
@@ -486,7 +479,6 @@ def select_soc_order(soc_order, selected__states, states__lengthsz, matrices__di
     # print('SOC:')
     # print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
     #                 for row in np.round((matrices__dict["soc"][:,:]/(constants.physical_constants['inverse meter-electron volt relationship'][0] * 100)))]))
-    # exit()
     return matrices__dict
 
 
@@ -551,7 +543,8 @@ def get_hamiltonian_construction(states__lengthsz, eigenenergies, soc_matrix):
 
 def diagonalization(matrix):
     """
-    Diagonalize Hamiltonian. Eigenvectors-eigenvalues are ordered by weight coefficients. Construct the diagonal matrix.
+    Diagonalize Hamiltonian. Eigenvectors-eigenvalues are ordered by weight coefficients. 
+    Construct the diagonal matrix.
     :param: matrix
     :return: eigenvalues, eigenvectors, diagonal_matrix
     """
@@ -575,19 +568,22 @@ def diagonalization(matrix):
                     eigenval[v_2] = change_order.real[0]
         return eigenval, eigenvect
 
+    def sort_eigenpairs(eigenvalues, eigenvectors):
+        idx = np.argsort(eigenvalues)
+        return eigenvalues[idx], eigenvectors[:, idx]
+
     try:
         eigenvalues, eigenvectors = linalg.eigh(matrix)
     except LinAlgError:
         print("Some values are NaN in the QChem output")
     
     eigenvalues, eigenvectors = reordering_eigenvectors(eigenvalues, eigenvectors)
-
     rotation_inverse = np.linalg.inv(eigenvectors)
     diagonal_matrix = np.matmul(np.matmul(rotation_inverse, matrix), eigenvectors)
     return eigenvalues, eigenvectors, diagonal_matrix
 
 
-def angular_matrices_obtention(eigenvectors, ndim, input_angular_matrix):
+def angular_matrices_obtaining(eigenvectors, ndim, input_angular_matrix):
     """
     Angular matrix from non-relativistic states (states from Q-Chem) is expanded in the relativistic states. In
     < B(S,Sz) | Sx | A(S',Sz') >, < B(S,Sz)| corresponds to rows and | A(S',Sz') > to columns.
@@ -597,22 +593,36 @@ def angular_matrices_obtention(eigenvectors, ndim, input_angular_matrix):
     angular_matrix = np.zeros((ndim, ndim, 3), dtype=complex)
     conj_eigenvectors = np.conj(eigenvectors)
 
-    for k in range(3): # For each dimension
-        for bra_final in range(ndim): # For each row = bra = < B |
-            for ket_final in range(ndim): # For each column = ket = | A >
-                # print('BRA, KET', bra_final, ket_final)
+    print('Kramer state eigenvectors:' )
+    for i in range(len(eigenvectors)):
+        formatted_row = ["{:.2f}".format(value) for value in eigenvectors[:][i]]
+        print(f"{i}: " + " ".join(formatted_row))
+    print()
 
-                for bra_eigen in range(len(eigenvectors)):
-                    for ket_eigen in range(len(eigenvectors)):
-                        # print('bra, ket', bra_eigen, ket_eigen)
+    for k in range(3): # For each dimension 
+        for ket_final in range(ndim): # Iterate over ket | A > microstates (columns) 
+            for bra_final in range(ndim): # Iterate over bra < B | microstates (rows) 
+                print('ROW:', bra_final, ', COL: ', ket_final)
 
-                        coeff_bra = conj_eigenvectors[bra_eigen, bra_final]
+                for ket_eigen in range(len(eigenvectors)):
+                    for bra_eigen in range(len(eigenvectors)):
+                        print(eigenvectors[:][ket_final])
+                        for bra_eigen in range(len(eigenvectors)):
+                            print(bra_eigen, ket_final, eigenvectors[bra_eigen][ket_final])
+                        exit()
                         coeff_ket = eigenvectors[ket_eigen, ket_final]
+                        coeff_bra = conj_eigenvectors[bra_eigen, bra_final]
 
                         angular_values = input_angular_matrix[bra_eigen, ket_eigen, k]
 
                         elements = coeff_bra * coeff_ket * angular_values
                         angular_matrix[bra_final, ket_final, k] += np.sum(elements)
+
+                        print('coeff row:', bra_eigen, np.round(coeff_bra, 2), 
+                              ', coeff col: ', ket_eigen, np.round(coeff_ket, 2), 
+                              ', result: ', elements)
+                print()
+                exit()
     return angular_matrix
 
 
@@ -630,12 +640,11 @@ def projection_technique(standard_spin_matrix, s_matrix, l_matrix, ppms=0):
         """
         try:
             eigenvalues, eigenvectors = linalg.eigh(matrix)
+            rotation_inverse = np.linalg.inv(eigenvectors)
+            diagonal_matrix = np.matmul(np.matmul(rotation_inverse, matrix), eigenvectors)
+            return eigenvectors, diagonal_matrix
         except np.linalg.LinAlgError:
             print("Some values are NaN in the QChem output")
-        
-        rotation_inverse = np.linalg.inv(eigenvectors)
-        diagonal_matrix = np.matmul(np.matmul(rotation_inverse, matrix), eigenvectors)
-        return eigenvectors, diagonal_matrix
 
     def trace_g_values(total_j, spin_matr):
         """
@@ -712,39 +721,34 @@ def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
         print('PROJECTION TECHNIQUE')
         print('-------------------------')
         
-        # print('Hamiltonian: ')
-        # print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-        #                     for row in np.round((hamiltonian[:, :]), 5)])) 
-        # print()
-
-        print('Eigenvectors:' )
-        for i, row in enumerate(eigenvector):
-            formatted_row = ["{:.2f}".format(value.real) for value in row]
-            print(f"{i}: " + " ".join(formatted_row))
+        print('Hamiltonian: ')
+        print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                            for row in np.round((hamiltonian[:, :]), 5)])) 
         print()
 
-        # print('Linear combination of Spin angular matrix:')
-        # for k in range(0, 1):
-        #     print('Dimension: ', k)
-        #     print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
-        #                     for row in np.round((combination_spin_matrix[:, :, k]), 5)]))
-        #     print()
-        # exit()
+        print('Kramer state eigenvectors:' )
+        for i in range(len(combination_spin_matrix)):
+            formatted_row = ["{:.2f}".format(value) for value in eigenvector[:][i]]
+            print(f"{i}: " + " ".join(formatted_row))
+
+        print('Linear combination of Spin angular matrix:')
+        for k in range(0, 3):
+            print('Dimension: ', k)
+            print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
+                            for row in np.round((combination_spin_matrix[:, :, k]), 5)]))
+            print()
         
         print('Linear combination of Orbital angular matrix:')
-        for k in range(1, 2):
+        for k in range(0, 3):
             print('Dimension: ', k)
             print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
                             for row in np.round((combination_orbital_matrix[:, :, k]), 5)]))
             print()
-        exit()
         
         print('G-matrix: ')
         print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
                     for row in np.round((gmatrix[:,:]), 10)]))
         print()
-
-        exit()
 
     hamiltonian = get_hamiltonian_construction(states_lengthsz, dict_matrices["excit_energies"], dict_matrices["soc"])
 
@@ -752,13 +756,13 @@ def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
 
     angular_matrix_dimension = next(iter(states_lengthsz.values()), None)
 
-    combination_spin_matrix = angular_matrices_obtention(eigenvector, angular_matrix_dimension, dict_matrices["spin"])
+    combination_spin_matrix = angular_matrices_obtaining(eigenvector, angular_matrix_dimension, dict_matrices["spin"])
 
-    combination_orbital_matrix = angular_matrices_obtention(eigenvector, angular_matrix_dimension, dict_matrices["orbital"])
+    combination_orbital_matrix = angular_matrices_obtaining(eigenvector, angular_matrix_dimension, dict_matrices["orbital"])
 
     gmatrix, gshift = projection_technique(dict_matrices["standard_spin"], combination_spin_matrix, combination_orbital_matrix, ppms)
     
-    # print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix)
+    print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix)
 
     return gmatrix, gshift 
 
@@ -806,7 +810,6 @@ def print_g_calculation(filee, approxspin_dict, soc_order, soc_option, g_shift, 
     # print('\n'.join([''.join(['{:^15}'.format(item) for item in row])\
     #             for row in np.round(np.sqrt(g_tensor[:,:]), 6)]))
     # print('')
-    # exit()
 
 
 def save_picture(save_options, filee, title_main):
@@ -845,7 +848,7 @@ def gshift_estimation_loop(output_dict, ppm):
         g_zz = {}
 
         for interstate, socc in output_dict["socc_dict"].items():
-            if (ground_state+"_") in interstate:
+            if interstate.startswith(ground_state+"_"):
 
                 socc = socc * from_cm_to_ev
                 excited_state = int(interstate.split("_")[1])
@@ -855,8 +858,8 @@ def gshift_estimation_loop(output_dict, ppm):
 
                 g_xx.update({excited_state: estimation_phormula(output_dict["angmoment_dict"][interstate][0], socc, excited_energy) * units})
                 g_yy.update({excited_state: estimation_phormula(output_dict["angmoment_dict"][interstate][1], socc, excited_energy) * units})
-                g_zz.update({excited_state: estimation_phormula(output_dict["angmoment_dict"][interstate][2], socc, excited_energy) * units})
-        
+                g_zz.update({excited_state: estimation_phormula(output_dict["angmoment_dict"][interstate][2], socc, excited_energy) * units}) 
+
         g_shift_dict = {"gxx": g_xx, "gyy": g_yy, "gzz": g_zz}
         return g_shift_dict
 
@@ -967,7 +970,7 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
     grstate_angmom = [value for key, value in outputdict["angmoment_dict"].items() if str(grstate)+"_" in key]
     cut_angmom = cut_off_angmom * abs(max([max([complex(x) for x in sublist], key=abs) for sublist in grstate_angmom], key=abs))
 
-    # Obtain the final list with the estimated g-values 
+    # Obtain the final list with the estimated g-values
     # mapping_symmetry = {index+1: key for index, key in enumerate(outputdict["energy_dict"].keys())}
     gshift_presentation = [] # Final presentation list with g-shift estimation
     gshift_states = [] # Taken to be used in pandas

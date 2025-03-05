@@ -8,7 +8,7 @@ from numpy import linalg, sqrt
 from scipy import constants
 import pandas as pd
 from projection_method.parsers.gtensor_calculation import get_hamiltonian_construction, hermitian_test, \
-    units_gshift, diagonalization, angular_matrices_obtention
+    units_gshift, diagonalization, angular_matrices_obtaining
 
 # Get the absolute path to local folder 'PyQChem'
 import sys 
@@ -685,9 +685,9 @@ def from_energies_soc_to_g_values(file, states_ras, totalstates,
 
     orbital_matrix = get_orbital_matrices(output_parsered, totalstates, states_ras, sz_list)
 
-    combination_spin_matrix = angular_matrices_obtention(eigenvector, spin_matrix, sz_list)
+    combination_spin_matrix = angular_matrices_obtaining(eigenvector, spin_matrix, sz_list)
 
-    combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
+    combination_orbital_matrix = angular_matrices_obtaining(eigenvector, orbital_matrix, sz_list)
 
     gmatrix, gshift = from_angmoments_to_gshifts(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, ground_sz, ppm)
@@ -807,9 +807,9 @@ def gfactor_presentation(ras_input, states_ras, states_option, symmetry_selectio
 
     orbital_matrix = get_orbital_matrices(output_parsered, totalstates, states_selected, sz_list)
 
-    combination_spin_matrix = angular_matrices_obtention(eigenvector, spin_matrix, sz_list)
+    combination_spin_matrix = angular_matrices_obtaining(eigenvector, spin_matrix, sz_list)
 
-    combination_orbital_matrix = angular_matrices_obtention(eigenvector, orbital_matrix, sz_list)
+    combination_orbital_matrix = angular_matrices_obtaining(eigenvector, orbital_matrix, sz_list)
 
     gmatrix, gshift = from_angmoments_to_gshifts(standard_spin_matrix, combination_spin_matrix, combination_orbital_matrix,
                                    sz_list, sz_ground, ppm)
