@@ -136,13 +136,13 @@ def get_soc_matrix(soc_dict, nstates, states_length_sz):
     ndim = sum(states_length_sz.values())
     socmatrix = np.zeros((ndim, ndim), dtype=complex)
     
-    initial_column = 0 
-    for col_state in nstates:  # Iterate over ket | A > states (columns) 
-        ket_size = states_length_sz[col_state] # Number of microstates in | A > 
+    initial_row = 0 
+    for row_state in nstates:  # Iterate over bra < B | states (rows) 
+        bra_size = states_length_sz[row_state] # Number of microstates in < B | 
 
-        initial_row = 0 
-        for row_state in nstates:  # Iterate over bra < B | states (rows) 
-            bra_size = states_length_sz[row_state] # Number of microstates in < B | 
+        initial_column = 0 
+        for col_state in nstates:  # Iterate over ket | A > states (columns) 
+            ket_size = states_length_sz[col_state] # Number of microstates in | A > 
 
             # < B | larger than | A >, i.e. lower part triangle is calculated
             if row_state > col_state:
@@ -154,7 +154,7 @@ def get_soc_matrix(soc_dict, nstates, states_length_sz):
                     for sz_ket in range(ket_size): # Loop over Sz values for the ket state ( | A > )
                         
                         # Compute matrix indices for row and column, adjusting offsets
-                        matrix_row = initial_row + sz_bra 
+                        matrix_row = initial_row + sz_bra   
                         matrix_col = initial_column + sz_ket 
 
                         # Assign the value to the SOC matrix and ensure Hermitian symmetry
@@ -162,11 +162,10 @@ def get_soc_matrix(soc_dict, nstates, states_length_sz):
                         socmatrix[matrix_col][matrix_row] = np.conj(socmatrix[matrix_row][matrix_col]) # Conjugate symmetry
                         # print('row:', matrix_row, ', col:', matrix_col, ', value: ', value)
 
-                initial_row += bra_size
-            
+                initial_column += ket_size
             else: 
-                initial_row += bra_size 
-        initial_column += ket_size
+                initial_column += ket_size 
+        initial_row += bra_size
 
     cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
     socmatrix_ev = socmatrix * cm_to_ev
@@ -379,11 +378,11 @@ def from_json_to_matrices(outpuut_dict_selected):
         print('INPUT MATRICES')
         print('-------------------------')
 
-        # cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
+        cm_to_ev = constants.physical_constants['inverse meter-electron volt relationship'][0] * 100
         # matrices_dict["soc"] = matrices_dict["soc"] * cm_to_ev
         print('SOC:')
         print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
-                        for row in np.round((matrices_dict["soc"] [:,:]),3)]))
+                        for row in np.round((matrices_dict["soc"] [:,:] / cm_to_ev),3)]))
         print()
 
         print('Spin matrices: ')
@@ -431,7 +430,7 @@ def from_json_to_matrices(outpuut_dict_selected):
     "orbital": orbital_matrix,
     }
 
-    print_all_matrices(matrices__dict)
+    # print_all_matrices(matrices__dict)
 
     return states_lengthsz, approx_spins, matrices__dict
 
@@ -557,24 +556,19 @@ def diagonalization(matrix):
         change_order = np.zeros(len(eigenvect), dtype=complex)
         for v_1 in range(0, len(eigenvect)):
             for v_2 in range(v_1, len(eigenvect)):
-
                 if abs(eigenvect[v_1, v_2]) > abs(eigenvect[v_1, v_1]):
                     change_order[:] = eigenvect[:, v_1]
                     eigenvect[:, v_1] = eigenvect[:, v_2]
                     eigenvect[:, v_2] = change_order[:]
-
+                    
                     change_order.real[0] = eigenval[v_1]
                     eigenval[v_1] = eigenval[v_2]
                     eigenval[v_2] = change_order.real[0]
         return eigenval, eigenvect
 
-    def sort_eigenpairs(eigenvalues, eigenvectors):
-        idx = np.argsort(eigenvalues)
-        return eigenvalues[idx], eigenvectors[:, idx]
-
     try:
         eigenvalues, eigenvectors = linalg.eigh(matrix)
-    except LinAlgError:
+    except np.linalg.LinAlgError:
         print("Some values are NaN in the QChem output")
     
     eigenvalues, eigenvectors = reordering_eigenvectors(eigenvalues, eigenvectors)
@@ -591,38 +585,44 @@ def angular_matrices_obtaining(eigenvectors, ndim, input_angular_matrix):
     :return: angular_matrix
     """
     angular_matrix = np.zeros((ndim, ndim, 3), dtype=complex)
-    conj_eigenvectors = np.conj(eigenvectors)
+    conj_eigenvectors = np.conjugate(eigenvectors)
 
-    print('Kramer state eigenvectors:' )
-    for i in range(len(eigenvectors)):
-        formatted_row = ["{:.2f}".format(value) for value in eigenvectors[:][i]]
-        print(f"{i}: " + " ".join(formatted_row))
-    print()
+    # eigenvectors[:][ket_final] first creates a copy of the entire eigenvectors 
+    # array (due to eigenvectors[:]) and then attempts to access the ket_final-th 
+    # element from this copy. This operation does not correctly retrieve the desired eigenvector.
+    # print(eigenvectors[:, 0])
+    # for bra_eigen2 in range(len(eigenvectors)):
+    #     print(bra_eigen2, 0, eigenvectors[bra_eigen2, 0])
+    # exit()
 
-    for k in range(3): # For each dimension 
+    # print('Kramer state eigenvectors:' )
+    # for i in range(ndim):
+    #     formatted_row = ["{:.2f}".format(value) for value in eigenvectors[:, i]]
+    #     print(f"{i}: " + " ".join(formatted_row))
+    # print()
+
+    for k in range(0, 3): # For each dimension 
         for ket_final in range(ndim): # Iterate over ket | A > microstates (columns) 
             for bra_final in range(ndim): # Iterate over bra < B | microstates (rows) 
-                print('ROW:', bra_final, ', COL: ', ket_final)
+                # print('ROW:', bra_final, ', COL: ', ket_final)
 
-                for ket_eigen in range(len(eigenvectors)):
-                    for bra_eigen in range(len(eigenvectors)):
-                        print(eigenvectors[:][ket_final])
-                        for bra_eigen in range(len(eigenvectors)):
-                            print(bra_eigen, ket_final, eigenvectors[bra_eigen][ket_final])
-                        exit()
-                        coeff_ket = eigenvectors[ket_eigen, ket_final]
-                        coeff_bra = conj_eigenvectors[bra_eigen, bra_final]
+                for ket_eigen in range(len(eigenvectors[:, ket_final])): # dimension of eigenvector
+                    for bra_eigen in range(len(eigenvectors[:, bra_final])): # dimension of eigenvector
+                        coeff_ket = (eigenvectors[ket_eigen, bra_final])
+                        coeff_bra = (conj_eigenvectors[bra_eigen, ket_final])
 
                         angular_values = input_angular_matrix[bra_eigen, ket_eigen, k]
 
                         elements = coeff_bra * coeff_ket * angular_values
                         angular_matrix[bra_final, ket_final, k] += np.sum(elements)
 
-                        print('coeff row:', bra_eigen, np.round(coeff_bra, 2), 
-                              ', coeff col: ', ket_eigen, np.round(coeff_ket, 2), 
-                              ', result: ', elements)
-                print()
-                exit()
+                #         print('coeff row:', bra_eigen, np.round(coeff_bra, 2), 
+                #               ', coeff col: ', ket_eigen, np.round(coeff_ket, 2), 
+                #               ', angular value: ', angular_values, 
+                #               ', final value: ', elements)
+                #     print()
+                # print()
+                # exit()
     return angular_matrix
 
 
@@ -728,8 +728,9 @@ def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
 
         print('Kramer state eigenvectors:' )
         for i in range(len(combination_spin_matrix)):
-            formatted_row = ["{:.2f}".format(value) for value in eigenvector[:][i]]
+            formatted_row = ["{:.2f}".format(value) for value in eigenvector[:, i]]
             print(f"{i}: " + " ".join(formatted_row))
+        print()
 
         print('Linear combination of Spin angular matrix:')
         for k in range(0, 3):
@@ -744,6 +745,7 @@ def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
             print('\n'.join([''.join(['{:^15}'.format(item) for item in row]) \
                             for row in np.round((combination_orbital_matrix[:, :, k]), 5)]))
             print()
+        # exit()
         
         print('G-matrix: ')
         print('\n'.join([''.join(['{:^8}'.format(item) for item in row])\
@@ -762,7 +764,7 @@ def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
 
     gmatrix, gshift = projection_technique(dict_matrices["standard_spin"], combination_spin_matrix, combination_orbital_matrix, ppms)
     
-    print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix)
+    # print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix)
 
     return gmatrix, gshift 
 
@@ -775,7 +777,30 @@ def print_g_calculation(filee, approxspin_dict, soc_order, soc_option, g_shift, 
         """
         Obtain a dictionary with multiplicities and the states with those multiplicities. 
         """
-        spin_mapping = {0:'singlets',0.5:'doublets',1:'triplets',1.5:'quartets',2.0:'quintets',2.5:'sextets',3:'heptets',3.5:'octets'}        
+        spin_mapping = {
+            0: 'singlet',
+            0.5: 'doublet',
+            1: 'triplet',
+            1.5: 'quartet',
+            2: 'quintet',
+            2.5: 'sextet',
+            3: 'septet',
+            3.5: 'octet',
+            4: 'nonet',
+            4.5: 'decet',
+            5: 'undecet',
+            5.5: 'duodecet',
+            6: 'tredecet',
+            6.5: 'quattuordecet',
+            7: 'quindecet',
+            7.5: 'sexdecet',
+            8: 'septendecet',
+            8.5: 'octodecet',
+            9: 'novemdecet',
+            9.5: 'vigintet',
+            10: 'unvigintet'
+        }
+
         data_dict = {key: [] for key in spin_mapping.values()}
         for state, spin_state in approx_spin_dict.items():
             data_dict[spin_mapping[spin_state]].append(state) 

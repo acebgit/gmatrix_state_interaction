@@ -69,7 +69,7 @@ def gtensor_parser_rasci(outpuut):
         # Take RAS_ACT_ORB 
         try:
             enum = outpuut.find('RAS_ACT_ORB')
-            ras_elec_orb = [int(x) for x in (outpuut[enum:enum+50].split('[')[1].split(']')[0]).split(",")]
+            ras_elec_orb = [int(x) for x in (outpuut[enum:enum+200].split('[')[1].split(']')[0]).split(",")]
         except: # RAS_ACT_ORB automatically selected
             print("Make program for RAS_ACT_ORB automatically selected")
             exit()

@@ -7,19 +7,19 @@ from projection_method.parsers.gtensor_calculation import extract_data_from_json
 # exit() 
 
 ######## STATES SELECTION ######## 
-state_selection = 0 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
+state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
 initial_states = [1, 5] # list(range(1, 12))
 # initial_states.remove(10)
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 1
+calculate_gshift = 0
 ppm = 0 # 0: ppt; 1: ppm
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 soc_orders = 0 # 0: All orders; 1: First-order 
 
 ######## G-TENSOR CALCULATION BY PAIRS ########
-cutoff_gvalue = 0 # ≠0: cut-off between ground-excited states (% of maximum g-value in each dim) 
+cutoff_gvalue = 0.9 # ≠0: cut-off between ground-excited states (% of maximum g-value in each dim) 
 cutoff_config = 0.9 # cut-off for configurations amplitude (% of maximum amplitude)
 excit_plot = 0 # 0: not show plot, 1: show plot 
 
