@@ -13,14 +13,14 @@ initial_states = [1, 5] # list(range(1, 12))
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 0
+calculate_gshift = 1
 ppm = 0 # 0: ppt; 1: ppm
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 soc_orders = 0 # 0: All orders; 1: First-order 
 
 ######## G-TENSOR CALCULATION BY PAIRS ########
-cutoff_gvalue = 0.9 # ≠0: cut-off between ground-excited states (% of maximum g-value in each dim) 
-cutoff_config = 0.9 # cut-off for configurations amplitude (% of maximum amplitude)
+cutoff_gvalue = 0.5 # ≠0: cut-off between ground-excited states (% of maximum g-value in each dim) 
+cutoff_config = 0.75 # cut-off for configurations amplitude (% of maximum amplitude)
 excit_plot = 0 # 0: not show plot, 1: show plot 
 
 ######## SOS PLOTS ########
