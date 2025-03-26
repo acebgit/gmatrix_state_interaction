@@ -1,7 +1,0 @@
-$molecule
-1 12    !charge and multiplicity
-Mn1
-Mn2 Mn1 dist
-
-dist = 2.942
-$end

@@ -1,7 +1,0 @@
-$molecule
-0 3    !charge and multiplicity
-Se1
-O2 Se1 dist
-
-dist = 1.677
-$end

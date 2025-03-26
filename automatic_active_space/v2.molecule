@@ -1,7 +1,0 @@
-$molecule
-1 4    !charge and multiplicity
-V1
-V2 V1 dist
-
-dist = 1.741
-$end

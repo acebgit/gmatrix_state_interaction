@@ -1,5 +1,0 @@
-$molecule
-1 4    !charge and multiplicity
-Ga1
-As2 Ga1 2.744
-$end
