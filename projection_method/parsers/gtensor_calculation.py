@@ -5,11 +5,13 @@ from numpy import linalg, sqrt
 import pandas as pd
 import math 
 from scipy import constants
+
+import matplotlib
+matplotlib.use('Agg')  # Set backend to 'Agg' for headless environments
 import matplotlib.pyplot as plt
+
 # import timeit
 # from functools import partial
-
-lande_factor = 2.002319304363
 
 
 def s2_to_s(s2):
@@ -626,7 +628,7 @@ def angular_matrices_obtaining(eigenvectors, ndim, input_angular_matrix):
     return angular_matrix
 
 
-def projection_technique(standard_spin_matrix, s_matrix, l_matrix, ppms=0):
+def projection_technique(standard_spin_matrix, s_matrix, l_matrix, ppms=0, lande_factor = 2.002319304363):
     """
     g-shift with orbitals and spin angular momentum matrices.
     :param: standard_spin_matrix, s_matrix, l_matrix, sz_list, ground_sz
@@ -712,7 +714,7 @@ def projection_technique(standard_spin_matrix, s_matrix, l_matrix, ppms=0):
     return g_matrix, g_shifts
 
 
-def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
+def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0, lande_factor = 2.002319304363):
     """
     From matrices to the g-shift value. 
     """
@@ -762,14 +764,14 @@ def from_matrices_to_gshift(states_lengthsz, dict_matrices, ppms=0):
 
     combination_orbital_matrix = angular_matrices_obtaining(eigenvector, angular_matrix_dimension, dict_matrices["orbital"])
 
-    gmatrix, gshift = projection_technique(dict_matrices["standard_spin"], combination_spin_matrix, combination_orbital_matrix, ppms)
+    gmatrix, gshift = projection_technique(dict_matrices["standard_spin"], combination_spin_matrix, combination_orbital_matrix, ppms, lande_factor)
     
     # print_all_matrices(hamiltonian, eigenvector, combination_spin_matrix, combination_orbital_matrix, gmatrix)
 
     return gmatrix, gshift 
 
 
-def print_g_calculation(filee, approxspin_dict, soc_order, soc_option, g_shift, g_tensor, ppms):
+def print_g_calculation(filee, approxspin_dict, g_shift, g_tensor, soc_order=0, soc_option=0, ppms=0):
     """
     Printing results. 
     """
@@ -1268,9 +1270,9 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, showplot
             # Form a dictionary only for a pair of states
             filtered_dict = filter_dictionary(outputdict, excit_state)
             
-            sz_ground, max_sz_list, approxspin_list, matrices_dict = from_json_to_matrices(filtered_dict)
+            states__lengthsz, approxspin_dict, matrices_dict = from_json_to_matrices(filtered_dict)
 
-            gmatrix, gshift = from_matrices_to_gshift(max_sz_list, sz_ground, matrices_dict, ppm)
+            gmatrix, gshift = from_matrices_to_gshift(states__lengthsz, matrices_dict, ppm)
             
             all_gshifts.append([excit_state, 
                                 (np.round(gshift[0].real, 3)),
@@ -1422,6 +1424,7 @@ def from_gvalue_to_shift(lista):
     :param: list
     :return: g_shift
     """
+    lande_factor = 2.002319304363
     g_shift = []
     for i in range(0, len(lista)):
         value = (lista[i] - lande_factor) * 10**3
@@ -1569,3 +1572,328 @@ def comparison_s2(json_file, outputdict, save_options):
                     '<S2> comparison', 
                     save_options)
 
+
+def remove_duplicate_positions(data_dict):
+    """
+    Checks if the second element (value at key 0.2) contains duplicate values.
+    If duplicates exist, removes that index from all lists in the dictionary.
+
+    Parameters:
+        data_dict (dict): Dictionary where keys map to lists of values.
+
+    Returns:
+        dict: A new dictionary with the duplicate position removed from all lists.
+    """
+    keys = list(data_dict.keys())
+
+    # Ensure there is a second entry in the dictionary
+    if len(keys) < 2:
+        return data_dict
+
+    # Get the second dictionary entry (key at index 1)
+    second_key = keys[1]
+    second_list = data_dict[second_key]
+
+    # Identify duplicate values in the second entry
+    seen = set()
+    duplicate_indices = set()
+    
+    for i, value in enumerate(second_list):
+        if value in seen:
+            duplicate_indices.add(i)
+        else:
+            seen.add(value)
+
+    # If no duplicates found, return original dictionary
+    if not duplicate_indices:
+        return data_dict
+
+    # Remove duplicate positions from all lists
+    new_dict = {}
+    for key, values in data_dict.items():
+        new_dict[key] = [v for i, v in enumerate(values) if i not in duplicate_indices]
+
+    return new_dict
+
+
+def fit_polynomial(scaling_dict, degree=3):
+    """
+    Fits a polynomial to each of the three elements in the dictionary and returns the coefficients and R² values.
+    the first element will correspond to the coefficient of x², the second element will correspond to the coefficient of x,
+    and the third element will correspond to the constant term.
+    
+    Parameters:
+    scaling_dict (dict): Dictionary where keys are x-values and values are lists of three y-values.
+    degree (int): Degree of the polynomial fit.
+    
+    Returns:
+    dict: A dictionary with polynomial coefficients and R² values for each y-series.
+    """
+    x_values = np.array(list(scaling_dict.keys()))
+    y_values = np.array(list(scaling_dict.values()))
+
+    poly_results = {}
+
+    for i, key in enumerate(["gxx", "gyy", "gzz"]):
+        coeffs = np.polyfit(x_values, y_values[:, i], degree)  # Fit polynomial
+        p = np.poly1d(coeffs)  # Create polynomial function
+        
+        # Calculate R²
+        y_pred = p(x_values)  # Predicted values
+        ss_res = np.sum((y_values[:, i] - y_pred) ** 2)  # Residual sum of squares
+        ss_tot = np.sum((y_values[:, i] - np.mean(y_values[:, i])) ** 2)  # Total sum of squares
+        r2 = 1 - (ss_res / ss_tot)  # R² calculation
+        
+        poly_results[key] = {"coefficients": coeffs, "R^2": r2}  # Store results
+    
+    return poly_results
+
+
+def plot_and_fit_scaling_dict(scaling_dict, name, xname, save_pic, degree=2):
+    """
+    Plots each of the three elements in the list against the key in the dictionary and fits a polynomial.
+    The polynomial equation is displayed on the graph.
+    
+    Parameters:
+    scaling_dict (dict): Dictionary where keys are x-values and values are lists of three y-values.
+    degree (int): Degree of the polynomial fit.
+    """
+    # Letter size
+    smalllet = 10
+
+    x_values = np.array(list(scaling_dict.keys()))
+    y_values = np.array(list(scaling_dict.values()))
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    
+    labels = ["$\mathregular{\Delta g_{\perp}}$", "$\mathregular{\Delta g_{\parallel}}$", "y3"]
+    markers = ['o', 's', '^']
+    colors = ['r', 'b', 'b']
+    
+    for i in range(2):
+        # Scatter plot
+        ax.scatter(x_values, y_values[:, i], label=labels[i], marker=markers[i], color=colors[i])
+
+        # Polynomial fit
+        coeffs = np.polyfit(x_values, y_values[:, i], degree)
+        poly_eq = np.poly1d(coeffs)
+
+        # Generate smooth curve for fitting
+        x_fit = np.linspace(min(x_values), max(x_values), 100)
+        y_fit = poly_eq(x_fit)
+        ax.plot(x_fit, y_fit, color=colors[i], linestyle="--", label="_nolegend_") # label=f"{labels[i]} fit"
+
+        # Display equation on the plot
+        # eq_str = " + ".join([f"{c:.3f}x^{degree - j}" if j < degree else f"{c:.3f}" 
+        #                     for j, c in enumerate(coeffs)])
+        # ax.text(0.05, 0.9 - i * 0.1, f"{labels[i]}: {eq_str}", 
+        #         transform=ax.transAxes, fontsize=10, color=colors[i])
+    
+    ax.tick_params(axis='both', which='major', labelsize=smalllet + 4)
+
+    ax.set_xlabel(xname, fontsize=smalllet + 6)
+    ax.set_ylabel("$\mathregular{\Delta g}$, ppt", fontsize=smalllet + 6)
+    ax.legend(fontsize=smalllet + 8)
+    # ax.grid(True) 
+    
+    # Showing the plot 
+    save_picture(save_pic, name, '')
+
+
+def get_scaling_analysis(scaling__analysis, outpuut_dict, file, savepic, ppms):
+    """
+    SOC scaling analysis. 
+    """
+    states__lengthsz, approxspin_dict, matrices_dict = from_json_to_matrices(outpuut_dict)
+    soc = matrices_dict["soc"].copy()
+    orbmoment = matrices_dict["orbital"].copy()
+    # spin_mat = matrices_dict["spin"].copy()
+
+    a = 0
+    b = 1.6
+    interval = 0.2
+
+    if scaling__analysis == 1:
+        print("------------------------------")
+        print(" SOC SCALING ANALYSIS: NI CASE")
+        print("------------------------------")
+
+        # scaling_dict = {}
+        # for soc_factor in np.arange(a, b, interval):
+        #     matrices_dict["soc"] = soc * soc_factor
+
+        #     gmatrix, gshift = from_matrices_to_gshift(states__lengthsz, matrices_dict, ppms)
+
+        #     scaling_dict.update({round(float(soc_factor), 1): [round(float(gshift[0].real), 3), 
+        #                     round(float(gshift[1].real), 3), 
+        #                     round(float(gshift[2].real), 3)]})
+            
+        #     print('Scaling factor: ', soc_factor, ', g-shifts: ', [round(float(gshift[0].real), 3), 
+        #                     round(float(gshift[1].real), 3), 
+        #                     round(float(gshift[2].real), 3)])
+        # print()
+
+        # NI SOC RESULTS
+        scaling_dict = {0.0: [0.0, 0.0, 0.0], 
+        0.2: [4.695, 4.695, -0.982], 
+        0.4: [7.342, 7.342, -3.912], 
+        0.6000000000000001: [7.938, 7.938, -8.736], 
+        0.8: [6.518, 6.518, -15.364], 
+        1.0: [3.157, 3.157, -23.668], 
+        1.2000000000000002: [-2.035, -2.035, -33.499], 
+        1.4000000000000001: [-8.918, -8.918, -44.688]}
+        
+        # Removing the second element from each value list
+        new_scaling_dict = remove_duplicate_positions(scaling_dict)
+        # new_scaling_dict = {key: [val[1], val[2]] for key, val in scaling_dict.items()}
+        namee = file.split('_')[0]+"_soc_scaling"
+        plot_and_fit_scaling_dict(new_scaling_dict, namee, "SOC Factor Scaling", savepic)
+
+        # Print formatted output
+        polynomial_coeffs = fit_polynomial(scaling_dict)
+        print("SOC scaling - Polynomial fit:")
+        for key, values in polynomial_coeffs.items():
+            coeffs = values["coefficients"]
+            r2 = values["R^2"]
+            print(f"{key}: A={coeffs[0]:.6f}, B={coeffs[1]:.6f}, C={coeffs[2]:.6f}, D={coeffs[3]:.6f}, R^2={r2:.6f}")
+
+        print('---------------------')
+        print()
+
+    elif scaling__analysis == 2:
+        print("------------------------------")
+        print(" L SCALING ANALYSIS: NI CASE")
+        print("------------------------------")
+
+        # scaling_dict = {}
+        # for orbit_factor in np.arange(a, b, interval):
+        #     matrices_dict["orbital"] = orbmoment * orbit_factor
+
+        #     gmatrix, gshift = from_matrices_to_gshift(states__lengthsz, matrices_dict, ppms)
+
+        #     scaling_dict.update({round(float(orbit_factor), 1): [round(float(gshift[0].real), 3), 
+        #                     round(float(gshift[1].real), 3), 
+        #                     round(float(gshift[2].real), 3)]})
+            
+        #     print('Scaling factor: ', round(orbit_factor, 2), ', g-shifts: ', [round(float(gshift[0].real), 3), 
+        #                     round(float(gshift[1].real), 3), 
+        #                     round(float(gshift[2].real), 3)])
+        
+        # NI L VALUES
+        scaling_dict = {0.0: [-14.184, -14.184, -17.097], 
+        0.2: [-10.716, -10.716, -18.411], 
+        0.4: [-7.248, -7.248, -19.725], 
+        0.6: [-3.78, -3.779, -21.04], 
+        0.8: [-0.311, -0.311, -22.354], 
+        1.0: [3.157, 3.157, -23.668], 
+        1.2: [6.625, 6.625, -24.982], 
+        1.4: [10.093, 10.093, -26.297]}
+            
+        # Removing the second element from each value list
+        new_scaling_dict = remove_duplicate_positions(scaling_dict)
+        namee = file.split('_')[0]+"_l_scaling"
+        plot_and_fit_scaling_dict(new_scaling_dict, namee, "L Factor Scaling", savepic)
+
+        # Print formatted output
+        polynomial_coeffs = fit_polynomial(scaling_dict)
+        print("SOC scaling - Polynomial fit:")
+        for key, values in polynomial_coeffs.items():
+            coeffs = values["coefficients"]
+            r2 = values["R^2"]
+            print(f"{key}: A={coeffs[0]:.6f}, B={coeffs[1]:.6f}, C={coeffs[2]:.6f}, D={coeffs[3]:.6f}, R^2={r2:.6f}")
+
+        print('---------------------')
+        print()
+    
+    elif scaling__analysis == 3:
+        print("----------------------------------------------")
+        print(" SPIN SCALING ANALYSIS (Landé factor scaling): NI CASE")
+        print("----------------------------------------------")
+        lande_factor = 2.002319304363
+        a = 0
+        b = lande_factor * 2 
+        interval = b / 10 
+
+        scaling_dict = {}
+        # for factor_lande in np.arange(a, b, interval):
+        #     # matrices_dict["spin"] = spin_mat * spin_factor 
+
+        #     gmatrix, gshift = from_matrices_to_gshift(states__lengthsz, matrices_dict, ppms, factor_lande)
+
+        #     scaling_dict.update({round(float(factor_lande), 1): [round(float(gshift[0].real), 3), 
+        #                     round(float(gshift[1].real), 3), 
+        #                     round(float(gshift[2].real), 3)]})
+            
+        #     print('Scaling Landé factor: ', factor_lande, ', g-shifts: ', [round(float(gshift[0].real), 3), 
+        #                     round(float(gshift[1].real), 3), 
+        #                     round(float(gshift[2].real), 3)])
+        # print()
+
+        # NI RESULTS: 
+        scaling_dict = {0.0: [17.34, 17.34, 6.571], 
+        0.4004638608726: [14.504, 14.504, -9.991], 
+        0.8009277217452: [11.667, 11.667, -13.41], 
+        1.2013915826177999: [8.83, 8.83, -16.829], 
+        1.6018554434904: [5.993, 5.993, -20.249], 
+        2.002319304363: [3.157, 3.157, -23.668], 
+        2.4027831652355998: [0.32, 0.32, -27.088], 
+        2.8032470261082: [-2.517, -2.517, -30.507], 
+        3.2037108869808: [-5.354, -5.354, -33.926], 
+        3.6041747478534: [-8.19, -8.19, -37.346]}
+        
+        # Removing the second element from each value list
+        new_scaling_dict = remove_duplicate_positions(scaling_dict)
+        # new_scaling_dict = {key: [val[1], val[2]] for key, val in scaling_dict.items()}
+        namee = file.split('_')[0]+"_spin_scaling"
+        plot_and_fit_scaling_dict(new_scaling_dict, namee, "Landé Factor value", savepic)
+
+        # Print formatted output
+        polynomial_coeffs = fit_polynomial(scaling_dict)
+        print("Spin scaling - Polynomial fit:")
+        for key, values in polynomial_coeffs.items():
+            coeffs = values["coefficients"]
+            r2 = values["R^2"]
+            print(f"{key}: A={coeffs[0]:.6f}, B={coeffs[1]:.6f}, C={coeffs[2]:.6f}, D={coeffs[3]:.6f}, R^2={r2:.6f}")
+
+        print('---------------------')
+        print()
+
+    elif scaling__analysis == 4:
+        print("------------------------------")
+        print(" SOC SCALING ANALYSIS")
+        print("------------------------------")
+
+        for orbit_factor in np.arange(a, b, interval):
+            matrices_dict["orbital"] = orbmoment * orbit_factor
+            print('Orbital factor: ', orbit_factor)
+
+            scaling_dict = {}
+            for soc_factor in np.arange(a, b, interval): 
+                matrices_dict["soc"] = soc * soc_factor
+
+                gmatrix, gshift = from_matrices_to_gshift(states__lengthsz, matrices_dict, ppms)
+
+                scaling_dict.update({round(float(soc_factor), 1): [round(float(gshift[0].real), 3), 
+                                round(float(gshift[1].real), 3), 
+                                round(float(gshift[2].real), 3)]})
+                
+                print('Scaling factor: ', soc_factor, ', g-shifts: ', [round(float(gshift[0].real), 3), 
+                                round(float(gshift[1].real), 3), 
+                                round(float(gshift[2].real), 3)])
+            print()
+            
+            # Removing the second element from each value list
+            new_scaling_dict = remove_duplicate_positions(scaling_dict)
+            namee = file.split('_')[0]+"_soc_scaling"+"_l_"+str(round(orbit_factor, 2))
+            plot_and_fit_scaling_dict(new_scaling_dict, namee, "Scaling Factor SOC", savepic)
+
+            # Print formatted output
+            polynomial_coeffs = fit_polynomial(scaling_dict)
+            print("SOC scaling - Polynomial fit:")
+            for key, values in polynomial_coeffs.items():
+                coeffs = values["coefficients"]
+                r2 = values["R^2"]
+                print(f"{key}: A={coeffs[0]:.6f}, B={coeffs[1]:.6f}, C={coeffs[2]:.6f}, D={coeffs[3]:.6f}, R^2={r2:.6f}")
+
+            print('---------------------')
+            print()

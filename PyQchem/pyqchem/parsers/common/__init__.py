@@ -86,7 +86,7 @@ def get_cis_occupations_list(number_of_orbitals,
     for transition in beta_transitions:
         beta_occupation[transition['origin'] - 1] = 0
         beta_occupation[transition['target'] - 1] = 1
-
+    
     return {'alpha': alpha_occupation,
             'beta': beta_occupation}
 
