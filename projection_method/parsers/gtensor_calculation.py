@@ -1111,7 +1111,7 @@ def plot_g_tensor_vs_states(file, subtitle, presentation_matrix, x_title, y_titl
 
     # MAIN FEATURES:
     fuente = 'sans-serif'  # 'serif'
-    small_size = 17
+    small_size = 17 # 25
     legend_size = small_size + 3
     bigger_size = small_size + 3
     weight_selected = 'normal'
@@ -1185,6 +1185,10 @@ def plot_g_tensor_vs_states(file, subtitle, presentation_matrix, x_title, y_titl
 
     # LIMIT TO AXIS:
     ax.set_xlim(min(x)-1, max(x)+1)
+
+    # To put only integer numbers in the label: 
+    # from matplotlib.ticker import MaxNLocator
+    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
     max_value = np.maximum.reduce([y1.max(), y2.max(), y3.max()])
     min_value = np.minimum.reduce([y1.min(), y2.min(), y3.min()])

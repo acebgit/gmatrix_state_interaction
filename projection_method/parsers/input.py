@@ -13,7 +13,7 @@ initial_states = [1, 2] # list(range(1, 12))
 symmetry_selection = 'B2'  # Symmetry selected states_selected
 
 ######## G-TENSOR CALCULATION ########
-calculate_gshift = 0
+calculate_gshift = 1
 ppm = 0 # 0: ppt; 1: ppm
 soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
 soc_orders = 0 # 0: All orders; 1: First-order 
@@ -27,7 +27,7 @@ excit_plot = 0 # 0: not show plot, 1: show plot
 sum_over_states_analysis = 0 # SOS g-tensor plot: g-tensor calculation with n states
 sos_cutoff = 0.5
 g_estimation = 0
-save_plot = 1
+save_plot = 0
 
 #### <S2> comparison ####
 s2_comparison = 0
@@ -36,7 +36,7 @@ s2_sos_cutoff = 0.5
 s2_per_gshift = 1
 
 ##### SOC scaling analysis #####
-scaling_analysis = 1 # Scaling analysis with 1: soc; 2: l; 3: spin; 4: l and soc
+scaling_analysis = 0 # Scaling analysis with 1: soc; 2: l; 3: spin; 4: l and soc
 fit_degree = 4 # order of the fitting 
 scaling_save_plot = 1
 
