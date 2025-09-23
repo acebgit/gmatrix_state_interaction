@@ -7,7 +7,7 @@ import numpy as np
 from numpy import linalg, sqrt
 from scipy import constants
 import pandas as pd
-from projection_method.parsers.gtensor_calculation import get_hamiltonian_construction, hermitian_test, \
+from projection_method.parsers_OPO.gmatrix_functions import get_hamiltonian_construction, hermitian_test, \
     units_gshift, diagonalization, angular_matrices_obtaining
 
 # Get the absolute path to local folder 'PyQChem'

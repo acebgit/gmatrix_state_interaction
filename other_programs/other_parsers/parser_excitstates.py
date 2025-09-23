@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from scipy import constants
 import pandas as pd
 
-from projection_method.parsers.parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
+from projection_method.parsers_OPO.parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
     take_selected_states_values, get_spin_orbit_couplings, from_energies_soc_to_g_values, from_ppt_to_ppm
 
 

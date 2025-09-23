@@ -1,9 +1,9 @@
 #####################################
 #          MODULES SELECTION
 #####################################
-from projection_method.parsers.parser_gtensor import print_g_calculation
+from projection_method.parsers_OPO.parser_gtensor import print_g_calculation
 from projectmethod.mixing_inputs_limited_states.parser_mixing_inputs import gfactor_exchange_energies_socs, from_energies_soc_to_g_values, sos_analysis_and_plot
-from projection_method.parsers.parser_excitstates import get_excited_states_analysis
+from projection_method.parsers_OPO.parser_excitstates import get_excited_states_analysis
 
 #####################################
 #            INPUT VALUES
