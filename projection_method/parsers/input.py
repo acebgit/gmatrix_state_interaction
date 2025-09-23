@@ -1,10 +1,7 @@
 import sys 
 from projection_method.parsers.gtensor_calculation import extract_data_from_json, get_selected_dict, \
     from_json_to_matrices, select_soc_order, from_matrices_to_gshift, print_g_calculation, gtensor_state_pairs_analysis, \
-    sum_over_state_plot, from_gvalue_to_shift, comparison_s2, get_scaling_analysis
-
-# from_gvalue_to_shift([1.8910, 1.9912, 1.8786, 1.9986])
-# exit()
+    sum_over_state_plot, comparison_s2, get_scaling_analysis
 
 ######## STATES SELECTION ######## 
 state_selection = 1 # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry
