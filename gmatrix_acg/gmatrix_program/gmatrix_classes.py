@@ -4,7 +4,7 @@ import sys
 import json
 from PyQchem.pyqchem.parsers.parser_rasci import parser_rasci
 from PyQchem.pyqchem.parsers.parser_cis import basic_cis
-from projection_method.parsers_OPO.gmatrix_functions import (
+from gmatrix_functions import (
     extract_data_from_json, get_selected_dict,
     from_json_to_matrices, from_matrices_to_gshift, print_g_calculation,
     gtensor_state_pairs_analysis, sum_over_state_plot,

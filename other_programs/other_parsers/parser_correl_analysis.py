@@ -6,10 +6,10 @@ AND THE G-TENSOR VALUES
 import numpy as np
 from scipy import stats
 
-from projection_method.parsers_OPO.parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, get_spin_orbit_couplings, \
+from projection_method_functions.parsers_OPO.parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, get_spin_orbit_couplings, \
     from_energies_soc_to_g_values, get_hamiltonian_construction, diagonalization, get_spin_matrices, \
     get_orbital_matrices, angular_matrices_obtention, from_angmoments_to_gshifts
-from projection_method.parsers_OPO.parser_plots import plot_g_tensor_vs_states
+from projection_method_functions.parsers_OPO.parser_plots import plot_g_tensor_vs_states
 
 ras_input = 'triplets_molecules/o2_8_6_triplets.out'  # str(sys.argv[1])
 state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected ; 2: use states_selected by selected symmetry

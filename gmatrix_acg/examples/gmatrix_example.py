@@ -1,7 +1,7 @@
 __author__ = 'Antonio Cebreiro'
 
 import sys
-from projection_method.parsers_OPO.gmatrix_classes import OutToJsonConverter, GTensorConfig, GTensorPipeline
+from gmatrix_program.gmatrix_classes import OutToJsonConverter, GTensorConfig, GTensorPipeline
 
 # Get the .out file from command line arguments
 if len(sys.argv) != 2:

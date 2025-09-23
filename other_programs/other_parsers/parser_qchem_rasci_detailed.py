@@ -8,9 +8,9 @@ __author__ = 'Antonio Cebreiro-Gallardo'
 #          MODULES SELECTION
 #####################################
 import sys 
-from projection_method.parsers_OPO.parser_gtensor import gfactor_presentation, from_gvalue_to_shift
-from projection_method.parsers_OPO.parser_excitstates import get_excited_states_analysis, gtensor_state_pairs_analysis, improved_active_space
-from projection_method.parsers_OPO.parser_plots import sos_analysis_and_plot, gfactor_change_ground_state, compare_gcalculation_gestimation
+from projection_method_functions.parsers_OPO.parser_gtensor import gfactor_presentation, from_gvalue_to_shift
+from projection_method_functions.parsers_OPO.parser_excitstates import get_excited_states_analysis, gtensor_state_pairs_analysis, improved_active_space
+from projection_method_functions.parsers_OPO.parser_plots import sos_analysis_and_plot, gfactor_change_ground_state, compare_gcalculation_gestimation
 
 # lista = from_gvalue_to_shift([2.0044, 2.0020, 2.0029])
 # print(lista)

@@ -1,5 +1,5 @@
 import sys 
-from projection_method.parsers_OPO.gmatrix_functions import extract_data_from_json, get_selected_dict, \
+from projection_method_functions.parsers_OPO.gmatrix_functions import extract_data_from_json, get_selected_dict, \
     from_json_to_matrices, select_soc_order, from_matrices_to_gshift, print_g_calculation, gtensor_state_pairs_analysis, \
     sum_over_state_plot, comparison_s2, get_scaling_analysis
 

@@ -4,12 +4,12 @@
 import numpy as np
 import sys
 
-from projection_method.parsers_OPO.parser_gtensor import get_number_of_states, get_eigenenergies, get_selected_states, \
+from projection_method_functions.parsers_OPO.parser_gtensor import get_number_of_states, get_eigenenergies, get_selected_states, \
     get_socc_values, get_ground_state_orbital_momentum, get_symmetry_states, \
     get_spin_orbit_couplings
-from projection_method.parsers_OPO.parser_gtensor import bolvin_from_energies_soc_to_g_values, print_g_calculation
-from projection_method.parsers_OPO.parser_excitstates import get_excited_states_analysis, improved_active_space
-from projection_method.parsers_OPO.parser_plots import get_bar_chart, bolvin_sos_analysis_and_plot
+from projection_method_functions.parsers_OPO.parser_gtensor import bolvin_from_energies_soc_to_g_values, print_g_calculation
+from projection_method_functions.parsers_OPO.parser_excitstates import get_excited_states_analysis, improved_active_space
+from projection_method_functions.parsers_OPO.parser_plots import get_bar_chart, bolvin_sos_analysis_and_plot
 
 #####################################
 #            INPUT VALUES

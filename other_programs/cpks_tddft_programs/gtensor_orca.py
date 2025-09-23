@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from projection_method.parsers_OPO.gmatrix_functions import save_picture
+from projection_method_functions.parsers_OPO.gmatrix_functions import save_picture
 
 ppm = 0
 save_options = 0

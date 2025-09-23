@@ -5,9 +5,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 # from matplotlib.ticker import MaxNLocator, MultipleLocator
 
-from projection_method.parsers_OPO.parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, \
+from projection_method_functions.parsers_OPO.parser_gtensor import get_number_of_states, get_selected_states, get_eigenenergies, \
     get_spin_orbit_couplings, from_energies_soc_to_g_values, get_symmetry_states
-from projection_method.parsers_OPO.parser_excitstates import get_groundst_socc_values, get_groundst_orbital_momentum, \
+from projection_method_functions.parsers_OPO.parser_excitstates import get_groundst_socc_values, get_groundst_orbital_momentum, \
     gshift_estimation_loop, gshift_calculation_loop
 
 # Get the absolute path to local folder 'PyQChem'

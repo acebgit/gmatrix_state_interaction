@@ -4,7 +4,7 @@ Calculation of the g-tensor using Q-Chem output with RAS-CI
 import numpy as np
 import matplotlib.pyplot as plt
 
-from projection_method.parsers_OPO.parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
+from projection_method_functions.parsers_OPO.parser_gtensor import get_number_of_states, get_symmetry_states, get_selected_states, get_eigenenergies, \
     get_spin_orbit_couplings, from_energies_soc_to_g_values, from_ppt_to_ppm
 
 
