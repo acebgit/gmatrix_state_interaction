@@ -476,34 +476,6 @@ def select_soc_order(soc_order, selected__states, states__lengthsz, matrices__di
     return matrices__dict
 
 
-def hermitian_test(matrix, sz_list):
-    """
-    Check if matrix is Hermitian. If not, "ValueError".
-    :param: matrix, sz_list
-    """
-    # Assuming matrix and sz_list are already defined
-    matrix_rounded = np.round(matrix, 4)
-    conjugate_matrix_rounded = np.round(np.conjugate(matrix.T), 4)
-
-    # Create a mask for the upper triangle including the diagonal
-    mask = np.triu(np.ones(matrix.shape, dtype=bool))
-
-    # Compare elements
-    different_elements = (matrix_rounded != conjugate_matrix_rounded) & mask
-
-    # Get the indices where the elements are different
-    i_indices, j_indices = np.where(different_elements)
-
-    # Compute states
-    state_1 = i_indices // len(sz_list)
-    state_2 = j_indices // len(sz_list)
-
-    # Combine states into a list of tuples if needed
-    states = list(zip(state_1, state_2))
-
-    if states: print(states)
-
-
 def get_hamiltonian_construction(states__lengthsz, eigenenergies, soc_matrix):
     """
     Construct Hamiltonian matrix with dimensions 'bra' x 'ket', with spin order (-Ms , +Ms) in the order of
@@ -1337,8 +1309,7 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, file_str
     print('Total: ', perturbative_sum[0], perturbative_sum[1], perturbative_sum[2])
 
     y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
-    # file_string = str(sys.argv[1]).split('.')[0]
-    if file_string is None: file_string = "default_name" # Avoid error if no file name is provided
+    file_string = str(sys.argv[1]).split('.')[0]
     plot_title = 'sos_analysis: ' + file_string
 
     plot_g_tensor_vs_states(file_string,
@@ -1349,94 +1320,6 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, file_str
                                 plot_title, 
                                 saveplot)
     return filtered_gshifts
-
-
-def filter_list(my_list, ncolumn, cutoff):
-    """
-    Get a list filtering the rows in "my_list" by the value "cutoff" of the column "ncolumn"
-    arg: my_list, ncolumn, cutoff
-    """
-    filtered_list = []
-    all_states = list(set([sublist[0] for sublist in my_list]))
-    for state in all_states:
-        configurations = [row for row in my_list if row[0] == state]
-        max_value = max(abs(sublist[ncolumn]) for sublist in configurations)
-        for config in configurations:
-            if abs(config[ncolumn]) >= cutoff * max_value:
-                filtered_list.append(config)
-    return filtered_list
-    
-
-def measure_function_time(func, *args, **kwargs): 
-    funct_and_args = partial(func, *args, **kwargs)
-    tiempo = timeit.timeit(funct_and_args, number=1)
-    nombre_funcion = func.__name__
-    print(f"{nombre_funcion} tardó {tiempo:.4f} segundos en ejecutarse.")
-
-
-def excitedstates_analysis(nstate, excitenergies, orbitmoment, soc, plot, cutoff_amp):
-    """
-    Get a table in pandas with information for each of the excited states. 
-    """
-    # max_orbitmoment = [abs(max(sublista, key=abs)) for sublista in orbitmoment]
-    socc = [((sum((abs(complex(elemento)))**2 for sublista in i for elemento in sublista))**(1/2)) for i in soc]
-    
-    # Make a list of orbital angular momentums rounded by two decimals 
-    np_data = np.array(orbitmoment)
-    rounded_data = np.around(np_data, decimals=2)
-    orbitmoment = rounded_data.tolist()
-
-    presentation_list_all = []
-    list_states = []
-    for state in range(0, nstate):
-        for transition in list(transitions_json[state]):
-            if state == 0:
-                presentation_list_all.append([state+1, excitenergies[state], "---", "---", 
-                                        transition['transition/SOMO'], 
-                                        transition['amplitude']])
-            else:
-                presentation_list_all.append([state+1, np.round(excitenergies[state],3), 
-                                        orbitmoment[state-1], 
-                                        np.round(socc[state-1],3),  
-                                        transition['transition/SOMO'], 
-                                        transition['amplitude']])
-    
-    # Filter all configurations by those with largest amplitude
-    presentation_list = []
-    presentation_list = filter_list(presentation_list_all, 5, cutoff_amp)
-
-    print("--------------------------")
-    print(" EXCITED STATES ANALYSIS")
-    print("--------------------------")
-    # Set display options to show all rows and columns
-    pd.set_option('display.max_rows', None)
-    pd.set_option('display.max_columns', None)
-    df = pd.DataFrame(presentation_list, columns=['state', 'energy','orbit mom','socc','transition/SOMO','amplitude'])
-    print(df.to_string(index=False))
-    print()
-
-    if plot == 1:
-        get_bar_chart(file[:-4], [i for i in range(1,nstate+1)], excitenergies, 'Electronic State',
-                        'Excitation energy (eV)', 'energ_analysis', save_pict=0)
-        orbit_max_values = [max(map(abs, sublist)) for sublist in orbitmoment]
-        get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], orbit_max_values, 'Electronic State',
-                        'Orbital angular momentum', 'orbit_analysis', save_pict=0)
-        get_bar_chart(file[:-4], [i for i in range(2,nstate+1)], socc, 'Electronic State',
-                        'Spin-orbit coupling constants (cm-1)', 'soc_analysis', save_pict=0)
-
-
-def from_gvalue_to_shift(lista):
-    """
-    Obtain the g-shifts from the g-values
-    :param: list
-    :return: g_shift
-    """
-    lande_factor = 2.002319304363
-    g_shift = []
-    for i in range(0, len(lista)):
-        value = (lista[i] - lande_factor) * 10**3
-        g_shift.append(value)
-    print(np.round(g_shift, 2))
 
 
 def comparison_s2(json_file, outputdict, save_options, s2__per_gshift, gshift__list):
@@ -1613,136 +1496,139 @@ def comparison_s2(json_file, outputdict, save_options, s2__per_gshift, gshift__l
                                 save_options)        
 
 
-def remove_duplicate_positions(data_dict):
-    """
-    Checks if the second element (value at key index 1) contains values that differ by 2 or less.
-    If such a pair is found, removes only the second occurrence in each pair from all lists.
-
-    Parameters:
-        data_dict (dict): Dictionary where keys map to lists of values.
-
-    Returns:
-        dict: A new dictionary with selected close-value positions removed from all lists.
-    """
-    keys = list(data_dict.keys())
-
-    # Ensure there is a second entry in the dictionary
-    if len(keys) < 2:
-        return data_dict
-
-    second_key = keys[1]
-    second_list = data_dict[second_key]
-
-    remove_indices = set()
-    used = set()
-
-    for i in range(len(second_list)):
-        for j in range(i + 1, len(second_list)):
-            if abs(second_list[i] - second_list[j]) <= 2 and j not in remove_indices and j not in used:
-                remove_indices.add(j)
-                used.add(i)
-                break  # remove only one element per conflict
-
-    if not remove_indices:
-        return data_dict
-
-    # Remove selected positions from all lists
-    new_dict = {}
-    for key, values in data_dict.items():
-        new_dict[key] = [v for idx, v in enumerate(values) if idx not in remove_indices]
-
-    return new_dict
-
-
-
-def fit_polynomial(scaling_dict, degree=3):
-    """
-    Fits a polynomial to each of the three elements in the dictionary and returns the coefficients and R² values.
-    the first element will correspond to the coefficient of x², the second element will correspond to the coefficient of x,
-    and the third element will correspond to the constant term.
-    
-    Parameters:
-    scaling_dict (dict): Dictionary where keys are x-values and values are lists of three y-values.
-    degree (int): Degree of the polynomial fit.
-    
-    Returns:
-    dict: A dictionary with polynomial coefficients and R² values for each y-series.
-    """
-    x_values = np.array(list(scaling_dict.keys()))
-    y_values = np.array(list(scaling_dict.values()))
-
-    poly_results = {}
-
-    for i, key in enumerate(["gxx", "gyy", "gzz"]):
-        coeffs = np.polyfit(x_values, y_values[:, i], degree)  # Fit polynomial
-        p = np.poly1d(coeffs)  # Create polynomial function
-        
-        # Calculate R²
-        y_pred = p(x_values)  # Predicted values
-        ss_res = np.sum((y_values[:, i] - y_pred) ** 2)  # Residual sum of squares
-        ss_tot = np.sum((y_values[:, i] - np.mean(y_values[:, i])) ** 2)  # Total sum of squares
-        r2 = 1 - (ss_res / ss_tot)  # R² calculation
-        
-        poly_results[key] = {"coefficients": coeffs, "R^2": r2}  # Store results
-    
-    return poly_results
-
-
-def plot_and_fit_scaling_dict(scaling_dict, name, xname, save_pic, degree=2):
-    """
-    Plots each of the three elements in the list against the key in the dictionary and fits a polynomial.
-    The polynomial equation is displayed on the graph.
-    
-    Parameters:
-    scaling_dict (dict): Dictionary where keys are x-values and values are lists of three y-values.
-    degree (int): Degree of the polynomial fit.
-    """
-    # Letter size
-    smalllet = 10
-
-    x_values = np.array(list(scaling_dict.keys()))
-    y_values = np.array(list(scaling_dict.values()))
-
-    fig, ax = plt.subplots(figsize=(8, 6))
-    
-    labels = ["$\mathregular{\Delta g_{\perp}}$", "$\mathregular{\Delta g_{\parallel}}$", "y3"]
-    markers = ['o', 's', '^']
-    colors = ['r', 'b', 'b']
-    
-    for i in range(2):
-        # Scatter plot
-        ax.scatter(x_values, y_values[:, i], label=labels[i], marker=markers[i], color=colors[i])
-
-        # Polynomial fit
-        coeffs = np.polyfit(x_values, y_values[:, i], degree)
-        poly_eq = np.poly1d(coeffs)
-
-        # Generate smooth curve for fitting
-        x_fit = np.linspace(min(x_values), max(x_values), 100)
-        y_fit = poly_eq(x_fit)
-        ax.plot(x_fit, y_fit, color=colors[i], linestyle="--", label="_nolegend_") # label=f"{labels[i]} fit"
-
-        # Display equation on the plot
-        # eq_str = " + ".join([f"{c:.3f}x^{degree - j}" if j < degree else f"{c:.3f}" 
-        #                     for j, c in enumerate(coeffs)])
-        # ax.text(0.05, 0.9 - i * 0.1, f"{labels[i]}: {eq_str}", 
-        #         transform=ax.transAxes, fontsize=10, color=colors[i])
-    
-    ax.tick_params(axis='both', which='major', labelsize=smalllet + 4)
-
-    ax.set_xlabel(xname, fontsize=smalllet + 6)
-    ax.set_ylabel("$\mathregular{\Delta g}$, ppt", fontsize=smalllet + 6)
-    ax.legend(fontsize=smalllet + 8)
-    # ax.grid(True) 
-    
-    # Showing the plot 
-    save_picture(save_pic, name, '')
-
-
 def get_scaling_analysis(scaling__analysis, degree_fit, outpuut_dict, file, savepic, ppms):
     """
     SOC scaling analysis. 
     """
+    def remove_duplicate_positions(data_dict):
+        """
+        Checks if the second element (value at key index 1) contains values that differ by 2 or less.
+        If such a pair is found, removes only the second occurrence in each pair from all lists.
+
+        Parameters:
+            data_dict (dict): Dictionary where keys map to lists of values.
+
+        Returns:
+            dict: A new dictionary with selected close-value positions removed from all lists.
+        """
+        keys = list(data_dict.keys())
+
+        # Ensure there is a second entry in the dictionary
+        if len(keys) < 2:
+            return data_dict
+
+        second_key = keys[1]
+        second_list = data_dict[second_key]
+
+        remove_indices = set()
+        used = set()
+
+        for i in range(len(second_list)):
+            for j in range(i + 1, len(second_list)):
+                if abs(second_list[i] - second_list[j]) <= 2 and j not in remove_indices and j not in used:
+                    remove_indices.add(j)
+                    used.add(i)
+                    break  # remove only one element per conflict
+
+        if not remove_indices:
+            return data_dict
+
+        # Remove selected positions from all lists
+        new_dict = {}
+        for key, values in data_dict.items():
+            new_dict[key] = [v for idx, v in enumerate(values) if idx not in remove_indices]
+
+        return new_dict
+
+    def fit_polynomial(scaling_dict, degree=3):
+        """
+        Fits a polynomial to each of the three elements in the dictionary and returns the coefficients and R² values.
+        the first element will correspond to the coefficient of x², the second element will correspond to the coefficient of x,
+        and the third element will correspond to the constant term.
+        
+        Parameters:
+        scaling_dict (dict): Dictionary where keys are x-values and values are lists of three y-values.
+        degree (int): Degree of the polynomial fit.
+        
+        Returns:
+        dict: A dictionary with polynomial coefficients and R² values for each y-series.
+        """
+        x_values = np.array(list(scaling_dict.keys()))
+        y_values = np.array(list(scaling_dict.values()))
+
+        poly_results = {}
+
+        for i, key in enumerate(["gxx", "gyy", "gzz"]):
+            coeffs = np.polyfit(x_values, y_values[:, i], degree)  # Fit polynomial
+            p = np.poly1d(coeffs)  # Create polynomial function
+            
+            # Calculate R²
+            y_pred = p(x_values)  # Predicted values
+            ss_res = np.sum((y_values[:, i] - y_pred) ** 2)  # Residual sum of squares
+            ss_tot = np.sum((y_values[:, i] - np.mean(y_values[:, i])) ** 2)  # Total sum of squares
+            r2 = 1 - (ss_res / ss_tot)  # R² calculation
+            
+            poly_results[key] = {"coefficients": coeffs, "R^2": r2}  # Store results
+        
+        return poly_results
+
+    def plot_and_fit_scaling_dict(scaling_dict, name, xname, save_pic, degree=2):
+        """
+        Plots each of the three elements in the list against the key in the dictionary and fits a polynomial.
+        The polynomial equation is displayed on the graph.
+        
+        Parameters:
+        scaling_dict (dict): Dictionary where keys are x-values and values are lists of three y-values.
+        degree (int): Degree of the polynomial fit.
+        """
+        # Letter size
+        smalllet = 10
+
+        x_values = np.array(list(scaling_dict.keys()))
+        # y_values = np.array(list(scaling_dict.values()))
+        y_values = np.array(list(scaling_dict.values()), dtype=float)
+        if y_values.ndim == 1:
+            y_values = y_values[:, np.newaxis]
+
+        fig, ax = plt.subplots(figsize=(8, 6))
+        
+        labels = ["$\mathregular{\Delta g_{\perp}}$", "$\mathregular{\Delta g_{\parallel}}$", "y3"]
+        markers = ['o', 's', '^']
+        colors = ['r', 'b', 'b']
+        
+        ncols = y_values.shape[1]
+        for i in range(ncols):
+            # Scatter plot
+            ax.scatter(x_values, y_values[:, i],
+                        label=labels[i] if i < len(labels) else f"y{i+1}",
+                        marker=markers[i % len(markers)],
+                        color=colors[i % len(colors)])
+
+            # Polynomial fit
+            coeffs = np.polyfit(x_values, y_values[:, i], degree)
+            poly_eq = np.poly1d(coeffs)
+
+            # Generate smooth curve for fitting
+            x_fit = np.linspace(min(x_values), max(x_values), 100)
+            y_fit = poly_eq(x_fit)
+            ax.plot(x_fit, y_fit, color=colors[i], linestyle="--", label="_nolegend_") # label=f"{labels[i]} fit"
+
+            # Display equation on the plot
+            # eq_str = " + ".join([f"{c:.3f}x^{degree - j}" if j < degree else f"{c:.3f}" 
+            #                     for j, c in enumerate(coeffs)])
+            # ax.text(0.05, 0.9 - i * 0.1, f"{labels[i]}: {eq_str}", 
+            #         transform=ax.transAxes, fontsize=10, color=colors[i])
+        
+        ax.tick_params(axis='both', which='major', labelsize=smalllet + 4)
+
+        ax.set_xlabel(xname, fontsize=smalllet + 6)
+        ax.set_ylabel("$\mathregular{\Delta g}$, ppt", fontsize=smalllet + 6)
+        ax.legend(fontsize=smalllet + 8)
+        # ax.grid(True) 
+        
+        # Showing the plot 
+        save_picture(save_pic, name, '')
+
     states__lengthsz, approxspin_dict, matrices_dict = from_json_to_matrices(outpuut_dict)
     soc = matrices_dict["soc"].copy()
     orbmoment = matrices_dict["orbital"].copy()

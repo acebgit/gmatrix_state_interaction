@@ -270,24 +270,24 @@ class GTensorConfig:
 
         # --- g-tensor calculation by pairs ---
         self.cutoff_gvalue = 0  # !=0: cut-off between ground/excited states (% of max g-value)
-        self.cutoff_config = 0.75  # cut-off for configuration amplitude (% of max amplitude)
+        self.cutoff_config = 0  # cut-off for configuration amplitude (% of max amplitude)
         self.excit_plot = 0  # 0: do not show plot; 1: show plot
 
         # --- Sum-over-states (SOS) analysis ---
         self.sum_over_states_analysis = 0  # SOS g-tensor plot with n states
-        self.sos_cutoff = 0.5
+        self.sos_cutoff = 0
         self.g_estimation = 0
-        self.save_plot = 0
+        self.save_plot = 1
 
         # --- <S²> analysis ---
         self.s2_comparison = 0
         self.s2_save_plot = 1
-        self.s2_sos_cutoff = 0.5
+        self.s2_sos_cutoff = 0
         self.s2_per_gshift = 1
 
         # --- Scaling analysis ---
-        self.scaling_analysis = 0  # 1: SOC; 2: Orbital; 3: Spin; 4: Orbital + SOC
-        self.fit_degree = 4  # Polynomial fitting degree
+        self.scaling_analysis = 1  # 1: SOC; 2: Orbital; 3: Spin; 4: Orbital + SOC
+        self.fit_degree = 3  # Polynomial fitting degree
         self.scaling_save_plot = 1
 
 
@@ -347,7 +347,6 @@ class GTensorPipeline:
             self.config.ppm,
             self.config.sos_cutoff,
             self.config.save_plot,
-            file_string=self.file.split('.')[0]  # pass the file name explicitly
         )
 
     def run_s2_comparison(self):

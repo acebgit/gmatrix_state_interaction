@@ -1,0 +1,3266 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 6.0 (devel), Q-Chem, Inc., Pleasanton, CA (2022)
+
+ E. Epifanovsky,  A. T. B. Gilbert,  Xintian Feng,  Joonho Lee,  Yuezhi Mao,  
+ N. Mardirossian,  P. Pokhilko,  A. White,  M. Wormit,  M. P. Coons,  
+ A. L. Dempwolff,  Zhengting Gan,  D. Hait,  P. R. Horn,  L. D. Jacobson,  
+ I. Kaliman,  J. Kussmann,  A. W. Lange,  Ka Un Lao,  D. S. Levine,  Jie Liu,  
+ S. C. McKenzie,  A. F. Morrison,  K. Nanda,  F. Plasser,  D. R. Rehn,  
+ M. L. Vidal,  Zhi-Qiang You,  Ying Zhu,  B. Alam,  B. Albrecht,  
+ A. Aldossary,  E. Alguire,  J. H. Andersen,  V. Athavale,  D. Barton,  
+ K. Begam,  A. Behn,  N. Bellonzi,  Y. A. Bernard,  E. J. Berquist,  
+ H. Burton,  A. Carreras,  K. Carter-Fenk,  Romit Chakraborty,  
+ Chandrima Chakravarty,  Junhan Chen,  A. D. Chien,  K. D. Closser,  
+ V. Cofer-Shabica,  L. Cunha,  S. Dasgupta,  Jia Deng,  M. de Wergifosse,  
+ M. Diedenhofen,  Hainam Do,  S. Ehlert,  Po-Tung Fang,  S. Fatehi,  
+ Qingguo Feng,  T. Friedhoff,  B. Ganoe,  J. Gayvert,  Qinghui Ge,  
+ G. Gidofalvi,  M. Goldey,  J. Gomes,  C. Gonzalez-Espinoza,  S. Gulania,  
+ A. Gunina,  J. A. Gyamfi,  M. W. D. Hanson-Heine,  P. H. P. Harbach,  
+ A. W. Hauser,  M. F. Herbst,  M. Hernandez Vera,  M. Hodecker,  
+ Z. C. Holden,  S. Houck,  Xunkun Huang,  Kerwin Hui,  B. C. Huynh,  
+ K. Ikeda,  M. Ivanov,  Hyunjun Ji,  Zuxin Jin,  Hanjie Jiang,  B. Kaduk,  
+ S. Kaehler,  R. Kang,  K. Khistyaev,  Jaehoon Kim,  Yongbin Kim,  
+ P. Klunzinger,  Z. Koczor-Benda,  Joong Hoon Koh,  D. Kosenkov,  
+ Saikiran Kotaru,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  K. Kue,  
+ A. Kunitsa,  T. Kus,  A. Landau,  K. V. Lawler,  D. Lefrancois,  S. Lehtola,  
+ Rain Li,  Shaozhi Li,  Yi-Pei Li,  Jiashu Liang,  M. Liebenthal,  
+ Hung-Hsuan Lin,  You-Sheng Lin,  Fenglai Liu,  Kuan-Yu Liu,  
+ M. Loipersberger,  A. Luenser,  C. Malbon,  A. Manjanath,  P. Manohar,  
+ E. Mansoor,  S. F. Manzer,  Shan-Ping Mao,  A. V. Marenich,  T. Markovich,  
+ S. Mason,  F. Matz,  S. A. Maurer,  P. F. McLaughlin,  M. F. S. J. Menger,  
+ J.-M. Mewes,  S. A. Mewes,  P. Morgante,  Mohammad Mostafanejad,  
+ J. W. Mullinax,  K. J. Oosterbaan,  G. Paran,  V. Parravicini,  
+ Alexander C. Paul,  Suranjan K. Paul,  F. Pavosevic,  Zheng Pei,  S. Prager,  
+ E. I. Proynov,  E. Ramos,  B. Rana,  A. E. Rask,  A. Rettig,  R. M. Richard,  
+ F. Rob,  E. Rossomme,  T. Scheele,  M. Scheurer,  M. Schneider,  
+ P. E. Schneider,  N. Sergueev,  S. M. Sharada,  Hengyuan Shen,  
+ W. Skomorowski,  D. W. Small,  C. J. Stein,  Yingli Su,  Yu-Chuan Su,  
+ E. J. Sundstrom,  Zhen Tao,  J. Thirman,  Hung-Yi Tsai,  T. Tsuchimochi,  
+ N. M. Tubman,  C. Utku,  S. P. Veccham,  O. Vydrov,  J. Wenzel,  
+ Jonathan Wong,  J. Witte,  A. Yamada,  Chou-Hsun Yang,  Kun Yao,  
+ S. Yeganeh,  S. R. Yost,  A. Zech,  F. Zeller,  Igor Ying Zhang,  
+ Xing Zhang,  Yu Zhang,  D. Zuev,  A. Aspuru-Guzik,  A. T. Bell,  
+ N. A. Besley,  K. B. Bravaya,  B. R. Brooks,  D. Casanova,  Jeng-Da Chai,  
+ Hsing-Ta Chen,  S. Coriani,  C. J. Cramer,  A. E. DePrince, III,  
+ R. A. DiStasio Jr.,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  
+ W. A. Goddard III,  S. Grimme,  S. Hammes-Schiffer,  T. Head-Gordon,  
+ W. J. Hehre,  Chao-Ping Hsu,  T.-C. Jagau,  Yousung Jung,  A. Klamt,  
+ Jing Kong,  D. S. Lambrecht,  Xiangyuan Li,  WanZhen Liang,  N. J. Mayhall,  
+ C. W. McCurdy,  J. B. Neaton,  T. Neudecker,  C. Ochsenfeld,  
+ J. A. Parkhill,  R. Peverati,  V. A. Rassolov,  Haisheng Ren,  Yihan Shao,  
+ L. V. Slipchenko,  R. P. Steele,  J. E. Subotnik,  A. J. W. Thom,  
+ A. Tkatchenko,  D. G. Truhlar,  T. Van Voorhis,  Fan Wang,  
+ T. A. Wesolowski,  K. B. Whaley,  H. L. Woodcock III,  P. M. Zimmerman,  
+ S. Faraji,  P. M. W. Gill,  M. Head-Gordon,  J. M. Herbert,  A. I. Krylov
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  R. Baer,  J. Baker,  G. J. O. Beran,  
+ K. Brandhorst,  S. T. Brown,  E. F. C. Byrd,  Arup K. Chakraborty,  
+ G. K. L. Chan,  Chun-Min Chang,  Yunqing Chen,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  R. G. Edgar,  J. Fosso-Tande,  
+ L. Fusti-Molnar,  D. Ghosh,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  
+ J. Gonthier,  M. S. Gordon,  S. R. Gwaltney,  G. Hawkins,  J. E. Herr,  
+ A. Heyden,  S. Hirata,  E. G. Hohenstein,  G. Kedziora,  F. J. Keil,  
+ C. Kelley,  Jihan Kim,  R. A. King,  R. Z. Khaliullin,  P. P. Korambath,  
+ W. Kurlancheek,  A. Laurent,  A. M. Lee,  M. S. Lee,  S. V. Levchenko,  
+ Ching Yeh Lin,  D. Liotard,  E. Livshits,  R. C. Lochan,  I. Lotan,  
+ L. A. Martinez-Martinez,  P. E. Maslen,  N. Nair,  D. P. O'Neill,  
+ D. Neuhauser,  E. Neuscamman,  C. M. Oana,  R. Olivares-Amaya,  R. Olson,  
+ T. M. Perrine,  B. Peters,  P. A. Pieniazek,  A. Prociuk,  Y. M. Rhee,  
+ J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  H. F. Schaefer III,  
+ M. W. Schmidt,  N. E. Schultz,  S. Sharma,  N. Shenvi,  C. D. Sherrill,  
+ A. C. Simmonett,  A. Sodt,  T. Stein,  D. Stuck,  K. S. Thanthiriwatte,  
+ V. Vanovschi,  L. Vogt,  Tao Wang,  A. Warshel,  M. A. Watson,  
+ C. F. Williams,  Q. Wu,  X. Xu,  Jun Yang,  W. Zhang,  Yan Zhao
+
+   Please cite Q-Chem as follows:
+  "Software for the frontiers of quantum chemistry:
+   An overview of developments in the Q-Chem 5 package"
+   J. Chem. Phys. 155, 084801 (2021)
+   https://doi.org/10.1063/5.0055522 (open access)
+
+ Q-Chem 6.0.1 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Tue Jan 16 09:56:05 2024  
+
+ Host: atlas-fdr-login-01
+0
+
+     Scratch files written to ./qchem3650//
+ Processing $rem in /scratch/abel/SOFTWARE/qchem/config/preferences:
+ Processing $rem in /dipc/acebg/.qchemrc:
+
+ Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ TD-DFT/TDA CALCULATION
+$end
+
+$molecule
+ READ h2o.molecule
+$end
+
+$rem
+!**REFERENCE***     
+JOBTYPE            SP
+EXCHANGE           GEN   !gen:specify in $xc_functional
+CORRELATION        NONE
+BASIS              STO-3G
+
+!***SCF REFERENCE***
+!INPUT_BOHR          TRUE
+!SKIP_SCFMAN        FALSE
+!UNRESTRICTED       FALSE !rectricted-TDDFT not avail in doublets
+!SCF_GUESS          core
+!SCF_GUESS_MIX      FALSE
+!SCF_GUESS_ALWAYS   FALSE
+!MAX_SCF_CYCLES     500
+!SCF_CONVERGENCE    10
+!SCF_ALGORITHM      DIIS !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
+
+!SYMMETRY           TRUE !use of symmetry for calculating integrals
+!SYM_IGNORE         FALSE !turn off using symmetry
+!SYM_TOL            5 !tolerance for determining point group
+
+!THRESH             14
+!SCF_FINAL_PRINT    2 !0,1,2,3
+
+!****CIS****
+CIS_N_ROOTS        10
+!CIS_CONVERGENCE   10
+MAX_CIS_CYCLES     200
+!CIS_SINGLETS      true
+!CIS_TRIPLETS      true
+CALC_SOC           2 !not available in doublets in TDDFT
+STS_ANGMOM        true
+!RPA                FALSE !in default RPA=1 and TDA calc used as guess of TDDFT
+
+!Spin-orbit coupling calculations are implemented for
+!restricted, unrestricted CIS/TDDFT, and SF TDDFT
+!using Wigner-Eckart theorem: Try CALC_SOC = 2.
+!TDDFT based on a restricted open-shell reference is not available
+
+!****MEMORY****
+!MEM_TOTAL          80000        !Default 2000 MB
+!MEM_STATIC         25000         !Default 64 MB
+
+!**Molecular Properties and Analysis **
+!POP_MULLIKEN       FALSE   !Run Mulliken population analysis
+!LOWDIN_POPULATION  FALSE  !Run Löwdin population analysis
+GUI                0
+!STATE_ANALYSIS     TRUE
+!MOLDEN_FORMAT      FALSE
+!PRINT_ORBITALS     5
+!CIS_MOMENTS        TRUE !TDA Excited-State Multipoles
+$end
+
+$xc_functional
+!**50-50 functional**
+X  HF    0.50
+X  S     0.08
+X  B     0.42
+C  VWN   0.19
+C  LYP   0.81
+$end
+
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      O       0.0000000000     0.0000000000     0.1155512138
+    2      H      -0.8125311840    -0.0000000000    -0.4622048550
+    3      H       0.8125311840    -0.0000000000    -0.4622048550
+ ----------------------------------------------------------------
+ Molecular Point Group                 C2v   NOp =  4
+ Largest Abelian Subgroup              C2v   NOp =  4
+ Nuclear Repulsion Energy =           8.81794733 hartrees
+ There are        5 alpha and        4 beta electrons
+ Requested basis set is STO-3G
+ There are 4 shells and 7 basis functions
+
+ Total QAlloc Memory Limit   2000 MB
+ Mega-Array Size       188 MB
+ MEM_STATIC part       192 MB
+
+
+                       Distance Matrix (Angstroms)
+             O (  1)   H (  2)
+   H (  2)  0.997000
+   H (  3)  0.997000  1.625062
+ 
+ A cutoff of  1.0D-12 yielded     10 shell pairs
+ There are        34 function pairs
+ Smallest overlap matrix eigenvalue = 3.69E-01
+
+ Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000001 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 10.000000 electrons
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Exchange:     0.5000 Hartree-Fock + 0.0800 Slater + 0.4200 B88
+ Correlation:  0.1900 VWN5 + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ A unrestricted SCF calculation will be
+ performed using DIIS
+ SCF converges when DIIS error is below 1.0e-08
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1     -75.0454937122      1.89e-01  
+    2     -74.9229504835      2.40e-02  
+    3     -74.9387507068      7.18e-03  
+    4     -74.9405434719      9.37e-04  
+    5     -74.9405986250      3.15e-04  
+    6     -74.9406078003      3.52e-05  
+    7     -74.9406079217      5.49e-06  
+    8     -74.9406079242      4.87e-07  
+    9     -74.9406079242      2.66e-08  
+   10     -74.9406079242      1.30e-09  Convergence criterion met
+ ---------------------------------------
+ SCF time:   CPU 0.31s  wall 1.00s 
+<S^2> =          0.752654351
+ SCF   energy in the final basis set =      -74.9406079242
+ Total energy in the final basis set =      -74.9406079242
+ 
+ MAX_CIS_SUBSPACE fits in available memory
+ Direct TDDFT/TDA calculation will be performed
+ Exchange:     0.5000 Hartree-Fock + 0.0800 Slater + 0.4200 B88
+ Correlation:  0.1900 VWN5 + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ CIS energy converged when residual is below 10e- 6
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+   1         2           8      0.080257    0.024854
+   2         8           2      0.006391    0.004009
+   3         8           2      0.031331    0.029490
+   4        10           0      0.000000    0.000000    Roots Converged
+ ---------------------------------------------------
+ 
+ ---------------------------------------------------
+         TDDFT/TDA Excitation Energies              
+ ---------------------------------------------------
+
+ Excited state   1: excitation energy (eV) =    2.1313
+ Total energy for state  1:                   -74.86228533 au
+    <S**2>     :  0.7525
+    Trans. Mom.: -0.0000 X  -0.1718 Y   0.0000 Z
+    Strength   :     0.0015417628
+    D(    4) --> S(    1) amplitude =  0.9999 beta
+
+ Excited state   2: excitation energy (eV) =    7.6306
+ Total energy for state  2:                   -74.66018747 au
+    <S**2>     :  0.7515
+    Trans. Mom.: -0.0000 X  -0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    D(    3) --> S(    1) amplitude =  0.9987 beta
+
+ Excited state   3: excitation energy (eV) =   13.9821
+ Total energy for state  3:                   -74.42677478 au
+    <S**2>     :  2.7133
+    Trans. Mom.:  0.0000 X   0.0000 Y  -0.0478 Z
+    Strength   :     0.0007813441
+    S(    1) --> V(    1) amplitude = -0.5980 alpha
+    D(    4) --> V(    1) amplitude =  0.7840 beta
+
+ Excited state   4: excitation energy (eV) =   15.8706
+ Total energy for state  4:                   -74.35737552 au
+    <S**2>     :  0.7512
+    Trans. Mom.: -0.0000 X   0.0661 Y   0.0000 Z
+    Strength   :     0.0017009303
+    D(    4) --> V(    1) amplitude =  0.9845 alpha
+    D(    2) --> S(    1) amplitude =  0.1754 beta
+
+ Excited state   5: excitation energy (eV) =   15.8860
+ Total energy for state  5:                   -74.35680692 au
+    <S**2>     :  2.7180
+    Trans. Mom.:  0.0923 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0033131480
+    D(    3) --> V(    1) amplitude =  0.2916 alpha
+    S(    1) --> V(    2) amplitude = -0.5545 alpha
+    D(    3) --> V(    1) amplitude = -0.2670 beta
+    D(    4) --> V(    2) amplitude =  0.7311 beta
+
+ Excited state   6: excitation energy (eV) =   16.3261
+ Total energy for state  6:                   -74.34063592 au
+    <S**2>     :  0.7938
+    Trans. Mom.: -0.0000 X   0.0000 Y  -0.3339 Z
+    Strength   :     0.0445957965
+    S(    1) --> V(    1) amplitude =  0.7690 alpha
+    D(    3) --> V(    2) amplitude =  0.1980 beta
+    D(    4) --> V(    1) amplitude =  0.5947 beta
+
+ Excited state   7: excitation energy (eV) =   18.1248
+ Total energy for state  7:                   -74.27453209 au
+    <S**2>     :  2.4861
+    Trans. Mom.:  0.1002 X  -0.0000 Y  -0.0000 Z
+    Strength   :     0.0044558726
+    D(    3) --> V(    1) amplitude = -0.5106 alpha
+    D(    3) --> V(    1) amplitude =  0.7143 beta
+    D(    4) --> V(    2) amplitude =  0.4709 beta
+
+ Excited state   8: excitation energy (eV) =   18.3689
+ Total energy for state  8:                   -74.26556198 au
+    <S**2>     :  0.7515
+    Trans. Mom.: -0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    D(    4) --> V(    2) amplitude =  0.9987 alpha
+
+ Excited state   9: excitation energy (eV) =   18.7820
+ Total energy for state  9:                   -74.25038149 au
+    <S**2>     :  1.0451
+    Trans. Mom.:  0.3136 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0452610705
+    D(    3) --> V(    1) amplitude =  0.4500 alpha
+    S(    1) --> V(    2) amplitude =  0.7823 alpha
+    D(    4) --> V(    2) amplitude =  0.4269 beta
+
+ Excited state  10: excitation energy (eV) =   19.9954
+ Total energy for state 10:                   -74.20579132 au
+    <S**2>     :  2.7445
+    Trans. Mom.:  0.0000 X   0.0000 Y  -0.0415 Z
+    Strength   :     0.0008436766
+    D(    3) --> V(    2) amplitude =  0.6912 alpha
+    D(    3) --> V(    2) amplitude = -0.6934 beta
+ 
+ ---------------------------------------------------
+  SETman timing summary (seconds)
+  CPU time                 0.22s
+  System time              0.00s
+  Wall time                0.29s
+
+
+
+            *********SPIN-ORBIT COUPLING JOB USING WIGNER–ECKART THEOREM BEGINS HERE*********
+
+ Calculating one electron integrals:  Completed calculation of one electron integrals!
+ Calculating MF integrals:  Completed calculation of MF integrals!
+ Calculating S^2 values of the spin-states: S^2 values computed!
+ Computing transition densities and evaluating SOCME with Libwe: 
+
+**************************************************
+ State A: Root 0
+ State B: Root 1
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.7526543506 will be treated as 0.7500000000 Sz = 0.5000000000
+ Bra state:  Computed S^2 = 0.7525259401 will be treated as 0.7500000000 Sz = 0.5000000000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,88.484939)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-88.484939)
+
+ SOCC = 102.173607
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,72.247650)
+ <Sz=0.50|(-0.000000,72.247650)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,52.890504)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-53.938777)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,53.414641)
+ <S|| Hso(L+) ||S'> = (-0.000000,-53.414641)
+
+ SOCC = 61.677914
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,43.612871)
+ <Sz=0.50|(-0.000000,43.612871)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 2
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,101.976642)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 83.263580
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,58.876242)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-58.876242)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,59.019921)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.567134) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 48.189564
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,34.075167)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-34.075167)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 3
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 4
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-49.019419)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,49.019419)
+
+ SOCC = 56.602750
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,-40.024188)
+ <Sz=0.50|(-0.000000,-40.024188)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-31.632848)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,31.121153)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-31.377001)
+ <S|| Hso(L+) ||S'> = (-0.000000,31.377001)
+
+ SOCC = 36.231040
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,-25.619214)
+ <Sz=0.50|(-0.000000,-25.619214)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 5
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-46.639688,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-46.639688,-0.000000)
+
+ SOCC = 76.162292
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-46.639688,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-0.000000)(-26.927437,-0.000000)
+ <Sz=0.50|(-26.927437,0.000000)(-0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-46.639688,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-30.206009,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-30.233562,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-30.219785,0.000000)
+ <S|| Hso(L+) ||S'> = (-30.219785,-0.000000)
+
+ SOCC = 49.348703
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-30.219785,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-0.000000)(-17.447401,-0.000000)
+ <Sz=0.50|(-17.447401,0.000000)(-0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-30.219785,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 6
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,-0.000000)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,-0.000000)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 7
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-56.692322,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-56.692322,0.000000)
+
+ SOCC = 92.578174
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-56.692322,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,0.000000)(-32.731327,0.000000)
+ <Sz=0.50|(-32.731327,-0.000000)(-0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-56.692322,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-36.409775,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-36.428111,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-36.418943,-0.000000)
+ <S|| Hso(L+) ||S'> = (-36.418943,0.000000)
+
+ SOCC = 59.471885
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-36.418943,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,0.000000)(-21.026487,0.000000)
+ <Sz=0.50|(-21.026487,-0.000000)(-0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-36.418943,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 8
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,114.813003)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ SOCC = 93.744424
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,66.287318)(-0.000000,-0.000000)
+ <Sz=0.50|(0.000000,-0.000000)(0.000000,-66.287318)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,71.650108)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.338255) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ SOCC = 58.502068
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,41.367209)(-0.000000,-0.000000)
+ <Sz=0.50|(0.000000,-0.000000)(0.000000,-41.367209)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-39.530626,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-39.530626,0.000000)
+
+ SOCC = 45.646035
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,0.000000)(32.276621,-0.000000)
+ <Sz=0.50|(-32.276621,-0.000000)(-0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-25.520982,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-25.535269,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-25.528126,-0.000000)
+ <S|| Hso(L+) ||S'> = (-25.528126,0.000000)
+
+ SOCC = 29.477340
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,0.000000)(20.843627,-0.000000)
+ <Sz=0.50|(-20.843627,-0.000000)(-0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 0
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752654 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 2
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-65.711425,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-65.711425,-0.000000)
+
+ SOCC = 75.877017
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(53.653154,0.000000)
+ <Sz=0.50|(-53.653154,0.000000)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-39.860288,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-39.835968,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-39.848128,0.000000)
+ <S|| Hso(L+) ||S'> = (-39.848128,-0.000000)
+
+ SOCC = 46.012654
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(32.535860,0.000000)
+ <Sz=0.50|(-32.535860,0.000000)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 3
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,30.706525)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-30.706525)
+
+ SOCC = 50.143546
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,-30.706525)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,0.000000)(-0.000000,-17.728421)
+ <Sz=0.50|(-0.000000,17.728421)(-0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,30.706525)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,19.360982)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-19.639263)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,19.500123)
+ <S|| Hso(L+) ||S'> = (-0.000000,-19.500123)
+
+ SOCC = 31.843567
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,-19.500123)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,0.000000)(-0.000000,-11.258401)
+ <Sz=0.50|(-0.000000,11.258401)(-0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,19.500123)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 4
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 5
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-58.620314)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 67.688908
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-47.863286)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-47.863286)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-36.620333)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.281815) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 42.285518
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-29.900377)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-29.900377)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 6
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-32.530759)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,32.530759)
+
+ SOCC = 37.563285
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-0.000000,-26.561253)
+ <Sz=0.50|(0.000000,-26.561253)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-20.522033)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,20.815920)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-20.668976)
+ <S|| Hso(L+) ||S'> = (0.000000,20.668976)
+
+ SOCC = 23.866478
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-0.000000,-16.876149)
+ <Sz=0.50|(0.000000,-16.876149)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 7
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-37.500724)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 43.302106
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-30.619213)(-0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,-30.619213)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-23.433829)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.182269) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 27.059055
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-19.133641)(-0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,-19.133641)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 8
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-3.247267,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-3.247267,0.000000)
+
+ SOCC = 3.749621
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(2.651382,-0.000000)
+ <Sz=0.50|(-2.651382,-0.000000)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-1.962856,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-1.961607,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-1.962232,-0.000000)
+ <S|| Hso(L+) ||S'> = (-1.962232,0.000000)
+
+ SOCC = 2.265790
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(1.602155,-0.000000)
+ <Sz=0.50|(-1.602155,-0.000000)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,48.542310)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 39.634630
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,28.025916)(0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,-0.000000)(-0.000000,-28.025916)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,30.320610)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.164218) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 24.756674
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,17.505612)(0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,-0.000000)(-0.000000,-17.505612)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 1
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.752526 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-3.192035)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,3.192035)
+
+ SOCC = 5.212571
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,3.192035)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,1.842922)
+ <Sz=0.50|(0.000000,-1.842922)(0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,-3.192035)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-2.012260)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,2.041228)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-2.026744)
+ <S|| Hso(L+) ||S'> = (0.000000,2.026744)
+
+ SOCC = 3.309659
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,2.026744)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,1.170141)
+ <Sz=0.50|(0.000000,-1.170141)(0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,-2.026744)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 2
+ State B: Root 3
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,6.684883)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 7.719038
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,5.458184)(-0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,5.458184)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,4.196610)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.037978) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 4.845828
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,3.426518)(-0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,3.426518)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 2
+ State B: Root 4
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.551799,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.551799,0.000000)
+
+ SOCC = 0.637162
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-0.450542,-0.000000)
+ <Sz=0.50|(0.450542,-0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.170002,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.167131,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.168566,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.168566,0.000000)
+
+ SOCC = 0.194644
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-0.137634,-0.000000)
+ <Sz=0.50|(0.137634,-0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 2
+ State B: Root 5
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-8.581100)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,8.581100)
+
+ SOCC = 14.012877
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,8.581100)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-0.000000)(-0.000000,4.954300)
+ <Sz=0.50|(-0.000000,-4.954300)(-0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,-8.581100)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-5.471322)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,5.543924)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-5.507623)
+ <S|| Hso(L+) ||S'> = (-0.000000,5.507623)
+
+ SOCC = 8.993911
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,5.507623)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-0.000000)(-0.000000,3.179828)
+ <Sz=0.50|(-0.000000,-3.179828)(-0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,-5.507623)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 2
+ State B: Root 6
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,23.008891)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 18.786681
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,13.284189)(0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,-0.000000)(-0.000000,-13.284189)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,14.348528)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.073146) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 11.715524
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,8.284126)(0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,-0.000000)(-0.000000,-8.284126)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 2
+ State B: Root 7
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,27.760858)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-27.760858)
+
+ SOCC = 45.333291
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-27.760858)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,-16.027739)
+ <Sz=0.50|(0.000000,16.027739)(0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,27.760858)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,17.509524)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-17.760712)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,17.635118)
+ <S|| Hso(L+) ||S'> = (0.000000,-17.635118)
+
+ SOCC = 28.798027
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-17.635118)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,-10.181640)
+ <Sz=0.50|(0.000000,10.181640)(0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,17.635118)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 2
+ State B: Root 8
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,-0.000000)(-0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,-0.000000)(-0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 2
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,1.350829)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-1.350829)
+
+ SOCC = 1.559803
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,1.102947)
+ <Sz=0.50|(-0.000000,1.102947)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.734147)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.756444)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.745296)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.745296)
+
+ SOCC = 0.860593
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,0.608531)
+ <Sz=0.50|(-0.000000,0.608531)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 2
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,52.631054)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ SOCC = 60.773106
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,42.973075)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,-0.000000)(0.000000,42.973075)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,32.998810)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.287147) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ SOCC = 38.103744
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,26.943416)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,-0.000000)(0.000000,26.943416)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 3
+ State B: Root 4
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-53.098297)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,53.098297)
+
+ SOCC = 61.312632
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-37.546166)(0.000000,0.000000)(-0.000000,21.677289)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-21.677289)(0.000000,0.000000)(-0.000000,37.546166)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-32.341542)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,31.711237)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-32.026390)
+ <S|| Hso(L+) ||S'> = (-0.000000,32.026390)
+
+ SOCC = 36.980889
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-22.646077)(0.000000,0.000000)(-0.000000,13.074719)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-13.074719)(0.000000,0.000000)(-0.000000,22.646077)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 3
+ State B: Root 5
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|1.500,0.500> = 0.258
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-31.014871,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-31.014871,-0.000000)
+
+ SOCC = 50.647073
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,-0.000000)(-19.615527,-0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(19.615527,-0.000000)(0.000000,-0.000000)(-22.650060,-0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(22.650060,-0.000000)(0.000000,0.000000)(-19.615527,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(19.615527,-0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-20.195127,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-20.194071,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-20.194599,0.000000)
+ <S|| Hso(L+) ||S'> = (-20.194599,-0.000000)
+
+ SOCC = 32.977642
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,-0.000000)(-12.772186,-0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(12.772186,-0.000000)(0.000000,-0.000000)(-14.748050,-0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(14.748050,-0.000000)(0.000000,0.000000)(-12.772186,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(12.772186,-0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 3
+ State B: Root 6
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,0.000000)(-0.000000,0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,0.000000)(-0.000000,0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 3
+ State B: Root 7
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|1.500,0.500> = 0.258
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (4.503911,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (4.503911,0.000000)
+
+ SOCC = 7.354856
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,-0.000000)(2.848523,0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-2.848523,0.000000)(0.000000,-0.000000)(3.289191,0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-3.289191,0.000000)(0.000000,0.000000)(2.848523,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(-2.848523,0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.651905,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.640022,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.645964,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.645964,0.000000)
+
+ SOCC = 1.054854
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.408543,0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.408543,0.000000)(0.000000,-0.000000)(0.471745,0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.471745,0.000000)(0.000000,0.000000)(0.408543,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(-0.408543,0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 3
+ State B: Root 8
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,13.775255)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 11.247448
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,-7.953147)(-0.000000,0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,-7.953147)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,8.049350)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.065006) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 6.572266
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,-4.647294)(-0.000000,0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,-4.647294)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 3
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (6.532209,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (6.532209,0.000000)
+
+ SOCC = 7.542745
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(4.618969,-0.000000)(-0.000000,-0.000000)(2.666763,0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(2.666763,-0.000000)(0.000000,-0.000000)(4.618969,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (5.937625,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (5.941957,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (5.939791,-0.000000)
+ <S|| Hso(L+) ||S'> = (5.939791,0.000000)
+
+ SOCC = 6.858680
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(4.200066,-0.000000)(-0.000000,-0.000000)(2.424909,0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(2.424909,-0.000000)(0.000000,-0.000000)(4.200066,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 3
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.713261 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|1.500,0.500> = 0.258
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-0.000000)(0.000000,-0.000000)(-0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(0.000000,-0.000000)(0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-0.000000)(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-0.000000)(0.000000,-0.000000)(-0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(0.000000,-0.000000)(0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 4
+ State B: Root 5
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,22.143742)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 25.569391
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,18.080290)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,18.080290)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,12.883223)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.163742) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 14.876265
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,10.519108)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,10.519108)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 4
+ State B: Root 6
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-66.695527)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,66.695527)
+
+ SOCC = 77.013361
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,0.000000)(-0.000000,-54.456670)
+ <Sz=0.50|(0.000000,-54.456670)(0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-39.860824)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,40.653787)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-40.257305)
+ <S|| Hso(L+) ||S'> = (0.000000,40.257305)
+
+ SOCC = 46.485132
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,0.000000)(-0.000000,-32.869952)
+ <Sz=0.50|(0.000000,-32.869952)(0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 4
+ State B: Root 7
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-38.877581)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 44.891964
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-31.743412)(-0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,-31.743412)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-22.623358)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.286231) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 26.123204
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,-18.471894)(-0.000000,-0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,-18.471894)
+ <Sz=1.50|(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 4
+ State B: Root 8
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-40.739552,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-40.739552,-0.000000)
+
+ SOCC = 47.041983
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,0.000000)(33.263705,0.000000)
+ <Sz=0.50|(-33.263705,0.000000)(-0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-26.957893,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-26.958539,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-26.958216,0.000000)
+ <S|| Hso(L+) ||S'> = (-26.958216,-0.000000)
+
+ SOCC = 31.128667
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,0.000000)(22.011291,0.000000)
+ <Sz=0.50|(-22.011291,0.000000)(-0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 4
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-48.610712)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 39.690480
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-28.065408)(0.000000,0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,28.065408)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-28.294036)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.251690) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 23.101984
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-16.335569)(0.000000,0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,16.335569)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 4
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751179 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,8.704202)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-8.704202)
+
+ SOCC = 14.213902
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-8.704202)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,-5.025373)
+ <Sz=0.50|(0.000000,5.025373)(0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,8.704202)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,5.237835)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-5.340441)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,5.289138)
+ <S|| Hso(L+) ||S'> = (0.000000,-5.289138)
+
+ SOCC = 8.637126
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-5.289138)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,-3.053685)
+ <Sz=0.50|(0.000000,3.053685)(0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,5.289138)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 5
+ State B: Root 6
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-79.663419,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-79.663419,0.000000)
+
+ SOCC = 91.987393
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-56.330544,-0.000000)(0.000000,-0.000000)(-32.522455,0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-32.522455,-0.000000)(0.000000,-0.000000)(-56.330544,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-50.550659,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-50.555108,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-50.552883,-0.000000)
+ <S|| Hso(L+) ||S'> = (-50.552883,0.000000)
+
+ SOCC = 58.373442
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-35.746287,-0.000000)(0.000000,-0.000000)(-20.638128,0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-20.638128,-0.000000)(0.000000,-0.000000)(-35.746287,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 5
+ State B: Root 7
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|1.500,0.500> = 0.258
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,0.000000)(0.000000,0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,0.000000)(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(-0.000000,0.000000)(0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,0.000000)(0.000000,0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,0.000000)(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(-0.000000,0.000000)(0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 5
+ State B: Root 8
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-50.690553)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,50.690553)
+
+ SOCC = 58.532408
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-35.843634)(0.000000,-0.000000)(-0.000000,20.694331)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-20.694331)(0.000000,-0.000000)(-0.000000,35.843634)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-30.920684)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,30.322000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-30.621342)
+ <S|| Hso(L+) ||S'> = (-0.000000,30.621342)
+
+ SOCC = 35.358480
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-21.652559)(0.000000,-0.000000)(-0.000000,12.501111)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-12.501111)(0.000000,-0.000000)(-0.000000,21.652559)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 5
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,0.000000)(-0.000000,0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,0.000000)(-0.000000,0.000000)(-0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,-0.000000)(0.000000,0.000000)(-0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 5
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.718043 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|1.500,0.500> = 0.258
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-10.027017,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-10.027017,-0.000000)
+
+ SOCC = 16.374050
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,-0.000000)(-6.341642,-0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(6.341642,-0.000000)(0.000000,-0.000000)(-7.322698,-0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(7.322698,-0.000000)(0.000000,0.000000)(-6.341642,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(6.341642,-0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-5.837195,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-5.829785,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-5.833490,0.000000)
+ <S|| Hso(L+) ||S'> = (-5.833490,-0.000000)
+
+ SOCC = 9.526049
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,-0.000000)(-3.689423,-0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(3.689423,-0.000000)(0.000000,-0.000000)(-4.260179,-0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(4.260179,-0.000000)(0.000000,0.000000)(-3.689423,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(3.689423,-0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 6
+ State B: Root 7
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (31.398362,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (31.398362,-0.000000)
+
+ SOCC = 51.273310
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(31.398362,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-0.000000)(18.127853,-0.000000)
+ <Sz=0.50|(18.127853,0.000000)(0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(31.398362,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (18.937260,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (18.920180,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (18.928720,0.000000)
+ <S|| Hso(L+) ||S'> = (18.928720,-0.000000)
+
+ SOCC = 30.910471
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(18.928720,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-0.000000)(10.928502,-0.000000)
+ <Sz=0.50|(10.928502,0.000000)(0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(18.928720,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 6
+ State B: Root 8
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,11.079529)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 9.046398
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,6.396769)(0.000000,0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,-6.396769)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,6.408326)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.065521) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 5.232377
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,3.699849)(0.000000,0.000000)
+ <Sz=0.50|(-0.000000,0.000000)(-0.000000,-3.699849)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 6
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (9.810937,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (9.810937,-0.000000)
+
+ SOCC = 11.328694
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-8.010597,0.000000)
+ <Sz=0.50|(8.010597,0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (5.294989,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (5.286459,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (5.290724,0.000000)
+ <S|| Hso(L+) ||S'> = (5.290724,-0.000000)
+
+ SOCC = 6.109202
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-4.319858,0.000000)
+ <Sz=0.50|(4.319858,0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 6
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.793842 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,-0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,-0.000000)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,-0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 7
+ State B: Root 8
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+ Bra state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,3.419444)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-3.419444)
+
+ SOCC = 3.948434
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(0.000000,2.417912)(-0.000000,-0.000000)(0.000000,-1.395982)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,1.395982)(0.000000,-0.000000)(0.000000,-2.417912)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,2.125485)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,-2.091686)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,2.108585)
+ <S|| Hso(L+) ||S'> = (0.000000,-2.108585)
+
+ SOCC = 2.434785
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(0.000000,1.490995)(-0.000000,-0.000000)(0.000000,-0.860826)(0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(0.000000,0.860826)(0.000000,-0.000000)(0.000000,-1.490995)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 7
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,0.000000)(-0.000000,-0.000000)(-0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,0.000000)(0.000000,0.000000)(-0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-0.000000,-0.000000)
+
+ SOCC = 0.000000
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-0.50|(-0.000000,0.000000)(0.000000,0.000000)(-0.000000,-0.000000)(-0.000000,-0.000000)
+ <Sz=0.50|(0.000000,0.000000)(-0.000000,0.000000)(0.000000,0.000000)(-0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 7
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 2.486062 will be treated as 3.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <1.500,0.500;1.000,0.000|1.500,0.500> = 0.258
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-39.564369,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-39.564369,0.000000)
+
+ SOCC = 64.608344
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,0.000000)(-25.022704,0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(25.022704,0.000000)(0.000000,0.000000)(-28.893730,0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(28.893730,0.000000)(0.000000,-0.000000)(-25.022704,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(25.022704,0.000000)(0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-23.381174,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (-23.363258,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (0.000000,0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-23.372216,-0.000000)
+ <S|| Hso(L+) ||S'> = (-23.372216,0.000000)
+
+ SOCC = 38.166669
+
+
+ Actual matrix elements:
+       |Sz=-1.50>           |Sz=-0.50>           |Sz=0.50>           |Sz=1.50>
+ <Sz=-1.50|(0.000000,0.000000)(-14.781887,0.000000)(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(14.781887,0.000000)(0.000000,0.000000)(-17.068653,0.000000)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,0.000000)(17.068653,0.000000)(0.000000,-0.000000)(-14.781887,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,0.000000)(14.781887,0.000000)(0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 8
+ State B: Root 9
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|0.500,0.500> = -0.577
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-69.978189)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,69.978189)
+
+ SOCC = 80.803853
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-0.000000,-57.136952)
+ <Sz=0.50|(0.000000,-57.136952)(0.000000,0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-41.836911)
+ <S|| Hso(L0) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,42.666571)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-42.251741)
+ <S|| Hso(L+) ||S'> = (0.000000,42.251741)
+
+ SOCC = 48.788108
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-0.50|(0.000000,-0.000000)(-0.000000,-34.498402)
+ <Sz=0.50|(0.000000,-34.498402)(0.000000,0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 8
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+ Ket state:  Computed S^2 = 0.751478 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,57.289619)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ SOCC = 66.152354
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,46.776778)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,-0.000000)(0.000000,46.776778)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,33.504897)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.374195) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (0.000000,-0.000000)
+ <S|| Hso(L+) ||S'> = (0.000000,0.000000)
+
+ SOCC = 38.688122
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(0.000000,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(-0.000000,27.356634)(0.000000,0.000000)
+ <Sz=0.50|(0.000000,-0.000000)(0.000000,27.356634)
+ <Sz=1.50|(0.000000,0.000000)(0.000000,-0.000000)
+_______________________________
+
+**************************************************
+
+**************************************************
+ State A: Root 9
+ State B: Root 10
+
+
+ Analysing Sz ans S^2 of the pair of states...
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Ket state:  Computed S^2 = 1.045080 will be treated as 0.750000 Sz = 0.500000
+WARNING! The deviation of S^2 from the correct value is large, indicating a significant spin contamination. The results may be unreliable
+ Bra state:  Computed S^2 = 2.744502 will be treated as 3.750000 Sz = 0.500000
+ Clebsh-Gordan coefficient: <0.500,0.500;1.000,0.000|1.500,0.500> = 0.816
+
+_______________________________
+ One-electron SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-31.789410,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-31.789410,0.000000)
+
+ SOCC = 51.911889
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-31.789410,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,0.000000)(-18.353624,0.000000)
+ <Sz=0.50|(-18.353624,-0.000000)(-0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-31.789410,-0.000000)
+_______________________________
+ Mean-field SO (cm-1)
+ Reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-18.997250,-0.000000)
+ <S|| Hso(L0) ||S'> = (0.000000,0.000000)
+ <S|| Hso(L+) ||S'> = (-18.980935,0.000000)
+
+ Singlet part of <S|| Hso(L0) ||S'> = (-0.000000,-0.000000) (excluded from all matrix elements)
+ L-/L+ Averaged reduced matrix elements:
+ <S|| Hso(L-) ||S'> = (-18.989093,-0.000000)
+ <S|| Hso(L+) ||S'> = (-18.989093,0.000000)
+
+ SOCC = 31.009059
+
+
+ Actual matrix elements:
+       |Sz=-0.50>           |Sz=0.50>
+ <Sz=-1.50|(-18.989093,0.000000)(0.000000,0.000000)
+ <Sz=-0.50|(0.000000,0.000000)(-10.963358,0.000000)
+ <Sz=0.50|(-10.963358,-0.000000)(-0.000000,0.000000)
+ <Sz=1.50|(0.000000,0.000000)(-18.989093,-0.000000)
+_______________________________
+
+**************************************************
+
+
+            *********SPIN-ORBIT COUPLING JOB ENDS HERE*********
+
+
+
+
+            STATE-TO-STATE TRANSITION ANGULAR MOMENTS
+Note: values should be multiplied by complex "i" to account for the true operator
+
+
+            Angular Moments of Ground State
+ -----------------------------------------------------
+   State     X           Y           Z(a.u.) 
+ -----------------------------------------------------
+       0    -0.000000    0.000000    0.940699
+ -----------------------------------------------------
+
+ Within CIS/TDA Excited States:
+
+            Angular Moments of Excited State
+ -----------------------------------------------------
+   State     X           Y           Z(a.u.) 
+ -----------------------------------------------------
+       1    -0.000000    0.000000    0.940699
+       2    -0.000000    0.000000    0.940699
+       3    -0.000000    0.000000    0.940699
+       4    -0.000000    0.000000    0.940699
+       5    -0.000000    0.000000    0.940699
+       6    -0.000000    0.000000    0.940699
+       7    -0.000000    0.000000    0.940699
+       8    -0.000000    0.000000    0.940699
+       9    -0.000000    0.000000    0.940699
+      10    -0.000000    0.000000    0.940699
+ -----------------------------------------------------
+
+        Transition Angular Moments Between Ground and Excited States
+ --------------------------------------------------------------------------------
+    States   X          Y          Z             Length(a.u.)
+ --------------------------------------------------------------------------------
+    0    1   0.960075  -0.000000   0.000000      0.9600748
+    0    2   0.000000  -0.000000  -0.938044      0.9380438
+    0    3   0.000000  -0.000000   0.000000   7.418974E-16
+    0    4   0.260335  -0.000000  -0.000000      0.2603349
+    0    5   0.000000   0.088943   0.000000     0.08894296
+    0    6   0.000000  -0.000000  -0.000000   1.030556E-14
+    0    7  -0.000000   0.225543  -0.000000      0.2255427
+    0    8   0.000000  -0.000000   0.310305      0.3103052
+    0    9   0.000000   0.540871   0.000000      0.5408715
+    0   10   0.000000  -0.000000   0.000000   8.469289E-15
+ --------------------------------------------------------------------------------
+
+        Transition Angular Moments Between Excited States
+ --------------------------------------------------------------------------------
+    States   X          Y          Z             Length(a.u.)
+ --------------------------------------------------------------------------------
+    1    2  -0.000000   0.889960  -0.000000      0.8899603
+    1    3  -0.199258  -0.000000   0.000000      0.1992582
+    1    4   0.000000  -0.000000   0.000000   1.384065E-13
+    1    5  -0.000000   0.000000  -0.285950        0.28595
+    1    6  -0.147209   0.000000   0.000000      0.1472087
+    1    7  -0.000000  -0.000000  -0.181770        0.18177
+    1    8  -0.000000   0.045276   0.000000     0.04527648
+    1    9  -0.000000   0.000000  -0.167899      0.1678995
+    1   10   0.020845   0.000000   0.000000     0.02084476
+    2    3  -0.000000  -0.000000   0.029202     0.02920169
+    2    4  -0.000000  -0.017912   0.000000     0.01791183
+    2    5   0.039456  -0.000000  -0.000000     0.03945621
+    2    6   0.000000  -0.000000  -0.082322     0.08232154
+    2    7  -0.178998   0.000000   0.000000      0.1789982
+    2    8  -0.000000  -0.000000  -0.000000   3.409181E-15
+    2    9   0.028572  -0.000000   0.000000     0.02857225
+    2   10   0.000000  -0.000000   0.236829      0.2368285
+    3    4  -0.573986   0.000000   0.000000      0.5739864
+    3    5  -0.000000  -0.111171   0.000000      0.1111706
+    3    6  -0.000000  -0.000000   0.000000   1.153734E-14
+    3    7   0.000000   0.888507   0.000000      0.8885068
+    3    8  -0.000000   0.000000  -0.112748      0.1127482
+    3    9  -0.000000  -0.288247  -0.000000      0.2882475
+    3   10  -0.000000  -0.000000  -0.000000   5.481153E-15
+    4    5  -0.000000   0.000000   0.265626      0.2656259
+    4    6  -0.726344   0.000000  -0.000000      0.7263435
+    4    7  -0.000000  -0.000000  -0.465628      0.4656285
+    4    8   0.000000   0.129909  -0.000000      0.1299093
+    4    9   0.000000  -0.000000   0.410875      0.4108746
+    4   10  -0.133409   0.000000  -0.000000      0.1334089
+    5    6  -0.000000   0.000275  -0.000000   0.0002747921
+    5    7   0.000000  -0.000000  -0.000000   2.255097E-13
+    5    8  -0.542063   0.000000  -0.000000       0.542063
+    5    9  -0.000000   0.000000   0.000000   1.987232E-13
+    5   10  -0.000000  -0.785608   0.000000      0.7856078
+    6    7  -0.000000  -0.038024  -0.000000     0.03802402
+    6    8   0.000000  -0.000000  -0.098405     0.09840503
+    6    9   0.000000   0.287376   0.000000       0.287376
+    6   10  -0.000000   0.000000  -0.000000   2.014036E-14
+    7    8   0.019984   0.000000  -0.000000     0.01998416
+    7    9   0.000000  -0.000000   0.000000   1.141497E-14
+    7   10   0.000000  -0.280920  -0.000000      0.2809202
+    8    9  -0.756042   0.000000   0.000000      0.7560419
+    8   10   0.000000  -0.000000   0.658385      0.6583849
+    9   10   0.000000   0.197056   0.000000      0.1970559
+ --------------------------------------------------------------------------------
+
+                    END OF TRANSITION MOMENT CALCULATION
+
+ 
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+ 
+ Alpha MOs, Unrestricted
+ -- Occupied --                  
+-20.143  -1.676  -1.067  -0.943  -0.907
+  1 A1    2 A1    1 B1    1 B2    3 A1                                         
+ -- Virtual --                   
+ -0.104   0.008
+  4 A1    2 B1                                                                 
+ 
+ Beta MOs, Unrestricted
+ -- Occupied --                  
+-20.121  -1.571  -1.040  -0.865
+  1 A1    2 A1    1 B1    3 A1                                                 
+ -- Virtual --                   
+ -0.443  -0.084   0.021
+  1 B2    4 A1    2 B1                                                         
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 O                     0.107808       1.081732
+      2 H                     0.446096      -0.040866
+      3 H                     0.446096      -0.040866
+  --------------------------------------------------------
+  Sum of atomic charges =     1.000000
+  Sum of spin   charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y      -0.0000      Z      -2.3910
+       Tot       2.3910
+    Quadrupole Moments (Debye-Ang)
+        XX      -1.9748     XY      -0.0000     YY      -4.6957
+        XZ      -0.0000     YZ      -0.0000     ZZ      -4.2944
+    Octopole Moments (Debye-Ang^2)
+       XXX      -0.0000    XXY      -0.0000    XYY       0.0000
+       YYY      -0.0000    XXZ      -1.6631    XYZ      -0.0000
+       YYZ      -0.0743    XZZ       0.0000    YZZ      -0.0000
+       ZZZ      -0.9768
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -3.5481   XXXY      -0.0000   XXYY      -1.3741
+      XYYY      -0.0000   YYYY      -2.3209   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ       0.0000   YYYZ      -0.0000
+      XXZZ      -0.8611   XYZZ      -0.0000   YYZZ      -1.0603
+      XZZZ      -0.0000   YZZZ      -0.0000   ZZZZ      -3.8067
+ -----------------------------------------------------------------
+ Total job time:  1.59s(wall), 0.74s(cpu) 
+ Tue Jan 16 09:56:07 2024
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+

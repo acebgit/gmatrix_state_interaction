@@ -17,13 +17,16 @@ converter.save_json()
 
 # Create a configuration object
 config = GTensorConfig()
-config.state_selection = 0  # 0: use "state_ras" ; 1: use all states_selected
-config.initial_states = [1, 5, 6]  # select only states 1,2,3,4
+# config.state_selection = 1  # 0: use "state_ras" ; 1: use all states_selected
+# config.initial_states = [1, 5, 6]  # select only states 1,2,3,4
 
 # Create the pipeline using this configuration
 pipeline = GTensorPipeline(qchemout, config=config)
 pipeline.load_data()                    # Step 1: load the JSON
 pipeline.select_states()                # Step 2: select the states
-pipeline.run_gshift_calculation()       # Step 3: calculate g-shift
+# pipeline.run_gshift_calculation()       # Step 3: calculate g-shift
 
-
+# pipeline.run_sos_analysis()             # Optional: sum-over-states
+# pipeline.run_pairs_analysis()             # Optional: pairs analysis
+# pipeline.run_s2_comparison()          # Optional: <S²> comparison
+# pipeline.run_scaling_analysis()       # Optional: scaling
