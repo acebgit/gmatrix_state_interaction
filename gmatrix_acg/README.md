@@ -1,93 +1,70 @@
-# g-Tensor Analysis Toolkit
+# g-matrix analysis toolkit
 
-This project provides a Python toolkit for analyzing **g-tensors** and related spin–orbit coupling (SOC) properties from quantum chemistry output files (e.g., Q-Chem).  
-It includes:
+Python toolkit for analyzing **g-matrix** using Quasi-degenerate perturbation theory within **PyQchem** (https://github.com/abelcarreras/PyQchem), a Python wrapper for Q-Chem (https://www.q-chem.com).
 
-- **Utility functions** for reading and processing SOC, angular momentum, and transitions data.
-- **Object-oriented classes** that organize workflows (g-shift, S² analysis, sum-over-states (SOS), scaling).
-- **Example scripts** demonstrating how to use the pipeline.
-
----
+## 📁 Main features
+Perform:
+* Calculation of the g-shift 
+* Sum-over-states (SOS) plots: g-matrix calculation between ground and the different excited states separately
+* Scaling analysis: evaluation of the g-matrix when increasing the spin-orbit coupling as a scaling parameter
+* Spin contamination analysis for each excited state
 
 ## 📁 Project Structure
 
-myproject/
+```yaml 
+gmatrix_acg/
 │
-├── myproject/
-│ ├── utils.py # Functions for SOC matrices, angular momentum, transitions, etc.
-│ ├── models.py # Classes wrapping the functions into workflows
-│ ├── init.py # Expose main classes/functions
+├── gmatrix_program/
+│ ├── gmatrix_functions.py # Functions used in the different classes
+│ ├── gmatrix_classes.py # Classes wrapping the functions into workflows
 │
 ├── examples/
-│ └── example_basic.py # Example of how to use the pipeline
-│
+│ └── gmatrix_example.py # Example of how to use the pipeline
+│ └── test_1.out # QChem output example to be used in the gmatrix_example.py
+│ └── test_2.out # QChem output example to be used in the gmatrix_example.py
+│ └── test_2.out # QChem output example to be used in the gmatrix_example.py│
+|
 ├── README.md
 └── requirements.txt
-
-yaml
-Copy code
-
----
+``` 
 
 ## 🚀 Usage
 
 ### 1. Installation
 
-Clone the repository and install the requirements:
+Check https://github.com/abelcarreras/PyQchem. 
 
-```bash
-git clone https://github.com/yourusername/g-tensor-toolkit.git
-cd g-tensor-toolkit
-pip install -r requirements.txt
-```
+### 2. Example
+Simple Python API to define your pipeline, defined in *gmatrix_example.py*: 
 
-### 2. Example: Run the Pipeline
 ```python
-from myproject.models import GTensorPipeline, GTensorConfig
+import sys
+from gmatrix_program.gmatrix_classes import OutToJsonConverter, GTensorConfig, GTensorPipeline 
 
 # Path to your Q-Chem output file
-qchemout = "o2_4_3.out"
+qchemout = sys.argv[1] 
 
-# Optional: configure state selection
+# Obtain the json file from the QChem .out file
+converter = OutToJsonConverter(qchemout)
+converter.read_file()
+converter.parse()
+converter.save_json()
+
+# Create a configuration object
 config = GTensorConfig()
-# config.state_selection = 1
-# config.initial_states = [1, 2, 3, 4]
 
-# Create and run the pipeline
+# Create and run the pipeline using this configuration
 pipeline = GTensorPipeline(qchemout, config=config)
 pipeline.load_data()
 pipeline.select_states()
 pipeline.run_gshift_calculation()
-pipeline.run_sos_analysis()
 ```
-
-### Features
-Parse Q-Chem output to extract:
-Spin–orbit coupling matrices
-
-Occupation numbers
-
-Angular momentum elements
-
-Transitions data
-
-Perform:
-
-g-shift analysis
-
-S² analysis
-
-Sum-over-states (SOS) plots
-
-Scaling analysis
-
-Object-oriented design for clean workflows
-
-Easy plotting with matplotlib
+Then in your command line:
+```bash
+python gmatrix_example.py test1.out
+```
 
 ### Dependencies
 See requirements.txt.
-Core libraries:
-numpy for linear algebra
 matplotlib for plotting
 (Standard libraries like json, sys, and os are used internally and do not need installation.)
