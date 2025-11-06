@@ -12,7 +12,7 @@ Perform:
 ## 📁 Project Structure
 
 ```yaml 
-gmatrix_acg/
+tatchen_method/
 │
 ├── gmatrix_program/
 │ ├── gmatrix_functions.py # Functions used in the different classes

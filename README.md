@@ -9,7 +9,7 @@
 This repository contains Python programs developed to compute **magnetic g-matrices** through the **state-interaction (SI)** approach.  
 The workflow consists of two main post-processing stages:
 
-1. **Parsing Q-Chem outputs** to extract relevant electronic structure data (state energies, spin–orbit couplings, and angular momentum matrix elements).  
+1. **Parsing [Q-Chem](https://www.q-chem.com) outputs** to extract relevant electronic structure data (state energies, spin–orbit couplings, and angular momentum matrix elements) [1]  
 2. **Computing the g-matrix** based on the SI effective Hamiltonian formalism.
 
 Electronic structure calculations are performed with a developer version of **Q-Chem 6.0**, which provides all the quantities required by the SI scheme. The evaluation of the g-matrix is carried out with in-house codes integrated within **PyQChem** and **ezMagnet** frameworks.
@@ -24,8 +24,8 @@ The SI procedure constructs and diagonalizes an **effective Hamiltonian** whose:
 
 The resulting **spin–orbit-coupled states** are linear combinations of the non-relativistic states.  
 Two implementations are available:
-- **Bolvin’s approach**, for systems with doublet multiplicity)  
-- **Tatchen’s method**, for arbitrary spin multiplicities
+- **Bolvin’s approach**, for systems with doublet multiplicity [2] 
+- **Tatchen’s method**, for arbitrary spin multiplicities [3]
 
 This framework enables a detailed **rationalization of g-shifts**, analyzing how excitation energies, SOCs, and orbital angular momenta jointly determine magnetic anisotropy.
 
@@ -79,15 +79,13 @@ python gtensor.py example_ras.json > example_ras_results.out
 
 ## 📖 References
 
-* A. Krylov et al., Q-Chem 6.0 (developer version)
-* Bolvin, H. (2006). ChemPhysChem: A European Journal of Chemical Physics and Physical Chemistry, 7(7), 1575-1589.
-* Tatchen, J., Kleinschmidt, M., & Marian, C. M. (2009). The Journal of chemical physics, 130(15).
+* [1] A. Krylov et al., Q-Chem 6.0 (developer version)
+* [2] Bolvin, H. (2006). ChemPhysChem: A European Journal of Chemical Physics and Physical Chemistry, 7(7), 1575-1589.
+* [3] Tatchen, J., Kleinschmidt, M., & Marian, C. M. (2009). The Journal of chemical physics, 130(15).
 
 ## 📬 Contact
 
-Antonio Cebreiro
-
-Donostia International Physics Centre
+Antonio Cebreiro, [Molecular Electronic Structure Group](https://molecular-electronic-structure-group.github.io/) at the [Donostia International Physics Centre (DIPC)](https://dipc.ehu.eus/es)
 
 📧 antonio.cebreiro@dipc.org
 
