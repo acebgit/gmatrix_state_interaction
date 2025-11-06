@@ -80,8 +80,8 @@ python gtensor.py example_ras.json > example_ras_results.out
 ## 📖 References
 
 * A. Krylov et al., Q-Chem 6.0 (developer version)
-* Bolvin, Chem. Phys. Lett. 2006, 428, 142–147.
-* Tatchen et al., J. Chem. Phys. 2007, 126, 034303.
+* Bolvin, H. (2006). ChemPhysChem: A European Journal of Chemical Physics and Physical Chemistry, 7(7), 1575-1589.
+* Tatchen, J., Kleinschmidt, M., & Marian, C. M. (2009). The Journal of chemical physics, 130(15).
 
 ## 📬 Contact
 
