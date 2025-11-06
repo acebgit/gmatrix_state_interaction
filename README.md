@@ -85,7 +85,9 @@ python gtensor.py example_ras.json > example_ras_results.out
 
 ## 📬 Contact
 
-Antonio Cebreiro, [Molecular Electronic Structure Group](https://molecular-electronic-structure-group.github.io/) at the [Donostia International Physics Centre (DIPC)](https://dipc.ehu.eus/es)
+Antonio Cebreiro
+
+📍 [Molecular Electronic Structure Group](https://molecular-electronic-structure-group.github.io/) at the [Donostia International Physics Centre (DIPC)](https://dipc.ehu.eus/es)
 
 📧 antonio.cebreiro@dipc.org
 
