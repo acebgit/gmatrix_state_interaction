@@ -1,0 +1,704 @@
+                  Welcome to Q-Chem
+     A Quantum Leap Into The Future Of Chemistry
+
+
+ Q-Chem 6.0 (devel), Q-Chem, Inc., Pleasanton, CA (2022)
+
+ E. Epifanovsky,  A. T. B. Gilbert,  Xintian Feng,  Joonho Lee,  Yuezhi Mao,  
+ N. Mardirossian,  P. Pokhilko,  A. White,  M. Wormit,  M. P. Coons,  
+ A. L. Dempwolff,  Zhengting Gan,  D. Hait,  P. R. Horn,  L. D. Jacobson,  
+ I. Kaliman,  J. Kussmann,  A. W. Lange,  Ka Un Lao,  D. S. Levine,  Jie Liu,  
+ S. C. McKenzie,  A. F. Morrison,  K. Nanda,  F. Plasser,  D. R. Rehn,  
+ M. L. Vidal,  Zhi-Qiang You,  Ying Zhu,  B. Alam,  B. Albrecht,  
+ A. Aldossary,  E. Alguire,  J. H. Andersen,  V. Athavale,  D. Barton,  
+ K. Begam,  A. Behn,  N. Bellonzi,  Y. A. Bernard,  E. J. Berquist,  
+ H. Burton,  A. Carreras,  K. Carter-Fenk,  Romit Chakraborty,  
+ Chandrima Chakravarty,  Junhan Chen,  A. D. Chien,  K. D. Closser,  
+ V. Cofer-Shabica,  L. Cunha,  S. Dasgupta,  Jia Deng,  M. de Wergifosse,  
+ M. Diedenhofen,  Hainam Do,  S. Ehlert,  Po-Tung Fang,  S. Fatehi,  
+ Qingguo Feng,  T. Friedhoff,  B. Ganoe,  J. Gayvert,  Qinghui Ge,  
+ G. Gidofalvi,  M. Goldey,  J. Gomes,  C. Gonzalez-Espinoza,  S. Gulania,  
+ A. Gunina,  J. A. Gyamfi,  M. W. D. Hanson-Heine,  P. H. P. Harbach,  
+ A. W. Hauser,  M. F. Herbst,  M. Hernandez Vera,  M. Hodecker,  
+ Z. C. Holden,  S. Houck,  Xunkun Huang,  Kerwin Hui,  B. C. Huynh,  
+ K. Ikeda,  M. Ivanov,  Hyunjun Ji,  Zuxin Jin,  Hanjie Jiang,  B. Kaduk,  
+ S. Kaehler,  R. Kang,  K. Khistyaev,  Jaehoon Kim,  Yongbin Kim,  
+ P. Klunzinger,  Z. Koczor-Benda,  Joong Hoon Koh,  D. Kosenkov,  
+ Saikiran Kotaru,  L. Koulias,  T. Kowalczyk,  C. M. Krauter,  K. Kue,  
+ A. Kunitsa,  T. Kus,  A. Landau,  K. V. Lawler,  D. Lefrancois,  S. Lehtola,  
+ Rain Li,  Shaozhi Li,  Yi-Pei Li,  Jiashu Liang,  M. Liebenthal,  
+ Hung-Hsuan Lin,  You-Sheng Lin,  Fenglai Liu,  Kuan-Yu Liu,  
+ M. Loipersberger,  A. Luenser,  C. Malbon,  A. Manjanath,  P. Manohar,  
+ E. Mansoor,  S. F. Manzer,  Shan-Ping Mao,  A. V. Marenich,  T. Markovich,  
+ S. Mason,  F. Matz,  S. A. Maurer,  P. F. McLaughlin,  M. F. S. J. Menger,  
+ J.-M. Mewes,  S. A. Mewes,  P. Morgante,  Mohammad Mostafanejad,  
+ J. W. Mullinax,  K. J. Oosterbaan,  G. Paran,  V. Parravicini,  
+ Alexander C. Paul,  Suranjan K. Paul,  F. Pavosevic,  Zheng Pei,  S. Prager,  
+ E. I. Proynov,  E. Ramos,  B. Rana,  A. E. Rask,  A. Rettig,  R. M. Richard,  
+ F. Rob,  E. Rossomme,  T. Scheele,  M. Scheurer,  M. Schneider,  
+ P. E. Schneider,  N. Sergueev,  S. M. Sharada,  Hengyuan Shen,  
+ W. Skomorowski,  D. W. Small,  C. J. Stein,  Yingli Su,  Yu-Chuan Su,  
+ E. J. Sundstrom,  Zhen Tao,  J. Thirman,  Hung-Yi Tsai,  T. Tsuchimochi,  
+ N. M. Tubman,  C. Utku,  S. P. Veccham,  O. Vydrov,  J. Wenzel,  
+ Jonathan Wong,  J. Witte,  A. Yamada,  Chou-Hsun Yang,  Kun Yao,  
+ S. Yeganeh,  S. R. Yost,  A. Zech,  F. Zeller,  Igor Ying Zhang,  
+ Xing Zhang,  Yu Zhang,  D. Zuev,  A. Aspuru-Guzik,  A. T. Bell,  
+ N. A. Besley,  K. B. Bravaya,  B. R. Brooks,  D. Casanova,  Jeng-Da Chai,  
+ Hsing-Ta Chen,  S. Coriani,  C. J. Cramer,  A. E. DePrince, III,  
+ R. A. DiStasio Jr.,  A. Dreuw,  B. D. Dunietz,  T. R. Furlani,  
+ W. A. Goddard III,  S. Grimme,  S. Hammes-Schiffer,  T. Head-Gordon,  
+ W. J. Hehre,  Chao-Ping Hsu,  T.-C. Jagau,  Yousung Jung,  A. Klamt,  
+ Jing Kong,  D. S. Lambrecht,  Xiangyuan Li,  WanZhen Liang,  N. J. Mayhall,  
+ C. W. McCurdy,  J. B. Neaton,  T. Neudecker,  C. Ochsenfeld,  
+ J. A. Parkhill,  R. Peverati,  V. A. Rassolov,  Haisheng Ren,  Yihan Shao,  
+ L. V. Slipchenko,  R. P. Steele,  J. E. Subotnik,  A. J. W. Thom,  
+ A. Tkatchenko,  D. G. Truhlar,  T. Van Voorhis,  Fan Wang,  
+ T. A. Wesolowski,  K. B. Whaley,  H. L. Woodcock III,  P. M. Zimmerman,  
+ S. Faraji,  P. M. W. Gill,  M. Head-Gordon,  J. M. Herbert,  A. I. Krylov
+
+ Contributors to earlier versions of Q-Chem not listed above: 
+ R. D. Adamson,  B. Austin,  R. Baer,  J. Baker,  G. J. O. Beran,  
+ K. Brandhorst,  S. T. Brown,  E. F. C. Byrd,  Arup K. Chakraborty,  
+ G. K. L. Chan,  Chun-Min Chang,  Yunqing Chen,  C.-L. Cheng,  
+ Siu Hung Chien,  D. M. Chipman,  D. L. Crittenden,  H. Dachsel,  
+ R. J. Doerksen,  A. D. Dutoi,  R. G. Edgar,  J. Fosso-Tande,  
+ L. Fusti-Molnar,  D. Ghosh,  A. Ghysels,  A. Golubeva-Zadorozhnaya,  
+ J. Gonthier,  M. S. Gordon,  S. R. Gwaltney,  G. Hawkins,  J. E. Herr,  
+ A. Heyden,  S. Hirata,  E. G. Hohenstein,  G. Kedziora,  F. J. Keil,  
+ C. Kelley,  Jihan Kim,  R. A. King,  R. Z. Khaliullin,  P. P. Korambath,  
+ W. Kurlancheek,  A. Laurent,  A. M. Lee,  M. S. Lee,  S. V. Levchenko,  
+ Ching Yeh Lin,  D. Liotard,  E. Livshits,  R. C. Lochan,  I. Lotan,  
+ L. A. Martinez-Martinez,  P. E. Maslen,  N. Nair,  D. P. O'Neill,  
+ D. Neuhauser,  E. Neuscamman,  C. M. Oana,  R. Olivares-Amaya,  R. Olson,  
+ T. M. Perrine,  B. Peters,  P. A. Pieniazek,  A. Prociuk,  Y. M. Rhee,  
+ J. Ritchie,  M. A. Rohrdanz,  E. Rosta,  N. J. Russ,  H. F. Schaefer III,  
+ M. W. Schmidt,  N. E. Schultz,  S. Sharma,  N. Shenvi,  C. D. Sherrill,  
+ A. C. Simmonett,  A. Sodt,  T. Stein,  D. Stuck,  K. S. Thanthiriwatte,  
+ V. Vanovschi,  L. Vogt,  Tao Wang,  A. Warshel,  M. A. Watson,  
+ C. F. Williams,  Q. Wu,  X. Xu,  Jun Yang,  W. Zhang,  Yan Zhao
+
+   Please cite Q-Chem as follows:
+  "Software for the frontiers of quantum chemistry:
+   An overview of developments in the Q-Chem 5 package"
+   J. Chem. Phys. 155, 084801 (2021)
+   https://doi.org/10.1063/5.0055522 (open access)
+
+ Q-Chem 6.0.1 for Intel X86 EM64T Linux
+
+ Parts of Q-Chem use Armadillo 9.900.5 (Nocturnal Misbehaviour).
+ http://arma.sourceforge.net/
+
+ Q-Chem begins on Thu Nov 21 13:57:33 2024  
+
+ Host: hyperion-068
+0
+
+     Scratch files written to ./qchem1530956//
+ Processing $rem in /scratch/abel/SOFTWARE/qchem/config/preferences:
+ Processing $rem in /home/acebg/.qchemrc:
+
+ Checking the input file for inconsistencies... 	...done.
+
+--------------------------------------------------------------
+User input:
+--------------------------------------------------------------
+$comment
+ TD-DFT/TDA CALCULATION
+$end
+
+$molecule
+ READ h2o+.molecule
+$end
+
+$rem
+!**REFERENCE***     
+JOBTYPE            SP
+EXCHANGE           B3LYP   !gen:specify in $xc_functional
+CORRELATION        NONE
+BASIS              STO-3G
+!ECP		   def2-ECP
+
+!***SCF REFERENCE***
+!INPUT_BOHR          TRUE
+!SKIP_SCFMAN        FALSE
+!UNRESTRICTED       FALSE !rectricted-TDDFT not avail in doublets
+!SCF_GUESS          core
+!SCF_GUESS_MIX      FALSE
+!SCF_GUESS_ALWAYS   FALSE
+MAX_SCF_CYCLES     500
+!SCF_CONVERGENCE    10
+!SCF_ALGORITHM      DIIS !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
+
+!SYMMETRY           TRUE !use of symmetry for calculating integrals
+!SYM_IGNORE         FALSE !turn off using symmetry
+!SYM_TOL            5 !tolerance for determining point group
+
+!THRESH             14
+!SCF_FINAL_PRINT    2 !0,1,2,3
+
+!****CIS****
+CIS_N_ROOTS        10
+!CIS_CONVERGENCE   10
+MAX_CIS_CYCLES     200
+!CIS_SINGLETS      true
+!CIS_TRIPLETS      true
+
+CALC_SOC           2 !not available in doublets in TDDFT
+STS_ANGMOM         TRUE !orbit. ang. moment. between states
+RPA                TRUE !0: TDDFT/TDA, 1: both TDA and full TDDFT
+
+!Spin-orbit coupling calculations are implemented for
+!restricted, unrestricted CIS/TDDFT, and SF TDDFT
+!using Wigner-Eckart theorem: Try CALC_SOC = 2.
+!TDDFT based on a restricted open-shell reference is not available
+
+!****MEMORY****
+MEM_TOTAL          80000        !Default 2000 MB
+MEM_STATIC         10000         !Default 64 MB
+
+!**Molecular Properties and Analysis **
+!POP_MULLIKEN       FALSE   !Run Mulliken population analysis
+!LOWDIN_POPULATION  FALSE  !Run Löwdin population analysis
+GUI                2
+!STATE_ANALYSIS     TRUE
+!MOLDEN_FORMAT      FALSE
+!PRINT_ORBITALS     5
+!CIS_MOMENTS        TRUE !TDA Excited-State Multipoles
+$end
+
+!$xc_functional
+!**50-50 functional**
+!X  HF    0.50
+!X  S     0.08
+!X  B     0.42
+!C  VWN   0.19
+!C  LYP   0.81
+!$end
+
+--------------------------------------------------------------
+ ----------------------------------------------------------------
+             Standard Nuclear Orientation (Angstroms)
+    I     Atom           X                Y                Z
+ ----------------------------------------------------------------
+    1      O       0.0000000000     0.0000000000     0.1274291760
+    2      H      -0.9035466163    -0.0000000000    -0.5097167039
+    3      H       0.9035466163    -0.0000000000    -0.5097167039
+ ----------------------------------------------------------------
+ Molecular Point Group                 C2v   NOp =  4
+ Largest Abelian Subgroup              C2v   NOp =  4
+ Nuclear Repulsion Energy =           7.95096957 hartrees
+ There are        5 alpha and        4 beta electrons
+ Requested basis set is STO-3G
+ There are 4 shells and 7 basis functions
+
+ Q-Chem warning in module libmdc/get_mega.C, line 167:
+
+ Allowed MEM_STATIC has been capped at MEM_STATIC=8191.
+ Reduce the value of MEM_STATIC to silence this warning.
+
+
+ Total QAlloc Memory Limit  80000 MB
+ Mega-Array Size      8007 MB
+ MEM_STATIC part      8191 MB
+
+
+                       Distance Matrix (Angstroms)
+             O (  1)   H (  2)
+   H (  2)  1.105600
+   H (  3)  1.105600  1.807093
+ 
+ A cutoff of  1.0D-12 yielded     10 shell pairs
+ There are        34 function pairs
+ Smallest overlap matrix eigenvalue = 4.38E-01
+
+ Scale SEOQF with 1.000000e+00/1.000000e+00/1.000000e+00
+
+ Standard Electronic Orientation quadrupole field applied
+ Nucleus-field energy     =    -0.0000000001 hartrees
+ Guess from superposition of atomic densities
+ Warning:  Energy on first SCF cycle will be non-variational
+ SAD guess density has 10.000000 electrons
+
+ -----------------------------------------------------------------------
+  General SCF calculation program by
+  Eric Jon Sundstrom, Paul Horn, Yuezhi Mao, Dmitri Zuev, Alec White,
+  David Stuck, Shaama M.S., Shane Yost, Joonho Lee, David Small,
+  Daniel Levine, Susi Lehtola, Hugh Burton, Evgeny Epifanovsky,
+  Bang C. Huynh
+ -----------------------------------------------------------------------
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 B88
+ Correlation:  0.1900 VWN1RPA + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ A unrestricted SCF calculation will be
+ performed using DIIS
+ SCF converges when DIIS error is below 1.0e-08
+ ---------------------------------------
+  Cycle       Energy         DIIS error
+ ---------------------------------------
+    1     -75.0178164281      1.45e-01  
+    2     -74.9457637024      2.91e-02  
+    3     -74.9595236138      1.90e-02  
+    4     -74.9730497390      1.18e-03  
+    5     -74.9731287460      3.13e-04  
+    6     -74.9731411115      2.12e-05  
+    7     -74.9731411743      1.69e-06  
+    8     -74.9731411746      1.57e-07  
+    9     -74.9731411746      5.35e-09  Convergence criterion met
+ ---------------------------------------
+ SCF time:   CPU 0.09s  wall 0.00s 
+<S^2> =          0.753169673
+ SCF   energy in the final basis set =      -74.9731411746
+ Total energy in the final basis set =      -74.9731411746
+ 
+ MAX_CIS_SUBSPACE fits in available memory
+ Direct TDDFT/TDA calculation will be performed
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 B88
+ Correlation:  0.1900 VWN1RPA + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ CIS energy converged when residual is below 10e- 6
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+   1         2           8      0.076099    0.031123
+   2         7           3      0.037931    0.034832
+   3         9           1      0.000897    0.000806
+   4        10           0      0.000000    0.000000    Roots Converged
+ ---------------------------------------------------
+ 
+ ---------------------------------------------------
+         TDDFT/TDA Excitation Energies              
+ ---------------------------------------------------
+
+ Excited state   1: excitation energy (eV) =    2.4087
+ Total energy for state  1:                   -74.88462300 au
+    <S**2>     :  0.7526
+    Trans. Mom.: -0.0000 X  -0.1534 Y  -0.0000 Z
+    Strength   :     0.0013890495
+    D(    4) --> S(    1) amplitude =  0.9996 beta
+
+ Excited state   2: excitation energy (eV) =    6.7231
+ Total energy for state  2:                   -74.72607138 au
+    <S**2>     :  0.7516
+    Trans. Mom.: -0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    D(    3) --> S(    1) amplitude =  0.9977 beta
+
+ Excited state   3: excitation energy (eV) =   10.4891
+ Total energy for state  3:                   -74.58767356 au
+    <S**2>     :  2.7263
+    Trans. Mom.:  0.0000 X  -0.0000 Y   0.0511 Z
+    Strength   :     0.0006711917
+    S(    1) --> V(    1) amplitude =  0.6202 alpha
+    D(    4) --> V(    1) amplitude =  0.7658 beta
+
+ Excited state   4: excitation energy (eV) =   12.3554
+ Total energy for state  4:                   -74.51908828 au
+    <S**2>     :  2.7330
+    Trans. Mom.:  0.0863 X   0.0000 Y   0.0000 Z
+    Strength   :     0.0022519299
+    D(    3) --> V(    1) amplitude =  0.3407 alpha
+    S(    1) --> V(    2) amplitude =  0.5591 alpha
+    D(    3) --> V(    1) amplitude =  0.3180 beta
+    D(    4) --> V(    2) amplitude =  0.6848 beta
+
+ Excited state   5: excitation energy (eV) =   12.5199
+ Total energy for state  5:                   -74.51304162 au
+    <S**2>     :  0.7516
+    Trans. Mom.: -0.0000 X   0.0437 Y   0.0000 Z
+    Strength   :     0.0005865033
+    D(    4) --> V(    1) amplitude =  0.9916 alpha
+
+ Excited state   6: excitation energy (eV) =   13.1066
+ Total energy for state  6:                   -74.49148161 au
+    <S**2>     :  0.7814
+    Trans. Mom.:  0.0000 X   0.0000 Y  -0.3622 Z
+    Strength   :     0.0421341199
+    D(    3) --> V(    2) amplitude = -0.1549 alpha
+    S(    1) --> V(    1) amplitude =  0.7388 alpha
+    D(    3) --> V(    2) amplitude =  0.2484 beta
+    D(    4) --> V(    1) amplitude = -0.6035 beta
+
+ Excited state   7: excitation energy (eV) =   14.5174
+ Total energy for state  7:                   -74.43963817 au
+    <S**2>     :  2.4970
+    Trans. Mom.: -0.0788 X  -0.0000 Y   0.0000 Z
+    Strength   :     0.0022100195
+    D(    3) --> V(    1) amplitude =  0.4734 alpha
+    D(    3) --> V(    1) amplitude =  0.7110 beta
+    D(    4) --> V(    2) amplitude = -0.5122 beta
+
+ Excited state   8: excitation energy (eV) =   14.8148
+ Total energy for state  8:                   -74.42870745 au
+    <S**2>     :  0.7516
+    Trans. Mom.:  0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    D(    4) --> V(    2) amplitude =  0.9977 alpha
+
+ Excited state   9: excitation energy (eV) =   15.1527
+ Total energy for state  9:                   -74.41629083 au
+    <S**2>     :  1.0188
+    Trans. Mom.: -0.2487 X   0.0000 Y   0.0000 Z
+    Strength   :     0.0229560909
+    D(    3) --> V(    1) amplitude = -0.5002 alpha
+    S(    1) --> V(    2) amplitude =  0.7516 alpha
+    D(    4) --> V(    2) amplitude = -0.4139 beta
+
+ Excited state  10: excitation energy (eV) =   16.0566
+ Total energy for state 10:                   -74.38307030 au
+    <S**2>     :  2.7431
+    Trans. Mom.:  0.0000 X   0.0000 Y   0.0411 Z
+    Strength   :     0.0006648426
+    D(    3) --> V(    2) amplitude =  0.6982 alpha
+    S(    1) --> V(    1) amplitude = -0.1549 alpha
+    D(    3) --> V(    2) amplitude =  0.6902 beta
+ 
+ ---------------------------------------------------
+
+ Direct TDDFT calculation will be performed
+ Exchange:     0.2000 Hartree-Fock + 0.0800 Slater + 0.7200 B88
+ Correlation:  0.1900 VWN1RPA + 0.8100 LYP
+ Using SG-1 standard quadrature grid
+ ---------------------------------------------------
+ Iter    Rts Conv    Rts Left    Ttl Dev     Max Dev
+ ---------------------------------------------------
+   1         2           8      0.060587    0.016196
+   2         6           4      0.012116    0.007582
+   3        10           0      0.000000    0.000000    Roots Converged
+ ---------------------------------------------------
+ 
+ ---------------------------------------------------
+             TDDFT Excitation Energies              
+ ---------------------------------------------------
+
+ Excited state   1: excitation energy (eV) =    2.3951
+ Total energy for state  1:                   -74.88512425 au
+    Trans. Mom.: -0.0000 X  -0.1415 Y  -0.0000 Z
+    Strength   :     0.0011749527
+    X: D(    4) --> S(    1) amplitude =  1.0000 beta
+
+ Excited state   2: excitation energy (eV) =    6.7040
+ Total energy for state  2:                   -74.72677260 au
+    Trans. Mom.:  0.0000 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0000000000
+    X: D(    3) --> S(    1) amplitude =  0.9981 beta
+
+ Excited state   3: excitation energy (eV) =   10.3062
+ Total energy for state  3:                   -74.59439531 au
+    Trans. Mom.:  0.0000 X  -0.0000 Y   0.0462 Z
+    Strength   :     0.0005380282
+    X: S(    1) --> V(    1) amplitude =  0.6204 alpha
+    X: D(    4) --> V(    1) amplitude =  0.7631 beta
+
+ Excited state   4: excitation energy (eV) =   12.1319
+ Total energy for state  4:                   -74.52730112 au
+    Trans. Mom.:  0.0810 X   0.0000 Y  -0.0000 Z
+    Strength   :     0.0019495103
+    X: D(    3) --> V(    1) amplitude =  0.3655 alpha
+    X: S(    1) --> V(    2) amplitude =  0.5520 alpha
+    X: D(    3) --> V(    1) amplitude =  0.3491 beta
+    X: D(    4) --> V(    2) amplitude =  0.6689 beta
+
+ Excited state   5: excitation energy (eV) =   12.4886
+ Total energy for state  5:                   -74.51419505 au
+    Trans. Mom.: -0.0000 X   0.0586 Y   0.0000 Z
+    Strength   :     0.0010505083
+    X: D(    4) --> V(    1) amplitude =  0.9926 alpha
+
+ Excited state   6: excitation energy (eV) =   12.9695
+ Total energy for state  6:                   -74.49652191 au
+    Trans. Mom.: -0.0000 X   0.0000 Y  -0.3371 Z
+    Strength   :     0.0361027240
+    X: S(    1) --> V(    1) amplitude =  0.7444 alpha
+    X: D(    3) --> V(    2) amplitude =  0.2257 beta
+    X: D(    4) --> V(    1) amplitude = -0.6167 beta
+
+ Excited state   7: excitation energy (eV) =   14.4604
+ Total energy for state  7:                   -74.44173152 au
+    Trans. Mom.: -0.0818 X  -0.0000 Y  -0.0000 Z
+    Strength   :     0.0023710478
+    X: D(    3) --> V(    1) amplitude =  0.4614 alpha
+    X: D(    3) --> V(    1) amplitude =  0.6946 beta
+    X: D(    4) --> V(    2) amplitude = -0.5441 beta
+
+ Excited state   8: excitation energy (eV) =   14.8013
+ Total energy for state  8:                   -74.42920210 au
+    Trans. Mom.:  0.0000 X   0.0000 Y   0.0000 Z
+    Strength   :     0.0000000000
+    X: D(    4) --> V(    2) amplitude =  0.9979 alpha
+
+ Excited state   9: excitation energy (eV) =   15.1116
+ Total energy for state  9:                   -74.41779952 au
+    Trans. Mom.: -0.2459 X   0.0000 Y   0.0000 Z
+    Strength   :     0.0223884402
+    X: D(    3) --> V(    1) amplitude = -0.4882 alpha
+    X: S(    1) --> V(    2) amplitude =  0.7632 alpha
+    X: D(    4) --> V(    2) amplitude = -0.4121 beta
+
+ Excited state  10: excitation energy (eV) =   15.8658
+ Total energy for state 10:                   -74.39008499 au
+    Trans. Mom.:  0.0000 X   0.0000 Y   0.0403 Z
+    Strength   :     0.0006327760
+    X: D(    3) --> V(    2) amplitude =  0.6940 alpha
+    X: S(    1) --> V(    1) amplitude = -0.1767 alpha
+    X: D(    3) --> V(    2) amplitude =  0.6910 beta
+ 
+ ---------------------------------------------------
+  SETman timing summary (seconds)
+  CPU time                 0.15s
+  System time              0.00s
+  Wall time                0.24s
+
+ Q-Chem warning in module anlman/spin_orbit_couple_we.C, line 40:
+
+ Spin-Orbit coupling job using Wigner-Eckart theorem is not available with RPA.
+
+
+            STATE-TO-STATE TRANSITION ANGULAR MOMENTS
+Note: values should be multiplied by complex "i" to account for the true operator
+
+
+            Angular Moments of Ground State
+ -----------------------------------------------------
+   State     X           Y           Z(a.u.) 
+ -----------------------------------------------------
+       0    -0.000000   -0.000000    0.945788
+ -----------------------------------------------------
+
+ Within CIS/TDA Excited States:
+
+            Angular Moments of Excited State
+ -----------------------------------------------------
+   State     X           Y           Z(a.u.) 
+ -----------------------------------------------------
+       1    -0.000000   -0.000000    0.945788
+       2    -0.000000   -0.000000    0.945788
+       3    -0.000000   -0.000000    0.945788
+       4    -0.000000   -0.000000    0.945788
+       5    -0.000000   -0.000000    0.945788
+       6    -0.000000   -0.000000    0.945788
+       7    -0.000000   -0.000000    0.945788
+       8    -0.000000   -0.000000    0.945788
+       9    -0.000000   -0.000000    0.945788
+      10    -0.000000   -0.000000    0.945788
+ -----------------------------------------------------
+
+        Transition Angular Moments Between Ground and Excited States
+ --------------------------------------------------------------------------------
+    States   X          Y          Z             Length(a.u.)
+ --------------------------------------------------------------------------------
+    0    1   0.951712   0.000000  -0.000000      0.9517119
+    0    2  -0.000000   0.000000  -0.927594      0.9275935
+    0    3  -0.000000   0.000000  -0.000000   3.104922E-15
+    0    4   0.000000   0.070479   0.000000     0.07047863
+    0    5   0.289225  -0.000000   0.000000      0.2892249
+    0    6   0.000000  -0.000000  -0.000000   3.912945E-15
+    0    7  -0.000000  -0.249194  -0.000000       0.249194
+    0    8   0.000000   0.000000  -0.331595      0.3315954
+    0    9   0.000000  -0.598157  -0.000000      0.5981566
+    0   10  -0.000000  -0.000000   0.000000   1.427697E-14
+ --------------------------------------------------------------------------------
+
+        Transition Angular Moments Between Excited States
+ --------------------------------------------------------------------------------
+    States   X          Y          Z             Length(a.u.)
+ --------------------------------------------------------------------------------
+    1    2  -0.000000   0.867153   0.000000      0.8671527
+    1    3   0.234680   0.000000  -0.000000      0.2346796
+    1    4   0.000000   0.000000  -0.292716      0.2927162
+    1    5   0.000000   0.000000   0.000000   1.342288E-14
+    1    6  -0.191934   0.000000  -0.000000       0.191934
+    1    7   0.000000  -0.000000   0.222754      0.2227536
+    1    8  -0.000000  -0.060416  -0.000000     0.06041646
+    1    9   0.000000  -0.000000   0.175400      0.1754002
+    1   10  -0.024423   0.000000  -0.000000     0.02442349
+    2    3   0.000000   0.000000  -0.031946     0.03194582
+    2    4   0.062013   0.000000   0.000000     0.06201274
+    2    5  -0.000000   0.005731   0.000000    0.005731495
+    2    6   0.000000   0.000000  -0.116314      0.1163144
+    2    7   0.224953  -0.000000  -0.000000      0.2249525
+    2    8  -0.000000   0.000000  -0.000000   2.363283E-15
+    2    9  -0.015681   0.000000   0.000000      0.0156813
+    2   10   0.000000   0.000000  -0.252327      0.2523269
+    3    4   0.000000   0.147461  -0.000000      0.1474612
+    3    5   0.594326   0.000000   0.000000      0.5943262
+    3    6   0.000000   0.000000   0.000000   8.715558E-15
+    3    7  -0.000000   0.882446  -0.000000      0.8824459
+    3    8   0.000000  -0.000000  -0.122012      0.1220123
+    3    9   0.000000  -0.283956  -0.000000      0.2839559
+    3   10  -0.000000  -0.000000   0.000000   8.722014E-15
+    4    5  -0.000000  -0.000000  -0.311900      0.3119003
+    4    6  -0.000000  -0.001775  -0.000000    0.001775134
+    4    7   0.000000  -0.000000   0.000000   2.010307E-14
+    4    8   0.543102   0.000000  -0.000000       0.543102
+    4    9   0.000000  -0.000000  -0.000000   2.076991E-14
+    4   10  -0.000000   0.729114  -0.000000      0.7291141
+    5    6  -0.693741  -0.000000   0.000000       0.693741
+    5    7  -0.000000   0.000000   0.427485      0.4274854
+    5    8  -0.000000  -0.153362  -0.000000      0.1533619
+    5    9   0.000000   0.000000  -0.455303      0.4553026
+    5   10   0.143460  -0.000000  -0.000000      0.1434597
+    6    7  -0.000000   0.016272   0.000000     0.01627211
+    6    8   0.000000   0.000000   0.134729      0.1347289
+    6    9   0.000000  -0.301980  -0.000000        0.30198
+    6   10   0.000000   0.000000  -0.000000   1.506021E-14
+    7    8  -0.045285  -0.000000  -0.000000     0.04528481
+    7    9  -0.000000   0.000000   0.000000   1.001216E-14
+    7   10  -0.000000  -0.360822   0.000000      0.3608217
+    8    9  -0.721900  -0.000000  -0.000000      0.7219003
+    8   10  -0.000000   0.000000   0.660458      0.6604577
+    9   10  -0.000000   0.187020   0.000000      0.1870197
+ --------------------------------------------------------------------------------
+
+ Within RPA/TDDFT Excited States:
+
+            Angular Moments of Excited State
+ -----------------------------------------------------
+   State     X           Y           Z(a.u.) 
+ -----------------------------------------------------
+       1    -0.000000   -0.000000    0.945788
+       2    -0.000000   -0.000000    0.945788
+       3    -0.000000   -0.000000    0.945788
+       4    -0.000000   -0.000000    0.945788
+       5    -0.000000   -0.000000    0.945788
+       6    -0.000000   -0.000000    0.945788
+       7    -0.000000   -0.000000    0.945788
+       8    -0.000000   -0.000000    0.945788
+       9    -0.000000   -0.000000    0.945788
+      10    -0.000000   -0.000000    0.945788
+ -----------------------------------------------------
+
+        Transition Angular Moments Between Ground and Excited States
+ --------------------------------------------------------------------------------
+    States   X          Y          Z             Length(a.u.)
+ --------------------------------------------------------------------------------
+    0    1   0.938409   0.000000  -0.000000      0.9384087
+    0    2  -0.000000   0.000000  -0.901234      0.9012339
+    0    3  -0.000000   0.000000  -0.000000   3.369036E-15
+    0    4   0.000000   0.066420   0.000000     0.06641979
+    0    5   0.275018  -0.000000  -0.000000      0.2750176
+    0    6   0.000000  -0.000000  -0.000000   1.221092E-14
+    0    7  -0.000000  -0.262854  -0.000000      0.2628536
+    0    8   0.000000   0.000000  -0.307653      0.3076533
+    0    9  -0.000000  -0.614537  -0.000000      0.6145365
+    0   10   0.000000  -0.000000   0.000000   1.981473E-14
+ --------------------------------------------------------------------------------
+
+        Transition Angular Moments Between Excited States
+ --------------------------------------------------------------------------------
+    States   X          Y          Z             Length(a.u.)
+ --------------------------------------------------------------------------------
+    1    2  -0.000000   0.867890   0.000000      0.8678898
+    1    3   0.232353   0.000000  -0.000000      0.2323526
+    1    4  -0.000000   0.000000  -0.284976      0.2849758
+    1    5   0.000000   0.000000   0.000000   8.090084E-15
+    1    6  -0.197682   0.000000   0.000000      0.1976824
+    1    7   0.000000  -0.000000   0.237462      0.2374616
+    1    8   0.000000  -0.061323  -0.000000     0.06132319
+    1    9   0.000000  -0.000000   0.173551      0.1735506
+    1   10  -0.028987   0.000000   0.000000     0.02898736
+    2    3  -0.000000  -0.000000  -0.041019      0.0410191
+    2    4   0.070446   0.000000   0.000000     0.07044621
+    2    5  -0.000000   0.007560   0.000000      0.0075605
+    2    6   0.000000   0.000000  -0.105702      0.1057025
+    2    7   0.221024   0.000000   0.000000      0.2210239
+    2    8  -0.000000   0.000000  -0.000000   3.189072E-15
+    2    9  -0.021131   0.000000   0.000000     0.02113135
+    2   10   0.000000  -0.000000  -0.251239      0.2512395
+    3    4   0.000000   0.166591  -0.000000      0.1665905
+    3    5   0.595658   0.000000   0.000000      0.5956584
+    3    6   0.000000   0.000000  -0.000000   2.585643E-14
+    3    7  -0.000000   0.892257  -0.000000      0.8922568
+    3    8   0.000000   0.000000  -0.140461      0.1404605
+    3    9   0.000000  -0.294817  -0.000000       0.294817
+    3   10  -0.000000  -0.000000   0.000000   1.362548E-14
+    4    5   0.000000  -0.000000  -0.334829      0.3348292
+    4    6  -0.000000  -0.001542  -0.000000    0.001542145
+    4    7   0.000000  -0.000000   0.000000   3.559768E-14
+    4    8   0.537394   0.000000  -0.000000      0.5373936
+    4    9   0.000000  -0.000000  -0.000000   9.511094E-14
+    4   10  -0.000000   0.723623  -0.000000       0.723623
+    5    6  -0.699970  -0.000000   0.000000      0.6999703
+    5    7   0.000000   0.000000   0.416268      0.4162677
+    5    8  -0.000000  -0.153180   0.000000      0.1531803
+    5    9   0.000000   0.000000  -0.445149      0.4451494
+    5   10   0.164355  -0.000000  -0.000000      0.1643546
+    6    7  -0.000000   0.003076   0.000000    0.003076097
+    6    8  -0.000000  -0.000000   0.107798      0.1077984
+    6    9   0.000000  -0.326216  -0.000000      0.3262156
+    6   10   0.000000  -0.000000  -0.000000   4.674896E-14
+    7    8  -0.059814  -0.000000  -0.000000     0.05981355
+    7    9  -0.000000  -0.000000   0.000000   7.113236E-14
+    7   10   0.000000  -0.366934   0.000000      0.3669343
+    8    9  -0.732607  -0.000000  -0.000000      0.7326073
+    8   10  -0.000000   0.000000   0.656624      0.6566236
+    9   10  -0.000000   0.182934   0.000000      0.1829341
+ --------------------------------------------------------------------------------
+
+                    END OF TRANSITION MOMENT CALCULATION
+
+ 
+ --------------------------------------------------------------
+             Orbital Energies (a.u.) and Symmetries
+ --------------------------------------------------------------
+ 
+ Alpha MOs, Unrestricted
+ -- Occupied --                  
+-19.579  -1.470  -0.920  -0.807  -0.780
+  1 A1    2 A1    1 B1    1 B2    3 A1                                         
+ -- Virtual --                   
+ -0.248  -0.155
+  4 A1    2 B1                                                                 
+ 
+ Beta MOs, Unrestricted
+ -- Occupied --                  
+-19.561  -1.391  -0.899  -0.746
+  1 A1    2 A1    1 B1    3 A1                                                 
+ -- Virtual --                   
+ -0.520  -0.235  -0.145
+  1 B2    4 A1    2 B1                                                         
+ --------------------------------------------------------------
+ 
+          Ground-State Mulliken Net Atomic Charges
+
+     Atom                 Charge (a.u.)    Spin (a.u.)
+  --------------------------------------------------------
+      1 O                     0.163257       1.085199
+      2 H                     0.418371      -0.042599
+      3 H                     0.418371      -0.042599
+  --------------------------------------------------------
+  Sum of atomic charges =     1.000000
+  Sum of spin   charges =     1.000000
+
+ -----------------------------------------------------------------
+                    Cartesian Multipole Moments
+ -----------------------------------------------------------------
+    Charge (ESU x 10^10)
+                 4.8032
+    Dipole Moment (Debye)
+         X       0.0000      Y       0.0000      Z      -2.4040
+       Tot       2.4040
+    Quadrupole Moments (Debye-Ang)
+        XX      -1.4183     XY      -0.0000     YY      -4.7584
+        XZ      -0.0000     YZ       0.0000     ZZ      -4.1471
+    Octopole Moments (Debye-Ang^2)
+       XXX       0.0000    XXY       0.0000    XYY       0.0000
+       YYY       0.0000    XXZ      -2.1122    XYZ      -0.0000
+       YYZ      -0.0382    XZZ       0.0000    YZZ       0.0000
+       ZZZ      -1.0158
+    Hexadecapole Moments (Debye-Ang^3)
+      XXXX      -3.4982   XXXY      -0.0000   XXYY      -1.5607
+      XYYY      -0.0000   YYYY      -2.3909   XXXZ      -0.0000
+      XXYZ       0.0000   XYYZ      -0.0000   YYYZ       0.0000
+      XXZZ      -0.7661   XYZZ      -0.0000   YYZZ      -1.1421
+      XZZZ      -0.0000   YZZZ       0.0000   ZZZZ      -4.1270
+ -----------------------------------------------------------------
+ Total job time:  1.24s(wall), 0.30s(cpu) 
+ Thu Nov 21 13:57:35 2024
+
+        *************************************************************
+        *                                                           *
+        *  Thank you very much for using Q-Chem.  Have a nice day.  *
+        *                                                           *
+        *************************************************************
+
+

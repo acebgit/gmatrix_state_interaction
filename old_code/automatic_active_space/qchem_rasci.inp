@@ -1,0 +1,103 @@
+$comment
+ RAS-SF CALCULATION
+$end
+
+$molecule
+ READ ARCHIVO
+$end
+
+$rem
+!**CALCULATION TYPE***     
+JOBTYPE            sp    
+EXCHANGE           HF
+CORRELATION        RASCI    !RASCI=Casanova; RASCI2=Zimmerman
+BASIS              6-31G*
+!BASIS2             STO-3G
+
+!***SCF REFERENCE***
+!SKIP_SCFMAN        FALSE
+UNRESTRICTED       FALSE
+!SCF_GUESS          core
+!SCF_GUESS_MIX      FALSE
+!SCF_GUESS_ALWAYS   FALSE
+MAX_SCF_CYCLES     1000
+!SCF_CONVERGENCE    10
+!SCF_ALGORITHM      DIIS !DIIS,DM,DIIS_DM,GDM,DIIS_GDM,GD
+
+!SYMMETRY           TRUE   !use of symmetry for calculating integrals
+!SYM_IGNORE         FALSE  !turn off using symmetry
+!SYM_TOL            5      !tolerance for determining point group
+!USE_ABELIAN_SUBGROUP      !define to use abelian group
+
+!THRESH             14
+!SCF_FINAL_PRINT     1 !0,1,2,3
+
+!****RAS-SF****
+RAS_ROOTS          20       !number of RAS-CI roots to be computed
+SET_ITER           150     !number of iterations in RASCI
+RAS_ELEC           2       !number of electrons in RAS2
+RAS_ELEC_ALPHA            !spin-α electrons in RAS2 
+RAS_ELEC_BETA             !spin-β electrons in RAS2
+
+RAS_ACT            2       !number of orbitals in RAS2 
+RAS_ACT_ORB       1       !user-selected RAS2 orbitals
+RAS_OCC            2       !number of orbitals in RAS1
+!N_FROZEN_CORE      FC     !Number of frozen core orbitals
+!N_FROZEN_VIRTUAL   0      !Number of frozen virtual orbitals
+
+!RAS_DO_HOLE        TRUE   !presence of hole excitations in RAS-CI wave function
+!RAS_DO_PART        TRUE   !presence of particle excitations
+!RAS_AMPL_PRINT     10     !threshold (×10 2 ) for the CI amplitudes
+
+!RAS_GUESS_CS       0      !number of closed shell guess conﬁgurations
+!RAS_SPIN_MULT      0      !spin multiplicity. Only for Ms = 0 
+!RAS_SRDFT          FALSE  !short-range density functional RAS-CI
+!RAS_NFRAG          0     !fragments of excitation analysis in RASCI
+
+RAS_PRINT          2      !level of information
+!RAS_NATORB         TRUE   !computation of the natural orbital occupancies
+!RAS_NATORB_STATE  0      !Saves NO of i RAS computed state in .fchk ﬁle
+!RAS_FOD            TRUE
+
+!****RAS-SOC****
+CALC_SOC           TRUE   !calculate SOC for EOM-CC, RAS-CI, ADC, TDDFT/TDA and TDDFT
+!RAS_SOC_2E        TRUE   !two-electron mean-ﬁeld contribution, default=true
+RAS_SOC_SYM_DENS   TRUE   !averaging of α and β densities
+
+!****MEMORY****
+MEM_TOTAL          60000 !Default 2000 MB
+MEM_STATIC         20000  !Default 64 MB
+
+!**Molecular Properties and Analysis **                                                                                          
+!POP_MULLIKEN       TRUE   !Run Mulliken population analysis
+!LOWDIN_POPULATION  TRUE   !Run Löwdin population analysis
+GUI                0       !Checkpoints generation
+STATE_ANALYSIS     TRUE
+
+!**Wave function analysis of RAS-CI states: MOLDEN**
+!PLOTS = 0     ! Note: This can be omitted, default is 0
+!NTO_PAIRS = 2 ! Note: This can be omitted, default is 2
+!GUI 0
+!MOLDEN_FORMAT      TRUE
+!PRINT_ORBITALS     15
+
+!**Wave function analysis of RAS-CI state: CUBE**
+!NTO_PAIRS = 2 ! Note: This can be omitted, default is 2
+!PLOTS = 1
+!GUI 0
+
+!**SR-DFT**
+!RAS_SRDFT           TRUE !Perform short-range density functional RAS-CI
+!RAS_SRDFT_EXC       0 !EX functional. 0=HF. 
+!RAS_SRDFT_ONLY_COR  TRUE !No use of EXC functional
+!RAS_SRDFT_COR       srPBE !short-range correlation functional
+!ras_srdft_0         TRUE !true: no iteration (one-shot); false: iteration
+!RAS_OMEGA           400 !Coulomb range-separation parameter. def=400
+!RAS_SRDFT_DAMP     0.5 !dumping factor. def=0.5
+$end
+
+!$plots
+!   grid_points 100 100 100
+!   grid_range  (-10,10) (-10,10) (-10,10)
+!$end
+
