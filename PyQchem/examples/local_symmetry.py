@@ -129,13 +129,13 @@ def get_symmetry_wf(occupation_alpha, occupation_beta):
         if abs(occupation) > 0.1:
             state_orb = SymmetryBase(group='D2h',
                                      rep=pd.Series(np.array(orbital_a),
-                                                   index=[ "E", "C2", "C2'", "C2''", "sh", "i", "sv", "sd"]))
+                                                   index=[ "E", "C2", "C2'", "C2''", "sh", "i", "sv", "udemy_python_course"]))
             state_wf = state_wf * state_orb
     for orbital_b, occupation in zip(molsym.mo_SOEVs_a, occupation_beta):
         if abs(occupation) > 0.1:
             state_orb = SymmetryBase(group='D2h',
                                      rep=pd.Series(np.array(orbital_b),
-                                                   index=[ "E", "C2", "C2'", "C2''", "sh", "i", "sv", "sd"]))
+                                                   index=[ "E", "C2", "C2'", "C2''", "sh", "i", "sv", "udemy_python_course"]))
             state_wf = state_wf * state_orb
 
     return state_wf
