@@ -3,8 +3,6 @@ import sys
 import numpy as np
 from numpy import linalg, sqrt
 import pandas as pd
-import math 
-import matplotlib
 # matplotlib.use('Agg')  # Set backend to 'Agg' for headless environments
 import matplotlib.pyplot as plt
 
@@ -38,21 +36,6 @@ def extract_data_from_json(filee):
     with open(filee, 'r') as f:
         object_text = f.read()
     outpuut_dict = json.loads(object_text)
-
-    # total_energy_list = []
-    # excitation_energy_list = []
-    # for i in outpuut_dict['selected_energy_dict']:
-    #     total_energy_list.append(float(outpuut_dict['selected_energy_dict'][i][0]))
-    #     excit_energy = float(outpuut_dict['selected_energy_dict'][i][1]) 
-    #     excitation_energy_list.append(excit_energy)
-
-    # spin_list = [float(outpuut_dict['spin_dict'][i]) for i in outpuut_dict['spin_dict']]
-    # soc_list = [outpuut_dict['soclist_dict'][i] for i in outpuut_dict['soclist_dict']]
-    # orbital_momentum_list = [[complex(outpuut_dict['orbitalmomentlist_dict'][i][0]),
-    #                         complex(outpuut_dict['orbitalmomentlist_dict'][i][1]),
-    #                         complex(outpuut_dict['orbitalmomentlist_dict'][i][2])] 
-    #                         for i in outpuut_dict['orbitalmomentlist_dict']]
-    # transitions_list = [i for i in outpuut_dict['transitions_dict']]
     return outpuut_dict
 
 
@@ -811,22 +794,59 @@ def print_g_calculation(filee, approxspin_dict, g_shift, g_tensor, soc_order=0, 
     # print('')
 
 
-def save_picture(save_options, filee, title_main):
+def save_picture(
+    save: bool = False,
+    filename: str = "figure",
+    title: str = "",
+    fig=None,
+    fmt: str = "png",
+    dpi: int = 300,
+    directory: str = "figures"
+):
     """
-    Function that shows the plot (save_options=0) or save it (save_options=1).
-    :param save_options, file, main_title.
-    :return: plot (saved or shown)
+    Shows or saves a matplotlib figure with sensible defaults.
+
+    Parameters
+    ----------
+    save : bool, default=False
+        If True, saves the figure. If False, shows it.
+
+    filename : str, default='figure'
+        Base name of the saved figure.
+
+    title : str, default=''
+        Optional supplementary name in the filename.
+
+    fig : matplotlib.figure.Figure or None, default=None
+        The figure to operate on. If None, uses the current active figure.
+
+    fmt : str, default='png'
+        Output format ('png', 'pdf', 'svg', ...).
+
+    dpi : int, default=300
+        Resolution of the saved figure.
+
+    directory : str, default='figures'
+        Folder where images will be saved. Created automatically if missing.
     """
-    if save_options == 1:
-        plt.plot()
-        figure_name = filee + '_' + title_main + '.png'
-        plt.savefig(figure_name, 
-                    bbox_inches="tight", 
-                    dpi=600
-                    )
-        plt.close()
+
+    # Determine the figure
+    if fig is None:
+        fig = plt.gcf()
+
+    # Build filename
+    safe_title = f"_{title}" if title else ""
+    filepath = Path(directory) / f"{filename}{safe_title}.{fmt}"
+
+    if save:
+        # Ensure folder exists
+        Path(directory).mkdir(parents=True, exist_ok=True)
+
+        fig.savefig(filepath, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
+        print(f"✔ Figure saved: {filepath}")
     else:
-        plt.plot()
         plt.show()
 
 
@@ -912,9 +932,6 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
         :param:
         :return:
         """
-        # "matplotlib" help: https://aprendeconalf.es/docencia/python/manual/matplotlib/
-        # https://chartio.com/resources/tutorials/how-to-save-a-plot-to-a-file-using-matplotlib/
-        # https://pythonspot.com/matplotlib-bar-chart/
         fuente = 'serif'  # "Sans"
         medium_size = 16
         big_size = 20
@@ -1068,147 +1085,161 @@ def gtensor_state_pairs_analysis(outputdict, ppms, cut_off_gvalue=0, cut_off_con
         excited_states_plots(excitstates_presentation, savepicture)
 
 
-def plot_g_tensor_vs_states(file, subtitle, presentation_matrix, x_title, y_title, main_title, save_options):
+def get_plot_specs(
+    font="sans-serif",
+    small_size=17,
+    bigger_size=20,
+    legend_size=20,
+    marker_size=10,
+    line_width=2
+):
+    """Return a dictionary with all plot appearance specifications."""
+    
+    return {
+        "font": font,
+        "small_size": small_size,
+        "legend_size": legend_size,
+        "bigger_size": bigger_size,
+        "weight": "normal",
+        "line_width": line_width,
+        "marker_size": marker_size,
+    }
+
+
+def plot_g_tensor_vs_states(
+        filename,
+        subtitle,
+        matrix,
+        x_title,
+        y_title,
+        main_title,
+        save_option,
+        plot_type=1,
+        specs=None
+    ):
+    """
+    Plot g-tensor components vs electronic states.
+
+    Parameters
+    ----------
+    filename : str
+        Base filename for saving.
+
+    subtitle : str
+        Additional label for the saved file.
+
+    matrix : np.ndarray
+        Matrix where:
+        - column 0 → x-axis (states)
+        - column 1 → Δg_xx
+        - column 2 → Δg_yy
+        - column 3 → Δg_zz
+
+    x_title, y_title : str
+        Axis labels.
+
+    main_title : str
+        Title of the plot.
+
+    save_option : bool
+        If True → saves figure, else shows it.
+
+    plot_type : int, default=1
+        0 → line plot
+        1 → bar plot
+
+    specs : dict or None
+        Plot styling dictionary (from get_plot_specs()).
+    """
+
+    if specs is None:
+        specs = get_plot_specs()  # default style
+
+    # Extract styling into local variables
+    font = specs["font"]
+    small_size = specs["small_size"]
+    bigger_size = specs["bigger_size"]
+    legend_size = specs["legend_size"]
+    weight = specs["weight"]
+    lw = specs["line_width"]
+    ms = specs["marker_size"]
+
+    # Extract data
+    x = matrix[:, 0]
+    y1, y2, y3 = matrix[:, 1], matrix[:, 2], matrix[:, 3]
+
     fig, ax = plt.subplots(figsize=(10, 5))
-    plot_type = 1 # 0: plot, 1: bars
 
-    # MAIN FEATURES:
-    fuente = 'sans-serif'  # 'serif'
-    small_size = 17 # 25
-    legend_size = small_size + 3
-    bigger_size = small_size + 3
-    weight_selected = 'normal'
-    line_width = 2
-    marker_size = 10
-
-    x = presentation_matrix[:, 0]  # First column for x-axis
-    y1 = presentation_matrix[:, 1]  # Second column for the first category
-    y2 = presentation_matrix[:, 2]  # Third column for the second category
-    y3 = presentation_matrix[:, 3]  # Fourth column for the third category
-
-    #################################
-    ###   PLOT TYPE
-    #################################
+    # -------------------------------
+    #       LINE PLOT
+    # -------------------------------
     if plot_type == 0:
-        # MAJOR AND MINOR TICKS:
-        # x_tick = int((max(x))) / 4
-        # x_tick = int((max(x))) / 4
-        # y_tick = int((max(x))) / 4
-        # x_tick = 20
-        # y_tick = 1
-        # ax.xaxis.set_major_locator(MultipleLocator(x_tick))
-        # ax.yaxis.set_major_locator(MultipleLocator(y_tick))
+        ax.plot(x, y1, "ro", markersize=ms)
+        ax.plot(x, y2, "bv", markersize=ms, markerfacecolor="none", markeredgewidth=1.5)
+        ax.plot(x, y3, "ks", markersize=ms)
+        plt.grid(axis="both", linestyle="--", linewidth=0.7, alpha=0.7)
 
-        # x_tick_min = x_tick / 2
-        # y_tick_min = y_tick / 2
-        # ax.xaxis.set_minor_locator(MultipleLocator(x_tick_min))
-        # ax.yaxis.set_minor_locator(MultipleLocator(y_tick_min))
-
-        # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        # ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-
-        # LINES:
-        # ax.plot(x, y1, 'r',
-        #         label=r'$\mathregular{\Delta g_{xx}}$', linewidth=line_width)
-        # ax.plot(x, y2, 'b', 
-        #         label=r'$\mathregular{\Delta g_{yy}}$', linewidth=line_width)
-        # ax.plot(x, y3, 'k',
-        #         label=r'$\mathregular{\Delta g_{zz}}$', linewidth=line_width)
-
-        # MARKERS: https://matplotlib.org/2.1.1/api/_as_gen/matplotlib.pyplot.plot.html
-        ax.plot(x, y1, 'ro', markersize=marker_size)
-        ax.plot(x, y2, 'bv', markersize=marker_size,
-                markerfacecolor='none', markeredgewidth=1.5)
-        ax.plot(x, y3, 'ks', markersize=marker_size)
-
-        # Enable grid lines for both x and y axes
-        plt.grid(axis='both', linestyle='--', linewidth=0.7, alpha=0.7)
-
-    #################################
-    ###   BAR PLOTS
-    #################################
+    # -------------------------------
+    #        BAR PLOT
+    # -------------------------------
     elif plot_type == 1:
-        # Set width of the bars
         bar_width = 0.25
+        r1 = x
+        r2 = x + bar_width
+        r3 = x + 2 * bar_width
 
-        # Set the positions of the bars on the x-axis
-        r1 = x  # np.arange(len(x))
-        r2 = [x + bar_width for x in r1]
-        r3 = [x + bar_width * 2 for x in r1]
+        ax.bar(r1, y1, width=bar_width, color="red", label=r"$\Delta g_{xx}$")
+        ax.bar(r2, y2, width=bar_width, color="blue", label=r"$\Delta g_{yy}$")
+        ax.bar(r3, y3, width=bar_width, color="black", label=r"$\Delta g_{zz}$")
 
-        # Create the bar plot 
-        plt.bar(r1, y1, width=bar_width, color='red', edgecolor='red', label=r'$\mathregular{\Delta g_{xx}}$')
-        plt.bar(r2, y2, width=bar_width, color='blue', edgecolor='blue', label=r'$\mathregular{\Delta g_{yy}}$')
-        plt.bar(r3, y3, width=bar_width, color='black', edgecolor='black', label=r'$\mathregular{\Delta g_{zz}}$')
+    # -------------------------------
+    #      AXIS & LIMITS
+    # -------------------------------
+    plt.xticks(fontsize=small_size, weight=weight)
+    plt.yticks(fontsize=small_size, weight=weight)
 
-    # CHANGING THE FONTSIZE OF TICKS
-    plt.xticks(fontsize=small_size, weight=weight_selected)
-    plt.yticks(fontsize=small_size, weight=weight_selected)
-    # axis.set_major_locator(MaxNLocator(integer=True))
-
-    # LIMIT TO AXIS:
     ax.set_xlim(min(x)-1, max(x)+1)
 
-    # To put only integer numbers in the label: 
-    # from matplotlib.ticker import MaxNLocator
-    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    y_max = max(y1.max(), y2.max(), y3.max())
+    y_min = min(y1.min(), y2.min(), y3.min())
+    margin = 0.1 * max(abs(y_max), abs(y_min))
+    ax.set_ylim(y_min - margin, y_max + margin)
 
-    max_value = np.maximum.reduce([y1.max(), y2.max(), y3.max()])
-    min_value = np.minimum.reduce([y1.min(), y2.min(), y3.min()])
-    # Choose the larger value in absolute terms to calculate the interval
-    interval = 0.1 * max(abs(max_value), abs(min_value))
-    ax.set_ylim(min_value-interval, max_value+interval)
+    plt.xlabel(x_title, fontsize=bigger_size, fontfamily=font, labelpad=15)
+    plt.ylabel(y_title, fontsize=bigger_size, fontfamily=font, style="italic", labelpad=15)
 
-    # LABELS:
-    # labelpad: change the space between axis umbers and labels
-    plt.xlabel(x_title, fontsize=bigger_size, fontfamily=fuente, labelpad=15,
-               weight=weight_selected)
-    plt.ylabel(y_title, fontsize=bigger_size, fontfamily=fuente, style='italic',
-               weight=weight_selected, labelpad=15)
-    # x_min = 0
-    # x_max =  11
-    # y_min = -45
-    # y_max =  5
-    # plt.xlim([x_min, x_max])  # Limit axis values
-    # plt.ylim([y_min, y_max])  # Limit axis values
+    # -------------------------------
+    #            LEGEND
+    # -------------------------------
+    plt.legend(
+        fontsize=legend_size,
+        fancybox=True,
+        framealpha=0.5,
+        loc="best",
+        frameon=False
+    )
 
-    # TITLE:
-    # y = 1.05 change the space between title and plot
-    # plt.title(main_title, fontsize=bigger_size, fontfamily=fuente, y=1.05)
-    
-    # LEGEND
-    legend = plt.legend(fontsize=legend_size, 
-                        fancybox=True, 
-                        framealpha=0.5,
-                        labelcolor='linecolor', 
-                        loc='best', 
-                        frameon=False, 
-                        )
-    # plt.legend(frameon=False)
-    # frame = legend.get_frame().set_edgecolor('black')
-    # frame = legend.get_frame().set_linewidth(1)
-    # frame = legend.get_frame().set_facecolor('white')
-    # frame.set_edgecolor('black')
+    # -------------------------------
+    #         AXIS STYLE
+    # -------------------------------
+    ax.spines["top"].set_linewidth(lw)
+    ax.spines["bottom"].set_linewidth(lw)
+    ax.spines["left"].set_linewidth(lw)
+    ax.spines["right"].set_linewidth(lw)
 
-    # plt.locator_params(nbins=10)
-    # plt.grid()
-
-    # Add an horizontal line in y = 0
-    # ax.hlines(y=0, xmin=x_min, xmax=x_max, linewidth=line_width, color='k',
-    #           linestyle='dotted')
-    # dotted, dashed, solid, dashdot
-
-    # Frame of the plot: https://e2eml.school/matplotlib_framing.html#spinestyle
-    line_width = line_width - 0.8
-    ax.spines["top"].set_linewidth(line_width)
-    ax.spines["bottom"].set_linewidth(line_width)
-    ax.spines["left"].set_linewidth(line_width)
-    ax.spines["right"].set_linewidth(line_width)
-    
-    save_picture(save_options, file, subtitle)
+    # -------------------------------
+    #         SAVE OR SHOW
+    # -------------------------------
+    save_picture(save_option, filename, subtitle)
 
 
-def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, file_string=None):
+
+def sum_over_state_plot(outputdict, 
+                        gestimation, 
+                        ppm, 
+                        cutoff, 
+                        saveplot, 
+                        file_string=None):
     """
     Generate the sum-over-states plot, i.e. calculation of the g-tensor by including states
     from 1 to nstates, above a cutoff of g-value. 
@@ -1308,10 +1339,10 @@ def sum_over_state_plot(outputdict, gestimation, ppm, cutoff, saveplot, file_str
     perturbative_sum = [round(float(sum(x)), 3) for x in zip(*filtered_gshifts)][1:]  # Sum columns, skipping the first
     print('Total: ', perturbative_sum[0], perturbative_sum[1], perturbative_sum[2])
 
+    # Make the title
     y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
-    file_string = str(sys.argv[1]).split('.')[0]
+    file_string = "str(sys.argv[1]).split('.')[0]
     plot_title = 'sos_analysis: ' + file_string
-
     plot_g_tensor_vs_states(file_string,
                                 'sos', 
                                 np.array(filtered_gshifts, dtype=object),
@@ -1405,7 +1436,7 @@ def comparison_s2(json_file, outputdict, save_options, s2__per_gshift, gshift__l
         #           linestyle='dotted')
         # dotted, dashed, solid, dashdot
 
-        # Frame of the plot: https://e2eml.school/matplotlib_framing.html#spinestyle
+        # Frame of the plot
         line_width = line_width - 0.8
         ax.spines["top"].set_linewidth(line_width)
         ax.spines["bottom"].set_linewidth(line_width)

@@ -1,6 +1,3 @@
-
-__author__ = 'Antonio Cebreiro'
-
 import json
 import sys 
 import numpy as np
@@ -14,11 +11,7 @@ import matplotlib.pyplot as plt
 
 import timeit
 from functools import partial
+from PyQchem.pyqchem.parsers.parser_rasci import parser_rasci
 
-# Get the absolute path to local folder 'PyQChem'
-import sys
-import os
-parent_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), 'C:\\Users\\HP.LAPTOP-F127N3L3\\Desktop\\my_programs\\PyQChem'))
-if parent_directory not in sys.path: # Add 'folder2' to the Python path
-    sys.path.append(parent_directory)
-from pyqchem.parsers.parser_rasci import parser_rasci
+import warnings
+warnings.filterwarnings("ignore")

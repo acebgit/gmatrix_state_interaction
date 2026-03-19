@@ -1,7 +1,13 @@
 __author__ = 'Antonio Cebreiro'
 
 import sys
-from gmatrix_program.gmatrix_classes import OutToJsonConverter, GTensorConfig, GTensorPipeline
+print(sys.path)
+
+from tatchen_method.gmatrix_program.gmatrix_classes import (
+    OutToJsonConverter, 
+    GTensorConfig, 
+    GTensorPipeline
+)
 
 # Get the .out file from command line arguments
 if len(sys.argv) != 2:
@@ -24,7 +30,7 @@ config = GTensorConfig()
 pipeline = GTensorPipeline(qchemout, config=config)
 pipeline.load_data()                    # Step 1: load the JSON
 pipeline.select_states()                # Step 2: select the states
-# pipeline.run_gshift_calculation()       # Step 3: calculate g-shift
+pipeline.run_gshift_calculation()       # Step 3: calculate g-shift
 
 # pipeline.run_sos_analysis()             # Optional: sum-over-states
 # pipeline.run_pairs_analysis()             # Optional: pairs analysis
