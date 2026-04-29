@@ -5,6 +5,7 @@ from numpy import linalg, sqrt
 import pandas as pd
 # matplotlib.use('Agg')  # Set backend to 'Agg' for headless environments
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 cm_to_ev = 0.0001239841984
 
@@ -845,7 +846,7 @@ def save_picture(
         fig.savefig(filepath, dpi=dpi, bbox_inches="tight")
         plt.close(fig)
 
-        print(f"✔ Figure saved: {filepath}")
+        print(f"Figure saved: {filepath}")
     else:
         plt.show()
 
@@ -1107,13 +1108,13 @@ def get_plot_specs(
 
 
 def plot_g_tensor_vs_states(
-        filename,
-        subtitle,
         matrix,
-        x_title,
-        y_title,
-        main_title,
-        save_option,
+        filename="g_tensor_plot",
+        subtitle="plot",
+        x_title="# states",
+        y_title=r"$\Delta g$",
+        main_title="G-tensor components vs electronic states",
+        save_option=False,
         plot_type=1,
         specs=None
     ):
@@ -1122,12 +1123,6 @@ def plot_g_tensor_vs_states(
 
     Parameters
     ----------
-    filename : str
-        Base filename for saving.
-
-    subtitle : str
-        Additional label for the saved file.
-
     matrix : np.ndarray
         Matrix where:
         - column 0 → x-axis (states)
@@ -1135,38 +1130,50 @@ def plot_g_tensor_vs_states(
         - column 2 → Δg_yy
         - column 3 → Δg_zz
 
-    x_title, y_title : str
-        Axis labels.
+    filename : str, default="g_tensor_plot"
+        Base name for saving.
 
-    main_title : str
-        Title of the plot.
+    subtitle : str, default="plot"
+        Secondary name appended to filename.
 
-    save_option : bool
-        If True → saves figure, else shows it.
+    x_title : str, default="# states"
+        Label for the x-axis.
+
+    y_title : str, default=r"$\\Delta g$"
+        Label for the y-axis.
+
+    main_title : str, default="G-tensor components vs electronic states"
+        Plot title.
+
+    save_option : bool, default=False
+        If True → saves the plot. If False → shows the plot.
 
     plot_type : int, default=1
         0 → line plot
         1 → bar plot
 
     specs : dict or None
-        Plot styling dictionary (from get_plot_specs()).
+        Plot styling dictionary. If None → default styling.
     """
 
+    # Apply default styling
     if specs is None:
-        specs = get_plot_specs()  # default style
+        specs = get_plot_specs()
 
-    # Extract styling into local variables
-    font = specs["font"]
-    small_size = specs["small_size"]
+    # Extract styling shortcuts
+    font        = specs["font"]
+    small_size  = specs["small_size"]
     bigger_size = specs["bigger_size"]
     legend_size = specs["legend_size"]
-    weight = specs["weight"]
-    lw = specs["line_width"]
-    ms = specs["marker_size"]
+    weight      = specs["weight"]
+    lw          = specs["line_width"]
+    ms          = specs["marker_size"]
 
     # Extract data
-    x = matrix[:, 0]
-    y1, y2, y3 = matrix[:, 1], matrix[:, 2], matrix[:, 3]
+    x  = matrix[:, 0]
+    y1 = matrix[:, 1]
+    y2 = matrix[:, 2]
+    y3 = matrix[:, 3]
 
     fig, ax = plt.subplots(figsize=(10, 5))
 
@@ -1182,15 +1189,11 @@ def plot_g_tensor_vs_states(
     # -------------------------------
     #        BAR PLOT
     # -------------------------------
-    elif plot_type == 1:
+    else:
         bar_width = 0.25
-        r1 = x
-        r2 = x + bar_width
-        r3 = x + 2 * bar_width
-
-        ax.bar(r1, y1, width=bar_width, color="red", label=r"$\Delta g_{xx}$")
-        ax.bar(r2, y2, width=bar_width, color="blue", label=r"$\Delta g_{yy}$")
-        ax.bar(r3, y3, width=bar_width, color="black", label=r"$\Delta g_{zz}$")
+        ax.bar(x,               y1, width=bar_width, color="red",   label=r"$\Delta g_{xx}$")
+        ax.bar(x + bar_width,   y2, width=bar_width, color="blue",  label=r"$\Delta g_{yy}$")
+        ax.bar(x + 2*bar_width, y3, width=bar_width, color="black", label=r"$\Delta g_{zz}$")
 
     # -------------------------------
     #      AXIS & LIMITS
@@ -1198,7 +1201,7 @@ def plot_g_tensor_vs_states(
     plt.xticks(fontsize=small_size, weight=weight)
     plt.yticks(fontsize=small_size, weight=weight)
 
-    ax.set_xlim(min(x)-1, max(x)+1)
+    ax.set_xlim(min(x) - 1, max(x) + 1)
 
     y_max = max(y1.max(), y2.max(), y3.max())
     y_min = min(y1.min(), y2.min(), y3.min())
@@ -1207,6 +1210,8 @@ def plot_g_tensor_vs_states(
 
     plt.xlabel(x_title, fontsize=bigger_size, fontfamily=font, labelpad=15)
     plt.ylabel(y_title, fontsize=bigger_size, fontfamily=font, style="italic", labelpad=15)
+
+    plt.title(main_title, fontsize=bigger_size, fontfamily=font, pad=15)
 
     # -------------------------------
     #            LEGEND
@@ -1222,10 +1227,8 @@ def plot_g_tensor_vs_states(
     # -------------------------------
     #         AXIS STYLE
     # -------------------------------
-    ax.spines["top"].set_linewidth(lw)
-    ax.spines["bottom"].set_linewidth(lw)
-    ax.spines["left"].set_linewidth(lw)
-    ax.spines["right"].set_linewidth(lw)
+    for side in ["top", "bottom", "left", "right"]:
+        ax.spines[side].set_linewidth(lw)
 
     # -------------------------------
     #         SAVE OR SHOW
@@ -1233,123 +1236,139 @@ def plot_g_tensor_vs_states(
     save_picture(save_option, filename, subtitle)
 
 
-
-def sum_over_state_plot(outputdict, 
+def sum_over_state_plot(outputdict,
                         gestimation, 
                         ppm, 
-                        cutoff, 
-                        saveplot, 
-                        file_string=None):
+                        sos_cutoff, 
+                        sos_save_plot,
+                        sos_print_results):
     """
     Generate the sum-over-states plot, i.e. calculation of the g-tensor by including states
-    from 1 to nstates, above a cutoff of g-value. 
-    This can be done by:
-    - gestimation = 0: effective Hamiltonian created between each pair of states
-    - gestimation = 1: use of predictive phormula 
-    :param: 
-    :return: shows SOS plot
+    from 1 to nstates, above a cutoff of g-value.
     """
+
     def filter_dictionary(dictionary, state):
-        """
-        Form a dictionary with only a pair of states: ground state and "state"
-        """
+        """Form a dictionary with only a pair of states: ground state and 'state'."""
         new_dict = {}
-        ground_state = list(outputdict["energy_dict"].keys())[0]
-        
+        ground_state = list(dictionary["energy_dict"].keys())[0]
+
         for name_dict in ["energy_dict", "spin_dict"]:
-            new_dict[name_dict] = {k: v for k, v in dictionary[name_dict].items() if k == ground_state or k == state}
+            new_dict[name_dict] = {
+                k: v for k, v in dictionary[name_dict].items()
+                if k == ground_state or k == state
+            }
 
         for name_dict in ["soc_matrix_dict", "angmoment_dict"]:
             for k, v in dictionary[name_dict].items():
                 if k in [f"{ground_state}_{state}", f"{state}_{ground_state}"]:
                     new_dict[name_dict] = {k: v}
+
         return new_dict
-    
+
+    # -----------------------------
+    # INTERNAL PRINT FUNCTION
+    # -----------------------------
+    def print_summary(filtered_gshifts):
+        """Print formatted results of SOS analysis."""
+        print("------------------------------")
+        print(" SUM-OVER-STATE ANALYSIS")
+        print("------------------------------")
+
+        technique = {0: "Effective Hamiltonian", 1: "Estimation formula"}
+        print("Technique used:", technique.get(gestimation, "Unknown"))
+        print("cut-offs g-value (%):", sos_cutoff)
+
+        # Show full dataframe
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+
+        df = pd.DataFrame(
+            [row[0:4] for row in filtered_gshifts],
+            [row[0] for row in filtered_gshifts],
+            columns=['state', 'gxx', 'gyy', 'gzz']
+        )
+        print(df.to_string(index=False))
+
+        # Compute the sum of all elements
+        perturbative_sum = [round(float(sum(x)), 3) for x in zip(*filtered_gshifts)][1:]
+        print('Total: ', perturbative_sum[0], perturbative_sum[1], perturbative_sum[2])
+
+    # -----------------------------
+    # FILTERING / COMPUTATION
+    # -----------------------------
     filtered_gshifts = []
 
     if gestimation == 0:
         all_gshifts = []
-        
+
         for excit_state in list(outputdict["energy_dict"].keys())[1:]:
-            
-            # Form a dictionary only for a pair of states
+            # Filter dictionaries
             filtered_dict = filter_dictionary(outputdict, excit_state)
-            
             states__lengthsz, approxspin_dict, matrices_dict = from_json_to_matrices(filtered_dict)
-
             gmatrix, gshift = from_matrices_to_gshift(states__lengthsz, matrices_dict, ppm)
-            
-            all_gshifts.append([excit_state, 
-                                (np.round(gshift[0].real, 3)),
-                                (np.round(gshift[1].real, 3)), 
-                                (np.round(gshift[2].real, 3))])
 
-        # Convert to a NumPy array for efficient processing
+            all_gshifts.append([
+                excit_state,
+                np.round(gshift[0].real, 3),
+                np.round(gshift[1].real, 3),
+                np.round(gshift[2].real, 3)
+            ])
+
         all_gshifts_array = np.array(all_gshifts, dtype=np.float64)
 
-        # Step 1: Find the three maximum values in each of the last three columns and multiply by cutoff
-        cutoffs = np.max(np.abs(all_gshifts_array[:, 1:]), axis=0) * cutoff
+        # Compute cutoffs
+        cutoffs = np.max(np.abs(all_gshifts_array[:, 1:]), axis=0) * sos_cutoff
 
-        # Step 2: Filter rows where at least one column meets or exceeds the threshold
+        # Filter rows
         data = [
-            [int(row[0])] + list(row[1:])  # Convert the first value to an integer and keep the rest as float
+            [int(row[0])] + list(row[1:])
             for row in all_gshifts_array
             if any(abs(row[i]) >= cutoffs[i-1] for i in range(1, 4))
         ]
 
-        # Convert np.float64 to regular float
         filtered_gshifts = [
-            [row[0]] + [float(value) for value in row[1:]]  # Convert all elements except the first to floats
+            [row[0]] + [float(val) for val in row[1:]]
             for row in data
         ]
 
     elif gestimation == 1:
         gshift_dict = gshift_estimation_loop(outputdict, ppm)
+        threshold = 1e-6
+        new_cutoff = sos_cutoff if sos_cutoff != 0 else threshold
 
-        # Avoid to include g-tensor with zero
-        threshold = 10**(-6)
-        new_cutoff = cutoff if cutoff != 0 else threshold
+        cut_gvalues = {
+            key: max((abs(v), v) for v in values.values())[1] * new_cutoff
+            for key, values in gshift_dict.items()
+        }
 
-        # Create the new dictionary with the maximum absolute value multiplied by cutoff
-        cut_gvalues = {key: max((abs(v), v) for v in values.values())[1] * new_cutoff for key, values in gshift_dict.items()}
-        
-        # Take states with estimated g-shift higher than a cutoff
         for k, v in gshift_dict["gxx"].items():
-            if any(abs(gshift_dict[key][k]) >= cut_gvalues[key] and cut_gvalues[key] >= threshold
-                for key in ["gxx", "gyy", "gzz"]):
-                    filtered_gshifts.append([int(k),
-                                             (gshift_dict["gxx"][k]),
-                                             (gshift_dict["gyy"][k]),
-                                             (gshift_dict["gzz"][k])])
+            if any(abs(gshift_dict[key][k]) >= cut_gvalues[key] and 
+                   cut_gvalues[key] >= threshold
+                   for key in ["gxx", "gyy", "gzz"]):
+                filtered_gshifts.append([
+                    int(k),
+                    gshift_dict["gxx"][k],
+                    gshift_dict["gyy"][k],
+                    gshift_dict["gzz"][k]
+                ])
 
-    print("------------------------------")
-    print(" SUM-OVER-STATE ANALYSIS")
-    print("------------------------------")
-    technique = {0: "Effective Hamiltonian", 1: "Estimation phormula"}
-    print("Technique used:", technique.get(gestimation, "Unknown"))
-    print("cut-offs g-value (%): ", cutoff)
+    # -----------------------------
+    # CALL THE PRINT FUNCTION
+    # -----------------------------
+    if sos_print_results:
+        print_summary(filtered_gshifts)
 
-    # Set display options to show all rows and columns
-    pd.set_option('display.max_rows', None)
-    pd.set_option('display.max_columns', None)
-    df = pd.DataFrame([row[0:4] for row in filtered_gshifts], [row[0] for row in filtered_gshifts], columns=['state','gxx','gyy','gzz'])
-    print(df.to_string(index=False)) 
-
-    # Compute the sum of all the elements
-    perturbative_sum = [round(float(sum(x)), 3) for x in zip(*filtered_gshifts)][1:]  # Sum columns, skipping the first
-    print('Total: ', perturbative_sum[0], perturbative_sum[1], perturbative_sum[2])
-
-    # Make the title
+    # -----------------------------
+    # PLOT
+    # -----------------------------
     y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
-    file_string = "str(sys.argv[1]).split('.')[0]
-    plot_title = 'sos_analysis: ' + file_string
-    plot_g_tensor_vs_states(file_string,
-                                'sos', 
-                                np.array(filtered_gshifts, dtype=object),
-                                '# roots',
-                                y_title,
-                                plot_title, 
-                                saveplot)
+
+    plot_g_tensor_vs_states(
+        matrix=np.array(filtered_gshifts, dtype=object),
+        y_title=y_title,
+        save_option=sos_save_plot
+    )
+
     return filtered_gshifts
 
 

@@ -255,40 +255,107 @@ class OutToJsonConverter:
 
 
 class GTensorConfig:
-    """Holds configuration parameters for g-tensor analysis."""
+    """
+    Configuration container for all parameters involved in the g‑tensor workflow.
+
+    This class centralizes every user‑adjustable setting required for the
+    computation, selection, and analysis of g‑tensor contributions. It allows
+    the entire pipeline to be controlled from a single object, ensuring a clean
+    separation between numerical algorithms and high‑level user choices.
+
+    The configuration parameters are grouped into several categories:
+
+    1. **State selection**
+       Controls which electronic states are used to build the effective
+       Hamiltonian or the perturbative sum:
+         - `state_selection`
+               0 → use "initial_states"
+               1 → use all states 
+               2 → use symmetry‑filtered states
+         - `initial_states`: list of roots to include
+         - `symmetry_selection`: irreducible representation for filtering
+
+    2. **g‑tensor calculation**
+       Defines how the g‑tensor is computed:
+         - `calculate_gshift`: enable/disable main g‑shift calculation
+         - `ppm`: units (0 = ppt, 1 = ppm)
+         - `soc_options`: type of SOC matrix used
+               0 → total mean‑field SOC
+               1 → 1‑electron SOC
+               2 → 2‑electron mean‑field SOC
+         - `soc_orders`: order of SOC contributions (0 = all, 1 = first‑order only)
+
+    3. **Pairwise (ground–excited) analysis**
+       Used to study individual contributions:
+         - `cutoff_gvalue`: cutoff on |Δg| (percentage of the maximum value)
+         - `cutoff_config`: cutoff for configuration amplitudes
+         - `excit_plot`: enable/disable pairwise excitation plots
+
+    4. **Sum‑over‑states (SOS) perturbative analysis**
+       Controls the perturbative SOS expansion, where contributions from each
+       excited state are evaluated independently and then accumulated:
+         - `sum_over_states_analysis`: perform SOS computation
+         - `sos_cutoff`: significance threshold for keeping states
+         - `g_estimation`: 0 = effective Hamiltonian; 1 = predictive formula
+         - `sos_save_plot`: save the SOS plot
+         - `sos_print_results`: print the SOS table in the console
+
+    5. **⟨S²⟩ comparison analysis**
+       Used to diagnose spin‑contamination effects:
+         - `s2_comparison`: perform ⟨S²⟩ comparison between methods
+         - `s2_save_plot`: save the ⟨S²⟩ plot
+         - `s2_sos_cutoff`: SOS cutoff used for ⟨S²⟩
+         - `s2_per_gshift`: normalize ⟨S²⟩ contribution per Δg component
+
+    6. **Scaling analysis**
+       Enables scaling studies of SOC, orbital, and spin contributions:
+         - `scaling_analysis`
+               1 → SOC scaling
+               2 → orbital scaling
+               3 → spin scaling
+               4 → combined SOC + orbital scaling
+         - `fit_degree`: degree of polynomial fit
+         - `scaling_save_plot`: save scaling curves
+
+    This class does not perform any computation directly; instead,
+    it provides a structured way to control the behavior of the 
+    g‑tensor computation pipeline.
+    """
+
     def __init__(self):
         # --- State selection ---
-        self.state_selection = 1  # 0: use "state_ras"; 1: use all states_selected; 2: use states_selected by symmetry
-        self.initial_states = [1, 2]  # Example: list(range(1, 12)) ; can remove some manually
-        self.symmetry_selection = 'B2'  # Symmetry for state selection
+        self.state_selection = 1
+        self.initial_states = [1, 2]
+        self.symmetry_selection = 'B2'
 
         # --- g-tensor calculation ---
         self.calculate_gshift = 1
-        self.ppm = 0  # 0: ppt; 1: ppm
-        self.soc_options = 0  # 0: Total mean-field SOC matrix; 1: 1-elec SOC matrix; 2: 2-elec mean-field SOC matrix
-        self.soc_orders = 0  # 0: All orders; 1: First-order only
+        self.ppm = 0
+        self.soc_options = 0
+        self.soc_orders = 0
 
         # --- g-tensor calculation by pairs ---
-        self.cutoff_gvalue = 0  # !=0: cut-off between ground/excited states (% of max g-value)
-        self.cutoff_config = 0  # cut-off for configuration amplitude (% of max amplitude)
-        self.excit_plot = 0  # 0: do not show plot; 1: show plot
+        self.cutoff_gvalue = 0
+        self.cutoff_config = 0
+        self.excit_plot = 0
 
         # --- Sum-over-states (SOS) analysis ---
-        self.sum_over_states_analysis = 0  # SOS g-tensor plot with n states
+        self.sum_over_states_analysis = 0
         self.sos_cutoff = 0
         self.g_estimation = 0
-        self.save_plot = 1
+        self.sos_save_plot = 0
+        self.sos_print_results = 0
 
         # --- <S²> analysis ---
         self.s2_comparison = 0
-        self.s2_save_plot = 1
+        self.s2_save_plot = 0
         self.s2_sos_cutoff = 0
         self.s2_per_gshift = 1
 
         # --- Scaling analysis ---
-        self.scaling_analysis = 1  # 1: SOC; 2: Orbital; 3: Spin; 4: Orbital + SOC
-        self.fit_degree = 3  # Polynomial fitting degree
-        self.scaling_save_plot = 1
+        self.scaling_analysis = 1
+        self.fit_degree = 3
+        self.scaling_save_plot = 0
 
 
 class GTensorPipeline:
@@ -340,13 +407,61 @@ class GTensorPipeline:
         )
 
     def run_sos_analysis(self):
-        """Perform sum-over-states (SOS) analysis."""
+        """
+        Perform a perturbative sum-over-states (SOS) analysis for the g-tensor.
+
+        This function evaluates the contribution of each excited state to the 
+        g‑tensor correction using a perturbative formalism, where every excited 
+        state contributes independently to the total Δg value. The SOS method 
+        builds the g‑shift by adding the contributions from state 1, then states 
+        {1,2}, then {1,2,3}, and so on, allowing one to identify how much each 
+        electronic state influences the g‑tensor.
+
+        Two estimation strategies are supported:
+
+        - gestimation = 0:
+            The g‑tensor is computed perturbatively using an effective Hamiltonian 
+            between the ground state and each excited state (pairwise analysis).
+
+        - gestimation = 1:
+            A predictive, non‑iterative estimation formula is used to approximate 
+            each independent contribution to the g‑tensor without explicitly 
+            constructing the effective Hamiltonian.
+
+        Parameters
+        ----------
+        outputdict : dict
+            Dictionaries containing energies, spin values, SOC matrices, and 
+            angular momentum integrals for all states.
+
+        gestimation : int
+            0 → perturbative effective-Hamiltonian SOS method.
+            1 → predictive estimation formula.
+
+        ppm : int
+            0 → express Δg in ppt.
+            1 → express Δg in ppm.
+
+        sos_cutoff : float
+            Fraction (0–1) of the maximum |Δg| value used to select states whose
+            contributions exceed a predefined significance threshold.
+
+        sos_save_plot : bool
+            If True → save the SOS plot. 
+            If False → display it in the notebook.
+
+        Returns
+        -------
+        filtered_gshifts : list
+            List of states whose perturbative contribution exceeds the given cutoff.
+        """
         sum_over_state_plot(
             self.output_dict_selected,
             self.config.g_estimation,
             self.config.ppm,
             self.config.sos_cutoff,
-            self.config.save_plot,
+            self.config.sos_save_plot,
+            self.config.sos_print_results,
         )
 
     def run_s2_comparison(self):
@@ -356,7 +471,7 @@ class GTensorPipeline:
             self.config.g_estimation,
             self.config.ppm,
             self.config.s2_sos_cutoff,
-            saveplot=1
+            sos_save_plot=1
         )
         states_gtensor = [1]  # Ground state always included
         states_gtensor.extend(sublist[0] for sublist in gshift_list if sublist)

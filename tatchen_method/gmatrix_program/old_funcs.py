@@ -156,6 +156,120 @@ def plot_g_tensor_vs_states(file, subtitle, presentation_matrix, x_title, y_titl
     save_picture(save_options, file, subtitle)
 
 
+def sum_over_state_plot(outputdict, 
+                        gestimation, 
+                        ppm, 
+                        sos_cutoff, 
+                        sos_save_plot):
+    """
+    Generate the sum-over-states plot, i.e. calculation of the g-tensor by including states
+    from 1 to nstates, above a cutoff of g-value. 
+    This can be done by:
+    - gestimation = 0: effective Hamiltonian created between each pair of states
+    - gestimation = 1: use of predictive phormula 
+    :param: 
+    :return: shows SOS plot
+    """
+    def filter_dictionary(dictionary, state):
+        """
+        Form a dictionary with only a pair of states: ground state and "state"
+        """
+        new_dict = {}
+        ground_state = list(outputdict["energy_dict"].keys())[0]
+        
+        for name_dict in ["energy_dict", "spin_dict"]:
+            new_dict[name_dict] = {k: v for k, v in dictionary[name_dict].items() if k == ground_state or k == state}
+
+        for name_dict in ["soc_matrix_dict", "angmoment_dict"]:
+            for k, v in dictionary[name_dict].items():
+                if k in [f"{ground_state}_{state}", f"{state}_{ground_state}"]:
+                    new_dict[name_dict] = {k: v}
+        return new_dict
+    
+    filtered_gshifts = []
+
+    if gestimation == 0:
+        all_gshifts = []
+        
+        for excit_state in list(outputdict["energy_dict"].keys())[1:]:
+            
+            # Form a dictionary only for a pair of states
+            filtered_dict = filter_dictionary(outputdict, excit_state)
+            
+            states__lengthsz, approxspin_dict, matrices_dict = from_json_to_matrices(filtered_dict)
+
+            gmatrix, gshift = from_matrices_to_gshift(states__lengthsz, matrices_dict, ppm)
+            
+            all_gshifts.append([excit_state, 
+                                (np.round(gshift[0].real, 3)),
+                                (np.round(gshift[1].real, 3)), 
+                                (np.round(gshift[2].real, 3))])
+
+        # Convert to a NumPy array for efficient processing
+        all_gshifts_array = np.array(all_gshifts, dtype=np.float64)
+
+        # Step 1: Find the three maximum values in each of the last three columns and multiply by cutoff
+        cutoffs = np.max(np.abs(all_gshifts_array[:, 1:]), axis=0) * sos_cutoff
+
+        # Step 2: Filter rows where at least one column meets or exceeds the threshold
+        data = [
+            [int(row[0])] + list(row[1:])  # Convert the first value to an integer and keep the rest as float
+            for row in all_gshifts_array
+            if any(abs(row[i]) >= cutoffs[i-1] for i in range(1, 4))
+        ]
+
+        # Convert np.float64 to regular float
+        filtered_gshifts = [
+            [row[0]] + [float(value) for value in row[1:]]  # Convert all elements except the first to floats
+            for row in data
+        ]
+
+    elif gestimation == 1:
+        gshift_dict = gshift_estimation_loop(outputdict, ppm)
+
+        # Avoid to include g-tensor with zero
+        threshold = 10**(-6)
+        new_cutoff = sos_cutoff if sos_cutoff != 0 else threshold
+
+        # Create the new dictionary with the maximum absolute value multiplied by cutoff
+        cut_gvalues = {key: max((abs(v), v) for v in values.values())[1] * new_cutoff for key, values in gshift_dict.items()}
+        
+        # Take states with estimated g-shift higher than a cutoff
+        for k, v in gshift_dict["gxx"].items():
+            if any(abs(gshift_dict[key][k]) >= cut_gvalues[key] and cut_gvalues[key] >= threshold
+                for key in ["gxx", "gyy", "gzz"]):
+                    filtered_gshifts.append([int(k),
+                                             (gshift_dict["gxx"][k]),
+                                             (gshift_dict["gyy"][k]),
+                                             (gshift_dict["gzz"][k])])
+
+    print("------------------------------")
+    print(" SUM-OVER-STATE ANALYSIS")
+    print("------------------------------")
+    technique = {0: "Effective Hamiltonian", 1: "Estimation phormula"}
+    print("Technique used:", technique.get(gestimation, "Unknown"))
+    print("cut-offs g-value (%): ", sos_cutoff)
+
+    # Set display options to show all rows and columns
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    df = pd.DataFrame([row[0:4] for row in filtered_gshifts], [row[0] for row in filtered_gshifts], columns=['state','gxx','gyy','gzz'])
+    print(df.to_string(index=False))
+
+    # Compute the sum of all the elements
+    perturbative_sum = [round(float(sum(x)), 3) for x in zip(*filtered_gshifts)][1:]  # Sum columns, skipping the first
+    print('Total: ', perturbative_sum[0], perturbative_sum[1], perturbative_sum[2])
+
+    # Make the title
+    y_title = r'$\Delta g, ppt$' if ppm == 0 else r'$\Delta g, ppm$'
+    # file_string = "str(sys.argv[1]).split('.')[0]
+    # plot_title = 'sos_analysis: ' + file_string
+    plot_g_tensor_vs_states(matrix=np.array(filtered_gshifts, dtype=object),
+                            y_title=y_title,
+                            save_option=sos_save_plot)
+    return filtered_gshifts
+
+
 
 
 
